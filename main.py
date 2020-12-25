@@ -67,10 +67,11 @@ def main():
         # Render
         screen.fill(background)
         GameObject.game_objects.draw(screen)
-#         screen.blit(ball.image, ball.rect)
         pygame.display.flip()
 
         clock.tick(60)
+
+    pygame.quit()
 
 
 if __name__ == "__main__":
