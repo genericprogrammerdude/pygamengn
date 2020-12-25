@@ -1,23 +1,16 @@
+import sys
+
 import pygame
 
 
-class GameObject(pygame.sprite.Sprite):
-    """Basic game object."""
-
-    game_objects = pygame.sprite.Group()
-
-    def __init__(self, image_fname):
-        super().__init__()
-
-        # Set the image to use for this sprite.
-        self.image = pygame.image.load(image_fname)
-        self.rect = self.image.get_rect()
-
-        # Add to group of game objects
-        GameObject.game_objects.add(self)
-
-
 def main():
+    try:
+        from game_object import GameObject
+    except ModuleNotFoundError:
+        from sys import path
+        path.append(r"./GameEngine")
+        from game_object import GameObject
+
     pygame.init()
 
     size = width, height = 640, 480
@@ -27,8 +20,7 @@ def main():
 
     screen = pygame.display.set_mode(size)
 
-    ball = GameObject("intro_ball.gif")
-    ballrect = ball.rect
+    ball = GameObject("Assets/intro_ball.gif")
 
     clock = pygame.time.Clock()
     running = True
@@ -55,14 +47,14 @@ def main():
             move_delta[1] += speed
 
         # Prevent player from exiting the screen
-        if (ballrect.left < 0 and move_delta[0] < 0) or (ballrect.right > width and move_delta[0] > 0):
+        if (ball.rect.left < 0 and move_delta[0] < 0) or (ball.rect.right > width and move_delta[0] > 0):
             move_delta[0] = 0
-        if (ballrect.top < 0 and move_delta[1] < 0) or (ballrect.bottom > height and move_delta[1] > 0):
+        if (ball.rect.top < 0 and move_delta[1] < 0) or (ball.rect.bottom > height and move_delta[1] > 0):
             move_delta[1] = 0
 
         # Move the player
-        ballrect.x = ballrect.x + move_delta[0]
-        ballrect.y = ballrect.y + move_delta[1]
+        ball.rect.x = ball.rect.x + move_delta[0]
+        ball.rect.y = ball.rect.y + move_delta[1]
 
         # Render
         screen.fill(background)
