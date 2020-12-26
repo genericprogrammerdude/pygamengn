@@ -4,16 +4,16 @@ import pygame
 def main():
     pygame.init()
 
-    size = width, height = 640, 480
-    move_delta = [0, 0]
-    speed = 2
+    size = (1280, 720)
     background = 50, 50, 50
 
     screen = pygame.display.set_mode(size)
 
     ball = GameObject("Assets/SpaceShooterRedux/PNG/playerShip2_blue.png")
-    ball.set_pos((80, 80))
-    ball.set_scale(0.5)
+    ball.set_pos((screen.get_rect().width / 2, screen.get_rect().height / 2))
+    ball.set_scale(0.8)
+    linear_velocity = 150.0
+    angular_velocity = 1.5
 
     clock = pygame.time.Clock()
     running = True
@@ -29,28 +29,14 @@ def main():
 
         # Handle input for movement
         pressed_keys = pygame.key.get_pressed()
-        move_delta = pygame.math.Vector2(0.0, 0.0)
         if pressed_keys[pygame.K_s]:
-            # move_delta[0] -= speed
-            ball.set_angle(ball.angle + 1)
+            ball.set_angle(ball.angle + angular_velocity)
         if pressed_keys[pygame.K_f]:
-            # move_delta[0] += speed
-            ball.set_angle(ball.angle - 1)
+            ball.set_angle(ball.angle - angular_velocity)
         if pressed_keys[pygame.K_e]:
-            move_delta[1] -= speed
+            ball.set_velocity(linear_velocity)
         if pressed_keys[pygame.K_d]:
-            move_delta[1] += speed
-
-        # Prevent player from exiting the screen
-        if (ball.rect.left < 0 and move_delta[0] < 0) or (ball.rect.right > width and move_delta[0] > 0):
-            move_delta[0] = 0
-        if (ball.rect.top < 0 and move_delta[1] < 0) or (ball.rect.bottom > height and move_delta[1] > 0):
-            move_delta[1] = 0
-
-        # Move the player
-        ball.set_pos(ball.pos + move_delta)
-#         ball.rect.x = ball.rect.x + move_delta[0]
-#         ball.rect.y = ball.rect.y + move_delta[1]
+            ball.set_velocity(-linear_velocity)
 
         # Render
         screen.fill(background)
