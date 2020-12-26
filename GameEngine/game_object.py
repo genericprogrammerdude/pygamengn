@@ -1,5 +1,3 @@
-from pickle import NONE
-
 import pygame
 
 
