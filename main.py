@@ -1,16 +1,7 @@
-import sys
-
 import pygame
 
 
 def main():
-    try:
-        from game_object import GameObject
-    except ModuleNotFoundError:
-        from sys import path
-        path.append(r"./GameEngine")
-        from game_object import GameObject
-
     pygame.init()
 
     size = width, height = 640, 480
@@ -20,7 +11,9 @@ def main():
 
     screen = pygame.display.set_mode(size)
 
-    ball = GameObject("Assets/intro_ball.gif")
+    ball = GameObject("Assets/SpaceShooterRedux/PNG/playerShip2_blue.png")
+    ball.set_pos((80, 80))
+    ball.set_scale(0.5)
 
     clock = pygame.time.Clock()
     running = True
@@ -36,11 +29,13 @@ def main():
 
         # Handle input for movement
         pressed_keys = pygame.key.get_pressed()
-        move_delta = [0, 0]
+        move_delta = pygame.math.Vector2(0.0, 0.0)
         if pressed_keys[pygame.K_s]:
-            move_delta[0] -= speed
+            # move_delta[0] -= speed
+            ball.set_angle(ball.angle + 1)
         if pressed_keys[pygame.K_f]:
-            move_delta[0] += speed
+            # move_delta[0] += speed
+            ball.set_angle(ball.angle - 1)
         if pressed_keys[pygame.K_e]:
             move_delta[1] -= speed
         if pressed_keys[pygame.K_d]:
@@ -53,11 +48,13 @@ def main():
             move_delta[1] = 0
 
         # Move the player
-        ball.rect.x = ball.rect.x + move_delta[0]
-        ball.rect.y = ball.rect.y + move_delta[1]
+        ball.set_pos(ball.pos + move_delta)
+#         ball.rect.x = ball.rect.x + move_delta[0]
+#         ball.rect.y = ball.rect.y + move_delta[1]
 
         # Render
         screen.fill(background)
+        GameObject.game_objects.update(clock.get_time())
         GameObject.game_objects.draw(screen)
         pygame.display.flip()
 
@@ -67,4 +64,8 @@ def main():
 
 
 if __name__ == "__main__":
+    from sys import path
+    path.append(r"./GameEngine")
+    from game_object import GameObject
+
     main()
