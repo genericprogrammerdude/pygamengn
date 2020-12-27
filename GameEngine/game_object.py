@@ -16,7 +16,7 @@ class GameObject(pygame.sprite.Sprite):
         self.pos = pygame.math.Vector2(0.0, 0.0)
         self.dirty_image = True
         self.is_collidable = is_collidable
-        self.mask = None  # The mask will be built on the first trasnform()
+        self.mask = None  # The mask will be built on the first transform()
 
     def update(self, delta):
         """Updates the game object. Delta time is in ms."""

@@ -31,7 +31,7 @@ class AnimatedTexture(GameObject):
             if frame_index < len(self.frames):
                 self.image = self.frames[frame_index]
 
-            self.rect = self.image.get_rect()
+            self.rect.topleft = self.pos
 
             # Update animation time
             self.animation_time = self.animation_time + delta

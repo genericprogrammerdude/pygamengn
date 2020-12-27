@@ -33,5 +33,5 @@ class Ship(GameObject):
         group = self.groups()[0]
         group.add(self.explosion)
         group.move_to_front(self.explosion)
-        self.explosion.set_pos(self.pos)
+        self.explosion.set_pos(self.pos - local_pos)
         self.explosion.play()
