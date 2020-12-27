@@ -11,7 +11,7 @@ class Ship(GameObject):
         super().__init__(image_fname)
         self.velocity = 0.0
         self.velocity_decay_factor = velocity_decay_factor
-        self.explosion = AnimatedTexture("Assets/Explosions/explosion1.png", (256, 256), 2000)
+        self.explosion = AnimatedTexture("Assets/Explosions/explosion1.png", (256, 256), 750)
 
     def update(self, delta):
         """Updates the ship."""
