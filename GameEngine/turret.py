@@ -9,7 +9,7 @@ class Turret(GameObject):
         super().__init__(base_image_fname)
         self.laser_image_fname = laser_image_fname
         self.target = None
-        self.fire_freq = 500
+        self.fire_freq = 1000
         self.time_since_last_fire = 0
 
     def set_target(self, target):
@@ -25,14 +25,14 @@ class Turret(GameObject):
 
     def fire(self):
         """Fires a Projectile at the target."""
-        fire_dir = self.pos - self.target.pos
-        fire_dir.normalize()
-        angle, _ = fire_dir.as_polar()
+        fire_dir = self.target.pos - self.pos
+        _, angle = fire_dir.as_polar()
+
         projectile = Projectile(self.laser_image_fname)
         projectile.set_pos(self.pos)
-        projectile.set_angle(angle)
+        projectile.set_angle(270 - angle)
         projectile.transform()
-        projectile.set_velocity(1000)
+        projectile.set_velocity(500)
 
         group = self.groups()[0]
         group.add(projectile)

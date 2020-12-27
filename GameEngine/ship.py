@@ -16,7 +16,7 @@ class Ship(GameObject):
         # Translate according to velocity
         delta_pos = pygame.math.Vector2()
         delta_pos.from_polar((delta / -1000.0 * self.velocity, 90.0 - self.angle))
-        self.pos = self.pos + delta_pos
+        self.set_pos(self.pos + delta_pos)
         self.velocity = self.velocity * self.velocity_decay_factor
 
         # Now do the regular GameObject update

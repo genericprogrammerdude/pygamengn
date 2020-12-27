@@ -14,6 +14,8 @@ class GameObject(pygame.sprite.Sprite):
         self.scale = 1.0
         self.angle = 0.0
         self.pos = pygame.math.Vector2(0.0, 0.0)
+        self.__dirty_image = True
+        self.mask = None  # The mask will be built on the first update()
 
     def update(self, delta):
         """Updates the game object. Delta time is in ms."""
@@ -22,9 +24,12 @@ class GameObject(pygame.sprite.Sprite):
 
     def transform(self):
         """Transforms the object based on current angle, scale, and position."""
-        # Rotate and scale
-        self.image = pygame.transform.rotozoom(self.image_original, self.angle, self.scale)
-        self.rect = self.image.get_rect()
+        # Rotate and scale if necessary
+        if self.__dirty_image:
+            self.image = pygame.transform.rotozoom(self.image_original, self.angle, self.scale)
+            self.rect = self.image.get_rect()
+            self.mask = pygame.mask.from_surface(self.image)
+            self.__dirty_image = False
 
         # Translate
         topleft = self.pos - pygame.math.Vector2(self.rect.width / 2.0, self.rect.height / 2.0)
@@ -32,6 +37,7 @@ class GameObject(pygame.sprite.Sprite):
 
     def set_scale(self, scale):
         """Sets the scale of the sprite."""
+        self.__dirty_image = (self.scale != scale)
         self.scale = scale
 
     def set_pos(self, pos):
@@ -40,6 +46,7 @@ class GameObject(pygame.sprite.Sprite):
 
     def set_angle(self, angle):
         """Sets the orientation of the game object."""
+        self.__dirty_image = (self.angle != angle)
         self.angle = angle
 
     def kill_when_off_screen(self):

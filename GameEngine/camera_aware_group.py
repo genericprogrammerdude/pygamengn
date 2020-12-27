@@ -19,6 +19,7 @@ class CameraAwareGroup(pygame.sprite.LayeredUpdates):
     def update(self, *args):
         """Updates itself and its sprites."""
         super().update(*args)
+        self.handle_collisions()
 
         if self.target:
             # Keep the view_rect centered with the target's rect center
@@ -32,7 +33,6 @@ class CameraAwareGroup(pygame.sprite.LayeredUpdates):
 
     def draw(self, surface):
         """Draws the sprites in the group on the given surface."""
-
         if self.grid_draw:
             self.__draw_grid(surface)
 
@@ -41,16 +41,22 @@ class CameraAwareGroup(pygame.sprite.LayeredUpdates):
             transformed_rect = sprite.rect.move(cam)
             if not self.view_rect.colliderect(transformed_rect):
                 # Ignore sprites that are outside of the view rectangle
-#                 print("Ignoring", sprite.__class__, len(self.sprites()))
                 if sprite.kill_when_off_screen():
-                    print("Removing", sprite.__class__, len(self.sprites()), transformed_rect)
                     sprite.kill()
             else:
                 surface.blit(sprite.image, transformed_rect)
 
+    def handle_collisions(self):
+        if self.target:
+            collisions = pygame.sprite.spritecollide(self.target, self, False)
+            for sprite in collisions:
+                if sprite != self.target:
+                    collision = pygame.sprite.collide_mask(self.target, sprite)
+                    if collision:
+                        sprite.kill()
+
     def __draw_grid(self, surface):
         """Draws a grid as a background."""
-
         low_x = int(math.floor(self.cam.x / self.grid_interval)) * 100
         hi_x = int(math.ceil(self.cam.x + self.view_rect.width))
         for x in range(int(low_x - self.cam.x), int(hi_x - self.cam.x), self.grid_interval):
@@ -63,7 +69,7 @@ class CameraAwareGroup(pygame.sprite.LayeredUpdates):
             ycor = self.view_rect.height - y
             pygame.draw.line(surface, self.grid_color, (0, ycor), (self.view_rect.width, ycor))
 
-    def draw_asdf(self, surface):
+    def draw_ORIGINAL(self, surface):
         print("draw_asdf")
         spritedict = self.spritedict
         surface_blit = surface.blit
