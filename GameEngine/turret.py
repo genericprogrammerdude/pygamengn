@@ -26,11 +26,11 @@ class Turret(GameObject):
     def fire(self):
         """Fires a Projectile at the target."""
         fire_dir = self.target.pos - self.pos
-        _, angle = fire_dir.as_polar()
+        _, heading = fire_dir.as_polar()
 
         projectile = Projectile(self.laser_image_fname)
         projectile.set_pos(self.pos)
-        projectile.set_angle(270 - angle)
+        projectile.set_heading(270 - heading)
         projectile.transform()
         projectile.set_velocity(500)
 

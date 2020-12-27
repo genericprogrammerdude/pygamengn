@@ -17,7 +17,7 @@ def main():
     player.set_pos(pygame.Vector2(screen_rect.width / 2.0, screen_rect.height / 2.0))
     player.set_scale(0.8)
     player.transform()
-    linear_velocity = 150.0
+    linear_velocity = 200.0
     angular_velocity = 1.5
 
     # Create a turret
@@ -47,9 +47,9 @@ def main():
         # Handle input for movement
         pressed_keys = pygame.key.get_pressed()
         if pressed_keys[pygame.K_s]:
-            player.set_angle(player.angle + angular_velocity)
+            player.set_heading(player.heading + angular_velocity)
         if pressed_keys[pygame.K_f]:
-            player.set_angle(player.angle - angular_velocity)
+            player.set_heading(player.heading - angular_velocity)
         if pressed_keys[pygame.K_e]:
             player.set_velocity(linear_velocity)
         if pressed_keys[pygame.K_d]:

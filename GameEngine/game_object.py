@@ -12,7 +12,7 @@ class GameObject(pygame.sprite.Sprite):
         self.image_original = self.image.copy()
         self.rect = self.image.get_rect()
         self.scale = 1.0
-        self.angle = 0.0
+        self.heading = 0.0
         self.pos = pygame.math.Vector2(0.0, 0.0)
         self.__dirty_image = True
         self.mask = None  # The mask will be built on the first update()
@@ -23,10 +23,10 @@ class GameObject(pygame.sprite.Sprite):
         self.transform()
 
     def transform(self):
-        """Transforms the object based on current angle, scale, and position."""
+        """Transforms the object based on current heading, scale, and position."""
         # Rotate and scale if necessary
         if self.__dirty_image:
-            self.image = pygame.transform.rotozoom(self.image_original, self.angle, self.scale)
+            self.image = pygame.transform.rotozoom(self.image_original, self.heading, self.scale)
             self.rect = self.image.get_rect()
             self.mask = pygame.mask.from_surface(self.image)
             self.__dirty_image = False
@@ -44,10 +44,10 @@ class GameObject(pygame.sprite.Sprite):
         """Sets the position of the sprite in the screen so that the sprite's center is at pos."""
         self.pos = pos
 
-    def set_angle(self, angle):
+    def set_heading(self, heading):
         """Sets the orientation of the game object."""
-        self.__dirty_image = (self.angle != angle)
-        self.angle = angle
+        self.__dirty_image = (self.heading != heading)
+        self.heading = heading
 
     def kill_when_off_screen(self):
         """This can be used by the Sprite Group to know if the object should be killed when it goes off screen."""
