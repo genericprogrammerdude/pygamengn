@@ -30,8 +30,9 @@ class Ship(GameObject):
         self.velocity = velocity
 
     def collide(self, collider, local_pos):
-        group = self.groups()[0]
-        group.add(self.explosion)
-        group.move_to_front(self.explosion)
-        self.explosion.set_pos(self.pos - local_pos)
-        self.explosion.play()
+        if not self.explosion.is_playing:
+            group = self.groups()[0]
+            group.add(self.explosion)
+            group.move_to_front(self.explosion)
+            self.explosion.set_pos(self.pos - local_pos)
+            self.explosion.play()
