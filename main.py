@@ -10,17 +10,25 @@ def main():
     # Create world
     screen = pygame.display.set_mode(size)
     world_rect = pygame.Rect(0, 0, size[0] * 2, size[1] * 2)
-    screen_rect = pygame.Rect(0, 0, size[0], size[1])
+    screen_rect = screen.get_rect()
 
     # Create player
-    player = GameObject("Assets/SpaceShooterRedux/PNG/playerShip2_blue.png")
-    player.set_pos((screen.get_rect().width / 2, screen.get_rect().height / 2))
+    player = Ship("Assets/SpaceShooterRedux/PNG/playerShip2_blue.png", 0.5)
+    player.set_pos((screen_rect.width / 2, screen_rect.height / 2))
     player.set_scale(0.8)
     linear_velocity = 150.0
     angular_velocity = 1.5
 
-    # Add player to group of game objects
+    # Create a turret
+    turret = Turret("Assets/SpaceShooterRedux/PNG/Parts/turretBase_big.png",
+                    "Assets/SpaceShooterRedux/PNG/Lasers/laserRed06.png")
+    turret.set_pos((screen_rect.width * 0.75, screen_rect.height * 0.75))
+    turret.set_target(player)
+
+    # Add player and turret to group of game objects
     game_objects = CameraAwareGroup(player, world_rect, screen_rect, True)
+    game_objects.add(turret)
+    game_objects.move_to_back(turret)
 
     clock = pygame.time.Clock()
     running = True
@@ -43,7 +51,7 @@ def main():
         if pressed_keys[pygame.K_e]:
             player.set_velocity(linear_velocity)
         if pressed_keys[pygame.K_d]:
-            player.set_velocity(-linear_velocity)
+            player.set_velocity(player.velocity * 0.8)
 
         # Update groups
         game_objects.update(clock.get_time())
@@ -61,7 +69,8 @@ def main():
 if __name__ == "__main__":
     from sys import path
     path.append(r"./GameEngine")
-    from game_object import GameObject
+    from ship import Ship
     from camera_aware_group import CameraAwareGroup
+    from turret import Turret
 
     main()

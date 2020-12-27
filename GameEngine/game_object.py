@@ -14,7 +14,6 @@ class GameObject(pygame.sprite.Sprite):
         self.scale = 1.0
         self.angle = 0.0
         self.pos = pygame.math.Vector2(0.0, 0.0)
-        self.velocity = 0.0
 
     def update(self, delta):
         """Updates the game object. Delta time is in ms."""
@@ -26,17 +25,8 @@ class GameObject(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
 
         # Translate
-        delta_pos = pygame.math.Vector2()
-        delta_pos.from_polar((delta / -1000.0 * self.velocity, 90.0 - self.angle))
-        self.pos = self.pos + delta_pos
-        self.velocity = self.velocity * 0.95
-
         topleft = self.pos - pygame.math.Vector2(self.rect.width / 2.0, self.rect.height / 2.0)
         self.rect.topleft = pygame.Vector2(round(topleft.x), round(topleft.y))
-
-    def set_velocity(self, velocity):
-        """Sets the game object's velocity in screen units per second."""
-        self.velocity = velocity
 
     def set_scale(self, scale):
         """Sets the scale of the sprite."""
