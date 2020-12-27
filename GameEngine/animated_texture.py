@@ -20,7 +20,6 @@ class AnimatedTexture(GameObject):
                 frame = self.image.subsurface(rect)
                 self.frames.append(frame)
         self.image = self.frames[0]
-        self.rect = self.image.get_rect()
 
     def update(self, delta):
         super().update(delta)
