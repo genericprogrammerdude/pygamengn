@@ -1,5 +1,6 @@
 import math
 import pygame
+from animated_texture import AnimatedTexture
 
 
 class CameraAwareGroup(pygame.sprite.LayeredUpdates):
@@ -50,9 +51,10 @@ class CameraAwareGroup(pygame.sprite.LayeredUpdates):
         if self.target:
             collisions = pygame.sprite.spritecollide(self.target, self, False)
             for sprite in collisions:
-                if sprite != self.target:
+                if sprite != self.target and not isinstance(sprite, AnimatedTexture):
                     collision = pygame.sprite.collide_mask(self.target, sprite)
                     if collision:
+                        self.target.collide(sprite, collision)
                         sprite.kill()
 
     def __draw_grid(self, surface):

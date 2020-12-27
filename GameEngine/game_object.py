@@ -4,7 +4,7 @@ import pygame
 class GameObject(pygame.sprite.Sprite):
     """Basic game object."""
 
-    def __init__(self, image_fname):
+    def __init__(self, image_fname, is_collidable=True):
         super().__init__()
 
         # Set the image to use for this sprite.
@@ -14,8 +14,9 @@ class GameObject(pygame.sprite.Sprite):
         self.scale = 1.0
         self.heading = 0.0
         self.pos = pygame.math.Vector2(0.0, 0.0)
-        self.__dirty_image = True
-        self.mask = None  # The mask will be built on the first update()
+        self.dirty_image = True
+        self.is_collidable = is_collidable
+        self.mask = None  # The mask will be built on the first trasnform()
 
     def update(self, delta):
         """Updates the game object. Delta time is in ms."""
@@ -25,11 +26,12 @@ class GameObject(pygame.sprite.Sprite):
     def transform(self):
         """Transforms the object based on current heading, scale, and position."""
         # Rotate and scale if necessary
-        if self.__dirty_image:
+        if self.dirty_image:
             self.image = pygame.transform.rotozoom(self.image_original, self.heading, self.scale)
             self.rect = self.image.get_rect()
-            self.mask = pygame.mask.from_surface(self.image)
-            self.__dirty_image = False
+            if self.is_collidable:
+                self.mask = pygame.mask.from_surface(self.image)
+            self.dirty_image = False
 
         # Translate
         topleft = self.pos - pygame.math.Vector2(self.rect.width / 2.0, self.rect.height / 2.0)
@@ -37,7 +39,7 @@ class GameObject(pygame.sprite.Sprite):
 
     def set_scale(self, scale):
         """Sets the scale of the sprite."""
-        self.__dirty_image = (self.scale != scale)
+        self.dirty_image = (self.scale != scale)
         self.scale = scale
 
     def set_pos(self, pos):
@@ -46,7 +48,7 @@ class GameObject(pygame.sprite.Sprite):
 
     def set_heading(self, heading):
         """Sets the orientation of the game object."""
-        self.__dirty_image = (self.heading != heading)
+        self.dirty_image = (self.heading != heading)
         self.heading = heading
 
     def kill_when_off_screen(self):
