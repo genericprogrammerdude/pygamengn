@@ -39,7 +39,14 @@ class CameraAwareGroup(pygame.sprite.LayeredUpdates):
         for sprite in self.sprites():
             cam = pygame.Vector2(round(self.cam.x), round(self.cam.y))
             transformed_rect = sprite.rect.move(cam)
-            surface.blit(sprite.image, transformed_rect)
+            if not self.view_rect.colliderect(transformed_rect):
+                # Ignore sprites that are outside of the view rectangle
+#                 print("Ignoring", sprite.__class__, len(self.sprites()))
+                if sprite.kill_when_off_screen():
+                    print("Removing", sprite.__class__, len(self.sprites()), transformed_rect)
+                    sprite.kill()
+            else:
+                surface.blit(sprite.image, transformed_rect)
 
     def __draw_grid(self, surface):
         """Draws a grid as a background."""

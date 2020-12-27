@@ -16,6 +16,7 @@ def main():
     player = Ship("Assets/SpaceShooterRedux/PNG/playerShip2_blue.png", 0.5)
     player.set_pos((screen_rect.width / 2, screen_rect.height / 2))
     player.set_scale(0.8)
+    player.transform()
     linear_velocity = 150.0
     angular_velocity = 1.5
 
@@ -23,6 +24,7 @@ def main():
     turret = Turret("Assets/SpaceShooterRedux/PNG/Parts/turretBase_big.png",
                     "Assets/SpaceShooterRedux/PNG/Lasers/laserRed06.png")
     turret.set_pos((screen_rect.width * 0.75, screen_rect.height * 0.75))
+    turret.transform()
     turret.set_target(player)
 
     # Add player and turret to group of game objects

@@ -17,9 +17,11 @@ class GameObject(pygame.sprite.Sprite):
 
     def update(self, delta):
         """Updates the game object. Delta time is in ms."""
-
         super().update()
+        self.transform()
 
+    def transform(self):
+        """Transforms the object based on current angle, scale, and position."""
         # Rotate and scale
         self.image = pygame.transform.rotozoom(self.image_original, self.angle, self.scale)
         self.rect = self.image.get_rect()
@@ -39,3 +41,7 @@ class GameObject(pygame.sprite.Sprite):
     def set_angle(self, angle):
         """Sets the orientation of the game object."""
         self.angle = angle
+
+    def kill_when_off_screen(self):
+        """This can be used by the Sprite Group to know if the object should be killed when it goes off screen."""
+        return False

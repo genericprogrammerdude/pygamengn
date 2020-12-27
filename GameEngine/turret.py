@@ -1,5 +1,5 @@
 from game_object import GameObject
-from ship import Ship
+from projectile import Projectile
 
 
 class Turret(GameObject):
@@ -24,15 +24,18 @@ class Turret(GameObject):
             self.fire()
 
     def fire(self):
-        """Fires a shot at the target."""
-
+        """Fires a Projectile at the target."""
         fire_dir = self.pos - self.target.pos
         fire_dir.normalize()
         angle, _ = fire_dir.as_polar()
-        shot = Ship(self.laser_image_fname)
-        shot.set_pos(self.pos)
-        shot.set_angle(angle)
-        shot.set_velocity(1000)
-        self.groups()[0].add(shot)
+        projectile = Projectile(self.laser_image_fname)
+        projectile.set_pos(self.pos)
+        projectile.set_angle(angle)
+        projectile.transform()
+        projectile.set_velocity(1000)
+
+        group = self.groups()[0]
+        group.add(projectile)
+        group.move_to_back(projectile)
 
         self.time_since_last_fire = 0
