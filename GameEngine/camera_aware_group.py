@@ -17,7 +17,33 @@ class CameraAwareGroup(pygame.sprite.LayeredUpdates):
         if self.target:
             self.add(target)
 
+        self.x_inc = 1.1
+        self.y_inc = 0.7
+
     def update(self, *args):
+        """Updates itself and its sprites."""
+        super().update(*args)
+        self.handle_collisions()
+
+        self.cam[0] += self.x_inc
+        if self.cam[0] <= 0 or self.cam[0] >= 100:
+            self.x_inc *= -1
+        self.cam[1] -= self.y_inc
+        if self.cam[1] < 0 or self.cam[1] > 100:
+            self.y_inc *= -1
+        print(self.cam)
+
+#         if self.target:
+#             Keep the view_rect centered with the target's rect center
+#             x = self.view_rect.width / 2.0
+#             y = self.view_rect.height / 2.0
+#             self.cam += (pygame.Vector2((x, y)) - self.cam) * 0.05
+#             if self.world_rect.width > 0 and self.world_rect.height > 0:
+#                 # Keep the camera within the world_rect if one was given
+#                 self.cam.x = max(-(self.world_rect.width - self.view_rect.width), min(0, self.cam.x))
+#                 self.cam.y = max(-(self.world_rect.height - self.view_rect.height), min(0, self.cam.y))
+
+    def update_ORI(self, *args):
         """Updates itself and its sprites."""
         super().update(*args)
         self.handle_collisions()

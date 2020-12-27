@@ -2,6 +2,7 @@ import pygame
 
 from animated_texture import AnimatedTexture
 from game_object import GameObject
+from transform import Transform
 
 
 class Ship(GameObject):
@@ -34,5 +35,6 @@ class Ship(GameObject):
             group = self.groups()[0]
             group.add(self.explosion)
             group.move_to_front(self.explosion)
-            self.explosion.set_pos(self.pos - local_pos)
+            pos = Transform(theta=self.heading, translation=self.pos).apply(local_pos)
+            self.explosion.set_pos(self.pos)
             self.explosion.play()

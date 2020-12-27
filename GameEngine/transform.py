@@ -14,15 +14,15 @@ class Transform():
             [  0.0, 0.0, 1.0]
         ])
 
-        t = self.translation_matrix(translation)
-        r = self.rotation_matrix(theta)
-        s = self.scale_matrix(scale)
-
-        print("--------")
-        print(numpy.dot(r, numpy.dot(s, t)))
-        print()
-        print(self.matrix)
-        print("--------")
+#         t = self.translation_matrix(translation)
+#         r = self.rotation_matrix(theta)
+#         s = self.scale_matrix(scale)
+#
+#         print("--------")
+#         print(numpy.dot(r, numpy.dot(s, t)))
+#         print()
+#         print(self.matrix)
+#         print("--------")
 
     def apply(self, point):
         """Applies the transform to the given point."""
