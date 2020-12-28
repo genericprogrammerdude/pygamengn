@@ -55,14 +55,24 @@ class CameraAwareGroup(pygame.sprite.LayeredUpdates):
                 if collision:
                     self.target.collide(pygame.Vector2(self.target.rect.topleft) + collision)
                     sprite.kill()
+            for attachment in self.target.attachments:
+                gob = attachment.game_object
+                collisions = pygame.sprite.spritecollide(gob, self, False, self.sprites_collided)
+                for sprite in collisions:
+                    collision = pygame.sprite.collide_mask(gob, sprite)
+                    if collision:
+                        self.target.collide(pygame.Vector2(gob.rect.topleft) + collision)
+                        sprite.kill()
 
     def sprites_collided(self, a, b):
-        """Checks whether sprites a and b should have collision detection run between the two."""
+        """Checks whether sprites a and b collide."""
         if a == b:
             return False
         if not (a.is_collidable and b.is_collidable):
             return False
-        return True
+        if (a.parent and a.parent == b) or (b.parent and b.parent == a):
+            return False
+        return pygame.sprite.collide_rect(a, b)
 
     def __draw_grid(self, surface):
         """Draws a grid as a background."""

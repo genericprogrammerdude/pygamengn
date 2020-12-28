@@ -1,4 +1,5 @@
 import pygame
+from transform import Transform
 
 
 class GameObject(pygame.sprite.Sprite):
@@ -17,11 +18,20 @@ class GameObject(pygame.sprite.Sprite):
         self.dirty_image = True
         self.is_collidable = is_collidable
         self.mask = None  # The mask will be built on the first transform()
+        self.attachments = []
+        self.parent = None
 
     def update(self, delta):
         """Updates the game object. Delta time is in ms."""
         super().update()
         self.transform()
+
+        for attachment in self.attachments:
+            t = Transform(self.pos, self.heading)
+
+            attachment_pos = t.apply(attachment.offset)
+            attachment.game_object.set_pos(attachment_pos)
+            attachment.game_object.set_heading(self.heading)
 
     def transform(self):
         """Transforms the object based on current heading, scale, and position."""
@@ -54,3 +64,15 @@ class GameObject(pygame.sprite.Sprite):
     def kill_when_off_screen(self):
         """This can be used by the Sprite Group to know if the object should be killed when it goes off screen."""
         return False
+
+    def attach(self, game_object, offset):
+        self.attachments.append(Attachment(game_object, offset))
+        game_object.parent = self
+        self.groups()[0].add(game_object)
+
+
+class Attachment():
+
+    def __init__(self, game_object, offset):
+        self.game_object = game_object
+        self.offset = offset
