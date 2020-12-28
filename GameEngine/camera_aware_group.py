@@ -25,14 +25,6 @@ class CameraAwareGroup(pygame.sprite.LayeredUpdates):
         super().update(*args)
         self.handle_collisions()
 
-#         self.cam[0] += self.x_inc
-#         if self.cam[0] <= 0 or self.cam[0] >= 100:
-#             self.x_inc *= -1
-#         self.cam[1] -= self.y_inc
-#         if self.cam[1] < 0 or self.cam[1] > 100:
-#             self.y_inc *= -1
-#         print(self.cam)
-
         if self.target:
             # Keep the view_rect centered with the target's rect center
             x = -self.target.rect.center[0] + self.view_rect.width / 2.0
@@ -71,9 +63,6 @@ class CameraAwareGroup(pygame.sprite.LayeredUpdates):
                 if sprite.kill_when_off_screen():
                     sprite.kill()
             else:
-#                 from turret import Turret
-#                 if isinstance(sprite, Turret):
-#                     print(transformed_rect, sprite.pos, sprite.rect)
                 surface.blit(sprite.image, transformed_rect)
 
     def handle_collisions(self):
@@ -83,7 +72,7 @@ class CameraAwareGroup(pygame.sprite.LayeredUpdates):
                 if sprite != self.target and not isinstance(sprite, AnimatedTexture):
                     collision = pygame.sprite.collide_mask(self.target, sprite)
                     if collision:
-                        self.target.collide(sprite, collision)
+                        self.target.collide(sprite, pygame.Vector2(self.target.rect.topleft) + collision)
                         sprite.kill()
 
     def __draw_grid(self, surface):

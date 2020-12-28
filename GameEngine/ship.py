@@ -31,9 +31,10 @@ class Ship(GameObject):
         self.velocity = velocity
 
     def collide(self, collider, local_pos):
-        explosion = AnimatedTexture(self.explosion_atlas, 750)
-        group = self.groups()[0]
-        group.add(explosion)
-        group.move_to_front(explosion)
-        explosion.set_pos(collider.pos)
-        explosion.play()
+        if self.explosion_atlas:
+            explosion = AnimatedTexture(self.explosion_atlas, 750)
+            group = self.groups()[0]
+            group.add(explosion)
+            group.move_to_front(explosion)
+            explosion.set_pos(local_pos)
+            explosion.play()
