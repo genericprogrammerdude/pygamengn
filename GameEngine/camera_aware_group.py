@@ -1,6 +1,5 @@
 import math
 import pygame
-from animated_texture import AnimatedTexture
 
 
 class CameraAwareGroup(pygame.sprite.LayeredUpdates):
@@ -16,9 +15,6 @@ class CameraAwareGroup(pygame.sprite.LayeredUpdates):
         self.grid_interval = grid_interval
         if self.target:
             self.add(target)
-
-        self.x_inc = 1.1
-        self.y_inc = 0.7
 
     def update(self, *args):
         """Updates itself and its sprites."""
@@ -51,14 +47,22 @@ class CameraAwareGroup(pygame.sprite.LayeredUpdates):
                 surface.blit(sprite.image, transformed_rect)
 
     def handle_collisions(self):
+        """Checks for collisions."""
         if self.target:
-            collisions = pygame.sprite.spritecollide(self.target, self, False)
+            collisions = pygame.sprite.spritecollide(self.target, self, False, self.sprites_collided)
             for sprite in collisions:
-                if sprite != self.target and not isinstance(sprite, AnimatedTexture):
-                    collision = pygame.sprite.collide_mask(self.target, sprite)
-                    if collision:
-                        self.target.collide(pygame.Vector2(self.target.rect.topleft) + collision)
-                        sprite.kill()
+                collision = pygame.sprite.collide_mask(self.target, sprite)
+                if collision:
+                    self.target.collide(pygame.Vector2(self.target.rect.topleft) + collision)
+                    sprite.kill()
+
+    def sprites_collided(self, a, b):
+        """Checks whether sprites a and b should have collision detection run between the two."""
+        if a == b:
+            return False
+        if not (a.is_collidable and b.is_collidable):
+            return False
+        return True
 
     def __draw_grid(self, surface):
         """Draws a grid as a background."""
