@@ -5,9 +5,9 @@ from projectile import Projectile
 class Turret(GameObject):
     """Turret that will fire at the given target."""
 
-    def __init__(self, base_image_fname, laser_image_fname):
-        super().__init__(base_image_fname)
-        self.laser_image_fname = laser_image_fname
+    def __init__(self, turret_image, projectile_image):
+        super().__init__(turret_image)
+        self.projectile_image = projectile_image
         self.target = None
         self.fire_freq = 1000
         self.time_since_last_fire = 0
@@ -28,7 +28,7 @@ class Turret(GameObject):
         fire_dir = self.target.pos - self.pos
         _, heading = fire_dir.as_polar()
 
-        projectile = Projectile(self.laser_image_fname)
+        projectile = Projectile(self.projectile_image)
         projectile.set_pos(self.pos)
         projectile.set_heading(270 - heading)
         projectile.transform()

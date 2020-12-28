@@ -6,7 +6,7 @@ from game_object import GameObject
 class AnimatedTexture(GameObject):
 
     def __init__(self, atlas, duration):
-        super().__init__(atlas.frames[0])
+        super().__init__(atlas.frames[0], False)
         self.atlas = atlas
         self.duration = duration
         self.animation_time = 0

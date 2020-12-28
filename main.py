@@ -13,8 +13,9 @@ def main():
     screen_rect = screen.get_rect()
 
     # Create player
+    explosion_atlas = Atlas("Assets/Explosions/explosion1.png", (256, 256))
     ship_image = pygame.image.load("Assets/SpaceShooterRedux/PNG/playerShip2_blue.png").convert()
-    player = Ship(ship_image, 0.5)
+    player = Ship(ship_image, explosion_atlas, 0.5)
     player.set_pos(pygame.Vector2(screen_rect.width / 2.0, screen_rect.height / 2.0))
     player.set_scale(0.8)
     player.transform()
@@ -76,5 +77,6 @@ if __name__ == "__main__":
     from ship import Ship
     from camera_aware_group import CameraAwareGroup
     from turret import Turret
+    from atlas import Atlas
 
     main()

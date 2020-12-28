@@ -8,11 +8,11 @@ from game_object import GameObject
 class Ship(GameObject):
     """Space ship game object."""
 
-    def __init__(self, image_fname, velocity_decay_factor=1.0):
-        super().__init__(image_fname)
+    def __init__(self, image, explosion_atlas=None, velocity_decay_factor=1.0):
+        super().__init__(image)
         self.velocity = 0.0
         self.velocity_decay_factor = velocity_decay_factor
-        self.explosion_atlas = Atlas("Assets/Explosions/explosion1.png", (256, 256))
+        self.explosion_atlas = explosion_atlas
 
     def update(self, delta):
         """Updates the ship."""
