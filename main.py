@@ -6,16 +6,24 @@ def main():
 
     size = (1280, 720)
     background = 50, 50, 50
+    screen = pygame.display.set_mode(size, pygame.DOUBLEBUF | pygame.HWSURFACE)
+
+    # Load all the stuffs
+    explosion_atlas_image = pygame.image.load("Assets/Explosions/explosion1.png").convert_alpha()
+    ship_image = pygame.image.load("Assets/SpaceShooterRedux/PNG/playerShip2_blue.png").convert_alpha()
+    turret_image = pygame.image.load("Assets/SpaceShooterRedux/PNG/Parts/turretBase_big.png").convert_alpha()
+    turret_gun_image = pygame.image.load("Assets/SpaceShooterRedux/PNG/Parts/gun04.png").convert_alpha()
+    turret_image.blit(turret_gun_image, (12, -10))
+    projectile_image = pygame.image.load("Assets/SpaceShooterRedux/PNG/Lasers/laserRed06.png").convert_alpha()
 
     # Create world
-    screen = pygame.display.set_mode(size, pygame.DOUBLEBUF | pygame.HWSURFACE)
+    pygame.display.set_icon(ship_image)
+    pygame.display.set_caption("Game")
     world_rect = pygame.Rect(0, 0, size[0] * 2, size[1] * 2)
     screen_rect = screen.get_rect()
 
     # Create player
-    explosion_atlas_image = pygame.image.load("Assets/Explosions/explosion1.png").convert_alpha()
     explosion_atlas = Atlas(explosion_atlas_image, (256, 256))
-    ship_image = pygame.image.load("Assets/SpaceShooterRedux/PNG/playerShip2_blue.png").convert_alpha()
     player = Ship(ship_image, explosion_atlas, 0.5)
     player.set_pos(pygame.Vector2(screen_rect.width / 2.0, screen_rect.height / 2.0))
     player.set_scale(0.8)
@@ -24,10 +32,6 @@ def main():
     angular_velocity = 1.5
 
     # Create a turret
-    turret_image = pygame.image.load("Assets/SpaceShooterRedux/PNG/Parts/turretBase_big.png").convert_alpha()
-    turret_gun_image = pygame.image.load("Assets/SpaceShooterRedux/PNG/Parts/gun04.png").convert_alpha()
-    turret_image.blit(turret_gun_image, (12, -10))
-    projectile_image = pygame.image.load("Assets/SpaceShooterRedux/PNG/Lasers/laserRed06.png").convert_alpha()
     turret = Turret(turret_image, projectile_image)
     turret.set_scale(1.25)
     turret.set_pos(pygame.Vector2(screen_rect.width * 0.75, screen_rect.height * 0.75))
