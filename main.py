@@ -30,8 +30,10 @@ def main():
     linear_velocity = 200.0
     angular_velocity = 1.5
 
+    collision_group = pygame.sprite.Group()
+
     # Create a turret
-    turret = Turret(turret_image, projectile_image)
+    turret = Turret(turret_image, projectile_image, collision_group)
     turret.set_scale(1.25)
     turret.set_pos(pygame.Vector2(screen_rect.width * 0.75, screen_rect.height * 0.75))
     turret.set_target(player)
@@ -41,10 +43,14 @@ def main():
     game_objects.add(turret)
     game_objects.move_to_back(turret)
 
+    # Add player to collision group
+    collision_group.add(player)
+
     # Attach shield to player
     shield = GameObject(shield_image)
     shield.transform()
     player.attach(shield, (0, 0))
+    collision_group.add(shield)
 
     # Attach gun to turret
     turret_gun = GameObject(turret_gun_image)

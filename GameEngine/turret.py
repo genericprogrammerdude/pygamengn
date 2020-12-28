@@ -7,12 +7,13 @@ from projectile import Projectile
 class Turret(GameObject):
     """Turret that will fire at the given target."""
 
-    def __init__(self, turret_image, projectile_image):
+    def __init__(self, turret_image, projectile_image, enemies):
         super().__init__(turret_image)
         self.projectile_image = projectile_image
         self.target = None
         self.fire_freq = 1000
         self.time_since_last_fire = 0
+        self.enemies = enemies
 
     def set_target(self, target):
         """Sets the target to attack."""
@@ -31,7 +32,7 @@ class Turret(GameObject):
 
     def fire(self):
         """Fires a Projectile at the target."""
-        projectile = Projectile(self.projectile_image)
+        projectile = Projectile(self.projectile_image, enemies=self.enemies)
         projectile.set_pos(self.pos)
         projectile.set_heading(self.heading)
         projectile.transform()
