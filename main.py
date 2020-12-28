@@ -8,7 +8,7 @@ def main():
     background = 50, 50, 50
 
     # Create world
-    screen = pygame.display.set_mode(size)
+    screen = pygame.display.set_mode(size, pygame.DOUBLEBUF | pygame.HWSURFACE)
     world_rect = pygame.Rect(0, 0, size[0] * 2, size[1] * 2)
     screen_rect = screen.get_rect()
 
