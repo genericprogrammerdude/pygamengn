@@ -4,9 +4,8 @@ import pygame
 class Atlas():
     """Texture atlas that can be shared by GameObjects."""
 
-    def __init__(self, image_fname, frame_size):
+    def __init__(self, image, frame_size):
         # Build frame images from atlas
-        image = pygame.image.load(image_fname).convert()
         rect = image.get_rect()
         self.frame_size = frame_size
         self.frames = []
