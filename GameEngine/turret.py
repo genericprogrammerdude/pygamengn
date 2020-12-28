@@ -1,3 +1,5 @@
+import math
+
 from game_object import GameObject
 from projectile import Projectile
 
@@ -19,18 +21,19 @@ class Turret(GameObject):
     def update(self, delta):
         super().update(delta)
 
+        fire_dir = self.target.pos - self.pos
+        heading = math.degrees(math.atan2(fire_dir[0], fire_dir[1]) - math.pi)
+        self.set_heading(heading)
+
         self.time_since_last_fire = self.time_since_last_fire + delta
         if self.time_since_last_fire >= self.fire_freq and self.target != None:
             self.fire()
 
     def fire(self):
         """Fires a Projectile at the target."""
-        fire_dir = self.target.pos - self.pos
-        _, heading = fire_dir.as_polar()
-
         projectile = Projectile(self.projectile_image)
         projectile.set_pos(self.pos)
-        projectile.set_heading(270 - heading)
+        projectile.set_heading(self.heading)
         projectile.transform()
         projectile.set_velocity(500)
 
