@@ -1,5 +1,3 @@
-import pygame
-
 from game_object import GameObject
 
 
@@ -35,9 +33,6 @@ class AnimatedTexture(GameObject):
                 self.kill()
 
     def play(self):
-#         print(self.rect)
-#         self.rect.topleft = self.pos
-#         print(self.rect)
         self.is_playing = True
 
     def reset(self):
