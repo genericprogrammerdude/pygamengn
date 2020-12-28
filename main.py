@@ -14,7 +14,6 @@ def main():
     shield_image = pygame.image.load("Assets/SpaceShooterRedux/PNG/Effects/shield1.png").convert_alpha()
     turret_image = pygame.image.load("Assets/SpaceShooterRedux/PNG/Parts/turretBase_big.png").convert_alpha()
     turret_gun_image = pygame.image.load("Assets/SpaceShooterRedux/PNG/Parts/gun04.png").convert_alpha()
-    turret_image.blit(turret_gun_image, (12, -10))
     projectile_image = pygame.image.load("Assets/SpaceShooterRedux/PNG/Lasers/laserRed06.png").convert_alpha()
 
     # Create world
@@ -41,9 +40,15 @@ def main():
     game_objects = CameraAwareGroup(player, world_rect, screen_rect, True)
     game_objects.add(turret)
     game_objects.move_to_back(turret)
+
+    # Attach shield to player
     shield = GameObject(shield_image)
     shield.transform()
     player.attach(shield, (0, 0))
+
+    # Attach gun to turret
+    turret_gun = GameObject(turret_gun_image)
+    turret.attach(turret_gun, (0, -15))
 
     clock = pygame.time.Clock()
     running = True
