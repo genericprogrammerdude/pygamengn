@@ -72,7 +72,7 @@ class CameraAwareGroup(pygame.sprite.LayeredUpdates):
                 if sprite != self.target and not isinstance(sprite, AnimatedTexture):
                     collision = pygame.sprite.collide_mask(self.target, sprite)
                     if collision:
-                        self.target.collide(sprite, pygame.Vector2(self.target.rect.topleft) + collision)
+                        self.target.collide(pygame.Vector2(self.target.rect.topleft) + collision)
                         sprite.kill()
 
     def __draw_grid(self, surface):

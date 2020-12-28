@@ -30,11 +30,11 @@ class Ship(GameObject):
         """Sets the ship's velocity in screen units per second."""
         self.velocity = velocity
 
-    def collide(self, collider, local_pos):
+    def collide(self, pos):
         if self.explosion_atlas:
             explosion = AnimatedTexture(self.explosion_atlas, 750)
             group = self.groups()[0]
             group.add(explosion)
             group.move_to_front(explosion)
-            explosion.set_pos(local_pos)
+            explosion.set_pos(pos)
             explosion.play()
