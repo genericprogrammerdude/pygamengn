@@ -13,7 +13,8 @@ def main():
     screen_rect = screen.get_rect()
 
     # Create player
-    player = Ship("Assets/SpaceShooterRedux/PNG/playerShip2_blue.png", 0.5)
+    ship_image = pygame.image.load("Assets/SpaceShooterRedux/PNG/playerShip2_blue.png").convert()
+    player = Ship(ship_image, 0.5)
     player.set_pos(pygame.Vector2(screen_rect.width / 2.0, screen_rect.height / 2.0))
     player.set_scale(0.8)
     player.transform()
@@ -21,8 +22,9 @@ def main():
     angular_velocity = 1.5
 
     # Create a turret
-    turret = Turret("Assets/SpaceShooterRedux/PNG/Parts/turretBase_big.png",
-                    "Assets/SpaceShooterRedux/PNG/Lasers/laserRed06.png")
+    turret_image = pygame.image.load("Assets/SpaceShooterRedux/PNG/Parts/turretBase_big.png").convert()
+    projectile_image = pygame.image.load("Assets/SpaceShooterRedux/PNG/Lasers/laserRed06.png").convert()
+    turret = Turret(turret_image, projectile_image)
     turret.set_pos(pygame.Vector2(screen_rect.width * 0.75, screen_rect.height * 0.75))
     turret.transform()
     turret.set_target(player)

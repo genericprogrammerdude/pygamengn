@@ -1,8 +1,8 @@
 import pygame
 
 from animated_texture import AnimatedTexture
+from atlas import Atlas
 from game_object import GameObject
-from transform import Transform
 
 
 class Ship(GameObject):
@@ -12,7 +12,7 @@ class Ship(GameObject):
         super().__init__(image_fname)
         self.velocity = 0.0
         self.velocity_decay_factor = velocity_decay_factor
-        self.explosion = AnimatedTexture("Assets/Explosions/explosion1.png", (256, 256), 750)
+        self.explosion_atlas = Atlas("Assets/Explosions/explosion1.png", (256, 256))
 
     def update(self, delta):
         """Updates the ship."""
@@ -31,10 +31,9 @@ class Ship(GameObject):
         self.velocity = velocity
 
     def collide(self, collider, local_pos):
-        if not self.explosion.is_playing:
-            group = self.groups()[0]
-            group.add(self.explosion)
-            group.move_to_front(self.explosion)
-            pos = Transform(theta=self.heading, translation=self.pos).apply(local_pos)
-            self.explosion.set_pos(self.pos)
-            self.explosion.play()
+        explosion = AnimatedTexture(self.explosion_atlas, 750)
+        group = self.groups()[0]
+        group.add(explosion)
+        group.move_to_front(explosion)
+        explosion.set_pos(collider.pos)
+        explosion.play()

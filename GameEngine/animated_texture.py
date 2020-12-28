@@ -5,21 +5,14 @@ from game_object import GameObject
 
 class AnimatedTexture(GameObject):
 
-    def __init__(self, image_fname, frame_size, duration):
-        super().__init__(image_fname, False)
-        self.frame_size = frame_size
+    def __init__(self, atlas, duration):
+        super().__init__(atlas.frames[0])
+        self.atlas = atlas
         self.duration = duration
         self.animation_time = 0
         self.is_playing = False
-
-        # Build frame images from atlas
-        self.frames = []
-        for y in range(0, self.rect.height, frame_size[1]):
-            for x in range(0, self.rect.width, frame_size[0]):
-                rect = pygame.Rect(x, y, frame_size[0], frame_size[1])
-                frame = self.image.subsurface(rect)
-                self.frames.append(frame)
-        self.image = self.frames[0]
+        self.image = self.atlas.frames[0]
+        self.rect = self.image.get_rect()
 
     def update(self, delta):
         super().update(delta)
@@ -27,18 +20,24 @@ class AnimatedTexture(GameObject):
         if self.is_playing:
             # Figure out which frame to use and set the image
             progress = 1.0 * self.animation_time / self.duration
-            frame_index = round(progress * len(self.frames))
-            if frame_index < len(self.frames):
-                self.image = self.frames[frame_index]
+            frame_index = round(progress * len(self.atlas.frames))
+            if frame_index < len(self.atlas.frames):
+                self.image = self.atlas.frames[frame_index]
 
-            self.rect.topleft = self.pos
+            self.rect = self.image.get_rect()
+            self.rect.x = self.pos[0] - round(self.image.get_rect().width / 2)
+            self.rect.y = self.pos[1] - round(self.image.get_rect().height / 2)
 
             # Update animation time
             self.animation_time = self.animation_time + delta
             if self.animation_time > self.duration:
                 self.reset()
+                self.kill()
 
     def play(self):
+#         print(self.rect)
+#         self.rect.topleft = self.pos
+#         print(self.rect)
         self.is_playing = True
 
     def reset(self):

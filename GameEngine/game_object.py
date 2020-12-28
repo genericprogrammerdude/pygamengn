@@ -4,11 +4,11 @@ import pygame
 class GameObject(pygame.sprite.Sprite):
     """Basic game object."""
 
-    def __init__(self, image_fname, is_collidable=True):
+    def __init__(self, image, is_collidable=True):
         super().__init__()
 
         # Set the image to use for this sprite.
-        self.image = pygame.image.load(image_fname).convert()
+        self.image = image
         self.image_original = self.image.copy()
         self.rect = self.image.get_rect()
         self.scale = 1.0
