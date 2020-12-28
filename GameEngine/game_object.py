@@ -25,7 +25,6 @@ class GameObject(pygame.sprite.Sprite):
         """Updates the game object. Delta time is in ms."""
         super().update()
         self.transform()
-
         for attachment in self.attachments:
             t = Transform(self.pos, self.heading)
 
@@ -40,7 +39,7 @@ class GameObject(pygame.sprite.Sprite):
             self.image = pygame.transform.rotozoom(self.image_original, self.heading, self.scale)
             self.rect = self.image.get_rect()
             if self.is_collidable:
-                self.mask = pygame.mask.from_surface(self.image)
+                self.mask = pygame.mask.from_surface(self.image, 64)
             self.dirty_image = False
 
         # Translate

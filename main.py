@@ -11,6 +11,7 @@ def main():
     # Load all the stuffs
     explosion_atlas_image = pygame.image.load("Assets/Explosions/explosion1.png").convert_alpha()
     ship_image = pygame.image.load("Assets/SpaceShooterRedux/PNG/playerShip2_blue.png").convert_alpha()
+    shield_image = pygame.image.load("Assets/SpaceShooterRedux/PNG/Effects/shield1.png").convert_alpha()
     turret_image = pygame.image.load("Assets/SpaceShooterRedux/PNG/Parts/turretBase_big.png").convert_alpha()
     turret_gun_image = pygame.image.load("Assets/SpaceShooterRedux/PNG/Parts/gun04.png").convert_alpha()
     turret_image.blit(turret_gun_image, (12, -10))
@@ -40,7 +41,9 @@ def main():
     game_objects = CameraAwareGroup(player, world_rect, screen_rect, True)
     game_objects.add(turret)
     game_objects.move_to_back(turret)
-    player.attach(GameObject(turret_gun_image), (0, -50))
+    shield = GameObject(shield_image)
+    shield.transform()
+    player.attach(shield, (0, 0))
 
     clock = pygame.time.Clock()
     running = True
