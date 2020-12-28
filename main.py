@@ -13,8 +13,9 @@ def main():
     screen_rect = screen.get_rect()
 
     # Create player
-    explosion_atlas = Atlas("Assets/Explosions/explosion1.png", (256, 256))
-    ship_image = pygame.image.load("Assets/SpaceShooterRedux/PNG/playerShip2_blue.png").convert()
+    explosion_atlas_image = pygame.image.load("Assets/Explosions/explosion1.png").convert_alpha()
+    explosion_atlas = Atlas(explosion_atlas_image, (256, 256))
+    ship_image = pygame.image.load("Assets/SpaceShooterRedux/PNG/playerShip2_blue.png").convert_alpha()
     player = Ship(ship_image, explosion_atlas, 0.5)
     player.set_pos(pygame.Vector2(screen_rect.width / 2.0, screen_rect.height / 2.0))
     player.set_scale(0.8)
@@ -23,9 +24,12 @@ def main():
     angular_velocity = 1.5
 
     # Create a turret
-    turret_image = pygame.image.load("Assets/SpaceShooterRedux/PNG/Parts/turretBase_big.png").convert()
-    projectile_image = pygame.image.load("Assets/SpaceShooterRedux/PNG/Lasers/laserRed06.png").convert()
+    turret_image = pygame.image.load("Assets/SpaceShooterRedux/PNG/Parts/turretBase_big.png").convert_alpha()
+    turret_gun_image = pygame.image.load("Assets/SpaceShooterRedux/PNG/Parts/gun04.png").convert_alpha()
+    turret_image.blit(turret_gun_image, (12, -10))
+    projectile_image = pygame.image.load("Assets/SpaceShooterRedux/PNG/Lasers/laserRed06.png").convert_alpha()
     turret = Turret(turret_image, projectile_image)
+    turret.set_scale(1.25)
     turret.set_pos(pygame.Vector2(screen_rect.width * 0.75, screen_rect.height * 0.75))
     turret.transform()
     turret.set_target(player)
