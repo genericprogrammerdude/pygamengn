@@ -39,9 +39,9 @@ def main():
     turret.set_target(player)
 
     # Add player and turret to group of game objects
-    game_objects = CameraAwareGroup(player, world_rect, screen_rect, True)
-    game_objects.add(turret)
-    game_objects.move_to_back(turret)
+    render_group = RenderGroup(player, world_rect, screen_rect, True)
+    render_group.add(turret)
+    render_group.move_to_back(turret)
 
     # Add player to collision group
     collision_group.add(player)
@@ -80,11 +80,11 @@ def main():
             player.set_velocity(player.velocity * 0.8)
 
         # Update groups
-        game_objects.update(clock.get_time())
+        render_group.update(clock.get_time())
 
         # Render
         screen.fill(background)
-        game_objects.draw(screen)
+        render_group.draw(screen)
         pygame.display.flip()
 
         clock.tick(60)
@@ -96,7 +96,7 @@ if __name__ == "__main__":
     from sys import path
     path.append(r"./GameEngine")
     from ship import Ship
-    from camera_aware_group import CameraAwareGroup
+    from render_group import RenderGroup
     from turret import Turret
     from atlas import Atlas
     from game_object import GameObject

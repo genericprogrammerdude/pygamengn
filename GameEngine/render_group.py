@@ -2,7 +2,7 @@ import math
 import pygame
 
 
-class CameraAwareGroup(pygame.sprite.LayeredUpdates):
+class RenderGroup(pygame.sprite.LayeredUpdates):
 
     def __init__(self, target, world_rect, view_rect, grid_draw=False, grid_color=(100, 100, 100), grid_interval=100):
         super().__init__()
