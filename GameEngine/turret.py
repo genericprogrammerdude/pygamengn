@@ -7,13 +7,14 @@ from projectile import Projectile
 class Turret(GameObject):
     """Turret that will fire at the given target."""
 
-    def __init__(self, turret_image, projectile_image, enemies):
+    def __init__(self, turret_image, projectile_image, enemies, explosion_atlas):
         super().__init__(turret_image)
         self.projectile_image = projectile_image
         self.target = None
         self.fire_freq = 1000
-        self.time_since_last_fire = 0
+        self.time_since_last_fire = self.fire_freq
         self.enemies = enemies
+        self.explosion_atlas = explosion_atlas
 
     def set_target(self, target):
         """Sets the target to attack."""
@@ -22,17 +23,22 @@ class Turret(GameObject):
     def update(self, delta):
         super().update(delta)
 
-        fire_dir = self.target.pos - self.pos
-        heading = math.degrees(math.atan2(fire_dir[0], fire_dir[1]) - math.pi)
-        self.set_heading(heading)
+        if self.target:
+            if self.target.alive():
+                fire_dir = self.target.pos - self.pos
+                heading = math.degrees(math.atan2(fire_dir[0], fire_dir[1]) - math.pi)
+                self.set_heading(heading)
 
-        self.time_since_last_fire = self.time_since_last_fire + delta
-        if self.time_since_last_fire >= self.fire_freq and self.target != None:
-            self.fire()
+                self.time_since_last_fire = self.time_since_last_fire + delta
+                if self.time_since_last_fire >= self.fire_freq:
+                    self.fire()
+            else:
+                self.time_since_last_fire = self.fire_freq
+                self.target = None
 
     def fire(self):
         """Fires a Projectile at the target."""
-        projectile = Projectile(self.projectile_image, enemies=self.enemies)
+        projectile = Projectile(self.projectile_image, enemies=self.enemies, explosion_atlas=self.explosion_atlas)
         projectile.set_pos(self.pos)
         projectile.set_heading(self.heading)
         projectile.transform()

@@ -20,6 +20,7 @@ class GameObject(pygame.sprite.Sprite):
         self.mask = None  # The mask will be built on the first transform()
         self.attachments = []
         self.parent = None
+        self.health = 100
 
     def update(self, delta):
         """Updates the game object. Delta time is in ms."""
@@ -65,9 +66,20 @@ class GameObject(pygame.sprite.Sprite):
         return False
 
     def attach(self, game_object, offset):
+        """Attaches a game object to this game object at the give offset."""
         self.attachments.append(Attachment(game_object, offset))
         game_object.parent = self
-        self.groups()[0].add(game_object)
+        for group in self.groups():
+            group.add(game_object)
+
+    def take_damage(self, damage):
+        """Takes damage for this game object."""
+        self.health -= damage
+        if self.health <= 0:
+            self.die()
+
+    def die(self):
+        self.kill()
 
 
 class Attachment():

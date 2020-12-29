@@ -23,8 +23,7 @@ def main():
     screen_rect = screen.get_rect()
 
     # Create player
-    explosion_atlas = Atlas(explosion_atlas_image, (256, 256))
-    player = Ship(ship_image, explosion_atlas, 0.5)
+    player = Ship(ship_image, 0.5)
     player.set_pos(pygame.Vector2(screen_rect.width / 2.0, screen_rect.height / 2.0))
     player.set_scale(0.8)
     linear_velocity = 200.0
@@ -33,7 +32,8 @@ def main():
     collision_group = pygame.sprite.Group()
 
     # Create a turret
-    turret = Turret(turret_image, projectile_image, collision_group)
+    explosion_atlas = Atlas(explosion_atlas_image, (256, 256))
+    turret = Turret(turret_image, projectile_image, collision_group, explosion_atlas)
     turret.set_scale(1.25)
     turret.set_pos(pygame.Vector2(screen_rect.width * 0.75, screen_rect.height * 0.75))
     turret.set_target(player)
@@ -42,6 +42,7 @@ def main():
     render_group = RenderGroup(player, world_rect, screen_rect, True)
     render_group.add(turret)
     render_group.move_to_back(turret)
+    GameObject.render_group = render_group
 
     # Add player to collision group
     collision_group.add(player)
