@@ -1,13 +1,12 @@
 import pygame
 
 from animated_texture import AnimatedTexture
-from game_object import GameObject
 from ship import Ship
 
 
 class Projectile(Ship):
 
-    def __init__(self, image, velocity_decay_factor=1.0, explosion_atlas=None, enemies=None, damage=5):
+    def __init__(self, image, velocity_decay_factor=1.0, explosion_atlas=None, enemies=None, damage=10):
         super().__init__(image, velocity_decay_factor)
         self.explosion_atlas = explosion_atlas
         self.enemies = enemies
@@ -48,7 +47,7 @@ class Projectile(Ship):
         """Die. Plays an explosion if it was given an atlas for  the AnimatedTexture."""
         if self.explosion_atlas:
             explosion = AnimatedTexture(self.explosion_atlas, 750)
-            group = GameObject.render_group
+            group = self.groups()[0]
             group.add(explosion)
             group.move_to_front(explosion)
             explosion.set_pos(self.pos)

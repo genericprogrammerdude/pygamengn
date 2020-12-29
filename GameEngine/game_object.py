@@ -40,7 +40,7 @@ class GameObject(pygame.sprite.Sprite):
             self.image = pygame.transform.rotozoom(self.image_original, self.heading, self.scale)
             self.rect = self.image.get_rect()
             if self.is_collidable:
-                self.mask = pygame.mask.from_surface(self.image, 64)
+                self.mask = pygame.mask.from_surface(self.image, 16)
             self.dirty_image = False
 
         # Translate
@@ -49,7 +49,7 @@ class GameObject(pygame.sprite.Sprite):
 
     def set_scale(self, scale):
         """Sets the scale of the sprite."""
-        self.dirty_image = (self.scale != scale)
+        self.dirty_image = self.dirty_image or self.scale != scale
         self.scale = scale
 
     def set_pos(self, pos):
@@ -58,8 +58,14 @@ class GameObject(pygame.sprite.Sprite):
 
     def set_heading(self, heading):
         """Sets the orientation of the game object."""
-        self.dirty_image = (self.heading != heading)
+        self.dirty_image = self.dirty_image or self.heading != heading
         self.heading = heading
+
+    def set_image(self, image):
+        """Sets a new image for the game object."""
+        self.image = image
+        self.image_original = image
+        self.dirty_image = True
 
     def kill_when_off_screen(self):
         """This can be used by the Sprite Group to know if the object should be killed when it goes off screen."""
@@ -71,6 +77,7 @@ class GameObject(pygame.sprite.Sprite):
         game_object.parent = self
         for group in self.groups():
             group.add(game_object)
+        # self.groups()[0].move_to_front(game_object)
 
     def take_damage(self, damage):
         """Takes damage for this game object."""

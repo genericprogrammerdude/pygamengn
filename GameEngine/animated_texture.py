@@ -1,3 +1,5 @@
+import pygame
+
 from game_object import GameObject
 
 
@@ -21,6 +23,12 @@ class AnimatedTexture(GameObject):
             frame_index = round(progress * len(self.atlas.frames))
             if frame_index < len(self.atlas.frames):
                 self.image = self.atlas.frames[frame_index]
+                if self.scale != 1:
+                    self.image = pygame.transform.scale(self.image,
+                                                        (self.image.get_rect().width * self.scale,
+                                                        self.image.get_rect().height * self.scale))
+                    print("WARNING! Scaling atlas frames!")
+                self.rect = self.image.get_rect()
 
             self.rect = self.image.get_rect()
             self.rect.x = self.pos[0] - round(self.image.get_rect().width / 2)

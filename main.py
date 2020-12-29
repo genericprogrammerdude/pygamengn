@@ -1,4 +1,14 @@
+from sys import path
+path.append("./GameEngine")
+
 import pygame
+
+from atlas import Atlas
+from game_object import GameObject
+from render_group import RenderGroup
+from shield import Shield
+from ship import Ship
+from turret import Turret
 
 
 def main():
@@ -11,7 +21,11 @@ def main():
     # Load all the stuffs
     explosion_atlas_image = pygame.image.load("Assets/Explosions/explosion1.png").convert_alpha()
     ship_image = pygame.image.load("Assets/SpaceShooterRedux/PNG/playerShip2_blue.png").convert_alpha()
-    shield_image = pygame.image.load("Assets/SpaceShooterRedux/PNG/Effects/shield1.png").convert_alpha()
+    shield_images = [
+        pygame.image.load("Assets/SpaceShooterRedux/PNG/Effects/shield3.png").convert_alpha(),
+        pygame.image.load("Assets/SpaceShooterRedux/PNG/Effects/shield2.png").convert_alpha(),
+        pygame.image.load("Assets/SpaceShooterRedux/PNG/Effects/shield1.png").convert_alpha()
+    ]
     turret_image = pygame.image.load("Assets/SpaceShooterRedux/PNG/Parts/turretBase_big.png").convert_alpha()
     turret_gun_image = pygame.image.load("Assets/SpaceShooterRedux/PNG/Parts/gun04.png").convert_alpha()
     projectile_image = pygame.image.load("Assets/SpaceShooterRedux/PNG/Lasers/laserRed06.png").convert_alpha()
@@ -42,13 +56,12 @@ def main():
     render_group = RenderGroup(player, world_rect, screen_rect, True)
     render_group.add(turret)
     render_group.move_to_back(turret)
-    GameObject.render_group = render_group
 
     # Add player to collision group
     collision_group.add(player)
 
     # Attach shield to player
-    shield = GameObject(shield_image)
+    shield = Shield(shield_images)
     shield.transform()
     player.attach(shield, (0, 0))
     collision_group.add(shield)
@@ -94,12 +107,4 @@ def main():
 
 
 if __name__ == "__main__":
-    from sys import path
-    path.append(r"./GameEngine")
-    from ship import Ship
-    from render_group import RenderGroup
-    from turret import Turret
-    from atlas import Atlas
-    from game_object import GameObject
-
     main()
