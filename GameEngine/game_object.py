@@ -64,7 +64,7 @@ class GameObject(pygame.sprite.Sprite):
     def set_image(self, image):
         """Sets a new image for the game object."""
         self.image = image
-        self.image_original = image
+        self.image_original = self.image.copy()
         self.dirty_image = True
 
     def kill_when_off_screen(self):
