@@ -84,6 +84,8 @@ class GameObject(pygame.sprite.Sprite):
         self.health -= damage
         if self.health <= 0:
             self.die()
+            for attachment in self.attachments:
+                attachment.game_object.take_damage(attachment.game_object.health)
 
     def die(self):
         self.kill()
