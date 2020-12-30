@@ -1,4 +1,5 @@
 from _py_abc import ABCMeta
+from abc import abstractmethod
 import sys
 from typing import Callable
 
@@ -7,6 +8,17 @@ import pygame
 
 class GameObjectBase(metaclass=ABCMeta):
     """Base class for GameObject."""
+
+#     def __init__(self, **kwargs):
+#         pass
+
+#     @abstractmethod
+#     def set_pos(self, pos: pygame.Vector2):
+#         pass
+#
+#     @abstractmethod
+#     def set_scale(self, scale: float):
+#         pass
 
 
 class GameObjectFactory():
@@ -51,21 +63,41 @@ class GameObjectFactory():
         }
         for key in cls.assets.keys():
             asset_spec = cls.assets[key]
-            asset_spec["asset"] = GameObjectFactory.create_object(asset_spec)
+            asset_spec["asset"] = GameObjectFactory.__create_object(asset_spec)
 
         cls.game_types = {
             "PlayerShip": {
                 "class_name": "Ship",
                 "kwargs": {
                     "image": cls.images["ship"],
-                    "velocity_decay_factor": 0.9
-                }
+                    "velocity_decay_factor": 0.9,
+                    "scale": 0.8
+                },
+                "attachments": [
+                    {
+                        "game_type": "PlayerShield",
+                        "offset": pygame.Vector2(0.0, 0.0)
+                    }
+                ]
             },
             "EnemyTurret": {
                 "class_name": "Turret",
                 "kwargs": {
                     "image": cls.images["turret"],
-                    "projectile_type": "EnemyTurretProjectile"
+                    "projectile_type": "EnemyTurretProjectile",
+                    "scale": 1.25
+                },
+                "attachments": [
+                    {
+                        "game_type": "EnemyTurretGun",
+                        "offset": pygame.Vector2(0.0, -15.0)
+                    }
+                ]
+            },
+            "EnemyTurretGun": {
+                "class_name": "GameObject",
+                "kwargs": {
+                    "image": cls.images["turret_gun"]
                 }
             },
             "EnemyTurretProjectile": {
@@ -82,6 +114,12 @@ class GameObjectFactory():
                     "atlas": cls.assets["explosion_atlas"]["asset"],
                     "duration": 750
                 }
+            },
+            "PlayerShield": {
+                "class_name": "Shield",
+                "kwargs": {
+                    "images": cls.images["shield"]
+                }
             }
         }
 
@@ -94,10 +132,17 @@ class GameObjectFactory():
             sys.stderr.write("Game type '{0}' not found.\n".format(name))
             return None
 
-        return GameObjectFactory.create_object(game_type, **kwargs)
+        # Create attachments first
+        try:
+            for attachment in game_type["attachments"]:
+                print(attachment)
+        except KeyError:
+            print("No attachments")
+
+        return GameObjectFactory.__create_object(game_type, **kwargs)
 
     @classmethod
-    def create_object(cls, type_spec, **kwargs):
+    def __create_object(cls, type_spec, **kwargs) -> GameObjectBase:
         try:
             gob_class = cls.registry[type_spec["class_name"]]
             gob = gob_class(**type_spec["kwargs"], **kwargs)

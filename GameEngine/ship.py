@@ -8,8 +8,8 @@ from projectile import Projectile
 class Ship(GameObject):
     """Space ship game object."""
 
-    def __init__(self, image, velocity_decay_factor):
-        super().__init__(image)
+    def __init__(self, image, velocity_decay_factor, **kwargs):
+        super().__init__(image, **kwargs)
         self.mover = MoverVelocity(velocity_decay_factor)
 
     def update(self, delta):

@@ -9,14 +9,14 @@ from transform import Transform
 class GameObject(pygame.sprite.Sprite, GameObjectBase):
     """Basic game object."""
 
-    def __init__(self, image, is_collidable=True):
+    def __init__(self, image, is_collidable=True, scale=1.0):
         super().__init__()
 
         # Set the image to use for this sprite.
         self.image = image
         self.image_original = self.image.copy()
         self.rect = self.image.get_rect()
-        self.scale = 1.0
+        self.scale = scale
         self.heading = 0.0
         self.pos = pygame.math.Vector2(0.0, 0.0)
         self.dirty_image = True

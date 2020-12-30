@@ -8,8 +8,8 @@ from game_object_factory import GameObjectFactory
 class Turret(GameObject):
     """Turret that will fire at the given target."""
 
-    def __init__(self, turret_image, projectile_type, enemies):
-        super().__init__(turret_image)
+    def __init__(self, image, projectile_type, enemies, **kwargs):
+        super().__init__(image, **kwargs)
         self.projectile_type = projectile_type
         self.target = None
         self.fire_freq = 1000

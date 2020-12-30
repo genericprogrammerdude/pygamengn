@@ -3,7 +3,6 @@ path.append("./GameEngine")
 
 import pygame
 
-from atlas import Atlas
 from game_object import GameObject
 from game_object_factory import GameObjectFactory
 from render_group import RenderGroup
@@ -22,15 +21,7 @@ def main():
     GameObjectFactory.initialize()
 
     # Load all the stuffs
-    explosion_atlas_image = pygame.image.load("Assets/Explosions/explosion1.png").convert_alpha()
-    shield_images = [
-        pygame.image.load("Assets/SpaceShooterRedux/PNG/Effects/shield3.png").convert_alpha(),
-        pygame.image.load("Assets/SpaceShooterRedux/PNG/Effects/shield2.png").convert_alpha(),
-        pygame.image.load("Assets/SpaceShooterRedux/PNG/Effects/shield1.png").convert_alpha()
-    ]
-    turret_image = pygame.image.load("Assets/SpaceShooterRedux/PNG/Parts/turretBase_big.png").convert_alpha()
     turret_gun_image = pygame.image.load("Assets/SpaceShooterRedux/PNG/Parts/gun04.png").convert_alpha()
-    projectile_image = pygame.image.load("Assets/SpaceShooterRedux/PNG/Lasers/laserRed06.png").convert_alpha()
 
     # Create world
     pygame.display.set_icon(GameObjectFactory.images["ship"])
@@ -41,15 +32,13 @@ def main():
     # Create player
     player = GameObjectFactory.create("PlayerShip")
     player.set_pos(pygame.Vector2(screen_rect.width / 2.0, screen_rect.height / 2.0))
-    player.set_scale(0.8)
     linear_velocity = 200.0
     angular_velocity = 1.5
 
     collision_group = pygame.sprite.Group()
 
     # Create a turret
-    turret = Turret(turret_image, "EnemyTurretProjectile", collision_group)
-    turret.set_scale(1.25)
+    turret = GameObjectFactory.create("EnemyTurret", enemies=collision_group)
     turret.set_pos(pygame.Vector2(screen_rect.width * 0.75, screen_rect.height * 0.75))
     turret.set_target(player)
 
@@ -62,14 +51,14 @@ def main():
     collision_group.add(player)
 
     # Attach shield to player
-    shield = Shield(shield_images)
+    shield = GameObjectFactory.create("PlayerShield")
     shield.transform()
     player.attach(shield, (0, 0))
     collision_group.add(shield)
 
     # Attach gun to turret
     turret_gun = GameObject(turret_gun_image)
-    turret.attach(turret_gun, (0, -15))
+#     turret.attach(turret_gun, (0, -15))
 
     clock = pygame.time.Clock()
     running = True
@@ -92,7 +81,7 @@ def main():
         if pressed_keys[pygame.K_e]:
             player.set_velocity(linear_velocity)
         if pressed_keys[pygame.K_d]:
-            player.set_velocity(player.velocity * 0.8)
+            player.set_velocity(player.mover.velocity * 0.8)
 
         # Update groups
         render_group.update(clock.get_time())
