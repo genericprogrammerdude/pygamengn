@@ -1,8 +1,10 @@
 from game_object import GameObject
+from game_object_factory import GameObjectFactory
 from mover import MoverVelocity
 from projectile import Projectile
 
 
+@GameObjectFactory.register("Ship")
 class Ship(GameObject):
     """Space ship game object."""
 

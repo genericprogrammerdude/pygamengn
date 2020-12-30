@@ -1,8 +1,12 @@
 import pygame
+
+from game_object_factory import GameObjectBase
+from game_object_factory import GameObjectFactory
 from transform import Transform
 
 
-class GameObject(pygame.sprite.Sprite):
+@GameObjectFactory.register("GameObject")
+class GameObject(pygame.sprite.Sprite, GameObjectBase):
     """Basic game object."""
 
     def __init__(self, image, is_collidable=True):

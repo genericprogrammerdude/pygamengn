@@ -5,6 +5,7 @@ import pygame
 
 from atlas import Atlas
 from game_object import GameObject
+from game_object_factory import GameObjectFactory
 from render_group import RenderGroup
 from shield import Shield
 from ship import Ship
@@ -17,6 +18,8 @@ def main():
     size = (1280, 720)
     background = 50, 50, 50
     screen = pygame.display.set_mode(size, pygame.DOUBLEBUF | pygame.HWSURFACE)
+
+    GameObjectFactory.initialize()
 
     # Load all the stuffs
     explosion_atlas_image = pygame.image.load("Assets/Explosions/explosion1.png").convert_alpha()
@@ -37,7 +40,7 @@ def main():
     screen_rect = screen.get_rect()
 
     # Create player
-    player = Ship(ship_image, 0.9)
+    player = GameObjectFactory.create("PlayerShip")
     player.set_pos(pygame.Vector2(screen_rect.width / 2.0, screen_rect.height / 2.0))
     player.set_scale(0.8)
     linear_velocity = 200.0
