@@ -1,13 +1,15 @@
 import pygame
 
 from animated_texture import AnimatedTexture
-from ship import Ship
+from game_object import GameObject
+from mover import MoverVelocity
 
 
-class Projectile(Ship):
+class Projectile(GameObject):
 
     def __init__(self, image, velocity_decay_factor=1.0, explosion_atlas=None, enemies=None, damage=10):
-        super().__init__(image, velocity_decay_factor)
+        super().__init__(image)
+        self.mover = MoverVelocity(velocity_decay_factor)
         self.explosion_atlas = explosion_atlas
         self.enemies = enemies
         self.damage = damage
@@ -17,6 +19,7 @@ class Projectile(Ship):
         return True
 
     def update(self, delta):
+        self.pos, self.heading = self.mover.move(delta, self.pos, self.heading)
         super().update(delta)
         self.handle_collisions()
 
@@ -53,3 +56,6 @@ class Projectile(Ship):
             explosion.set_pos(self.pos)
             explosion.play()
         super().die()
+
+    def set_velocity(self, velocity):
+        self.mover.set_velocity(velocity)

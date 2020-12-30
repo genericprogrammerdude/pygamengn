@@ -1,6 +1,5 @@
-import pygame
-
 from game_object import GameObject
+from mover import MoverVelocity
 
 
 class Ship(GameObject):
@@ -8,21 +7,15 @@ class Ship(GameObject):
 
     def __init__(self, image, velocity_decay_factor=1.0):
         super().__init__(image)
-        self.velocity = 0.0
-        self.velocity_decay_factor = velocity_decay_factor
+        self.mover = MoverVelocity(velocity_decay_factor)
 
     def update(self, delta):
         """Updates the ship."""
-
         # Translate according to velocity
-        delta_pos = pygame.math.Vector2()
-        delta_pos.from_polar((delta / -1000.0 * self.velocity, 90.0 - self.heading))
-        self.set_pos(self.pos + delta_pos)
-        self.velocity = self.velocity * self.velocity_decay_factor
-
+        self.pos, self.heading = self.mover.move(delta, self.pos, self.heading)
         # Now do the regular GameObject update
         super().update(delta)
 
     def set_velocity(self, velocity):
         """Sets the ship's velocity in screen units per second."""
-        self.velocity = velocity
+        self.mover.set_velocity(velocity)
