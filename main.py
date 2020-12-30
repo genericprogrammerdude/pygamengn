@@ -23,7 +23,6 @@ def main():
 
     # Load all the stuffs
     explosion_atlas_image = pygame.image.load("Assets/Explosions/explosion1.png").convert_alpha()
-    ship_image = pygame.image.load("Assets/SpaceShooterRedux/PNG/playerShip2_blue.png").convert_alpha()
     shield_images = [
         pygame.image.load("Assets/SpaceShooterRedux/PNG/Effects/shield3.png").convert_alpha(),
         pygame.image.load("Assets/SpaceShooterRedux/PNG/Effects/shield2.png").convert_alpha(),
@@ -34,7 +33,7 @@ def main():
     projectile_image = pygame.image.load("Assets/SpaceShooterRedux/PNG/Lasers/laserRed06.png").convert_alpha()
 
     # Create world
-    pygame.display.set_icon(ship_image)
+    pygame.display.set_icon(GameObjectFactory.images["ship"])
     pygame.display.set_caption("Game")
     world_rect = pygame.Rect(0, 0, size[0] * 2, size[1] * 2)
     screen_rect = screen.get_rect()

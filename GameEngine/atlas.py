@@ -1,7 +1,9 @@
 import pygame
 
+from game_object_factory import GameObjectBase
 
-class Atlas():
+
+class Atlas(GameObjectBase):
     """Texture atlas that can be shared by GameObjects."""
 
     def __init__(self, image, frame_size):

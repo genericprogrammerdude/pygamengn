@@ -27,25 +27,54 @@ class GameObjectFactory():
 
     @classmethod
     def initialize(cls):
+        load = pygame.image.load
         cls.images = {
-            "ship": pygame.image.load("Assets/SpaceShooterRedux/PNG/playerShip2_blue.png").convert_alpha(),
-            "explosion": pygame.image.load("Assets/Explosions/explosion1.png").convert_alpha(),
-            "ship": pygame.image.load("Assets/SpaceShooterRedux/PNG/playerShip2_blue.png").convert_alpha(),
+            "ship": load("Assets/SpaceShooterRedux/PNG/playerShip2_blue.png").convert_alpha(),
+            "explosion": load("Assets/Explosions/explosion1.png").convert_alpha(),
+            "ship": load("Assets/SpaceShooterRedux/PNG/playerShip2_blue.png").convert_alpha(),
             "shield": [
-                pygame.image.load("Assets/SpaceShooterRedux/PNG/Effects/shield3.png").convert_alpha(),
-                pygame.image.load("Assets/SpaceShooterRedux/PNG/Effects/shield2.png").convert_alpha(),
-                pygame.image.load("Assets/SpaceShooterRedux/PNG/Effects/shield1.png").convert_alpha()
+                load("Assets/SpaceShooterRedux/PNG/Effects/shield3.png").convert_alpha(),
+                load("Assets/SpaceShooterRedux/PNG/Effects/shield2.png").convert_alpha(),
+                load("Assets/SpaceShooterRedux/PNG/Effects/shield1.png").convert_alpha()
             ],
-            "turret": pygame.image.load("Assets/SpaceShooterRedux/PNG/Parts/turretBase_big.png").convert_alpha(),
-            "turret_gun": pygame.image.load("Assets/SpaceShooterRedux/PNG/Parts/gun04.png").convert_alpha(),
-            "projectile": pygame.image.load("Assets/SpaceShooterRedux/PNG/Lasers/laserRed06.png").convert_alpha(),
+            "turret": load("Assets/SpaceShooterRedux/PNG/Parts/turretBase_big.png").convert_alpha(),
+            "turret_gun": load("Assets/SpaceShooterRedux/PNG/Parts/gun04.png").convert_alpha(),
+            "turret_projectile": load("Assets/SpaceShooterRedux/PNG/Lasers/laserRed06.png").convert_alpha(),
         }
         cls.game_types = {
             "PlayerShip": {
                 "class_name": "Ship",
-                "ctor_kwargs": {
+                "kwargs": {
                     "image": cls.images["ship"],
                     "velocity_decay_factor": 0.9
+                }
+            },
+            "EnemyTurret": {
+                "class_name": "Turret",
+                "kwargs": {
+                    "image": cls.images["turret"],
+                    "projectile_type": "EnemyTurretProjectile"
+                }
+            },
+            "EnemyTurretProjectile": {
+                "class_name": "Projectile",
+                "kwargs": {
+                    "image": cls.images["turret_projectile"],
+                    "death_effect": "Explosion"
+                }
+            },
+            "Explosion": {
+                "class_name": "AnimatedTexture",
+                "kwargs": {
+                    "atlas": "ExplosionAtlas",
+                    "duration": 750
+                }
+            },
+            "ExplosionAtlas": {
+                "class_name": "Atlas",
+                "kwargs": {
+                    "image": cls.images["explosion"],
+                    "frame_size": (256, 256)
                 }
             }
         }
@@ -56,7 +85,7 @@ class GameObjectFactory():
         try:
             game_type = cls.game_types[name]
             gob_class = cls.registry[game_type["class_name"]]
-            gob = gob_class(**game_type["ctor_kwargs"])
+            gob = gob_class(**game_type["kwargs"])
             return gob
         except KeyError:
             print("Game type \'%s\' not found.".format(name))
