@@ -1,5 +1,5 @@
 from _py_abc import ABCMeta
-# from abc import abstractmethod
+import sys
 from typing import Callable
 
 import pygame
@@ -8,22 +8,19 @@ import pygame
 class GameObjectBase(metaclass=ABCMeta):
     """Base class for GameObject."""
 
-#     def __init__(self):
-#         """Class constructor."""
-#         pass
-#
-#     @abstractmethod
-#     def update(self, delta: int):
-#         """Updates the game object."""
-#         pass
-
 
 class GameObjectFactory():
-    """GameObject factory."""
+    """
+    GameObject factory.
+
+    The following article helped a lot on the details of the implementation of GameObjectFactory:
+    https://medium.com/@geoffreykoh/implementing-the-factory-pattern-via-dynamic-registry-and-python-decorators-479fc1537bbe
+    """
 
     registry = {}
     images = {}
     game_types = {}
+    assets = {}
 
     @classmethod
     def initialize(cls):
@@ -41,6 +38,21 @@ class GameObjectFactory():
             "turret_gun": load("Assets/SpaceShooterRedux/PNG/Parts/gun04.png").convert_alpha(),
             "turret_projectile": load("Assets/SpaceShooterRedux/PNG/Lasers/laserRed06.png").convert_alpha(),
         }
+
+        cls.assets = {
+            "explosion_atlas": {
+                "class_name": "Atlas",
+                "kwargs": {
+                    "image": cls.images["explosion"],
+                    "frame_size": (256, 256)
+                },
+                "asset": None
+            }
+        }
+        for key in cls.assets.keys():
+            asset_spec = cls.assets[key]
+            asset_spec["asset"] = GameObjectFactory.create_object(asset_spec)
+
         cls.game_types = {
             "PlayerShip": {
                 "class_name": "Ship",
@@ -60,35 +72,38 @@ class GameObjectFactory():
                 "class_name": "Projectile",
                 "kwargs": {
                     "image": cls.images["turret_projectile"],
-                    "death_effect": "Explosion"
+                    "death_effect": "Explosion",
+                    "damage": 10
                 }
             },
             "Explosion": {
                 "class_name": "AnimatedTexture",
                 "kwargs": {
-                    "atlas": "ExplosionAtlas",
+                    "atlas": cls.assets["explosion_atlas"]["asset"],
                     "duration": 750
-                }
-            },
-            "ExplosionAtlas": {
-                "class_name": "Atlas",
-                "kwargs": {
-                    "image": cls.images["explosion"],
-                    "frame_size": (256, 256)
                 }
             }
         }
 
     @classmethod
-    def create(cls, name: str) -> GameObjectBase:
+    def create(cls, name: str, **kwargs) -> GameObjectBase:
         """Creates a GameObject instance."""
         try:
             game_type = cls.game_types[name]
-            gob_class = cls.registry[game_type["class_name"]]
-            gob = gob_class(**game_type["kwargs"])
+        except KeyError:
+            sys.stderr.write("Game type '{0}' not found.\n".format(name))
+            return None
+
+        return GameObjectFactory.create_object(game_type, **kwargs)
+
+    @classmethod
+    def create_object(cls, type_spec, **kwargs):
+        try:
+            gob_class = cls.registry[type_spec["class_name"]]
+            gob = gob_class(**type_spec["kwargs"], **kwargs)
             return gob
         except KeyError:
-            print("Game type \'%s\' not found.".format(name))
+            sys.stderr.write("GameObjectBase child class '{0}' not found.\n".format(type_spec["class_name"]))
             return None
 
     @classmethod
@@ -97,7 +112,7 @@ class GameObjectFactory():
 
         def inner_wrapper(wrapped_class: GameObjectBase) -> Callable:
             if name in cls.registry:
-                print("Class '%s' already registered. Replacing!".format(name))
+                sys.stderr.write("Class '{0}' already registered. Overwriting old value.".format(name))
             cls.registry[name] = wrapped_class
             return wrapped_class
 

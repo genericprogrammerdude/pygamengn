@@ -48,8 +48,7 @@ def main():
     collision_group = pygame.sprite.Group()
 
     # Create a turret
-    explosion_atlas = Atlas(explosion_atlas_image, (256, 256))
-    turret = Turret(turret_image, projectile_image, collision_group, explosion_atlas)
+    turret = Turret(turret_image, "EnemyTurretProjectile", collision_group)
     turret.set_scale(1.25)
     turret.set_pos(pygame.Vector2(screen_rect.width * 0.75, screen_rect.height * 0.75))
     turret.set_target(player)

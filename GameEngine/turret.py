@@ -1,20 +1,20 @@
 import math
 
 from game_object import GameObject
-from projectile import Projectile
+from game_object_factory import GameObjectFactory
 
 
+@GameObjectFactory.register("Turret")
 class Turret(GameObject):
     """Turret that will fire at the given target."""
 
-    def __init__(self, turret_image, projectile_image, enemies, explosion_atlas):
+    def __init__(self, turret_image, projectile_type, enemies):
         super().__init__(turret_image)
-        self.projectile_image = projectile_image
+        self.projectile_type = projectile_type
         self.target = None
         self.fire_freq = 1000
         self.time_since_last_fire = self.fire_freq
         self.enemies = enemies
-        self.explosion_atlas = explosion_atlas
 
     def set_target(self, target):
         """Sets the target to attack."""
@@ -37,8 +37,8 @@ class Turret(GameObject):
                 self.target = None
 
     def fire(self):
-        """Fires a Projectile at the target."""
-        projectile = Projectile(self.projectile_image, enemies=self.enemies, explosion_atlas=self.explosion_atlas)
+        """Fires a projectile_type object at the target."""
+        projectile = GameObjectFactory.create(self.projectile_type, enemies=self.enemies)
         projectile.set_pos(self.pos)
         projectile.set_heading(self.heading)
         projectile.transform()

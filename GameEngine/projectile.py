@@ -2,17 +2,19 @@ import pygame
 
 from animated_texture import AnimatedTexture
 from game_object import GameObject
+from game_object_factory import GameObjectFactory
 from mover import MoverVelocity
 
 
+@GameObjectFactory.register("Projectile")
 class Projectile(GameObject):
 
-    def __init__(self, image, explosion_atlas=None, enemies=None, damage=10):
+    def __init__(self, image, enemies=None, damage=10, death_effect=None):
         super().__init__(image)
         self.mover = MoverVelocity(1.0)
-        self.explosion_atlas = explosion_atlas
         self.enemies = enemies
         self.damage = damage
+        self.death_effect = death_effect
 
     def kill_when_off_screen(self):
         """This can be used by the Sprite Group to know if the object should be killed when it goes off screen."""
@@ -48,13 +50,13 @@ class Projectile(GameObject):
 
     def die(self):
         """Die. Plays an explosion if it was given an atlas for  the AnimatedTexture."""
-        if self.explosion_atlas:
-            explosion = AnimatedTexture(self.explosion_atlas, 750)
+        if self.death_effect:
+            effect = GameObjectFactory.create(self.death_effect)
             group = self.groups()[0]
-            group.add(explosion)
-            group.move_to_front(explosion)
-            explosion.set_pos(self.pos)
-            explosion.play()
+            group.add(effect)
+            group.move_to_front(effect)
+            effect.set_pos(self.pos)
+            effect.play()
         super().die()
 
     def set_velocity(self, velocity):

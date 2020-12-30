@@ -1,8 +1,11 @@
 import pygame
 
+from atlas import Atlas
 from game_object import GameObject
+from game_object_factory import GameObjectFactory
 
 
+@GameObjectFactory.register("AnimatedTexture")
 class AnimatedTexture(GameObject):
 
     def __init__(self, atlas, duration):
