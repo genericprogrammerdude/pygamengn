@@ -4,15 +4,18 @@ import pygame
 
 class RenderGroup(pygame.sprite.LayeredUpdates):
 
-    def __init__(self, target, world_rect, view_rect, grid_draw=False, grid_color=(100, 100, 100), grid_interval=100):
+    def __init__(self, world_rect, view_rect, grid_draw=False, grid_color=(100, 100, 100), grid_interval=100):
         super().__init__()
-        self.target = target
+        self.target = None
         self.cam = pygame.Vector2(0, 0)
         self.world_rect = world_rect
         self.view_rect = view_rect
         self.grid_draw = grid_draw
         self.grid_color = grid_color
         self.grid_interval = grid_interval
+
+    def set_target(self, target):
+        self.target = target
         if self.target:
             self.add(target)
 

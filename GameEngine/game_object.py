@@ -1,3 +1,4 @@
+from pip._internal import self_outdated_check
 import pygame
 
 from game_object_factory import GameObjectBase
@@ -22,9 +23,9 @@ class GameObject(pygame.sprite.Sprite, GameObjectBase):
         self.dirty_image = True
         self.is_collidable = is_collidable
         self.mask = None  # The mask will be built on the first transform()
-        self.attachments = []
         self.parent = None
         self.health = 100
+        self.attachments = []
 
     def update(self, delta):
         """Updates the game object. Delta time is in ms."""
@@ -87,12 +88,18 @@ class GameObject(pygame.sprite.Sprite, GameObjectBase):
         """Takes damage for this game object."""
         self.health -= damage
         if self.health <= 0:
-            self.die()
             for attachment in self.attachments:
                 attachment.game_object.take_damage(attachment.game_object.health)
+            self.die()
 
     def die(self):
         self.kill()
+
+    def add_to_groups(self, groups):
+        for group in groups:
+            group.add(self)
+            for attachment in self.attachments:
+                group.add(attachment.game_object)
 
 
 class Attachment():

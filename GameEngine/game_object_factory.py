@@ -132,14 +132,16 @@ class GameObjectFactory():
             sys.stderr.write("Game type '{0}' not found.\n".format(name))
             return None
 
-        # Create attachments first
-        try:
-            for attachment in game_type["attachments"]:
-                print(attachment)
-        except KeyError:
-            print("No attachments")
+        gob = GameObjectFactory.__create_object(game_type, **kwargs)
 
-        return GameObjectFactory.__create_object(game_type, **kwargs)
+        attachment_specs = game_type.get("attachments")
+        if gob and attachment_specs:
+            for attachment_spec in attachment_specs:
+                attachment_object = GameObjectFactory.create(attachment_spec["game_type"])
+                if attachment_object:
+                    gob.attach(attachment_object, attachment_spec["offset"])
+
+        return gob
 
     @classmethod
     def __create_object(cls, type_spec, **kwargs) -> GameObjectBase:

@@ -20,14 +20,14 @@ def main():
 
     GameObjectFactory.initialize()
 
-    # Load all the stuffs
-    turret_gun_image = pygame.image.load("Assets/SpaceShooterRedux/PNG/Parts/gun04.png").convert_alpha()
-
     # Create world
     pygame.display.set_icon(GameObjectFactory.images["ship"])
     pygame.display.set_caption("Game")
     world_rect = pygame.Rect(0, 0, size[0] * 2, size[1] * 2)
     screen_rect = screen.get_rect()
+
+    render_group = RenderGroup(world_rect, screen_rect, True)
+    collision_group = pygame.sprite.Group()
 
     # Create player
     player = GameObjectFactory.create("PlayerShip")
@@ -35,30 +35,14 @@ def main():
     linear_velocity = 200.0
     angular_velocity = 1.5
 
-    collision_group = pygame.sprite.Group()
+    render_group.set_target(player)
+    player.add_to_groups([render_group, collision_group])
 
     # Create a turret
     turret = GameObjectFactory.create("EnemyTurret", enemies=collision_group)
     turret.set_pos(pygame.Vector2(screen_rect.width * 0.75, screen_rect.height * 0.75))
     turret.set_target(player)
-
-    # Add player and turret to group of game objects
-    render_group = RenderGroup(player, world_rect, screen_rect, True)
-    render_group.add(turret)
-    render_group.move_to_back(turret)
-
-    # Add player to collision group
-    collision_group.add(player)
-
-    # Attach shield to player
-    shield = GameObjectFactory.create("PlayerShield")
-    shield.transform()
-    player.attach(shield, (0, 0))
-    collision_group.add(shield)
-
-    # Attach gun to turret
-    turret_gun = GameObject(turret_gun_image)
-#     turret.attach(turret_gun, (0, -15))
+    turret.add_to_groups([render_group])
 
     clock = pygame.time.Clock()
     running = True
