@@ -7,9 +7,9 @@ from mover import MoverVelocity
 
 class Projectile(GameObject):
 
-    def __init__(self, image, velocity_decay_factor=1.0, explosion_atlas=None, enemies=None, damage=10):
+    def __init__(self, image, explosion_atlas=None, enemies=None, damage=10):
         super().__init__(image)
-        self.mover = MoverVelocity(velocity_decay_factor)
+        self.mover = MoverVelocity(1.0)
         self.explosion_atlas = explosion_atlas
         self.enemies = enemies
         self.damage = damage

@@ -37,7 +37,7 @@ def main():
     screen_rect = screen.get_rect()
 
     # Create player
-    player = Ship(ship_image, 0.5)
+    player = Ship(ship_image, 0.9)
     player.set_pos(pygame.Vector2(screen_rect.width / 2.0, screen_rect.height / 2.0))
     player.set_scale(0.8)
     linear_velocity = 200.0
