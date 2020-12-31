@@ -3,14 +3,14 @@ from sys import path
 
 import pygame
 
+path.append("./GameEngine")
+
 from game_object import GameObject
 from game_object_factory import GameObjectFactory
 from render_group import RenderGroup
 from shield import Shield
 from ship import Ship
 from turret import Turret
-
-path.append("./GameEngine")
 
 
 def main():
