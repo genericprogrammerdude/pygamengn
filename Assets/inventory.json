@@ -1,0 +1,80 @@
+{
+    "surfaces": {
+        "ship": "Assets/SpaceShooterRedux/PNG/playerShip2_blue.png",
+        "explosion": "Assets/Explosions/explosion1.png",
+        "shield1": "Assets/SpaceShooterRedux/PNG/Effects/shield1.png",
+        "shield2": "Assets/SpaceShooterRedux/PNG/Effects/shield2.png",
+        "shield3": "Assets/SpaceShooterRedux/PNG/Effects/shield3.png",
+        "turret": "Assets/SpaceShooterRedux/PNG/Parts/turretBase_big.png",
+        "turret_gun": "Assets/SpaceShooterRedux/PNG/Parts/gun04.png",
+        "turret_projectile": "Assets/SpaceShooterRedux/PNG/Lasers/laserRed06.png"
+    },
+
+    "assets": {
+        "explosion_atlas": {
+            "class_name": "Atlas",
+            "kwargs": {
+                "image": "explosion",
+                "frame_size": [256, 256]
+            }
+        }
+    },
+
+    "game_types": {
+        "PlayerShip": {
+            "class_name": "Ship",
+            "kwargs": {
+                "image": "ship",
+                "velocity_decay_factor": 0.9,
+                "scale": 0.8
+            },
+            "attachments": [
+                {
+                    "game_type": "PlayerShield",
+                    "offset": [0.0, 0.0]
+                }
+            ]
+        },
+        "EnemyTurret": {
+            "class_name": "Turret",
+            "kwargs": {
+                "image": "turret",
+                "projectile_type": "EnemyTurretProjectile",
+                "scale": 1.25
+            },
+            "attachments": [
+                {
+                    "game_type": "EnemyTurretGun",
+                    "offset": [0.0, -15.0]
+                }
+            ]
+        },
+        "EnemyTurretGun": {
+            "class_name": "GameObject",
+            "kwargs": {
+                "image": "turret_gun"
+            }
+        },
+        "EnemyTurretProjectile": {
+            "class_name": "Projectile",
+            "kwargs": {
+                "image": "turret_projectile",
+                "death_effect": "Explosion",
+                "damage": 10
+            }
+        },
+        "Explosion": {
+            "class_name": "AnimatedTexture",
+            "kwargs": {
+                "asset": "explosion_atlas",
+                "duration": 750
+            }
+        },
+        "PlayerShield": {
+            "class_name": "Shield",
+            "kwargs": {
+                "image": "shield3"
+            }
+        }
+    }
+}

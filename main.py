@@ -18,10 +18,10 @@ def main():
     background = 50, 50, 50
     screen = pygame.display.set_mode(size, pygame.DOUBLEBUF | pygame.HWSURFACE)
 
-    GameObjectFactory.initialize()
+    GameObjectFactory.initialize(open("Assets/inventory.json"))
 
     # Create world
-    pygame.display.set_icon(GameObjectFactory.images["ship"])
+    pygame.display.set_icon(GameObjectFactory.surfaces["ship"])
     pygame.display.set_caption("Game")
     world_rect = pygame.Rect(0, 0, size[0] * 2, size[1] * 2)
     screen_rect = screen.get_rect()

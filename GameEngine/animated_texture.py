@@ -8,13 +8,13 @@ from game_object_factory import GameObjectFactory
 @GameObjectFactory.register("AnimatedTexture")
 class AnimatedTexture(GameObject):
 
-    def __init__(self, atlas, duration):
-        super().__init__(atlas.frames[0], False)
-        self.atlas = atlas
+    def __init__(self, asset, duration):
+        super().__init__(asset.frames[0], False)
+        self.asset = asset
         self.duration = duration
         self.animation_time = 0
         self.is_playing = False
-        self.image = self.atlas.frames[0]
+        self.image = self.asset.frames[0]
         self.rect = self.image.get_rect()
 
     def update(self, delta):
@@ -23,14 +23,14 @@ class AnimatedTexture(GameObject):
         if self.is_playing:
             # Figure out which frame to use and set the image
             progress = 1.0 * self.animation_time / self.duration
-            frame_index = round(progress * len(self.atlas.frames))
-            if frame_index < len(self.atlas.frames):
-                self.image = self.atlas.frames[frame_index]
+            frame_index = round(progress * len(self.asset.frames))
+            if frame_index < len(self.asset.frames):
+                self.image = self.asset.frames[frame_index]
                 if self.scale != 1:
                     self.image = pygame.transform.scale(self.image,
                                                         (self.image.get_rect().width * self.scale,
-                                                        self.image.get_rect().height * self.scale))
-                    print("WARNING! Scaling atlas frames!")
+                                                         self.image.get_rect().height * self.scale))
+                    print("WARNING! Scaling asset frames!")
                 self.rect = self.image.get_rect()
 
             self.rect = self.image.get_rect()
