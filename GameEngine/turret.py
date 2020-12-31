@@ -1,4 +1,5 @@
 import math
+import random
 
 from game_object import GameObject
 from game_object_factory import GameObjectFactory
@@ -13,7 +14,7 @@ class Turret(GameObject):
         self.projectile_type = projectile_type
         self.target = None
         self.fire_freq = fire_freq
-        self.time_since_last_fire = self.fire_freq
+        self.time_since_last_fire = random.randint(0, fire_freq)
         self.enemies = enemies
 
     def set_target(self, target):
@@ -30,7 +31,7 @@ class Turret(GameObject):
                 self.set_heading(heading)
 
                 self.time_since_last_fire = self.time_since_last_fire + delta
-                if self.time_since_last_fire >= self.fire_freq:
+                if self.time_since_last_fire >= self.fire_freq and self.alive():
                     self.fire()
             else:
                 self.time_since_last_fire = self.fire_freq

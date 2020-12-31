@@ -32,7 +32,7 @@
                 "velocity_decay_factor": 0.9,
                 "scale": 0.8,
                 "projectile_type": "PlayerProjectile",
-                "fire_freq": 500
+                "fire_freq": 250
             },
             "attachments": [
                 {
@@ -47,7 +47,7 @@
                 "image": "turret",
                 "projectile_type": "EnemyTurretProjectile",
                 "scale": 1.25,
-                "fire_freq": 1000
+                "fire_freq": 2250 
             },
             "attachments": [
                 {
@@ -59,7 +59,8 @@
         "EnemyTurretGun": {
             "class_name": "GameObject",
             "kwargs": {
-                "image": "turret_gun"
+                "image": "turret_gun",
+                "is_collidable": false
             }
         },
         "EnemyTurretProjectile": {
@@ -90,7 +91,7 @@
             "kwargs": {
                 "image": "player_projectile",
                 "death_effect": "Explosion",
-                "damage": 7,
+                "damage": 15,
                 "velocity": 800
             }
         }

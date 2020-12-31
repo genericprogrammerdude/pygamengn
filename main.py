@@ -1,5 +1,5 @@
+import random
 from sys import path
-path.append("./GameEngine")
 
 import pygame
 
@@ -9,6 +9,8 @@ from render_group import RenderGroup
 from shield import Shield
 from ship import Ship
 from turret import Turret
+
+path.append("./GameEngine")
 
 
 def main():
@@ -40,10 +42,11 @@ def main():
     player.add_to_groups([render_group, player_collision_group])
 
     # Create a turret
-    turret = GameObjectFactory.create("EnemyTurret", enemies=player_collision_group)
-    turret.set_pos(pygame.Vector2(screen_rect.width * 0.75, screen_rect.height * 0.75))
-    turret.set_target(player)
-    turret.add_to_groups([render_group, badies_collision_group])
+    turrets = [GameObjectFactory.create("EnemyTurret", enemies=player_collision_group) for i in range(5)]
+    for turret in turrets:
+        turret.set_pos(pygame.Vector2(random.randint(0, screen_rect.width), random.randint(0, screen_rect.height)))
+        turret.set_target(player)
+        turret.add_to_groups([render_group, badies_collision_group])
 
     clock = pygame.time.Clock()
     running = True
@@ -61,13 +64,13 @@ def main():
 
         # Handle input for movement
         pressed_keys = pygame.key.get_pressed()
-        if pressed_keys[pygame.K_s]:
+        if pressed_keys[pygame.K_a]:
             player.set_heading(player.heading + angular_velocity)
-        if pressed_keys[pygame.K_f]:
-            player.set_heading(player.heading - angular_velocity)
-        if pressed_keys[pygame.K_e]:
-            player.set_velocity(linear_velocity)
         if pressed_keys[pygame.K_d]:
+            player.set_heading(player.heading - angular_velocity)
+        if pressed_keys[pygame.K_w]:
+            player.set_velocity(linear_velocity)
+        if pressed_keys[pygame.K_s]:
             player.set_velocity(player.mover.velocity * 0.8)
 #         if pressed_keys[pygame.K_SPACE]:
 #             player.fire()
