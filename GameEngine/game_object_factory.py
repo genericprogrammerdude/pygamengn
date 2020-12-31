@@ -40,7 +40,6 @@ class GameObjectFactory():
         cls.images = {
             "ship": load("Assets/SpaceShooterRedux/PNG/playerShip2_blue.png").convert_alpha(),
             "explosion": load("Assets/Explosions/explosion1.png").convert_alpha(),
-            "ship": load("Assets/SpaceShooterRedux/PNG/playerShip2_blue.png").convert_alpha(),
             "shield": [
                 load("Assets/SpaceShooterRedux/PNG/Effects/shield3.png").convert_alpha(),
                 load("Assets/SpaceShooterRedux/PNG/Effects/shield2.png").convert_alpha(),
