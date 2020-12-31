@@ -27,22 +27,23 @@ def main():
     screen_rect = screen.get_rect()
 
     render_group = RenderGroup(world_rect, screen_rect, True)
-    collision_group = pygame.sprite.Group()
+    player_collision_group = pygame.sprite.Group()
+    badies_collision_group = pygame.sprite.Group()
 
     # Create player
-    player = GameObjectFactory.create("PlayerShip")
+    player = GameObjectFactory.create("PlayerShip", enemies=badies_collision_group)
     player.set_pos(pygame.Vector2(screen_rect.width / 2.0, screen_rect.height / 2.0))
     linear_velocity = 200.0
     angular_velocity = 1.5
 
     render_group.set_target(player)
-    player.add_to_groups([render_group, collision_group])
+    player.add_to_groups([render_group, player_collision_group])
 
     # Create a turret
-    turret = GameObjectFactory.create("EnemyTurret", enemies=collision_group)
+    turret = GameObjectFactory.create("EnemyTurret", enemies=player_collision_group)
     turret.set_pos(pygame.Vector2(screen_rect.width * 0.75, screen_rect.height * 0.75))
     turret.set_target(player)
-    turret.add_to_groups([render_group])
+    turret.add_to_groups([render_group, badies_collision_group])
 
     clock = pygame.time.Clock()
     running = True
@@ -55,6 +56,8 @@ def main():
                 # Exit
                 if event.key == pygame.K_ESCAPE:
                     running = False
+                if event.key == pygame.K_SPACE:
+                    player.fire()
 
         # Handle input for movement
         pressed_keys = pygame.key.get_pressed()
@@ -66,6 +69,8 @@ def main():
             player.set_velocity(linear_velocity)
         if pressed_keys[pygame.K_d]:
             player.set_velocity(player.mover.velocity * 0.8)
+#         if pressed_keys[pygame.K_SPACE]:
+#             player.fire()
 
         # Update groups
         render_group.update(clock.get_time())

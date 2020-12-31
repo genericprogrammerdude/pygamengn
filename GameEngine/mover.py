@@ -10,8 +10,8 @@ class Mover():
 
 class MoverVelocity():
 
-    def __init__(self, velocity_decay_factor):
-        self.velocity = 0.0
+    def __init__(self, velocity_decay_factor, velocity):
+        self.velocity = velocity
         self.velocity_decay_factor = velocity_decay_factor
 
     def move(self, delta, pos, heading):

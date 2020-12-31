@@ -8,9 +8,13 @@ from projectile import Projectile
 class Ship(GameObject):
     """Space ship game object."""
 
-    def __init__(self, image, velocity_decay_factor, **kwargs):
+    def __init__(self, image, velocity_decay_factor, projectile_type, enemies, fire_freq, **kwargs):
         super().__init__(image, **kwargs)
-        self.mover = MoverVelocity(velocity_decay_factor)
+        self.mover = MoverVelocity(velocity_decay_factor, 0)
+        self.projectile_type = projectile_type
+        self.enemies = enemies
+        self.fire_freq = fire_freq
+        self.time_since_last_fire = self.fire_freq
 
     def update(self, delta):
         """Updates the ship."""
@@ -18,6 +22,7 @@ class Ship(GameObject):
         self.pos, self.heading = self.mover.move(delta, self.pos, self.heading)
         # Now do the regular GameObject update
         super().update(delta)
+        self.time_since_last_fire += delta
 
     def set_velocity(self, velocity):
         """Sets the ship's velocity."""
@@ -25,14 +30,14 @@ class Ship(GameObject):
 
     def fire(self):
         """Fires a Projectile at the target."""
-        projectile = Projectile(self.projectile_image, enemies=self.enemies, explosion_atlas=self.explosion_atlas)
-        projectile.set_pos(self.pos)
-        projectile.set_heading(self.heading)
-        projectile.transform()
-        projectile.set_velocity(500)
+        if self.time_since_last_fire > self.fire_freq:
+            projectile = GameObjectFactory.create(self.projectile_type, enemies=self.enemies)
+            projectile.set_pos(self.pos)
+            projectile.set_heading(self.heading)
+            projectile.transform()
 
-        group = self.groups()[0]
-        group.add(projectile)
-        group.move_to_back(projectile)
+            group = self.groups()[0]
+            group.add(projectile)
+            group.move_to_back(projectile)
 
-        self.time_since_last_fire = 0
+            self.time_since_last_fire = 0
