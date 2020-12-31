@@ -1,4 +1,3 @@
-from pip._internal import self_outdated_check
 import pygame
 
 from game_object_factory import GameObjectBase
@@ -10,7 +9,7 @@ from transform import Transform
 class GameObject(pygame.sprite.Sprite, GameObjectBase):
     """Basic game object."""
 
-    def __init__(self, image, is_collidable=True, scale=1.0, alpha=1.0, visible=True):
+    def __init__(self, image, is_collidable=True, scale=1.0, alpha=1.0, visible=True, heading=0):
         super().__init__()
 
         # Set the image to use for this sprite.
@@ -18,7 +17,7 @@ class GameObject(pygame.sprite.Sprite, GameObjectBase):
         self.image_original = self.image.copy()
         self.rect = self.image.get_rect()
         self.scale = scale
-        self.heading = 0.0
+        self.heading = heading
         self.pos = pygame.math.Vector2(0.0, 0.0)
         self.dirty_image = True
         self.is_collidable = is_collidable
@@ -34,11 +33,12 @@ class GameObject(pygame.sprite.Sprite, GameObjectBase):
         super().update()
         self.transform()
         for attachment in self.attachments:
-            t = Transform(self.pos, self.heading)
+            if attachment.parent_transform:
+                t = Transform(self.pos, self.heading)
 
-            attachment_pos = t.apply(attachment.offset)
-            attachment.game_object.set_pos(attachment_pos)
-            attachment.game_object.set_heading(self.heading)
+                attachment_pos = t.apply(attachment.offset)
+                attachment.game_object.set_pos(attachment_pos)
+                attachment.game_object.set_heading(self.heading)
 
     def transform(self):
         """Transforms the object based on current heading, scale, and position."""
@@ -80,17 +80,17 @@ class GameObject(pygame.sprite.Sprite, GameObjectBase):
         """This can be used by the Sprite Group to know if the object should be killed when it goes off screen."""
         return False
 
-    def attach(self, game_object, offset):
+    def attach(self, game_object, offset, take_parent_transform):
         """Attaches a game object to this game object at the give offset."""
-        self.attachments.append(Attachment(game_object, offset))
+        self.attachments.append(Attachment(game_object, offset, take_parent_transform))
         game_object.parent = self
         game_object.add_to_groups(self.groups())
-        # self.groups()[0].move_to_front(game_object)
 
     def take_damage(self, damage):
         """Takes damage for this game object."""
         self.health -= damage
         if self.health <= 0:
+            self.health = 0
             for attachment in self.attachments:
                 attachment.game_object.take_damage(attachment.game_object.health)
             self.die()
@@ -107,6 +107,7 @@ class GameObject(pygame.sprite.Sprite, GameObjectBase):
 
 class Attachment():
 
-    def __init__(self, game_object, offset):
+    def __init__(self, game_object, offset, parent_transform):
         self.game_object = game_object
         self.offset = offset
+        self.parent_transform = parent_transform

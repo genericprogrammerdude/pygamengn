@@ -39,7 +39,7 @@ def main():
     angular_velocity = 1.5
 
     # Create a turret
-    turrets = [GameObjectFactory.create("EnemyTurret", enemies=player_collision_group) for i in range(1)]
+    turrets = [GameObjectFactory.create("EnemyTurret", enemies=player_collision_group) for i in range(5)]
     for turret in turrets:
         turret.set_pos(pygame.Vector2(random.randint(0, screen_rect.width), random.randint(0, screen_rect.height)))
         turret.set_target(player)

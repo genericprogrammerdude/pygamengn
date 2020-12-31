@@ -84,7 +84,10 @@ class GameObjectFactory():
             for attachment_spec in attachment_specs:
                 attachment_object = GameObjectFactory.create(attachment_spec["game_type"])
                 if attachment_object:
-                    gob.attach(attachment_object, attachment_spec["offset"])
+                    parent_transform = attachment_spec.get("parent_transform")
+                    if parent_transform == None:
+                        parent_transform = True
+                    gob.attach(attachment_object, attachment_spec["offset"], parent_transform)
 
         return gob
 

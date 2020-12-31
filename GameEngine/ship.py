@@ -1,5 +1,6 @@
 from game_object import GameObject
 from game_object_factory import GameObjectFactory
+from health_bar import HealthBar
 from mover import MoverVelocity
 from projectile import Projectile
 

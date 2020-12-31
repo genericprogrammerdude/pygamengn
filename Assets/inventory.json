@@ -11,7 +11,11 @@
         "turret": "Assets/SpaceShooterRedux/PNG/Parts/turretBase_big.png",
         "turret_gun": "Assets/SpaceShooterRedux/PNG/Parts/gun04.png",
         "turret_projectile": "Assets/SpaceShooterRedux/PNG/Lasers/laserRed06.png",
-        "player_projectile": "Assets/SpaceShooterRedux/PNG/Lasers/laserGreen07.png"
+        "player_projectile": "Assets/SpaceShooterRedux/PNG/Lasers/laserGreen07.png",
+        "player_health_bar_fg": "Assets/SpaceShooterRedux/PNG/Lasers/laserBlue02.png",
+        "player_health_bar_bg": "Assets/SpaceShooterRedux/PNG/Lasers/laserBlue14.png",
+        "turret_health_bar_fg": "Assets/SpaceShooterRedux/PNG/Lasers/laserRed02.png",
+        "turret_health_bar_bg": "Assets/SpaceShooterRedux/PNG/Lasers/laserRed14.png"
     },
 
     "assets": {
@@ -38,8 +42,21 @@
                 {
                     "game_type": "PlayerShield",
                     "offset": [0.0, 0.0]
+                },
+                {
+                    "game_type": "PlayerHealthBar",
+                    "offset": [0, 0],
+                    "parent_transform": false
                 }
             ]
+        },
+        "PlayerHealthBar": {
+            "class_name": "HealthBar",
+            "kwargs": {
+                "image": ["player_health_bar_bg", "player_health_bar_fg"],
+                "heading": 90,
+                "is_collidable": false
+            }
         },
         "EnemyTurret": {
             "class_name": "Turret",
@@ -53,8 +70,21 @@
                 {
                     "game_type": "EnemyTurretGun",
                     "offset": [0.0, -15.0]
+                },
+                {
+                    "game_type": "TurretHealthBar",
+                    "offset": [0, 0],
+                    "parent_transform": false
                 }
             ]
+        },
+        "TurretHealthBar": {
+            "class_name": "HealthBar",
+            "kwargs": {
+                "image": ["turret_health_bar_bg", "turret_health_bar_fg"],
+                "heading": 90,
+                "is_collidable": false
+            }
         },
         "EnemyTurretGun": {
             "class_name": "GameObject",
