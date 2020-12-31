@@ -1,9 +1,9 @@
 import random
-from sys import path
+import sys
 
 import pygame
 
-path.append("./GameEngine")
+sys.path.append("./GameEngine")
 
 from game_object import GameObject
 from game_object_factory import GameObjectFactory
@@ -20,7 +20,10 @@ def main():
     background = 50, 50, 50
     screen = pygame.display.set_mode(size, pygame.DOUBLEBUF | pygame.HWSURFACE)
 
-    GameObjectFactory.initialize(open("Assets/inventory.json"))
+    if len(sys.argv) > 1:
+        GameObjectFactory.initialize(open(sys.argv[1]))
+    else:
+        GameObjectFactory.initialize(open("Assets/inventory.json"))
 
     # Create world
     pygame.display.set_icon(GameObjectFactory.surfaces["ship"])
