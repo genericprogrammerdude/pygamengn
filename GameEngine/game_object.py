@@ -10,7 +10,7 @@ from transform import Transform
 class GameObject(pygame.sprite.Sprite, GameObjectBase):
     """Basic game object."""
 
-    def __init__(self, image, is_collidable=True, scale=1.0):
+    def __init__(self, image, is_collidable=True, scale=1.0, alpha=1.0, visible=True):
         super().__init__()
 
         # Set the image to use for this sprite.
@@ -26,6 +26,8 @@ class GameObject(pygame.sprite.Sprite, GameObjectBase):
         self.parent = None
         self.health = 100
         self.attachments = []
+        self.alpha = alpha
+        self.visible = visible
 
     def update(self, delta):
         """Updates the game object. Delta time is in ms."""
@@ -43,6 +45,8 @@ class GameObject(pygame.sprite.Sprite, GameObjectBase):
         # Rotate and scale if necessary
         if self.dirty_image:
             self.image = pygame.transform.rotozoom(self.image_original, self.heading, self.scale)
+            if self.alpha != 1.0:
+                self.image.set_alpha(self.alpha * 255)
             self.rect = self.image.get_rect()
             if self.is_collidable:
                 self.mask = pygame.mask.from_surface(self.image, 16)
@@ -80,8 +84,7 @@ class GameObject(pygame.sprite.Sprite, GameObjectBase):
         """Attaches a game object to this game object at the give offset."""
         self.attachments.append(Attachment(game_object, offset))
         game_object.parent = self
-        for group in self.groups():
-            group.add(game_object)
+        game_object.add_to_groups(self.groups())
         # self.groups()[0].move_to_front(game_object)
 
     def take_damage(self, damage):

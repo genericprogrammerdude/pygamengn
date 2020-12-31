@@ -38,15 +38,15 @@ def main():
     linear_velocity = 200.0
     angular_velocity = 1.5
 
-    render_group.set_target(player)
-    player.add_to_groups([render_group, player_collision_group])
-
     # Create a turret
-    turrets = [GameObjectFactory.create("EnemyTurret", enemies=player_collision_group) for i in range(5)]
+    turrets = [GameObjectFactory.create("EnemyTurret", enemies=player_collision_group) for i in range(1)]
     for turret in turrets:
         turret.set_pos(pygame.Vector2(random.randint(0, screen_rect.width), random.randint(0, screen_rect.height)))
         turret.set_target(player)
         turret.add_to_groups([render_group, badies_collision_group])
+
+    render_group.set_target(player)
+    player.add_to_groups([render_group, player_collision_group])
 
     clock = pygame.time.Clock()
     running = True
@@ -72,8 +72,6 @@ def main():
             player.set_velocity(linear_velocity)
         if pressed_keys[pygame.K_s]:
             player.set_velocity(player.mover.velocity * 0.8)
-#         if pressed_keys[pygame.K_SPACE]:
-#             player.fire()
 
         # Update groups
         render_group.update(clock.get_time())

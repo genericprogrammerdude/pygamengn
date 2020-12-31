@@ -1,6 +1,9 @@
 {
     "surfaces": {
         "ship": "Assets/SpaceShooterRedux/PNG/playerShip2_blue.png",
+        "ship_damage1": "Assets/SpaceShooterRedux/PNG/Damage/playerShip2_damage1.png",
+        "ship_damage2": "Assets/SpaceShooterRedux/PNG/Damage/playerShip2_damage2.png",
+        "ship_damage3": "Assets/SpaceShooterRedux/PNG/Damage/playerShip2_damage3.png",
         "explosion1": "Assets/Explosions/explosion1.png",
         "explosion2": "Assets/Explosions/explosion2.png",
         "explosion3": "Assets/Explosions/explosion3.png",
@@ -38,8 +41,47 @@
                 {
                     "game_type": "PlayerShield",
                     "offset": [0.0, 0.0]
+                },
+                {
+                    "game_type": "PlayerDamage1",
+                    "offset": [0.0, 0.0]
+                },
+                {
+                    "game_type": "PlayerDamage2",
+                    "offset": [0.0, 0.0]
+                },
+                {
+                    "game_type": "PlayerDamage3",
+                    "offset": [0.0, 0.0]
                 }
             ]
+        },
+        "PlayerDamage1": {
+            "class_name": "GameObject",
+            "kwargs": {
+                "image": "ship_damage1",
+                "scale": 0.8,
+                "alpha": 0.5,
+                "visible": false
+            }
+        },
+        "PlayerDamage2": {
+            "class_name": "GameObject",
+            "kwargs": {
+                "image": "ship_damage2",
+                "scale": 0.8,
+                "alpha": 0.5,
+                "visible": false
+            }
+        },
+        "PlayerDamage3": {
+            "class_name": "GameObject",
+            "kwargs": {
+                "image": "ship_damage3",
+                "scale": 0.8,
+                "alpha": 0.5,
+                "visible": false
+            }
         },
         "EnemyTurret": {
             "class_name": "Turret",
