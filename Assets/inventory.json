@@ -38,18 +38,6 @@
                 {
                     "game_type": "PlayerShield",
                     "offset": [0.0, 0.0]
-                },
-                {
-                    "game_type": "PlayerDamage1",
-                    "offset": [0.0, 0.0]
-                },
-                {
-                    "game_type": "PlayerDamage2",
-                    "offset": [0.0, 0.0]
-                },
-                {
-                    "game_type": "PlayerDamage3",
-                    "offset": [0.0, 0.0]
                 }
             ]
         },
