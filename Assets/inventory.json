@@ -1,7 +1,10 @@
 {
     "surfaces": {
         "ship": "Assets/SpaceShooterRedux/PNG/playerShip2_blue.png",
-        "explosion": "Assets/Explosions/explosion1.png",
+        "explosion1": "Assets/Explosions/explosion1.png",
+        "explosion2": "Assets/Explosions/explosion2.png",
+        "explosion3": "Assets/Explosions/explosion3.png",
+        "explosion4": "Assets/Explosions/explosion4.png",
         "shield1": "Assets/SpaceShooterRedux/PNG/Effects/shield1.png",
         "shield2": "Assets/SpaceShooterRedux/PNG/Effects/shield2.png",
         "shield3": "Assets/SpaceShooterRedux/PNG/Effects/shield3.png",
@@ -15,7 +18,7 @@
         "explosion_atlas": {
             "class_name": "Atlas",
             "kwargs": {
-                "image": "explosion",
+                "image": ["explosion1", "explosion2", "explosion3", "explosion4"],
                 "frame_size": [256, 256]
             }
         }
@@ -72,7 +75,8 @@
             "class_name": "AnimatedTexture",
             "kwargs": {
                 "asset": "explosion_atlas",
-                "duration": 750
+                "duration": 750,
+                "scale": 1
             }
         },
         "PlayerShield": {

@@ -42,7 +42,12 @@ class GameObjectFactory():
         cls.assets = data["assets"]
         for key in cls.assets.keys():
             asset_spec = cls.assets[key]
-            asset_spec["kwargs"]["image"] = cls.surfaces[asset_spec["kwargs"]["image"]]
+            if isinstance(asset_spec["kwargs"]["image"], str):
+                asset_spec["kwargs"]["image"] = cls.surfaces[asset_spec["kwargs"]["image"]]
+            elif isinstance(asset_spec["kwargs"]["image"], list):
+                images = asset_spec["kwargs"]["image"]
+                asset_spec["kwargs"]["image"] = cls.surfaces[images[0]]
+                asset_spec["kwargs"]["images"] = [cls.surfaces[images[i]] for i in range(len(images))]
             asset_spec["asset"] = GameObjectFactory.__create_object(asset_spec)
 
         # Replace image names with loaded Surfaces

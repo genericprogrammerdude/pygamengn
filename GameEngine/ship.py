@@ -30,7 +30,7 @@ class Ship(GameObject):
 
     def fire(self):
         """Fires a Projectile at the target."""
-        if self.time_since_last_fire > self.fire_freq:
+        if self.time_since_last_fire > self.fire_freq and self.alive():
             projectile = GameObjectFactory.create(self.projectile_type, enemies=self.enemies)
             projectile.set_pos(self.pos)
             projectile.set_heading(self.heading)

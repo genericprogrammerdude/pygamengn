@@ -1,3 +1,4 @@
+import random
 import pygame
 
 from atlas import Atlas
@@ -8,14 +9,13 @@ from game_object_factory import GameObjectFactory
 @GameObjectFactory.register("AnimatedTexture")
 class AnimatedTexture(GameObject):
 
-    def __init__(self, asset, duration):
-        super().__init__(asset.frames[0], False)
+    def __init__(self, asset, duration, scale=1.0):
+        super().__init__(asset.frames[0][0], False, scale)
         self.asset = asset
         self.duration = duration
         self.animation_time = 0
         self.is_playing = False
-        self.image = self.asset.frames[0]
-        self.rect = self.image.get_rect()
+        self.atlas_index = 0
 
     def update(self, delta):
         super().update(delta)
@@ -23,14 +23,16 @@ class AnimatedTexture(GameObject):
         if self.is_playing:
             # Figure out which frame to use and set the image
             progress = 1.0 * self.animation_time / self.duration
-            frame_index = round(progress * len(self.asset.frames))
-            if frame_index < len(self.asset.frames):
-                self.image = self.asset.frames[frame_index]
-                if self.scale != 1:
-                    self.image = pygame.transform.scale(self.image,
-                                                        (self.image.get_rect().width * self.scale,
-                                                         self.image.get_rect().height * self.scale))
-                    print("WARNING! Scaling asset frames!")
+            frames = self.asset.frames[self.atlas_index]
+            frame_index = round(progress * len(frames))
+            if frame_index < len(frames):
+                self.image = frames[frame_index]
+                if self.scale != 1 or self.heading != 0:
+                    self.image = pygame.transform.rotozoom(frames[frame_index], self.heading, self.scale)
+#                     self.image = pygame.transform.scale(self.image,
+#                                                         (self.image.get_rect().width * self.scale,
+#                                                          self.image.get_rect().height * self.scale))
+#                     print("WARNING! Scaling asset frames!")
                 self.rect = self.image.get_rect()
 
             self.rect = self.image.get_rect()
@@ -45,6 +47,8 @@ class AnimatedTexture(GameObject):
 
     def play(self):
         self.is_playing = True
+        self.set_heading(random.randint(0, 360))
+        self.atlas_index = random.randint(0, len(self.asset.frames) - 1)
 
     def reset(self):
         """Resets the animation and leaves the object ready to play from the start."""

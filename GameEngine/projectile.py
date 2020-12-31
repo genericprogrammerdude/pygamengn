@@ -50,7 +50,7 @@ class Projectile(GameObject):
 
     def die(self):
         """Die. Plays an explosion if it was given an atlas for  the AnimatedTexture."""
-        if self.death_effect:
+        if self.death_effect and self.alive():
             effect = GameObjectFactory.create(self.death_effect)
             group = self.groups()[0]
             group.add(effect)
