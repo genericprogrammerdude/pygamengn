@@ -33,10 +33,7 @@ class GameObjectFactory():
         cls.surfaces = {}
         data_images = data["surfaces"]
         for key in data_images.keys():
-            if isinstance(data_images[key], list):
-                cls.surfaces[key] = [pygame.image.load(fname) for fname in data_images[key]]
-            else:
-                cls.surfaces[key] = pygame.image.load(data_images[key])
+            cls.surfaces[key] = pygame.image.load(data_images[key])
 
         # Assets and game_types can be assigned directly
         cls.game_types = data["game_types"]
@@ -53,6 +50,10 @@ class GameObjectFactory():
             if isinstance(o["image"], str):
                 image_str = o["image"]
                 o["image"] = cls.surfaces[image_str]
+            elif isinstance(o["image"], list):
+                images = o["image"]
+                o["image"] = cls.surfaces[images[0]]
+                o["images"] = [cls.surfaces[images[i]] for i in range(len(images))]
         del cls.__image_json_objects
 
         # Replace asset names with the loaded assets

@@ -78,7 +78,7 @@
         "PlayerShield": {
             "class_name": "Shield",
             "kwargs": {
-                "image": "shield3"
+                "image": ["shield3", "shield2", "shield1"]
             }
         },
         "PlayerProjectile": {
