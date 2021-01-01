@@ -67,6 +67,30 @@
                 "is_collidable": false
             }
         },
+        "PlayerShield": {
+            "class_name": "Shield",
+            "kwargs": {
+                "image_list:images": ["shield3", "shield2", "shield1"]
+            }
+        },
+        "PlayerProjectile": {
+            "class_name": "Projectile",
+            "kwargs": {
+                "image:image": "player_projectile",
+                "death_effect": "Explosion",
+                "damage": 15,
+                "game_object_type:mover": "PlayerProjectileMover"
+            }
+        },
+        "PlayerProjectileMover": {
+            "class_name": "MoverVelocity",
+            "kwargs": {
+                "velocity": 800.0,
+                "velocity_decay_factor": 1.0,
+                "max_velocity": 800.0,
+                "angular_velocity": 0.0
+            }
+        },
         "EnemyTurret": {
             "class_name": "Turret",
             "kwargs": {
@@ -126,30 +150,6 @@
                 "asset:asset": "explosion_atlas",
                 "duration": 750,
                 "scale": 1
-            }
-        },
-        "PlayerShield": {
-            "class_name": "Shield",
-            "kwargs": {
-                "image_list:images": ["shield3", "shield2", "shield1"]
-            }
-        },
-        "PlayerProjectile": {
-            "class_name": "Projectile",
-            "kwargs": {
-                "image:image": "player_projectile",
-                "death_effect": "Explosion",
-                "damage": 15,
-                "game_object_type:mover": "PlayerProjectileMover"
-            }
-        },
-        "PlayerProjectileMover": {
-            "class_name": "MoverVelocity",
-            "kwargs": {
-                "velocity": 800.0,
-                "velocity_decay_factor": 1.0,
-                "max_velocity": 800.0,
-                "angular_velocity": 0.0
             }
         }
     }
