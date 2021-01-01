@@ -7,8 +7,8 @@ from game_object_factory import GameObjectFactory
 @GameObjectFactory.register("HealthBar")
 class HealthBar(GameObject):
 
-    def __init__(self, image, images, **kwargs):
-        super().__init__(image, **kwargs)
+    def __init__(self, images, **kwargs):
+        super().__init__(images[0], **kwargs)
         self.images = images
 
     def update(self, delta):

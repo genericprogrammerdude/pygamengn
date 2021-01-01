@@ -5,8 +5,8 @@ from game_object_factory import GameObjectFactory
 @GameObjectFactory.register("Shield")
 class Shield(GameObject):
 
-    def __init__(self, image, images):
-        super().__init__(image)
+    def __init__(self, images):
+        super().__init__(images[0])
         self.images = images
         self.image_index = 0
 

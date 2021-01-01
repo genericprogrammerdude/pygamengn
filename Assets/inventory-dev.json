@@ -15,8 +15,7 @@
         "player_health_bar_fg": "Assets/SpaceShooterRedux/PNG/Lasers/laserBlue02.png",
         "player_health_bar_bg": "Assets/SpaceShooterRedux/PNG/Lasers/laserBlue14.png",
         "turret_health_bar_fg": "Assets/SpaceShooterRedux/PNG/Lasers/laserRed02.png",
-        "turret_health_bar_bg": "Assets/SpaceShooterRedux/PNG/Lasers/laserRed14.png",
-        "turret_ship": "Assets/SpaceShooterRedux/PNG/Parts/cockpitRed_2.png"
+        "turret_health_bar_bg": "Assets/SpaceShooterRedux/PNG/Lasers/laserRed14.png"
     },
 
     "assets": {
@@ -98,7 +97,7 @@
                 "image:image": "turret",
                 "projectile_type": "EnemyTurretProjectile",
                 "scale": 1.25,
-                "fire_freq": 1500  
+                "fire_freq": 2250 
             },
             "attachments": [
                 {
