@@ -33,10 +33,10 @@
             "class_name": "Ship",
             "kwargs": {
                 "image:image": "ship",
-                "velocity_decay_factor": 0.9,
                 "scale": 0.8,
                 "projectile_type": "PlayerProjectile",
-                "fire_freq": 250
+                "fire_freq": 250,
+                "mover_type": "PlayerShipMover"
             },
             "attachments": [
                 {
@@ -49,6 +49,15 @@
                     "parent_transform": false
                 }
             ]
+        },
+        "PlayerShipMover": {
+            "class_name": "MoverVelocity",
+            "kwargs": {
+                "velocity": 0.0,
+                "velocity_decay_factor": 0.9,
+                "max_velocity": 200.0,
+                "angular_velocity": 1.5
+            }
         },
         "PlayerHealthBar": {
             "class_name": "HealthBar",
@@ -99,7 +108,16 @@
                 "image:image": "turret_projectile",
                 "death_effect": "Explosion",
                 "damage": 10,
-                "velocity": 500
+                "mover_type": "EnemyTurretProjectileMover"
+            }
+        },
+        "EnemyTurretProjectileMover": {
+            "class_name": "MoverVelocity",
+            "kwargs": {
+                "velocity": 500.0,
+                "velocity_decay_factor": 1.0,
+                "max_velocity": 500.0,
+                "angular_velocity": 0.0
             }
         },
         "Explosion": {
@@ -122,7 +140,16 @@
                 "image:image": "player_projectile",
                 "death_effect": "Explosion",
                 "damage": 15,
-                "velocity": 800
+                "mover_type": "PlayerProjectileMover"
+            }
+        },
+        "PlayerProjectileMover": {
+            "class_name": "MoverVelocity",
+            "kwargs": {
+                "velocity": 800.0,
+                "velocity_decay_factor": 1.0,
+                "max_velocity": 800.0,
+                "angular_velocity": 0.0
             }
         }
     }

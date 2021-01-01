@@ -1,18 +1,25 @@
 import pygame
 
+from game_object_factory import GameObjectBase
+from game_object_factory import GameObjectFactory
 
-class Mover():
+
+class Mover(GameObjectBase):
     """Base class for game objects that move."""
 
     def move(self, delta, pos, heading):
         pass
 
 
-class MoverVelocity():
+@GameObjectFactory.register("MoverVelocity")
+class MoverVelocity(Mover):
+    """Velocity-based mover."""
 
-    def __init__(self, velocity_decay_factor, velocity):
+    def __init__(self, velocity_decay_factor, velocity, max_velocity, angular_velocity):
         self.velocity = velocity
         self.velocity_decay_factor = velocity_decay_factor
+        self.max_velocity = max_velocity
+        self.angular_velocity = angular_velocity
 
     def move(self, delta, pos, heading):
         """Computes movement from the given parameters."""

@@ -99,6 +99,7 @@ class GameObject(pygame.sprite.Sprite, GameObjectBase):
         self.kill()
 
     def add_to_groups(self, groups):
+        """Adds the game object to the given sprite groups."""
         for group in groups:
             group.add(self)
             for attachment in self.attachments:

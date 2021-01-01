@@ -38,8 +38,6 @@ def main():
     # Create player
     player = GameObjectFactory.create("PlayerShip", enemies=badies_collision_group)
     player.set_pos(pygame.Vector2(screen_rect.width / 2.0, screen_rect.height / 2.0))
-    linear_velocity = 200.0
-    angular_velocity = 1.5
 
     # Create a turret
     turrets = [GameObjectFactory.create("EnemyTurret", enemies=player_collision_group) for i in range(5)]
@@ -68,11 +66,11 @@ def main():
         # Handle input for movement
         pressed_keys = pygame.key.get_pressed()
         if pressed_keys[pygame.K_a]:
-            player.set_heading(player.heading + angular_velocity)
+            player.set_heading(player.heading + player.mover.angular_velocity)
         if pressed_keys[pygame.K_d]:
-            player.set_heading(player.heading - angular_velocity)
+            player.set_heading(player.heading - player.mover.angular_velocity)
         if pressed_keys[pygame.K_w]:
-            player.set_velocity(linear_velocity)
+            player.set_velocity(player.mover.max_velocity)
         if pressed_keys[pygame.K_s]:
             player.set_velocity(player.mover.velocity * 0.8)
 
