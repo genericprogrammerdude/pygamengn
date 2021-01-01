@@ -23,7 +23,9 @@ class GameObjectFactory():
     game_types = {}
     assets = {}
     __image_json_objects = []
+    __image_list_json_objects = []
     __asset_json_objects = []
+    __asset_list_json_objects = []
 
     @classmethod
     def initialize(cls, inventory_fp):
@@ -33,40 +35,43 @@ class GameObjectFactory():
         cls.surfaces = {}
         data_images = data["surfaces"]
         for key in data_images.keys():
-            cls.surfaces[key] = pygame.image.load(data_images[key])
+            cls.surfaces[key] = pygame.image.load(data_images[key]).convert_alpha()
 
         # Assets and game_types can be assigned directly
         cls.game_types = data["game_types"]
 
         # Initialize assets with surfaces and the corresponding asset object
         cls.assets = data["assets"]
-        for key in cls.assets.keys():
-            asset_spec = cls.assets[key]
-            if isinstance(asset_spec["kwargs"]["image"], str):
-                asset_spec["kwargs"]["image"] = cls.surfaces[asset_spec["kwargs"]["image"]]
-            elif isinstance(asset_spec["kwargs"]["image"], list):
-                images = asset_spec["kwargs"]["image"]
-                asset_spec["kwargs"]["image"] = cls.surfaces[images[0]]
-                asset_spec["kwargs"]["images"] = [cls.surfaces[images[i]] for i in range(len(images))]
-            asset_spec["asset"] = GameObjectFactory.__create_object(asset_spec)
 
         # Replace image names with loaded Surfaces
-        for o in cls.__image_json_objects:
-            if isinstance(o["image"], str):
-                image_str = o["image"]
-                o["image"] = cls.surfaces[image_str]
-            elif isinstance(o["image"], list):
-                images = o["image"]
-                o["image"] = cls.surfaces[images[0]]
-                o["images"] = [cls.surfaces[images[i]] for i in range(len(images))]
+        for obj, key in cls.__image_json_objects:
+            image_name = obj[key]
+            obj[key[len("image:"):]] = cls.surfaces[image_name]
+            del obj[key]
         del cls.__image_json_objects
 
-        # Replace asset names with the loaded assets
-        for o in cls.__asset_json_objects:
-            if isinstance(o["asset"], str):
-                asset_str = o["asset"]
-                o["asset"] = cls.assets[asset_str]["asset"]
+        # Replace image lists with loaded Surfaces
+        for obj, key in cls.__image_list_json_objects:
+            image_list = obj[key]
+            obj[key[len("image_list:"):]] = [cls.surfaces[image_str] for image_str in image_list]
+            del obj[key]
+        del cls.__image_list_json_objects
+
+        # Create asset objects
+        for key in cls.assets.keys():
+            asset_spec = cls.assets[key]
+            asset_spec["asset"] = GameObjectFactory.__create_object(asset_spec)
+
+        # Replace asset names with loaded assets
+        for obj, key in cls.__asset_json_objects:
+            asset_name = obj[key]
+            obj[key[len("asset:"):]] = cls.assets[asset_name]["asset"]
+            del obj[key]
         del cls.__asset_json_objects
+
+        # Replace image lists with loaded Surfaces
+        # TODO: Implement me!
+        del cls.__asset_list_json_objects
 
     @classmethod
     def create(cls, name: str, **kwargs) -> GameObjectBase:
@@ -104,10 +109,15 @@ class GameObjectFactory():
     @classmethod
     def __json_object_hook(cls, obj_dict):
         """Keeps track of JSON objects (dictionaries) that will have to be initialized further."""
-        if "image" in obj_dict:
-            cls.__image_json_objects.append(obj_dict)
-        if "asset" in obj_dict:
-            cls.__asset_json_objects.append(obj_dict)
+        for key in obj_dict.keys():
+            if key.startswith("image:"):
+                cls.__image_json_objects.append((obj_dict, key))
+            elif key.startswith("image_list:"):
+                cls.__image_list_json_objects.append((obj_dict, key))
+            elif key.startswith("asset:"):
+                cls.__asset_json_objects.append((obj_dict, key))
+            elif key.startswith("asset_list:"):
+                cls.__asset_list_json_objects.append((obj_dict, key))
         return obj_dict
 
     @classmethod

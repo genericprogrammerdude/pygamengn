@@ -11,6 +11,7 @@ class AnimatedTexture(GameObject):
 
     def __init__(self, asset, duration, scale=1.0):
         super().__init__(asset.frames[0][0], False, scale)
+        self.dirty_image = False
         self.asset = asset
         self.duration = duration
         self.animation_time = 0
