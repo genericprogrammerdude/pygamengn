@@ -9,9 +9,9 @@ from mover import MoverVelocity
 @GameObjectFactory.register("Projectile")
 class Projectile(GameObject):
 
-    def __init__(self, image, enemies, damage, death_effect, mover_type):
+    def __init__(self, image, enemies, damage, death_effect, mover):
         super().__init__(image)
-        self.mover = GameObjectFactory.create(mover_type)
+        self.mover = mover
         self.enemies = enemies
         self.damage = damage
         self.death_effect = death_effect

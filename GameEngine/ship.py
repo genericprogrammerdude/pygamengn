@@ -9,9 +9,9 @@ from projectile import Projectile
 class Ship(GameObject):
     """Space ship game object."""
 
-    def __init__(self, image, projectile_type, enemies, fire_freq, mover_type, **kwargs):
+    def __init__(self, image, projectile_type, enemies, fire_freq, mover, **kwargs):
         super().__init__(image, **kwargs)
-        self.mover = GameObjectFactory.create(mover_type)
+        self.mover = mover
         self.projectile_type = projectile_type
         self.enemies = enemies
         self.fire_freq = fire_freq

@@ -36,7 +36,7 @@
                 "scale": 0.8,
                 "projectile_type": "PlayerProjectile",
                 "fire_freq": 250,
-                "mover_type": "PlayerShipMover"
+                "game_object_type:mover": "PlayerShipMover"
             },
             "attachments": [
                 {
@@ -108,7 +108,7 @@
                 "image:image": "turret_projectile",
                 "death_effect": "Explosion",
                 "damage": 10,
-                "mover_type": "EnemyTurretProjectileMover"
+                "game_object_type:mover": "EnemyTurretProjectileMover"
             }
         },
         "EnemyTurretProjectileMover": {
@@ -140,7 +140,7 @@
                 "image:image": "player_projectile",
                 "death_effect": "Explosion",
                 "damage": 15,
-                "mover_type": "PlayerProjectileMover"
+                "game_object_type:mover": "PlayerProjectileMover"
             }
         },
         "PlayerProjectileMover": {
