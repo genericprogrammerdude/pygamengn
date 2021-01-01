@@ -40,12 +40,18 @@ def main():
     player.set_pos(pygame.Vector2(screen_rect.width / 2.0, screen_rect.height / 2.0))
 
     # Create a turret
-    turrets = [GameObjectFactory.create("EnemyTurret", enemies=player_collision_group) for i in range(5)]
-    for turret in turrets:
+    #turrets = [GameObjectFactory.create("EnemyTurret", enemies=player_collision_group) for i in range(5)]
+   # for turret in turrets:
+     #   turret.set_pos(pygame.Vector2(random.randint(0, screen_rect.width), random.randint(0, screen_rect.height)))
+       # turret.set_target(player)
+       # turret.add_to_groups([render_group, badies_collision_group])
+    
+    turret2 = [GameObjectFactory.create("EnemyTurret2", enemies=player_collision_group) for i in range(5)]
+    for turret in turret2:
         turret.set_pos(pygame.Vector2(random.randint(0, screen_rect.width), random.randint(0, screen_rect.height)))
         turret.set_target(player)
         turret.add_to_groups([render_group, badies_collision_group])
-
+        
     render_group.set_target(player)
     player.add_to_groups([render_group, player_collision_group])
 

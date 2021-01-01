@@ -16,7 +16,8 @@
         "player_health_bar_bg": "Assets/SpaceShooterRedux/PNG/Lasers/laserBlue14.png",
         "turret_health_bar_fg": "Assets/SpaceShooterRedux/PNG/Lasers/laserRed02.png",
         "turret_health_bar_bg": "Assets/SpaceShooterRedux/PNG/Lasers/laserRed14.png",
-        "turret_ship": "Assets/SpaceShooterRedux/PNG/Parts/cockpitRed_2.png"
+        "turret_ship": "Assets/SpaceShooterRedux/PNG/Parts/cockpitRed_2.png",
+        "turret_projectile2" : "Assets/SpaceShooterRedux/PNG/Lasers/laserBlue01.png"
     },
 
     "assets": {
@@ -112,6 +113,27 @@
                 }
             ]
         },
+        "EnemyTurret2": {
+            "class_name": "Turret",
+            "kwargs": {
+                "image:image": "turret",
+                "projectile_type": "EnemyTurret2Projectile",
+                "scale": 1.25,
+                "fire_freq": 1500  
+            },
+            "attachments": [
+                {
+                    "game_type": "EnemyTurretGun",
+                    "offset": [0.0, -15.0]
+                },
+                {
+                    "game_type": "TurretHealthBar",
+                    "offset": [0, 0],
+                    "parent_transform": false
+                }
+            ]
+        },
+        
         "TurretHealthBar": {
             "class_name": "HealthBar",
             "kwargs": {
@@ -131,6 +153,15 @@
             "class_name": "Projectile",
             "kwargs": {
                 "image:image": "turret_projectile",
+                "death_effect": "Explosion",
+                "damage": 10,
+                "game_object_type:mover": "EnemyTurretProjectileMover"
+            }
+        },
+         "EnemyTurret2Projectile": {
+            "class_name": "Projectile",
+            "kwargs": {
+                "image:image": "turret_projectile2",
                 "death_effect": "Explosion",
                 "damage": 10,
                 "game_object_type:mover": "EnemyTurretProjectileMover"
