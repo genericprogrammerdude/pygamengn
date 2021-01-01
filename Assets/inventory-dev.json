@@ -97,7 +97,7 @@
                 "image:image": "turret",
                 "projectile_type": "EnemyTurretProjectile",
                 "scale": 1.25,
-                "fire_freq": 2250 
+                "fire_freq": 2250
             },
             "attachments": [
                 {

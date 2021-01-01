@@ -39,14 +39,15 @@ class RenderGroup(pygame.sprite.LayeredUpdates):
             self.__draw_grid(surface)
 
         for sprite in self.sprites():
-            cam = pygame.Vector2(round(self.cam.x), round(self.cam.y))
-            transformed_rect = sprite.rect.move(cam)
-            if not self.view_rect.colliderect(transformed_rect):
-                # Ignore sprites that are outside of the view rectangle
-                if sprite.kill_when_off_screen():
-                    sprite.kill()
-            else:
-                surface.blit(sprite.image, transformed_rect)
+            if sprite.visible:
+                cam = pygame.Vector2(round(self.cam.x), round(self.cam.y))
+                transformed_rect = sprite.rect.move(cam)
+                if not self.view_rect.colliderect(transformed_rect):
+                    # Ignore sprites that are outside of the view rectangle
+                    if sprite.kill_when_off_screen():
+                        sprite.kill()
+                else:
+                    surface.blit(sprite.image, transformed_rect)
 
     def __draw_grid(self, surface):
         """Draws a grid as a background."""
