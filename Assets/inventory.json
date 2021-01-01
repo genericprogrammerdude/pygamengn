@@ -62,7 +62,7 @@
         "EnemyTurret": {
             "class_name": "Turret",
             "kwargs": {
-                "image": "turret_ship",
+                "image": "turret",
                 "projectile_type": "EnemyTurretProjectile",
                 "scale": 1.25,
                 "fire_freq": 1500  
