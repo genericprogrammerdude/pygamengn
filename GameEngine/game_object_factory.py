@@ -60,7 +60,11 @@ class GameObjectFactory():
         del cls.__asset_list_json_objects
 
         # Initialize layer manager if there is one
-        cls.layer_manager = cls.create("LayerManager")
+        layer_manager_spec = cls.assets.get("LayerManager")
+        if layer_manager_spec:
+            cls.layer_manager = layer_manager_spec["asset"]
+        else:
+            sys.stderr.write("GameObjectFactory: No LayerManager defined in inventory assets.\n")
 
     @classmethod
     def create(cls, name: str, **kwargs) -> GameObjectBase:
@@ -128,8 +132,6 @@ class GameObjectFactory():
             elif key.startswith("image_list:"):
                 image_list = type_spec_kwargs[key]
                 resolved_refs[key[len("image_list:"):]] = [cls.surfaces[image_str] for image_str in image_list]
-            elif key.startswith("asset:"):
-                print("Found asset:", key, type_spec_kwargs[key])
             elif key.startswith("game_object_type:"):
                 gob_type_name = type_spec_kwargs[key]
                 resolved_refs[key[len("type_spec_object:"):]] = GameObjectFactory.create(gob_type_name)

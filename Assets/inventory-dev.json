@@ -19,16 +19,6 @@
     },
 
     "assets": {
-        "explosion_atlas": {
-            "class_name": "Atlas",
-            "kwargs": {
-                "image_list:images": ["explosion1", "explosion2", "explosion3", "explosion4"],
-                "frame_size": [256, 256]
-            }
-        }
-    },
-
-    "game_types": {
         "LayerManager": {
             "class_name": "LayerManager",
             "kwargs": {
@@ -42,6 +32,16 @@
                 ]
             }
         },
+        "explosion_atlas": {
+            "class_name": "Atlas",
+            "kwargs": {
+                "image_list:images": ["explosion1", "explosion2", "explosion3", "explosion4"],
+                "frame_size": [256, 256]
+            }
+        }
+    },
+
+    "game_types": {
         "PlayerShip": {
             "class_name": "Ship",
             "kwargs": {
