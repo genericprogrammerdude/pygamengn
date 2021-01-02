@@ -151,6 +151,32 @@
                 "duration": 750,
                 "scale": 1
             }
+        },
+        "Level_01": {
+            "class_name": "Level",
+            "kwargs": {
+                "game_object_type:player_spec": "Level_01PlayerSpec",
+                "game_object_type:enemy_spec": "Level_01EnemySpec"
+            }
+        },
+        "Level_01PlayerSpec": {
+            "class_name": "LevelObject",
+            "kwargs": {
+                "game_type": "PlayerShip",
+                "spawn_pos": [640, 360]
+            }
+        },
+        "Level_01EnemySpec": {
+            "class_name": "LevelObject",
+            "kwargs": {
+                "game_type": "EnemyTurret",
+                "spawn_pos": [
+                    [320, 180],
+                    [320, 540],
+                    [960, 180],
+                    [960, 540]
+                ]
+            }
         }
     }
 }
