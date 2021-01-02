@@ -36,4 +36,3 @@ class LevelObject(GameObjectBase):
     def __init__(self, game_type, spawn_pos):
         self.game_type = game_type
         self.spawn_pos = spawn_pos
-        print(self.game_type, self.spawn_pos)
