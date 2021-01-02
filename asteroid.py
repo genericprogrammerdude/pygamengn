@@ -1,3 +1,5 @@
+import random
+
 import pygame
 
 from game_object_factory import GameObjectFactory
@@ -15,7 +17,6 @@ class Asteroid(Projectile):
     def update(self, delta):
         self.spin_angle = (self.spin_angle + 1) % 360
         self.pos, self.heading = self.mover.move(delta, self.pos, self.heading)
-        print(self.heading)
         self.image = pygame.transform.rotozoom(self.image_original, self.spin_angle, self.scale)
         self.mask = pygame.mask.from_surface(self.image, 16)
 
@@ -39,13 +40,14 @@ class Asteroid(Projectile):
                     # Apply damage to the collided sprite
                     sprite.take_damage(self.damage)
 
-#     def die(self):
-#         """Die. Plays an explosion if it was given an atlas for  the AnimatedTexture."""
-#         if self.death_spawn and self.alive():
-#             effect = GameObjectFactory.create(self.death_effect)
-#             group = self.groups()[0]
-#             group.add(effect)
-#             group.move_to_front(effect)
-#             effect.set_pos(self.pos)
-#             effect.play()
-#         super().die()
+    def die(self):
+        """Die. Plays an explosion if it was given an atlas for  the AnimatedTexture."""
+        if self.death_spawn and self.alive():
+            for spawn_type in self.death_spawn:
+                spawn = GameObjectFactory.create(spawn_type, enemies=self.enemies)
+                spawn.add_to_groups(self.groups())
+                spawn.set_pos(pygame.Vector2(640, 370))
+                spawn.set_heading(self.heading + random.random() * 30 * random.randint(0, 1))
+                spawn.transform()
+                print(spawn, spawn.groups())
+        super().die()

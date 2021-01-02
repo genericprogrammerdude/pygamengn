@@ -15,7 +15,27 @@
         "player_health_bar_fg": "Assets/SpaceShooterRedux/PNG/Lasers/laserBlue02.png",
         "player_health_bar_bg": "Assets/SpaceShooterRedux/PNG/Lasers/laserBlue14.png",
         "turret_health_bar_fg": "Assets/SpaceShooterRedux/PNG/Lasers/laserRed02.png",
-        "turret_health_bar_bg": "Assets/SpaceShooterRedux/PNG/Lasers/laserRed14.png"
+        "turret_health_bar_bg": "Assets/SpaceShooterRedux/PNG/Lasers/laserRed14.png",
+        "asteroid_00": "Assets/SpaceShooterRedux/PNG/Meteors/meteorBrown_big1.png",
+        "asteroid_01": "Assets/SpaceShooterRedux/PNG/Meteors/meteorBrown_big2.png",
+        "asteroid_02": "Assets/SpaceShooterRedux/PNG/Meteors/meteorBrown_big3.png",
+        "asteroid_03": "Assets/SpaceShooterRedux/PNG/Meteors/meteorBrown_big4.png",
+        "asteroid_04": "Assets/SpaceShooterRedux/PNG/Meteors/meteorBrown_med1.png",
+        "asteroid_05": "Assets/SpaceShooterRedux/PNG/Meteors/meteorBrown_med2.png",
+        "asteroid_06": "Assets/SpaceShooterRedux/PNG/Meteors/meteorBrown_small1.png",
+        "asteroid_07": "Assets/SpaceShooterRedux/PNG/Meteors/meteorBrown_small2.png",
+        "asteroid_08": "Assets/SpaceShooterRedux/PNG/Meteors/meteorBrown_tiny1.png",
+        "asteroid_09": "Assets/SpaceShooterRedux/PNG/Meteors/meteorBrown_tiny2.png",
+        "asteroid_10": "Assets/SpaceShooterRedux/PNG/Meteors/meteorGrey_big1.png",
+        "asteroid_11": "Assets/SpaceShooterRedux/PNG/Meteors/meteorGrey_big2.png",
+        "asteroid_12": "Assets/SpaceShooterRedux/PNG/Meteors/meteorGrey_big3.png",
+        "asteroid_13": "Assets/SpaceShooterRedux/PNG/Meteors/meteorGrey_big4.png",
+        "asteroid_14": "Assets/SpaceShooterRedux/PNG/Meteors/meteorGrey_med1.png",
+        "asteroid_15": "Assets/SpaceShooterRedux/PNG/Meteors/meteorGrey_med2.png",
+        "asteroid_16": "Assets/SpaceShooterRedux/PNG/Meteors/meteorGrey_small1.png",
+        "asteroid_17": "Assets/SpaceShooterRedux/PNG/Meteors/meteorGrey_small2.png",
+        "asteroid_18": "Assets/SpaceShooterRedux/PNG/Meteors/meteorGrey_tiny1.png",
+        "asteroid_19": "Assets/SpaceShooterRedux/PNG/Meteors/meteorGrey_tiny2.png"
     },
 
     "assets": {
@@ -47,7 +67,7 @@
             "kwargs": {
                 "image:image": "ship",
                 "scale": 0.8,
-                "projectile_type": "PlayerProjectile",
+                "projectile_type": "Asteroid",
                 "fire_freq": 250,
                 "game_object_type:mover": "PlayerShipMover"
             },
@@ -169,7 +189,9 @@
             "class_name": "Level",
             "kwargs": {
                 "game_object_type:player_spec": "Level_01PlayerSpec",
-                "game_object_type:enemy_spec": "Level_01EnemySpec"
+                "game_object_type_list:enemy_specs": [
+                    "Level_01EnemySpec2"
+                ]
             },
             "StrayTurretGun": {
                 "class_name": "GameObject",
@@ -196,6 +218,82 @@
                     [960, 180],
                     [960, 540]
                 ]
+            }
+        },
+        "Level_01EnemySpec2": {
+            "class_name": "LevelObject",
+            "kwargs": {
+                "game_type": "EnemyTurret",
+                "spawn_pos": [
+                    [1000, 540]
+                ]
+            }
+        },
+        "Asteroid": {
+            "class_name": "Asteroid",
+            "kwargs": {
+                "image:image": "asteroid_00",
+                "death_effect": "Explosion",
+                "damage": 15,
+                "game_object_type:mover": "AsteroidMover",
+                "death_spawn": ["AsteroidSmall", "AsteroidTiny"]
+            }
+        },
+        "AsteroidSmall": {
+            "class_name": "Asteroid",
+            "kwargs": {
+                "image:image": "asteroid_06",
+                "death_effect": "Explosion",
+                "damage": 5,
+                "game_object_type:mover": "AsteroidMover",
+                "death_spawn": []
+            }
+        },
+        "AsteroidTiny": {
+            "class_name": "Asteroid",
+            "kwargs": {
+                "image:image": "asteroid_08",
+                "death_effect": "Explosion",
+                "damage": 5,
+                "game_object_type:mover": "AsteroidMover",
+                "death_spawn": []
+            }
+        },
+        "AsteroidMover": {
+            "class_name": "MoverVelocity",
+            "kwargs": {
+                "velocity": 50.0,
+                "velocity_decay_factor": 1.0,
+                "max_velocity": 500.0,
+                "angular_velocity": 1.0
+            }
+        },
+        "AsteroidParticleSystem": {
+            "class_name": "ParticleSystem",
+            "kwargs": {
+                "image_list:images": [
+                     "asteroid_00",
+                     "asteroid_01",
+                     "asteroid_02",
+                     "asteroid_03",
+                     "asteroid_04",
+                     "asteroid_05",
+                     "asteroid_06",
+                     "asteroid_07",
+                     "asteroid_08",
+                     "asteroid_09",
+                     "asteroid_10",
+                     "asteroid_11",
+                     "asteroid_12",
+                     "asteroid_13",
+                     "asteroid_14",
+                     "asteroid_15",
+                     "asteroid_16",
+                     "asteroid_17",
+                     "asteroid_18",
+                     "asteroid_19"
+                ],
+                "spawn_freq": 1000
             }
         }
     }
