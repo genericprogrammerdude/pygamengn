@@ -54,7 +54,6 @@ class Projectile(GameObject):
             effect = GameObjectFactory.create(self.death_effect)
             group = self.groups()[0]
             group.add(effect)
-            group.move_to_front(effect)
             effect.set_pos(self.pos)
             effect.play()
         super().die()
