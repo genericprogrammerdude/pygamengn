@@ -1,5 +1,6 @@
 from game_object import GameObject
 from game_object_factory import GameObjectFactory
+from health_bar import HealthBar
 from mover import MoverVelocity
 from projectile import Projectile
 
@@ -38,6 +39,5 @@ class Ship(GameObject):
 
             group = self.groups()[0]
             group.add(projectile)
-            group.move_to_back(projectile)
 
             self.time_since_last_fire = 0

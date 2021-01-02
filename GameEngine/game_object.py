@@ -105,6 +105,10 @@ class GameObject(pygame.sprite.Sprite, GameObjectBase):
             for attachment in self.attachments:
                 group.add(attachment.game_object)
 
+    def set_layer_id(self, layer_id):
+        """Sets the layer for rendering."""
+        self._layer = layer_id
+
 
 class Attachment():
 
