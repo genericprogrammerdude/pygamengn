@@ -157,6 +157,13 @@
             "kwargs": {
                 "game_object_type:player_spec": "Level_01PlayerSpec",
                 "game_object_type:enemy_spec": "Level_01EnemySpec"
+            },
+            "StrayTurretGun": {
+                "class_name": "GameObject",
+                "kwargs": {
+                    "image:image": "turret_gun",
+                    "is_collidable": false
+                }
             }
         },
         "Level_01PlayerSpec": {

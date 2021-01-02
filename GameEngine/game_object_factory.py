@@ -62,7 +62,7 @@ class GameObjectFactory():
     def create(cls, name: str, **kwargs) -> GameObjectBase:
         """Creates a GameObject instance."""
         try:
-            game_type = cls.game_types[name]
+            game_type = GameObjectFactory.__get_game_type(name)
         except KeyError:
             sys.stderr.write("Game type '{0}' not found.\n".format(name))
             return None
@@ -81,6 +81,21 @@ class GameObjectFactory():
                     gob.attach(attachment_object, attachment_spec["offset"], parent_transform)
 
         return gob
+
+    @classmethod
+    def __get_game_type(cls, name: str) -> dict:
+        """Gets the given game type, recursing into nested dictionaries as necessary."""
+        #
+        # TODO: Given game type A that references game type B, search for B in the "local context" first (i.e., search
+        # for B going up the hierarchy of dictionaries). This will remove the need to provide full context for
+        # referencing B from A. Instead of referencing "/CommonParent/B", A could reference "B" and that should be
+        # enough to find "/CommonParent/B" from A.
+        #
+        keys = name.split('/')
+        game_type = cls.game_types
+        for key in keys:
+            game_type = game_type[key]
+        return game_type
 
     @classmethod
     def __create_object(cls, type_spec, **kwargs) -> GameObjectBase:
