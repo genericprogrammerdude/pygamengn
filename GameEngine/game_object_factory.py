@@ -135,6 +135,11 @@ class GameObjectFactory():
             elif key.startswith("game_object_type:"):
                 gob_type_name = type_spec_kwargs[key]
                 resolved_refs[key[len("type_spec_object:"):]] = GameObjectFactory.create(gob_type_name)
+            elif key.startswith("game_object_type_list:"):
+                gob_type_list = type_spec_kwargs[key]
+                resolved_refs[key[len("game_object_type_list:"):]] = [
+                    GameObjectFactory.create(gob_type_name) for gob_type_name in gob_type_list
+                ]
             else:
                 resolved_refs[key] = type_spec_kwargs[key]
 

@@ -8,9 +8,9 @@ from game_object_factory import GameObjectFactory
 class Level(GameObjectBase):
     """Abstraction to represent a level to play in."""
 
-    def __init__(self, player_spec, enemy_spec):
+    def __init__(self, player_spec, enemy_specs):
         self.player_spec = player_spec
-        self.enemy_spec = enemy_spec
+        self.enemy_specs = enemy_specs
         self.player = None
         self.enemies = []
 
@@ -19,11 +19,12 @@ class Level(GameObjectBase):
         self.player = GameObjectFactory.create(self.player_spec.game_type, enemies=enemy_collision_group)
         self.player.set_pos(pygame.Vector2(self.player_spec.spawn_pos))
 
-        for spawn_pos in self.enemy_spec.spawn_pos:
-            enemy = GameObjectFactory.create(self.enemy_spec.game_type, enemies=player_collision_group)
-            enemy.set_pos(pygame.Vector2(spawn_pos))
-            enemy.add_to_groups([render_group, enemy_collision_group])
-            self.enemies.append(enemy)
+        for enemy_spec in self.enemy_specs:
+            for spawn_pos in enemy_spec.spawn_pos:
+                enemy = GameObjectFactory.create(enemy_spec.game_type, enemies=player_collision_group)
+                enemy.set_pos(pygame.Vector2(spawn_pos))
+                enemy.add_to_groups([render_group, enemy_collision_group])
+                self.enemies.append(enemy)
 
         render_group.set_target(self.player)
         self.player.add_to_groups([render_group, player_collision_group])
