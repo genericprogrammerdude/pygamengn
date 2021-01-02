@@ -29,6 +29,19 @@
     },
 
     "game_types": {
+        "LayerManager": {
+            "class_name": "LayerManager",
+            "kwargs": {
+                "layers": [
+                    ["Projectile"],
+                    ["Turret", "EnemyTurretGun", "TurretHealthBar"],
+                    ["Ship", "PlayerHealthBar"],
+                    ["Shield"],
+                    ["AnimatedTexture"],
+                    ["HealthBar"]
+                ]
+            }
+        },
         "PlayerShip": {
             "class_name": "Ship",
             "kwargs": {
