@@ -39,6 +39,5 @@ class Ship(GameObject):
 
             group = self.groups()[0]
             group.add(projectile)
-            group.move_to_back(projectile)
 
             self.time_since_last_fire = 0

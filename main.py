@@ -1,12 +1,11 @@
-import random
 import sys
 
 import pygame
 
 sys.path.append("./GameEngine")
 
-from game_object import GameObject
 from game_object_factory import GameObjectFactory
+from level import Level
 from render_group import RenderGroup
 from shield import Shield
 from ship import Ship
@@ -35,25 +34,31 @@ def main():
     player_collision_group = pygame.sprite.Group()
     badies_collision_group = pygame.sprite.Group()
 
-    # Create player
-    player = GameObjectFactory.create("PlayerShip", enemies=badies_collision_group)
-    player.set_pos(pygame.Vector2(screen_rect.width / 2.0, screen_rect.height / 2.0))
+#     # Create player
+#     player = GameObjectFactory.create("PlayerShip", enemies=badies_collision_group)
+#     player.set_pos(pygame.Vector2(screen_rect.width / 2.0, screen_rect.height / 2.0))
+# 
+#     # Create a turret
+#     turrets = [GameObjectFactory.create("EnemyTurret", enemies=player_collision_group) for i in range(3)]
+#     for turret in turrets:
+#         turret.set_pos(pygame.Vector2(random.randint(0, screen_rect.width), random.randint(0, screen_rect.height)))
+#         turret.set_target(player)
+#         turret.add_to_groups([render_group, badies_collision_group])
+#     
+#     turret2 = [GameObjectFactory.create("EnemyTurret2", enemies=player_collision_group) for i in range(2)]
+#     for turret in turret2:
+#         turret.set_pos(pygame.Vector2(random.randint(0, screen_rect.width), random.randint(0, screen_rect.height)))
+#         turret.set_target(player)
+#         turret.add_to_groups([render_group, badies_collision_group])
+#         
+#     render_group.set_target(player)
+#     player.add_to_groups([render_group, player_collision_group])
 
-    # Create a turret
-    turrets = [GameObjectFactory.create("EnemyTurret", enemies=player_collision_group) for i in range(3)]
-    for turret in turrets:
-        turret.set_pos(pygame.Vector2(random.randint(0, screen_rect.width), random.randint(0, screen_rect.height)))
-        turret.set_target(player)
-        turret.add_to_groups([render_group, badies_collision_group])
-    
-    turret2 = [GameObjectFactory.create("EnemyTurret2", enemies=player_collision_group) for i in range(2)]
-    for turret in turret2:
-        turret.set_pos(pygame.Vector2(random.randint(0, screen_rect.width), random.randint(0, screen_rect.height)))
-        turret.set_target(player)
-        turret.add_to_groups([render_group, badies_collision_group])
-        
-    render_group.set_target(player)
-    player.add_to_groups([render_group, player_collision_group])
+    level_01 = GameObjectFactory.create("Level_01")
+    level_01.create_objects(render_group, player_collision_group, badies_collision_group)
+    player = level_01.player
+    for enemy in level_01.enemies:
+        enemy.set_target(player)
 
     clock = pygame.time.Clock()
     running = True
