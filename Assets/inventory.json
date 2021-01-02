@@ -17,7 +17,7 @@
         "turret_health_bar_fg": "Assets/SpaceShooterRedux/PNG/Lasers/laserRed02.png",
         "turret_health_bar_bg": "Assets/SpaceShooterRedux/PNG/Lasers/laserRed14.png",
         "turret_ship": "Assets/SpaceShooterRedux/PNG/Parts/cockpitRed_2.png",
-        "turret_projectile2" : "Assets/SpaceShooterRedux/PNG/Lasers/laserBlue01.png"
+        "turret_projectile2" : "Assets/SpaceShooterRedux/PNG/Lasers/laserBlue06.png"
     },
 
     "assets": {
@@ -50,7 +50,7 @@
                 "image:image": "ship",
                 "scale": 0.8,
                 "projectile_type": "PlayerProjectile",
-                "fire_freq": 250,
+                "fire_freq": 200,
                 "game_object_type:mover": "PlayerShipMover"
             },
             "attachments": [
@@ -112,7 +112,7 @@
                 "image:image": "turret",
                 "projectile_type": "EnemyTurretProjectile",
                 "scale": 1.25,
-                "fire_freq": 1500  
+                "fire_freq": 2000 
             },
             "attachments": [
                 {
@@ -132,7 +132,7 @@
                 "image:image": "turret",
                 "projectile_type": "EnemyTurret2Projectile",
                 "scale": 1.25,
-                "fire_freq": 1750  
+                "fire_freq": 1000
             },
             "attachments": [
                 {
@@ -140,7 +140,7 @@
                     "offset": [0.0, -15.0]
                 },
                 {
-                    "game_type": "TurretHealthBar",
+                    "game_type": "Turret2HealthBar",
                     "offset": [0, 0],
                     "parent_transform": false
                 }
@@ -151,6 +151,14 @@
             "class_name": "HealthBar",
             "kwargs": {
                 "image_list:images": ["turret_health_bar_bg", "turret_health_bar_fg"],
+                "heading": 90,
+                "is_collidable": false
+            }
+        },
+        "Turret2HealthBar": {
+            "class_name": "HealthBar",
+            "kwargs": {
+                "image_list:images": ["player_health_bar_bg", "player_health_bar_fg"],
                 "heading": 90,
                 "is_collidable": false
             }
@@ -201,7 +209,10 @@
             "class_name": "Level",
             "kwargs": {
                 "game_object_type:player_spec": "Level_01PlayerSpec",
-                "game_object_type:enemy_spec": "Level_01EnemySpec"
+                "game_object_type_list:enemy_specs": [
+                    "Level_01EnemySpec",
+                    "Level_01EnemySpec2"
+                ]            
             }
         },
         "Level_01PlayerSpec": {
@@ -220,6 +231,15 @@
                     [320, 540],
                     [960, 180],
                     [960, 540]
+                ]
+            }
+        },
+        "Level_01EnemySpec2": {
+            "class_name": "LevelObject",
+            "kwargs": {
+                "game_type": "EnemyTurret2",
+                "spawn_pos": [
+                    [640,360]
                 ]
             }
         }
