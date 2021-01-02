@@ -119,7 +119,7 @@
                 "image:image": "turret",
                 "projectile_type": "EnemyTurret2Projectile",
                 "scale": 1.25,
-                "fire_freq": 1500  
+                "fire_freq": 1750  
             },
             "attachments": [
                 {
@@ -163,7 +163,7 @@
             "kwargs": {
                 "image:image": "turret_projectile2",
                 "death_effect": "Explosion",
-                "damage": 10,
+                "damage": 20,
                 "game_object_type:mover": "EnemyTurretProjectileMover"
             }
         },
