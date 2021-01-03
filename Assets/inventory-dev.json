@@ -88,7 +88,7 @@
             "kwargs": {
                 "image:image": "ship",
                 "scale": 0.8,
-                "projectile_type": "Asteroid",
+                "projectile_type": "PlayerProjectile",
                 "fire_freq": 250,
                 "game_object_type:mover": "PlayerShipMover"
             },
@@ -147,7 +147,8 @@
                 "game_object_type:mover": "PlayerProjectileMover"
             },
             "groups": [
-                "RenderGroup"
+                "RenderGroup",
+                "FriendGroup"
             ]
         },
         "PlayerProjectileMover": {
@@ -183,6 +184,30 @@
                 "EnemyGroup"
             ]
         },
+        "EnemyTurretAsteroid": {
+            "class_name": "Turret",
+            "kwargs": {
+                "image:image": "turret",
+                "projectile_type": "Asteroid",
+                "scale": 1.25,
+                "fire_freq": 3000
+            },
+            "attachments": [
+                {
+                    "game_type": "EnemyTurretGun",
+                    "offset": [0.0, -15.0]
+                },
+                {
+                    "game_type": "TurretHealthBar",
+                    "offset": [0, 0],
+                    "parent_transform": false
+                }
+            ],
+            "groups": [
+                "RenderGroup",
+                "EnemyGroup"
+            ]
+        },
         "TurretHealthBar": {
             "class_name": "HealthBar",
             "kwargs": {
@@ -197,12 +222,10 @@
         "EnemyTurretGun": {
             "class_name": "GameObject",
             "kwargs": {
-                "image:image": "turret_gun",
-                "is_collidable": false
+                "image:image": "turret_gun"
             },
             "groups": [
-                "RenderGroup",
-                "EnemyGroup"
+                "RenderGroup"
             ]
         },
         "EnemyTurretProjectile": {
@@ -214,7 +237,8 @@
                 "game_object_type:mover": "EnemyTurretProjectileMover"
             },
             "groups": [
-                "RenderGroup"
+                "RenderGroup",
+                "EnemyGroup"
             ]
         },
         "EnemyTurretProjectileMover": {
@@ -240,45 +264,37 @@
         "Level_01": {
             "class_name": "Level",
             "kwargs": {
-                "game_object_type:player_spec": "Level_01PlayerSpec",
+                "game_object_type:player_spec": "Level_01/PlayerSpec",
                 "game_object_type_list:enemy_specs": [
-                    "Level_01EnemySpec2"
+                    "Level_01/EnemySpec1",
+                    "Level_01/EnemySpec2"
                 ]
             },
-            "StrayTurretGun": {
-                "class_name": "GameObject",
+            "PlayerSpec": {
+                "class_name": "LevelObject",
                 "kwargs": {
-                    "image:image": "turret_gun",
-                    "is_collidable": false
+                    "game_type": "PlayerShip",
+                    "spawn_pos": [640, 360]
                 }
-            }
-        },
-        "Level_01PlayerSpec": {
-            "class_name": "LevelObject",
-            "kwargs": {
-                "game_type": "PlayerShip",
-                "spawn_pos": [640, 360]
-            }
-        },
-        "Level_01EnemySpec": {
-            "class_name": "LevelObject",
-            "kwargs": {
-                "game_type": "EnemyTurret",
-                "spawn_pos": [
-                    [320, 180],
-                    [320, 540],
-                    [960, 180],
-                    [960, 540]
-                ]
-            }
-        },
-        "Level_01EnemySpec2": {
-            "class_name": "LevelObject",
-            "kwargs": {
-                "game_type": "EnemyTurret",
-                "spawn_pos": [
-                    [1000, 540]
-                ]
+            },
+            "EnemySpec1": {
+                "class_name": "LevelObject",
+                "kwargs": {
+                    "game_type": "EnemyTurretAsteroid",
+                    "spawn_pos": [
+                        [320, 180],
+                        [320, 540]
+                    ]
+                }
+            },
+            "EnemySpec2": {
+                "class_name": "LevelObject",
+                "kwargs": {
+                    "game_type": "EnemyTurret",
+                    "spawn_pos": [
+                        [1000, 540]
+                    ]
+                }
             }
         },
         "Asteroid": {

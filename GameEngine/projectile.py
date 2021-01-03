@@ -23,28 +23,13 @@ class Projectile(GameObject):
         self.pos, self.heading = self.mover.move(delta, self.pos, self.heading)
         super().update(delta)
 
-    def handle_collisions(self):
-        """Checks for collisions."""
-        if self.enemies:
-            collisions = pygame.sprite.spritecollide(self, self.enemies, False, self.sprites_collided)
-            for sprite in collisions:
-                collision = pygame.sprite.collide_mask(sprite, self)
-                if collision:
-                    # Set own position to the collision point so the explosion will play there when self dies
-                    self.set_pos(pygame.Vector2(sprite.rect.topleft) + collision)
-                    self.take_damage(self.health)
-                    # Apply damage to the collided sprite
-                    sprite.take_damage(self.damage)
-
-    def sprites_collided(self, a, b):
-        """Checks whether sprites a and b collide."""
-        if a == b:
-            return False
-        if not (a.is_collidable and b.is_collidable):
-            return False
-        if (a.parent and a.parent == b) or (b.parent and b.parent == a):
-            return False
-        return pygame.sprite.collide_rect(a, b)
+    def handle_collision(self, gob, world_pos):
+        """Reacts to collision against game object gob."""
+        # Set own position to the collision point so the explosion will play there when self dies
+        self.set_pos(world_pos)
+        self.take_damage(self.health)
+        # Apply damage to the collided sprite
+        gob.take_damage(self.damage)
 
     def die(self):
         """Die. Plays an explosion if it was given an atlas for  the AnimatedTexture."""

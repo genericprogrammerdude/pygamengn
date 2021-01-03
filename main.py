@@ -4,6 +4,7 @@ import pygame
 
 sys.path.append("./GameEngine")
 
+from collision_manager import CollisionManager
 from game_object_factory import GameObjectFactory
 from level import Level
 from render_group import RenderGroup
@@ -28,6 +29,11 @@ def main():
     # Create world
     pygame.display.set_icon(GameObjectFactory.surfaces["ship"])
     pygame.display.set_caption("Game")
+
+    enemy_group = GameObjectFactory.get_asset("EnemyGroup")
+    friend_group = GameObjectFactory.get_asset("FriendGroup")
+    neutral_group = GameObjectFactory.get_asset("NeutralGroup")
+    collision_manager = CollisionManager(enemy_group, friend_group, neutral_group)
 
     render_group = GameObjectFactory.get_asset("RenderGroup")
 
@@ -61,7 +67,11 @@ def main():
             player.set_velocity(player.mover.velocity * 0.8)
 
         # Update groups
-        render_group.update(screen.get_rect(), clock.get_time())
+        delta = clock.get_time()
+        render_group.update(screen.get_rect(), delta)
+
+        # Do collision detection and response
+        collision_manager.do_collisions()
 
         # Render
         screen.fill(background)

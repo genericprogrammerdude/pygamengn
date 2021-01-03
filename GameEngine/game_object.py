@@ -105,6 +105,10 @@ class GameObject(pygame.sprite.Sprite, GameObjectBase):
         """Sets the layer for rendering."""
         self._layer = layer_id
 
+    def handle_collision(self, gob, world_pos):
+        """Reacts to collision against game object gob."""
+        pass
+
 
 class Attachment():
 

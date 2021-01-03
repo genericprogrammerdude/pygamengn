@@ -25,24 +25,17 @@ class Asteroid(Projectile):
         topleft = self.pos - pygame.math.Vector2(self.rect.width / 2.0, self.rect.height / 2.0)
         self.rect.topleft = pygame.Vector2(round(topleft.x), round(topleft.y))
 
-    def handle_collisions(self):
-        """Checks for collisions."""
-        if self.enemies:
-            collisions = pygame.sprite.spritecollide(self, self.enemies, False, self.sprites_collided)
-            for sprite in collisions:
-                collision = pygame.sprite.collide_mask(sprite, self)
-                if collision:
-                    # Set own position to the collision point so the explosion will play there when self dies
-                    self.set_pos(pygame.Vector2(sprite.rect.topleft) + collision)
-                    self.take_damage(self.health)
-                    # Apply damage to the collided sprite
-                    sprite.take_damage(self.damage)
+    def handle_collision(self, gob, world_pos):
+        """Reacts to collision against game object gob."""
+        self.take_damage(self.health)
+        # Apply damage to the collided sprite
+        gob.take_damage(self.damage)
 
     def die(self):
         """Die. Plays an explosion if it was given an atlas for  the AnimatedTexture."""
         if self.death_spawn and self.alive():
             for spawn_type in self.death_spawn:
-                spawn = GameObjectFactory.create(spawn_type, enemies=self.enemies)
+                spawn = GameObjectFactory.create(spawn_type)
                 spawn.add_to_groups(self.groups())
                 spawn.set_pos(pygame.Vector2(640, 370))
                 heading_delta = 60.0 * (random.random() - 0.5)
