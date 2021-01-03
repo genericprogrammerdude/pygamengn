@@ -9,6 +9,7 @@ from level import Level
 from render_group import RenderGroup
 from shield import Shield
 from ship import Ship
+from sprite_group import SpriteGroup
 from turret import Turret
 
 
@@ -27,12 +28,10 @@ def main():
     # Create world
     pygame.display.set_icon(GameObjectFactory.surfaces["ship"])
     pygame.display.set_caption("Game")
-    world_rect = pygame.Rect(0, 0, size[0] * 2, size[1] * 2)
-    screen_rect = screen.get_rect()
 
     render_group = GameObjectFactory.get_asset("RenderGroup")
-    player_collision_group = pygame.sprite.Group()
-    badies_collision_group = pygame.sprite.Group()
+    player_collision_group = GameObjectFactory.get_asset("FriendGroup")
+    badies_collision_group = GameObjectFactory.get_asset("EnemyGroup")
 
     level_01 = GameObjectFactory.create("Level_01")
     level_01.create_objects(render_group, player_collision_group, badies_collision_group)

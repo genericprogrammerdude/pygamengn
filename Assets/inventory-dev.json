@@ -47,6 +47,18 @@
                 "grid_interval": 100
             }
         },
+        "FriendGroup": {
+            "class_name": "SpriteGroup",
+            "kwargs": {}
+        },
+        "EnemyGroup": {
+            "class_name": "SpriteGroup",
+            "kwargs": {}
+        },
+        "NeutralGroup": {
+            "class_name": "SpriteGroup",
+            "kwargs": {}
+        },
         "LayerManager": {
             "class_name": "LayerManager",
             "kwargs": {
