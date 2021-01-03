@@ -21,10 +21,7 @@ def main():
     background = 50, 50, 50
     screen = pygame.display.set_mode(size, pygame.DOUBLEBUF | pygame.HWSURFACE)
 
-    if len(sys.argv) > 1:
-        GameObjectFactory.initialize(open(sys.argv[1]))
-    else:
-        GameObjectFactory.initialize(open("Assets/inventory.json"))
+    GameObjectFactory.initialize(open("Assets/inventory.json"))
 
     # Create world
     pygame.display.set_icon(GameObjectFactory.surfaces["ship"])
@@ -34,29 +31,13 @@ def main():
 
     render_group = GameObjectFactory.get_asset("RenderGroup")
 
-#     # Create player
-#     player = GameObjectFactory.create("PlayerShip", enemies=badies_collision_group)
-#     player.set_pos(pygame.Vector2(screen_rect.width / 2.0, screen_rect.height / 2.0))
-# 
-#     # Create a turret
-#     turrets = [GameObjectFactory.create("EnemyTurret", enemies=player_collision_group) for i in range(3)]
-#     for turret in turrets:
-#         turret.set_pos(pygame.Vector2(random.randint(0, screen_rect.width), random.randint(0, screen_rect.height)))
-#         turret.set_target(player)
-#         turret.add_to_groups([render_group, badies_collision_group])
-#     
-#     turret2 = [GameObjectFactory.create("EnemyTurret2", enemies=player_collision_group) for i in range(2)]
-#     for turret in turret2:
-#         turret.set_pos(pygame.Vector2(random.randint(0, screen_rect.width), random.randint(0, screen_rect.height)))
-#         turret.set_target(player)
-#         turret.add_to_groups([render_group, badies_collision_group])
-#         
-#     render_group.set_target(player)
-#     player.add_to_groups([render_group, player_collision_group])
-
-    level_01 = GameObjectFactory.create("Level_01")
-    level_01.create_objects(render_group)
-    player = level_01.player
+    level = None
+    if len(sys.argv) > 1:
+        level = GameObjectFactory.create(sys.argv[1])
+    else:
+        level = GameObjectFactory.create("Level_01")
+    level.create_objects(render_group)
+    player = level.player
 
     clock = pygame.time.Clock()
     running = True
