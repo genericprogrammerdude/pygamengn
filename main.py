@@ -30,7 +30,7 @@ def main():
     world_rect = pygame.Rect(0, 0, size[0] * 2, size[1] * 2)
     screen_rect = screen.get_rect()
 
-    render_group = RenderGroup(world_rect, screen_rect, True)
+    render_group = RenderGroup(grid_draw=True)
     player_collision_group = pygame.sprite.Group()
     badies_collision_group = pygame.sprite.Group()
 
@@ -66,7 +66,7 @@ def main():
             player.set_velocity(player.mover.velocity * 0.8)
 
         # Update groups
-        render_group.update(clock.get_time())
+        render_group.update(screen.get_rect(), clock.get_time())
 
         # Render
         screen.fill(background)

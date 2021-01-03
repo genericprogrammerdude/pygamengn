@@ -1,27 +1,33 @@
 import math
 import pygame
 
+from game_object_factory import GameObjectBase
+from game_object_factory import GameObjectFactory
 
-class RenderGroup(pygame.sprite.LayeredUpdates):
 
-    def __init__(self, world_rect, view_rect, grid_draw=False, grid_color=(100, 100, 100), grid_interval=100):
+@GameObjectFactory.register("RenderGroup")
+class RenderGroup(pygame.sprite.LayeredUpdates, GameObjectBase):
+
+    def __init__(self, world_rect=pygame.Rect(0, 0, 0, 0), grid_draw=False, grid_color=(100, 100, 100), grid_interval=100):
         super().__init__()
         self.target = None
         self.cam = pygame.Vector2(0, 0)
         self.world_rect = world_rect
-        self.view_rect = view_rect
+        self.view_rect = pygame.Rect(0, 0, 0, 0)
         self.grid_draw = grid_draw
         self.grid_color = grid_color
         self.grid_interval = grid_interval
 
     def set_target(self, target):
+        """Sets the game object to follow."""
         self.target = target
         if self.target:
             self.add(target)
 
-    def update(self, *args):
+    def update(self, view_size, *args):
         """Updates itself and its sprites."""
         super().update(*args)
+        self.view_rect = view_size
 
         if self.target:
             # Keep the view_rect centered with the target's rect center

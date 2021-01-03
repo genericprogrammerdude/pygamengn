@@ -51,6 +51,5 @@ class Asteroid(Projectile):
                 spawn.set_heading(self.heading + heading_delta)
                 velocity = self.mover.velocity * (0.5 + random.random())
                 spawn.mover.set_velocity(velocity)
-                print(heading_delta, velocity)
                 spawn.transform()
         super().die()
