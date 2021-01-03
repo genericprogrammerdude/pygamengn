@@ -209,7 +209,7 @@
             "class_name": "Turret",
             "kwargs": {
                 "image:image": "turret",
-                "projectile_type": "Asteroid",
+                "projectile_type": "AsteroidBig",
                 "scale": 1.25,
                 "fire_freq": 3000
             },
@@ -373,8 +373,7 @@
             "kwargs": {
                 "game_object_type:player_spec": "Level_01/PlayerSpec",
                 "game_object_type_list:enemy_specs": [          
-                    "Level_02/EnemySpec1",
-                    "Level_02/EnemySpec2"
+                    "Level_02/EnemySpec1"
                 ]
             },
             "PlayerSpec": {
@@ -389,8 +388,7 @@
                 "kwargs": {
                     "game_type": "EnemyTurretAsteroid",
                     "spawn_pos": [
-                        [320, 180],
-                        [320, 540]
+                        [320, 180]
                     ]
                 }
             },
@@ -404,12 +402,34 @@
                 }
             }
         },
-        "Asteroid": {
+        "AsteroidBig": {
             "class_name": "Asteroid",
             "kwargs": {
-                "image:image": "asteroid_00",
+                "image_list:images": [
+                    "asteroid_00",
+                    "asteroid_01",
+                    "asteroid_02",
+                    "asteroid_03"
+                ],
                 "death_effect": "Explosion",
                 "damage": 15,
+                "game_object_type:mover": "AsteroidMover",
+                "death_spawn": ["AsteroidMedium", "AsteroidMedium"]
+            },
+            "groups": [
+                "RenderGroup",
+                "AsteroidsGroup"
+            ]
+        },
+        "AsteroidMedium": {
+            "class_name": "Asteroid",
+            "kwargs": {
+                "image_list:images": [
+                    "asteroid_04",
+                    "asteroid_05"
+                ],
+                "death_effect": "Explosion",
+                "damage": 10,
                 "game_object_type:mover": "AsteroidMover",
                 "death_spawn": ["AsteroidSmall", "AsteroidTiny"]
             },
@@ -421,7 +441,10 @@
         "AsteroidSmall": {
             "class_name": "Asteroid",
             "kwargs": {
-                "image:image": "asteroid_06",
+                "image_list:images": [
+                    "asteroid_06",
+                    "asteroid_07"
+                ],
                 "death_effect": "Explosion",
                 "damage": 5,
                 "game_object_type:mover": "AsteroidMover",
@@ -435,9 +458,11 @@
         "AsteroidTiny": {
             "class_name": "Asteroid",
             "kwargs": {
-                "image:image": "asteroid_08",
+                "image_list:images": [
+                    "asteroid_08"
+                ],
                 "death_effect": "Explosion",
-                "damage": 5,
+                "damage": 2,
                 "game_object_type:mover": "AsteroidMover",
                 "death_spawn": []
             },
@@ -452,7 +477,7 @@
                 "velocity": 50.0,
                 "velocity_decay_factor": 1.0,
                 "max_velocity": 500.0,
-                "angular_velocity": 1.0
+                "angular_velocity": 45.0
             }
         },
         "AsteroidParticleSystem": {
