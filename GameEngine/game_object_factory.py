@@ -9,6 +9,16 @@ import pygame
 class GameObjectBase(metaclass=ABCMeta):
     """Base class for GameObject."""
 
+    __next_object_id = 0
+
+    def set_object_id(self):
+        """
+        Sets the object id. This is meant to aid debugging and should only be set once (when GameObjectFactory
+        creates the object.
+        """
+        self.__object_id = GameObjectBase.__next_object_id
+        GameObjectBase.__next_object_id += 1
+
 
 class GameObjectFactory():
     """
@@ -25,7 +35,6 @@ class GameObjectFactory():
     layer_manager = None
 
     __asset_json_objects = []
-    __asset_list_json_objects = []
 
     @classmethod
     def initialize(cls, inventory_fp):
@@ -51,13 +60,15 @@ class GameObjectFactory():
         # Assign initialized assets to the fields that reference them
         for obj, key in cls.__asset_json_objects:
             asset_name = obj[key]
-            obj[key[len("asset:"):]] = cls.assets[asset_name]["asset"]
+            if isinstance(asset_name, str):
+                obj[key[len("asset:"):]] = cls.assets[asset_name]["asset"]
+            elif isinstance(asset_name, list):
+                inner_key = key[len("asset:"):]
+                obj[inner_key] = []
+                asset_list = obj[inner_key]
+                cls.__assign_asset_list(asset_name, asset_list)
             del obj[key]
         del cls.__asset_json_objects
-
-        # Assign initialized assets to the fields that reference asset lists
-        # TODO: Implement me!
-        del cls.__asset_list_json_objects
 
         # Initialize layer manager if there is one
         layer_manager_spec = cls.assets.get("LayerManager")
@@ -162,6 +173,7 @@ class GameObjectFactory():
         try:
             gob_class = cls.registry[type_spec["class_name"]]
             gob = gob_class(**resolved_refs, **kwargs)
+            gob.set_object_id()
             return gob
         except KeyError:
             sys.stderr.write("GameObjectBase subclass '{0}' not found.\n".format(type_spec["class_name"]))
@@ -178,6 +190,20 @@ class GameObjectFactory():
         return obj_dict
 
     @classmethod
+    def __assign_asset_list(cls, asset_names, asset_list):
+        """
+        Goes into asset_list and assigns the initialized assets to the right asset spec elements in the assets
+        dictionary. This enables support for nested lists of assets in the asset specs. See the CollisionManager
+        for an example of a GameObject that relies on this.
+        """
+        for asset_name in asset_names:
+            if isinstance(asset_name, str):
+                asset_list.append(cls.assets[asset_name]["asset"])
+            else:
+                asset_list.append([])
+                cls.__assign_asset_list(asset_name, asset_list[-1])
+
+    @classmethod
     def register(cls, name: str) -> Callable:
         """Registers a new GameObject child class."""
 
@@ -191,7 +217,7 @@ class GameObjectFactory():
 
 
 @GameObjectFactory.register("LayerManager")
-class LayerManager():
+class LayerManager(GameObjectBase):
     """
     Manages draw layers semi-automatically.
 

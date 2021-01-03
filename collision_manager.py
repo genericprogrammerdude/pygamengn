@@ -1,23 +1,15 @@
 import pygame
 
+from game_object_factory import GameObjectBase
+from game_object_factory import GameObjectFactory
 
-class CollisionManager:
+
+@GameObjectFactory.register("CollisionManager")
+class CollisionManager(GameObjectBase):
     """Manages collision detection and response."""
 
-    def __init__(self, player, player_projectiles, turrets, turret_projectiles, asteroids):
-        self.player = player
-        self.player_projectiles = player_projectiles
-        self.turrets = turrets
-        self.turret_projectiles = turret_projectiles
-        self.asteroids = asteroids
-
-        self.collision_checks = [
-            [self.player_projectiles, self.asteroids],
-            [self.player_projectiles, self.turrets],
-            [self.turret_projectiles, self.player],
-            [self.turret_projectiles, self.asteroids],
-            [self.asteroids, self.player]
-        ]
+    def __init__(self, collision_checks):
+        self.collision_checks = collision_checks
 
     def do_collisions(self):
         for collision_check in self.collision_checks:
