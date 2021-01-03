@@ -16,7 +16,7 @@
         "player_health_bar_bg": "Assets/SpaceShooterRedux/PNG/Lasers/laserBlue14.png",
         "turret_health_bar_fg": "Assets/SpaceShooterRedux/PNG/Lasers/laserRed02.png",
         "turret_health_bar_bg": "Assets/SpaceShooterRedux/PNG/Lasers/laserRed14.png",
-        "turret_projectile2" : "Assets/SpaceShooterRedux/PNG/Lasers/laserBlue01.png"
+        "turret_projectile2" : "Assets/SpaceShooterRedux/PNG/Lasers/laserBlue01.png", 
         "asteroid_00": "Assets/SpaceShooterRedux/PNG/Meteors/meteorBrown_big1.png",
         "asteroid_01": "Assets/SpaceShooterRedux/PNG/Meteors/meteorBrown_big2.png",
         "asteroid_02": "Assets/SpaceShooterRedux/PNG/Meteors/meteorBrown_big3.png",
@@ -229,27 +229,6 @@
                 "TurretsGroup"
             ]
         },
-        "EnemyTurret2": {
-            "class_name": "Turret",
-            "kwargs": {
-                "image:image": "turret",
-                "projectile_type": "EnemyTurret2Projectile",
-                "scale": 1.25,
-                "fire_freq": 1000
-            },
-            "attachments": [
-                {
-                    "game_type": "EnemyTurretGun",
-                    "offset": [0.0, -15.0]
-                },
-                {
-                    "game_type": "Turret2HealthBar",
-                    "offset": [0, 0],
-                    "parent_transform": false
-                }
-            ]
-        },
-        
         "TurretHealthBar": {
             "class_name": "HealthBar",
             "kwargs": {
@@ -260,14 +239,6 @@
             "groups": [
                 "RenderGroup"
             ]
-        },
-        "Turret2HealthBar": {
-            "class_name": "HealthBar",
-            "kwargs": {
-                "image_list:images": ["player_health_bar_bg", "player_health_bar_fg"],
-                "heading": 90,
-                "is_collidable": false
-            }
         },
         "EnemyTurretGun": {
             "class_name": "GameObject",
@@ -290,15 +261,6 @@
                 "RenderGroup",
                 "TurretProjectilesGroup"
             ]
-        },
-         "EnemyTurret2Projectile": {
-            "class_name": "Projectile",
-            "kwargs": {
-                "image:image": "turret_projectile2",
-                "death_effect": "Explosion",
-                "damage": 20,
-                "game_object_type:mover": "EnemyTurretProjectileMover"
-            }
         },
         "EnemyTurretProjectileMover": {
             "class_name": "MoverVelocity",
@@ -329,13 +291,6 @@
                     "Level_01/EnemySpec2"
                 ]
             },
-            "PlayerSpec": {
-                "class_name": "LevelObject",
-                "kwargs": {
-                    "game_type": "PlayerShip",
-                    "spawn_pos": [640, 360]
-                }
-            },
             "EnemySpec1": {
                 "class_name": "LevelObject",
                 "kwargs": {
@@ -351,10 +306,65 @@
             "EnemySpec2": {
                 "class_name": "LevelObject",
                 "kwargs": {
-                    "game_type": "EnemyTurret",
+                    "game_type": "Level_01/EnemyTurret2",
                     "spawn_pos": [
                         [640, 640]
                     ]
+                }
+            },
+            "EnemyTurret2": {
+                "class_name": "Turret",
+                "kwargs": {
+                    "image:image": "turret",
+                    "projectile_type": "Level_01/EnemyTurret2Projectile",
+                    "scale": 1.25,
+                    "fire_freq": 1000
+                },
+                "attachments": [
+                    {
+                        "game_type": "EnemyTurretGun",
+                        "offset": [0.0, -15.0]
+                    },
+                    {
+                        "game_type": "Level_01/Turret2HealthBar",
+                        "offset": [0, 0],
+                        "parent_transform": false
+                    }
+                ],
+                "groups": [
+                    "RenderGroup",
+                    "TurretsGroup"
+                ]
+            },
+            "Turret2HealthBar": {
+                "class_name": "HealthBar",
+                "kwargs": {
+                    "image_list:images": ["player_health_bar_bg", "player_health_bar_fg"],
+                    "heading": 90,
+                    "is_collidable": false
+                },
+                "groups": [
+                    "RenderGroup"
+                ]
+            },
+            "EnemyTurret2Projectile": {
+                "class_name": "Projectile",
+                "kwargs": {
+                    "image:image": "turret_projectile2",
+                    "death_effect": "Explosion",
+                    "damage": 20,
+                    "game_object_type:mover": "EnemyTurretProjectileMover"
+                },
+                "groups": [
+                    "RenderGroup",
+                    "TurretProjectilesGroup"
+                ]
+            },
+            "PlayerSpec": {
+                "class_name": "LevelObject",
+                "kwargs": {
+                    "game_type": "PlayerShip",
+                    "spawn_pos": [640, 360]
                 }
             }
         },
