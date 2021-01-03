@@ -30,7 +30,7 @@ def main():
     world_rect = pygame.Rect(0, 0, size[0] * 2, size[1] * 2)
     screen_rect = screen.get_rect()
 
-    render_group = RenderGroup(grid_draw=True)
+    render_group = GameObjectFactory.get_asset("RenderGroup")
     player_collision_group = pygame.sprite.Group()
     badies_collision_group = pygame.sprite.Group()
 

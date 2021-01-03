@@ -106,6 +106,16 @@ class GameObjectFactory():
         return gob
 
     @classmethod
+    def get_asset(cls, name: str) -> GameObjectBase:
+        """Returns an initialized asset."""
+        asset_spec = cls.assets[name]
+        if asset_spec:
+            return asset_spec["asset"]
+        else:
+            sys.stderr.write("Asset {0} does not exist.\n".format(name))
+            return None
+
+    @classmethod
     def __get_game_type(cls, name: str) -> dict:
         """Gets the given game type, recursing into nested dictionaries as necessary."""
         #

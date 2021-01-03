@@ -39,6 +39,14 @@
     },
 
     "assets": {
+        "RenderGroup": {
+            "class_name": "RenderGroup",
+            "kwargs": {
+                "grid_draw": true,
+                "grid_color": [100, 100, 100],
+                "grid_interval": 100
+            }
+        },
         "LayerManager": {
             "class_name": "LayerManager",
             "kwargs": {
