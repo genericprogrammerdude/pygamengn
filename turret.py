@@ -14,7 +14,7 @@ class Turret(GameObject):
         self.projectile_type = projectile_type
         self.target = None
         self.fire_freq = fire_freq
-        self.time_since_last_fire = random.randint(0, fire_freq)
+        self.time_since_last_fire = 0
         self.enemies = enemies
 
     def set_target(self, target):
