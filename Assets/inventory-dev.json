@@ -47,15 +47,23 @@
                 "grid_interval": 100
             }
         },
-        "FriendGroup": {
+        "PlayerGroup": {
             "class_name": "SpriteGroup",
             "kwargs": {}
         },
-        "EnemyGroup": {
+        "PlayerProjectilesGroup": {
             "class_name": "SpriteGroup",
             "kwargs": {}
         },
-        "NeutralGroup": {
+        "TurretsGroup": {
+            "class_name": "SpriteGroup",
+            "kwargs": {}
+        },
+        "TurretProjectilesGroup": {
+            "class_name": "SpriteGroup",
+            "kwargs": {}
+        },
+        "AsteroidsGroup": {
             "class_name": "SpriteGroup",
             "kwargs": {}
         },
@@ -94,7 +102,7 @@
             },
             "groups": [
                 "RenderGroup",
-                "FriendGroup"
+                "PlayerGroup"
             ],
             "attachments": [
                 {
@@ -135,7 +143,7 @@
             },
             "groups": [
                 "RenderGroup",
-                "FriendGroup"
+                "PlayerGroup"
             ]
         },
         "PlayerProjectile": {
@@ -148,7 +156,7 @@
             },
             "groups": [
                 "RenderGroup",
-                "FriendGroup"
+                "PlayerProjectilesGroup"
             ]
         },
         "PlayerProjectileMover": {
@@ -181,7 +189,7 @@
             ],
             "groups": [
                 "RenderGroup",
-                "EnemyGroup"
+                "TurretsGroup"
             ]
         },
         "EnemyTurretAsteroid": {
@@ -205,7 +213,7 @@
             ],
             "groups": [
                 "RenderGroup",
-                "EnemyGroup"
+                "TurretsGroup"
             ]
         },
         "TurretHealthBar": {
@@ -238,7 +246,7 @@
             },
             "groups": [
                 "RenderGroup",
-                "EnemyGroup"
+                "TurretProjectilesGroup"
             ]
         },
         "EnemyTurretProjectileMover": {
@@ -308,7 +316,7 @@
             },
             "groups": [
                 "RenderGroup",
-                "NeutralGroup"
+                "AsteroidsGroup"
             ]
         },
         "AsteroidSmall": {
@@ -322,7 +330,7 @@
             },
             "groups": [
                 "RenderGroup",
-                "NeutralGroup"
+                "AsteroidsGroup"
             ]
         },
         "AsteroidTiny": {
@@ -336,7 +344,7 @@
             },
             "groups": [
                 "RenderGroup",
-                "NeutralGroup"
+                "AsteroidsGroup"
             ]
         },
         "AsteroidMover": {

@@ -4,15 +4,24 @@ import pygame
 class CollisionManager:
     """Manages collision detection and response."""
 
-    def __init__(self, enemies, friends, neutrals):
-        self.enemies = enemies
-        self.friends = friends
-        self.neutrals = neutrals
+    def __init__(self, player, player_projectiles, turrets, turret_projectiles, asteroids):
+        self.player = player
+        self.player_projectiles = player_projectiles
+        self.turrets = turrets
+        self.turret_projectiles = turret_projectiles
+        self.asteroids = asteroids
+
+        self.collision_checks = [
+            [self.player_projectiles, self.asteroids],
+            [self.player_projectiles, self.turrets],
+            [self.turret_projectiles, self.player],
+            [self.turret_projectiles, self.asteroids],
+            [self.asteroids, self.player]
+        ]
 
     def do_collisions(self):
-        self.collide_groups(self.friends, self.enemies)
-        self.collide_groups(self.friends, self.neutrals)
-#         self.collide_groups(self.enemies, self.neutrals)
+        for collision_check in self.collision_checks:
+            self.collide_groups(*collision_check)
 
     def collide_groups(self, group_a, group_b):
         collisions = pygame.sprite.groupcollide(group_a, group_b, False, False, self.collided)

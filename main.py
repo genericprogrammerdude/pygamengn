@@ -30,10 +30,16 @@ def main():
     pygame.display.set_icon(GameObjectFactory.surfaces["ship"])
     pygame.display.set_caption("Game")
 
-    enemy_group = GameObjectFactory.get_asset("EnemyGroup")
-    friend_group = GameObjectFactory.get_asset("FriendGroup")
-    neutral_group = GameObjectFactory.get_asset("NeutralGroup")
-    collision_manager = CollisionManager(enemy_group, friend_group, neutral_group)
+    player_group = GameObjectFactory.get_asset("PlayerGroup")
+    player_projectiles_group = GameObjectFactory.get_asset("PlayerProjectilesGroup")
+    turrets_group = GameObjectFactory.get_asset("TurretsGroup")
+    turret_projectiles_group = GameObjectFactory.get_asset("TurretProjectilesGroup")
+    asteroids_group = GameObjectFactory.get_asset("AsteroidsGroup")
+    collision_manager = CollisionManager(player_group,
+                                         player_projectiles_group,
+                                         turrets_group,
+                                         turret_projectiles_group,
+                                         asteroids_group)
 
     render_group = GameObjectFactory.get_asset("RenderGroup")
 
