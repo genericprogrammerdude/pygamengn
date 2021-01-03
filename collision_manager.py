@@ -5,7 +5,7 @@ from game_object_factory import GameObjectFactory
 
 
 @GameObjectFactory.register("CollisionManager")
-class CollisionManager:
+class CollisionManager(GameObjectBase):
     """Manages collision detection and response."""
 
     def __init__(self, collision_checks):

@@ -9,6 +9,16 @@ import pygame
 class GameObjectBase(metaclass=ABCMeta):
     """Base class for GameObject."""
 
+    __next_object_id = 0
+
+    def set_object_id(self):
+        """
+        Sets the object id. This is meant to aid debugging and should only be set once (when GameObjectFactory
+        creates the object.
+        """
+        self.__object_id = GameObjectBase.__next_object_id
+        GameObjectBase.__next_object_id += 1
+
 
 class GameObjectFactory():
     """
@@ -163,6 +173,7 @@ class GameObjectFactory():
         try:
             gob_class = cls.registry[type_spec["class_name"]]
             gob = gob_class(**resolved_refs, **kwargs)
+            gob.set_object_id()
             return gob
         except KeyError:
             sys.stderr.write("GameObjectBase subclass '{0}' not found.\n".format(type_spec["class_name"]))
@@ -206,7 +217,7 @@ class GameObjectFactory():
 
 
 @GameObjectFactory.register("LayerManager")
-class LayerManager():
+class LayerManager(GameObjectBase):
     """
     Manages draw layers semi-automatically.
 
