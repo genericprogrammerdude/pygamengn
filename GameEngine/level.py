@@ -12,22 +12,19 @@ class Level(GameObjectBase):
         self.player_spec = player_spec
         self.enemy_specs = enemy_specs
         self.player = None
-        self.enemies = []
 
-    def create_objects(self, render_group, player_collision_group, enemy_collision_group):
+    def create_objects(self, render_group):
         """Creates and initializes the game objects for the level."""
-        self.player = GameObjectFactory.create(self.player_spec.game_type, enemies=enemy_collision_group)
+        self.player = GameObjectFactory.create(self.player_spec.game_type)
         self.player.set_pos(pygame.Vector2(self.player_spec.spawn_pos))
 
         for enemy_spec in self.enemy_specs:
             for spawn_pos in enemy_spec.spawn_pos:
-                enemy = GameObjectFactory.create(enemy_spec.game_type, enemies=player_collision_group)
+                enemy = GameObjectFactory.create(enemy_spec.game_type)
                 enemy.set_pos(pygame.Vector2(spawn_pos))
-                enemy.add_to_groups([render_group, enemy_collision_group])
-                self.enemies.append(enemy)
+                enemy.set_target(self.player)
 
         render_group.set_target(self.player)
-        self.player.add_to_groups([render_group, player_collision_group])
 
 
 @GameObjectFactory.register("LevelObject")

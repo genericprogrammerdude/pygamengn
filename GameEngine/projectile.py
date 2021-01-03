@@ -9,10 +9,9 @@ from mover import MoverVelocity
 @GameObjectFactory.register("Projectile")
 class Projectile(GameObject):
 
-    def __init__(self, image, enemies, damage, death_effect, mover):
+    def __init__(self, image, damage, death_effect, mover):
         super().__init__(image)
         self.mover = mover
-        self.enemies = enemies
         self.damage = damage
         self.death_effect = death_effect
 
@@ -23,7 +22,6 @@ class Projectile(GameObject):
     def update(self, delta):
         self.pos, self.heading = self.mover.move(delta, self.pos, self.heading)
         super().update(delta)
-        self.handle_collisions()
 
     def handle_collisions(self):
         """Checks for collisions."""

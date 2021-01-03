@@ -47,6 +47,7 @@
                     ["Turret", "EnemyTurretGun", "TurretHealthBar"],
                     ["Ship", "PlayerHealthBar"],
                     ["Shield"],
+                    ["Asteroid"],
                     ["AnimatedTexture"],
                     ["HealthBar"]
                 ]
@@ -81,6 +82,10 @@
                     "offset": [0, 0],
                     "parent_transform": false
                 }
+            ],
+            "groups": [
+                "RenderGroup",
+                "FriendGroup"
             ]
         },
         "PlayerShipMover": {
@@ -98,13 +103,20 @@
                 "image_list:images": ["player_health_bar_bg", "player_health_bar_fg"],
                 "heading": 90,
                 "is_collidable": false
-            }
+            },
+            "groups": [
+                "RenderGroup"
+            ]
         },
         "PlayerShield": {
             "class_name": "Shield",
             "kwargs": {
                 "image_list:images": ["shield3", "shield2", "shield1"]
-            }
+            },
+            "groups": [
+                "RenderGroup",
+                "FriendGroup"
+            ]
         },
         "PlayerProjectile": {
             "class_name": "Projectile",
@@ -113,7 +125,11 @@
                 "death_effect": "Explosion",
                 "damage": 15,
                 "game_object_type:mover": "PlayerProjectileMover"
-            }
+            },
+            "groups": [
+                "RenderGroup",
+                "FriendGroup"
+            ]
         },
         "PlayerProjectileMover": {
             "class_name": "MoverVelocity",
@@ -142,6 +158,10 @@
                     "offset": [0, 0],
                     "parent_transform": false
                 }
+            ],
+            "groups": [
+                "RenderGroup",
+                "EnemyGroup"
             ]
         },
         "TurretHealthBar": {
@@ -150,14 +170,21 @@
                 "image_list:images": ["turret_health_bar_bg", "turret_health_bar_fg"],
                 "heading": 90,
                 "is_collidable": false
-            }
+            },
+            "groups": [
+                "RenderGroup"
+            ]
         },
         "EnemyTurretGun": {
             "class_name": "GameObject",
             "kwargs": {
                 "image:image": "turret_gun",
                 "is_collidable": false
-            }
+            },
+            "groups": [
+                "RenderGroup",
+                "EnemyGroup"
+            ]
         },
         "EnemyTurretProjectile": {
             "class_name": "Projectile",
@@ -166,7 +193,11 @@
                 "death_effect": "Explosion",
                 "damage": 10,
                 "game_object_type:mover": "EnemyTurretProjectileMover"
-            }
+            },
+            "groups": [
+                "RenderGroup",
+                "EnemyGroup"
+            ]
         },
         "EnemyTurretProjectileMover": {
             "class_name": "MoverVelocity",
@@ -183,13 +214,18 @@
                 "asset:asset": "explosion_atlas",
                 "duration": 750,
                 "scale": 1
-            }
+            },
+            "groups": [
+                "RenderGroup"
+            ]
         },
         "Level_01": {
             "class_name": "Level",
             "kwargs": {
                 "game_object_type:player_spec": "Level_01PlayerSpec",
-                "game_object_type:enemy_spec": "Level_01EnemySpec"
+                "game_object_type_list:enemy_specs": [
+                    "Level_01EnemySpec"
+                ]
             }
         },
         "Level_01PlayerSpec": {

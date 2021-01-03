@@ -30,14 +30,10 @@ def main():
     pygame.display.set_caption("Game")
 
     render_group = GameObjectFactory.get_asset("RenderGroup")
-    player_collision_group = GameObjectFactory.get_asset("FriendGroup")
-    badies_collision_group = GameObjectFactory.get_asset("EnemyGroup")
 
     level_01 = GameObjectFactory.create("Level_01")
-    level_01.create_objects(render_group, player_collision_group, badies_collision_group)
+    level_01.create_objects(render_group)
     player = level_01.player
-    for enemy in level_01.enemies:
-        enemy.set_target(player)
 
     clock = pygame.time.Clock()
     running = True

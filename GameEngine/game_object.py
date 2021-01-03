@@ -84,7 +84,6 @@ class GameObject(pygame.sprite.Sprite, GameObjectBase):
         """Attaches a game object to this game object at the give offset."""
         self.attachments.append(Attachment(game_object, offset, take_parent_transform))
         game_object.parent = self
-        game_object.add_to_groups(self.groups())
 
     def take_damage(self, damage):
         """Takes damage for this game object."""
@@ -100,10 +99,7 @@ class GameObject(pygame.sprite.Sprite, GameObjectBase):
 
     def add_to_groups(self, groups):
         """Adds the game object to the given sprite groups."""
-        for group in groups:
-            group.add(self)
-            for attachment in self.attachments:
-                group.add(attachment.game_object)
+        self.add(groups)
 
     def set_layer_id(self, layer_id):
         """Sets the layer for rendering."""

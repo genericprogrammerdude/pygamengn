@@ -67,6 +67,7 @@
                     ["Turret", "EnemyTurretGun", "TurretHealthBar"],
                     ["Ship", "PlayerHealthBar"],
                     ["Shield"],
+                    ["Asteroid"],
                     ["AnimatedTexture"],
                     ["HealthBar"]
                 ]
@@ -91,6 +92,10 @@
                 "fire_freq": 250,
                 "game_object_type:mover": "PlayerShipMover"
             },
+            "groups": [
+                "RenderGroup",
+                "FriendGroup"
+            ],
             "attachments": [
                 {
                     "game_type": "PlayerShield",
@@ -118,13 +123,20 @@
                 "image_list:images": ["player_health_bar_bg", "player_health_bar_fg"],
                 "heading": 90,
                 "is_collidable": false
-            }
+            },
+            "groups": [
+                "RenderGroup"
+            ]
         },
         "PlayerShield": {
             "class_name": "Shield",
             "kwargs": {
                 "image_list:images": ["shield3", "shield2", "shield1"]
-            }
+            },
+            "groups": [
+                "RenderGroup",
+                "FriendGroup"
+            ]
         },
         "PlayerProjectile": {
             "class_name": "Projectile",
@@ -133,7 +145,10 @@
                 "death_effect": "Explosion",
                 "damage": 15,
                 "game_object_type:mover": "PlayerProjectileMover"
-            }
+            },
+            "groups": [
+                "RenderGroup"
+            ]
         },
         "PlayerProjectileMover": {
             "class_name": "MoverVelocity",
@@ -162,6 +177,10 @@
                     "offset": [0, 0],
                     "parent_transform": false
                 }
+            ],
+            "groups": [
+                "RenderGroup",
+                "EnemyGroup"
             ]
         },
         "TurretHealthBar": {
@@ -170,14 +189,21 @@
                 "image_list:images": ["turret_health_bar_bg", "turret_health_bar_fg"],
                 "heading": 90,
                 "is_collidable": false
-            }
+            },
+            "groups": [
+                "RenderGroup"
+            ]
         },
         "EnemyTurretGun": {
             "class_name": "GameObject",
             "kwargs": {
                 "image:image": "turret_gun",
                 "is_collidable": false
-            }
+            },
+            "groups": [
+                "RenderGroup",
+                "EnemyGroup"
+            ]
         },
         "EnemyTurretProjectile": {
             "class_name": "Projectile",
@@ -186,7 +212,10 @@
                 "death_effect": "Explosion",
                 "damage": 10,
                 "game_object_type:mover": "EnemyTurretProjectileMover"
-            }
+            },
+            "groups": [
+                "RenderGroup"
+            ]
         },
         "EnemyTurretProjectileMover": {
             "class_name": "MoverVelocity",
@@ -203,7 +232,10 @@
                 "asset:asset": "explosion_atlas",
                 "duration": 750,
                 "scale": 1
-            }
+            },
+            "groups": [
+                "RenderGroup"
+            ]
         },
         "Level_01": {
             "class_name": "Level",
@@ -257,7 +289,11 @@
                 "damage": 15,
                 "game_object_type:mover": "AsteroidMover",
                 "death_spawn": ["AsteroidSmall", "AsteroidTiny"]
-            }
+            },
+            "groups": [
+                "RenderGroup",
+                "NeutralGroup"
+            ]
         },
         "AsteroidSmall": {
             "class_name": "Asteroid",
@@ -267,7 +303,11 @@
                 "damage": 5,
                 "game_object_type:mover": "AsteroidMover",
                 "death_spawn": []
-            }
+            },
+            "groups": [
+                "RenderGroup",
+                "NeutralGroup"
+            ]
         },
         "AsteroidTiny": {
             "class_name": "Asteroid",
@@ -277,7 +317,11 @@
                 "damage": 5,
                 "game_object_type:mover": "AsteroidMover",
                 "death_spawn": []
-            }
+            },
+            "groups": [
+                "RenderGroup",
+                "NeutralGroup"
+            ]
         },
         "AsteroidMover": {
             "class_name": "MoverVelocity",

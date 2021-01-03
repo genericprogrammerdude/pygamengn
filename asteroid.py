@@ -9,8 +9,8 @@ from projectile import Projectile
 @GameObjectFactory.register("Asteroid")
 class Asteroid(Projectile):
 
-    def __init__(self, image, enemies, damage, death_effect, mover, death_spawn):
-        super().__init__(image, enemies, damage, death_effect, mover)
+    def __init__(self, image, damage, death_effect, mover, death_spawn):
+        super().__init__(image, damage, death_effect, mover)
         self.spin_angle = 0
         self.death_spawn = death_spawn
 
@@ -24,8 +24,6 @@ class Asteroid(Projectile):
         self.rect = self.image.get_rect()
         topleft = self.pos - pygame.math.Vector2(self.rect.width / 2.0, self.rect.height / 2.0)
         self.rect.topleft = pygame.Vector2(round(topleft.x), round(topleft.y))
-
-        self.handle_collisions()
 
     def handle_collisions(self):
         """Checks for collisions."""

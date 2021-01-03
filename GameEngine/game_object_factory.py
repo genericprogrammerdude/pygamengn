@@ -92,6 +92,12 @@ class GameObjectFactory():
         if layer_id != LayerManager.invalid_layer_id:
             gob.set_layer_id(layer_id)
 
+        # Add to groups as specified in type spec
+        group_names = game_type.get("groups")
+        if group_names:
+            groups = [cls.assets[name]["asset"] for name in group_names]
+            gob.add_to_groups(groups)
+
         # Create attachments
         attachment_specs = game_type.get("attachments")
         if gob and attachment_specs:
