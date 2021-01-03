@@ -27,15 +27,23 @@
                 "grid_interval": 100
             }
         },
-        "FriendGroup": {
+        "PlayerGroup": {
             "class_name": "SpriteGroup",
             "kwargs": {}
         },
-        "EnemyGroup": {
+        "PlayerProjectilesGroup": {
             "class_name": "SpriteGroup",
             "kwargs": {}
         },
-        "NeutralGroup": {
+        "TurretsGroup": {
+            "class_name": "SpriteGroup",
+            "kwargs": {}
+        },
+        "TurretProjectilesGroup": {
+            "class_name": "SpriteGroup",
+            "kwargs": {}
+        },
+        "AsteroidsGroup": {
             "class_name": "SpriteGroup",
             "kwargs": {}
         },
@@ -63,6 +71,18 @@
     },
 
     "game_types": {
+        "CollisionManager": {
+            "class_name": "CollisionManager",
+            "kwargs": {
+                "asset:collision_checks": [
+                    ["PlayerProjectilesGroup", "AsteroidsGroup"],
+                    ["PlayerProjectilesGroup", "TurretsGroup"],
+                    ["TurretProjectilesGroup", "PlayerGroup"],
+                    ["TurretProjectilesGroup", "AsteroidsGroup"],
+                    ["AsteroidsGroup", "PlayerGroup"]
+                ]
+            }
+        },
         "PlayerShip": {
             "class_name": "Ship",
             "kwargs": {
@@ -85,7 +105,7 @@
             ],
             "groups": [
                 "RenderGroup",
-                "FriendGroup"
+                "PlayerGroup"
             ]
         },
         "PlayerShipMover": {
@@ -115,7 +135,7 @@
             },
             "groups": [
                 "RenderGroup",
-                "FriendGroup"
+                "PlayerGroup"
             ]
         },
         "PlayerProjectile": {
@@ -128,7 +148,7 @@
             },
             "groups": [
                 "RenderGroup",
-                "FriendGroup"
+                "PlayerProjectilesGroup"
             ]
         },
         "PlayerProjectileMover": {
@@ -161,7 +181,7 @@
             ],
             "groups": [
                 "RenderGroup",
-                "EnemyGroup"
+                "TurretsGroup"
             ]
         },
         "TurretHealthBar": {
@@ -182,8 +202,7 @@
                 "is_collidable": false
             },
             "groups": [
-                "RenderGroup",
-                "EnemyGroup"
+                "RenderGroup"
             ]
         },
         "EnemyTurretProjectile": {
@@ -196,7 +215,7 @@
             },
             "groups": [
                 "RenderGroup",
-                "EnemyGroup"
+                "TurretProjectilesGroup"
             ]
         },
         "EnemyTurretProjectileMover": {

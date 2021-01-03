@@ -25,7 +25,6 @@ class GameObjectFactory():
     layer_manager = None
 
     __asset_json_objects = []
-    __asset_list_json_objects = []
 
     @classmethod
     def initialize(cls, inventory_fp):
@@ -51,13 +50,15 @@ class GameObjectFactory():
         # Assign initialized assets to the fields that reference them
         for obj, key in cls.__asset_json_objects:
             asset_name = obj[key]
-            obj[key[len("asset:"):]] = cls.assets[asset_name]["asset"]
+            if isinstance(asset_name, str):
+                obj[key[len("asset:"):]] = cls.assets[asset_name]["asset"]
+            elif isinstance(asset_name, list):
+                inner_key = key[len("asset:"):]
+                obj[inner_key] = []
+                asset_list = obj[inner_key]
+                cls.__assign_asset_list(asset_name, asset_list)
             del obj[key]
         del cls.__asset_json_objects
-
-        # Assign initialized assets to the fields that reference asset lists
-        # TODO: Implement me!
-        del cls.__asset_list_json_objects
 
         # Initialize layer manager if there is one
         layer_manager_spec = cls.assets.get("LayerManager")
@@ -176,6 +177,20 @@ class GameObjectFactory():
             elif key.startswith("asset_list:"):
                 cls.__asset_list_json_objects.append((obj_dict, key))
         return obj_dict
+
+    @classmethod
+    def __assign_asset_list(cls, asset_names, asset_list):
+        """
+        Goes into asset_list and assigns the initialized assets to the right asset spec elements in the assets
+        dictionary. This enables support for nested lists of assets in the asset specs. See the CollisionManager
+        for an example of a GameObject that relies on this.
+        """
+        for asset_name in asset_names:
+            if isinstance(asset_name, str):
+                asset_list.append(cls.assets[asset_name]["asset"])
+            else:
+                asset_list.append([])
+                cls.__assign_asset_list(asset_name, asset_list[-1])
 
     @classmethod
     def register(cls, name: str) -> Callable:

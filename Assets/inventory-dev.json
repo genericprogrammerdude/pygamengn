@@ -91,6 +91,18 @@
     },
 
     "game_types": {
+        "CollisionManager": {
+            "class_name": "CollisionManager",
+            "kwargs": {
+                "asset:collision_checks": [
+                    ["PlayerProjectilesGroup", "AsteroidsGroup"],
+                    ["PlayerProjectilesGroup", "TurretsGroup"],
+                    ["TurretProjectilesGroup", "PlayerGroup"],
+                    ["TurretProjectilesGroup", "AsteroidsGroup"],
+                    ["AsteroidsGroup", "PlayerGroup"]
+                ]
+            }
+        },
         "PlayerShip": {
             "class_name": "Ship",
             "kwargs": {
