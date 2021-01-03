@@ -21,10 +21,7 @@ def main():
     background = 50, 50, 50
     screen = pygame.display.set_mode(size, pygame.DOUBLEBUF | pygame.HWSURFACE)
 
-    if len(sys.argv) > 1:
-        GameObjectFactory.initialize(open(sys.argv[1]))
-    else:
-        GameObjectFactory.initialize(open("Assets/inventory.json"))
+    GameObjectFactory.initialize(open("Assets/inventory.json"))
 
     # Create world
     pygame.display.set_icon(GameObjectFactory.surfaces["ship"])
@@ -34,9 +31,13 @@ def main():
 
     render_group = GameObjectFactory.get_asset("RenderGroup")
 
-    level_01 = GameObjectFactory.create("Level_01")
-    level_01.create_objects(render_group)
-    player = level_01.player
+    level = None
+    if len(sys.argv) > 1:
+        level = GameObjectFactory.create(sys.argv[1])
+    else:
+        level = GameObjectFactory.create("Level_01")
+    level.create_objects(render_group)
+    player = level.player
 
     clock = pygame.time.Clock()
     running = True

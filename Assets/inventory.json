@@ -15,7 +15,27 @@
         "player_health_bar_fg": "Assets/SpaceShooterRedux/PNG/Lasers/laserBlue02.png",
         "player_health_bar_bg": "Assets/SpaceShooterRedux/PNG/Lasers/laserBlue14.png",
         "turret_health_bar_fg": "Assets/SpaceShooterRedux/PNG/Lasers/laserRed02.png",
-        "turret_health_bar_bg": "Assets/SpaceShooterRedux/PNG/Lasers/laserRed14.png"
+        "turret_health_bar_bg": "Assets/SpaceShooterRedux/PNG/Lasers/laserRed14.png",
+        "asteroid_00": "Assets/SpaceShooterRedux/PNG/Meteors/meteorBrown_big1.png",
+        "asteroid_01": "Assets/SpaceShooterRedux/PNG/Meteors/meteorBrown_big2.png",
+        "asteroid_02": "Assets/SpaceShooterRedux/PNG/Meteors/meteorBrown_big3.png",
+        "asteroid_03": "Assets/SpaceShooterRedux/PNG/Meteors/meteorBrown_big4.png",
+        "asteroid_04": "Assets/SpaceShooterRedux/PNG/Meteors/meteorBrown_med1.png",
+        "asteroid_05": "Assets/SpaceShooterRedux/PNG/Meteors/meteorBrown_med2.png",
+        "asteroid_06": "Assets/SpaceShooterRedux/PNG/Meteors/meteorBrown_small1.png",
+        "asteroid_07": "Assets/SpaceShooterRedux/PNG/Meteors/meteorBrown_small2.png",
+        "asteroid_08": "Assets/SpaceShooterRedux/PNG/Meteors/meteorBrown_tiny1.png",
+        "asteroid_09": "Assets/SpaceShooterRedux/PNG/Meteors/meteorBrown_tiny2.png",
+        "asteroid_10": "Assets/SpaceShooterRedux/PNG/Meteors/meteorGrey_big1.png",
+        "asteroid_11": "Assets/SpaceShooterRedux/PNG/Meteors/meteorGrey_big2.png",
+        "asteroid_12": "Assets/SpaceShooterRedux/PNG/Meteors/meteorGrey_big3.png",
+        "asteroid_13": "Assets/SpaceShooterRedux/PNG/Meteors/meteorGrey_big4.png",
+        "asteroid_14": "Assets/SpaceShooterRedux/PNG/Meteors/meteorGrey_med1.png",
+        "asteroid_15": "Assets/SpaceShooterRedux/PNG/Meteors/meteorGrey_med2.png",
+        "asteroid_16": "Assets/SpaceShooterRedux/PNG/Meteors/meteorGrey_small1.png",
+        "asteroid_17": "Assets/SpaceShooterRedux/PNG/Meteors/meteorGrey_small2.png",
+        "asteroid_18": "Assets/SpaceShooterRedux/PNG/Meteors/meteorGrey_tiny1.png",
+        "asteroid_19": "Assets/SpaceShooterRedux/PNG/Meteors/meteorGrey_tiny2.png"
     },
 
     "assets": {
@@ -92,6 +112,10 @@
                 "fire_freq": 250,
                 "game_object_type:mover": "PlayerShipMover"
             },
+            "groups": [
+                "RenderGroup",
+                "PlayerGroup"
+            ],
             "attachments": [
                 {
                     "game_type": "PlayerShield",
@@ -102,10 +126,6 @@
                     "offset": [0, 0],
                     "parent_transform": false
                 }
-            ],
-            "groups": [
-                "RenderGroup",
-                "PlayerGroup"
             ]
         },
         "PlayerShipMover": {
@@ -166,7 +186,31 @@
                 "image:image": "turret",
                 "projectile_type": "EnemyTurretProjectile",
                 "scale": 1.25,
-                "fire_freq": 2250 
+                "fire_freq": 2250
+            },
+            "attachments": [
+                {
+                    "game_type": "EnemyTurretGun",
+                    "offset": [0.0, -15.0]
+                },
+                {
+                    "game_type": "TurretHealthBar",
+                    "offset": [0, 0],
+                    "parent_transform": false
+                }
+            ],
+            "groups": [
+                "RenderGroup",
+                "TurretsGroup"
+            ]
+        },
+        "EnemyTurretAsteroid": {
+            "class_name": "Turret",
+            "kwargs": {
+                "image:image": "turret",
+                "projectile_type": "Asteroid",
+                "scale": 1.25,
+                "fire_freq": 3000
             },
             "attachments": [
                 {
@@ -198,8 +242,7 @@
         "EnemyTurretGun": {
             "class_name": "GameObject",
             "kwargs": {
-                "image:image": "turret_gun",
-                "is_collidable": false
+                "image:image": "turret_gun"
             },
             "groups": [
                 "RenderGroup"
@@ -241,29 +284,154 @@
         "Level_01": {
             "class_name": "Level",
             "kwargs": {
-                "game_object_type:player_spec": "Level_01PlayerSpec",
+                "game_object_type:player_spec": "Level_01/PlayerSpec",
                 "game_object_type_list:enemy_specs": [
-                    "Level_01EnemySpec"
+                    "Level_01/EnemySpec1",
+                    "Level_01/EnemySpec2"
                 ]
+            },
+            "PlayerSpec": {
+                "class_name": "LevelObject",
+                "kwargs": {
+                    "game_type": "PlayerShip",
+                    "spawn_pos": [640, 360]
+                }
+            },
+            "EnemySpec1": {
+                "class_name": "LevelObject",
+                "kwargs": {
+                    "game_type": "EnemyTurret",
+                    "spawn_pos": [
+                        [320, 180],
+                        [320, 540],
+                        [960, 180],
+                        [960, 540]
+                    ]
+                }
+            },
+            "EnemySpec2": {
+                "class_name": "LevelObject",
+                "kwargs": {
+                    "game_type": "EnemyTurret",
+                    "spawn_pos": [
+                        [640, 640]
+                    ]
+                }
             }
         },
-        "Level_01PlayerSpec": {
-            "class_name": "LevelObject",
+        "Level_02": {
+            "class_name": "Level",
             "kwargs": {
-                "game_type": "PlayerShip",
-                "spawn_pos": [640, 360]
+                "game_object_type:player_spec": "Level_01/PlayerSpec",
+                "game_object_type_list:enemy_specs": [
+                    "Level_02/EnemySpec1",
+                    "Level_02/EnemySpec2"
+                ]
+            },
+            "PlayerSpec": {
+                "class_name": "LevelObject",
+                "kwargs": {
+                    "game_type": "PlayerShip",
+                    "spawn_pos": [640, 360]
+                }
+            },
+            "EnemySpec1": {
+                "class_name": "LevelObject",
+                "kwargs": {
+                    "game_type": "EnemyTurretAsteroid",
+                    "spawn_pos": [
+                        [320, 180],
+                        [320, 540]
+                    ]
+                }
+            },
+            "EnemySpec2": {
+                "class_name": "LevelObject",
+                "kwargs": {
+                    "game_type": "EnemyTurret",
+                    "spawn_pos": [
+                        [1000, 540]
+                    ]
+                }
             }
         },
-        "Level_01EnemySpec": {
-            "class_name": "LevelObject",
+        "Asteroid": {
+            "class_name": "Asteroid",
             "kwargs": {
-                "game_type": "EnemyTurret",
-                "spawn_pos": [
-                    [320, 180],
-                    [320, 540],
-                    [960, 180],
-                    [960, 540]
-                ]
+                "image:image": "asteroid_00",
+                "death_effect": "Explosion",
+                "damage": 15,
+                "game_object_type:mover": "AsteroidMover",
+                "death_spawn": ["AsteroidSmall", "AsteroidTiny"]
+            },
+            "groups": [
+                "RenderGroup",
+                "AsteroidsGroup"
+            ]
+        },
+        "AsteroidSmall": {
+            "class_name": "Asteroid",
+            "kwargs": {
+                "image:image": "asteroid_06",
+                "death_effect": "Explosion",
+                "damage": 5,
+                "game_object_type:mover": "AsteroidMover",
+                "death_spawn": []
+            },
+            "groups": [
+                "RenderGroup",
+                "AsteroidsGroup"
+            ]
+        },
+        "AsteroidTiny": {
+            "class_name": "Asteroid",
+            "kwargs": {
+                "image:image": "asteroid_08",
+                "death_effect": "Explosion",
+                "damage": 5,
+                "game_object_type:mover": "AsteroidMover",
+                "death_spawn": []
+            },
+            "groups": [
+                "RenderGroup",
+                "AsteroidsGroup"
+            ]
+        },
+        "AsteroidMover": {
+            "class_name": "MoverVelocity",
+            "kwargs": {
+                "velocity": 50.0,
+                "velocity_decay_factor": 1.0,
+                "max_velocity": 500.0,
+                "angular_velocity": 1.0
+            }
+        },
+        "AsteroidParticleSystem": {
+            "class_name": "ParticleSystem",
+            "kwargs": {
+                "image_list:images": [
+                     "asteroid_00",
+                     "asteroid_01",
+                     "asteroid_02",
+                     "asteroid_03",
+                     "asteroid_04",
+                     "asteroid_05",
+                     "asteroid_06",
+                     "asteroid_07",
+                     "asteroid_08",
+                     "asteroid_09",
+                     "asteroid_10",
+                     "asteroid_11",
+                     "asteroid_12",
+                     "asteroid_13",
+                     "asteroid_14",
+                     "asteroid_15",
+                     "asteroid_16",
+                     "asteroid_17",
+                     "asteroid_18",
+                     "asteroid_19"
+                ],
+                "spawn_freq": 1000
             }
         }
     }
