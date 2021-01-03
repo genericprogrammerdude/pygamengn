@@ -92,6 +92,12 @@ class GameObjectFactory():
         if layer_id != LayerManager.invalid_layer_id:
             gob.set_layer_id(layer_id)
 
+        # Add to groups as specified in type spec
+        group_names = game_type.get("groups")
+        if group_names:
+            groups = [cls.assets[name]["asset"] for name in group_names]
+            gob.add_to_groups(groups)
+
         # Create attachments
         attachment_specs = game_type.get("attachments")
         if gob and attachment_specs:
@@ -104,6 +110,16 @@ class GameObjectFactory():
                     gob.attach(attachment_object, attachment_spec["offset"], parent_transform)
 
         return gob
+
+    @classmethod
+    def get_asset(cls, name: str) -> GameObjectBase:
+        """Returns an initialized asset."""
+        asset_spec = cls.assets[name]
+        if asset_spec:
+            return asset_spec["asset"]
+        else:
+            sys.stderr.write("Asset {0} does not exist.\n".format(name))
+            return None
 
     @classmethod
     def __get_game_type(cls, name: str) -> dict:

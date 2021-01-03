@@ -4,11 +4,13 @@ import pygame
 
 sys.path.append("./GameEngine")
 
+from collision_manager import CollisionManager
 from game_object_factory import GameObjectFactory
 from level import Level
 from render_group import RenderGroup
 from shield import Shield
 from ship import Ship
+from sprite_group import SpriteGroup
 from turret import Turret
 
 
@@ -27,12 +29,19 @@ def main():
     # Create world
     pygame.display.set_icon(GameObjectFactory.surfaces["ship"])
     pygame.display.set_caption("Game")
-    world_rect = pygame.Rect(0, 0, size[0] * 2, size[1] * 2)
-    screen_rect = screen.get_rect()
 
-    render_group = RenderGroup(world_rect, screen_rect, True)
-    player_collision_group = pygame.sprite.Group()
-    badies_collision_group = pygame.sprite.Group()
+    player_group = GameObjectFactory.get_asset("PlayerGroup")
+    player_projectiles_group = GameObjectFactory.get_asset("PlayerProjectilesGroup")
+    turrets_group = GameObjectFactory.get_asset("TurretsGroup")
+    turret_projectiles_group = GameObjectFactory.get_asset("TurretProjectilesGroup")
+    asteroids_group = GameObjectFactory.get_asset("AsteroidsGroup")
+    collision_manager = CollisionManager(player_group,
+                                         player_projectiles_group,
+                                         turrets_group,
+                                         turret_projectiles_group,
+                                         asteroids_group)
+
+    render_group = GameObjectFactory.get_asset("RenderGroup")
 
 #     # Create player
 #     player = GameObjectFactory.create("PlayerShip", enemies=badies_collision_group)
@@ -55,10 +64,8 @@ def main():
 #     player.add_to_groups([render_group, player_collision_group])
 
     level_01 = GameObjectFactory.create("Level_01")
-    level_01.create_objects(render_group, player_collision_group, badies_collision_group)
+    level_01.create_objects(render_group)
     player = level_01.player
-    for enemy in level_01.enemies:
-        enemy.set_target(player)
 
     clock = pygame.time.Clock()
     running = True
@@ -86,7 +93,11 @@ def main():
             player.set_velocity(player.mover.velocity * 0.8)
 
         # Update groups
-        render_group.update(clock.get_time())
+        delta = clock.get_time()
+        render_group.update(screen.get_rect(), delta)
+
+        # Do collision detection and response
+        collision_manager.do_collisions()
 
         # Render
         screen.fill(background)

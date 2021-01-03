@@ -1,3 +1,4 @@
+from asteroid import Asteroid
 from game_object import GameObject
 from game_object_factory import GameObjectFactory
 from health_bar import HealthBar
@@ -9,11 +10,10 @@ from projectile import Projectile
 class Ship(GameObject):
     """Space ship game object."""
 
-    def __init__(self, image, projectile_type, enemies, fire_freq, mover, **kwargs):
+    def __init__(self, image, projectile_type, fire_freq, mover, **kwargs):
         super().__init__(image, **kwargs)
         self.mover = mover
         self.projectile_type = projectile_type
-        self.enemies = enemies
         self.fire_freq = fire_freq
         self.time_since_last_fire = self.fire_freq
 
@@ -32,7 +32,7 @@ class Ship(GameObject):
     def fire(self):
         """Fires a Projectile at the target."""
         if self.time_since_last_fire > self.fire_freq and self.alive():
-            projectile = GameObjectFactory.create(self.projectile_type, enemies=self.enemies)
+            projectile = GameObjectFactory.create(self.projectile_type)
             projectile.set_pos(self.pos)
             projectile.set_heading(self.heading)
             projectile.transform()

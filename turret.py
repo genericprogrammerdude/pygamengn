@@ -9,13 +9,12 @@ from game_object_factory import GameObjectFactory
 class Turret(GameObject):
     """Turret that will fire at the given target."""
 
-    def __init__(self, image, projectile_type, enemies, fire_freq, **kwargs):
+    def __init__(self, image, projectile_type, fire_freq, **kwargs):
         super().__init__(image, **kwargs)
         self.projectile_type = projectile_type
         self.target = None
         self.fire_freq = fire_freq
         self.time_since_last_fire = 0
-        self.enemies = enemies
 
     def set_target(self, target):
         """Sets the target to attack."""
@@ -39,7 +38,7 @@ class Turret(GameObject):
 
     def fire(self):
         """Fires a projectile_type object at the target."""
-        projectile = GameObjectFactory.create(self.projectile_type, enemies=self.enemies)
+        projectile = GameObjectFactory.create(self.projectile_type)
         projectile.set_pos(self.pos)
         projectile.set_heading(self.heading)
         projectile.transform()
