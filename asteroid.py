@@ -45,7 +45,6 @@ class Asteroid(Projectile):
                 spawn.set_pos(self.death_spawn_pos)
                 heading_delta = 90.0 * (random.random() - 0.5)
                 spawn.set_heading(self.heading + heading_delta)
-                spawn.transform()
         super().die()
 
 
@@ -67,4 +66,3 @@ class AsteroidSpawner(GameObjectBase):
             asteroid = GameObjectFactory.create(asteroid_type)
             asteroid.set_pos(pygame.Vector2(640, 360))
             asteroid.set_heading(random.randrange(0, 360))
-            asteroid.transform()
