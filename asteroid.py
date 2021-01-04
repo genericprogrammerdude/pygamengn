@@ -2,6 +2,7 @@ import random
 
 import pygame
 
+from game_object_factory import GameObjectBase
 from game_object_factory import GameObjectFactory
 from projectile import Projectile
 
@@ -41,9 +42,29 @@ class Asteroid(Projectile):
         if self.death_spawn and self.alive():
             for spawn_type in self.death_spawn:
                 spawn = GameObjectFactory.create(spawn_type)
-                spawn.add_to_groups(self.groups())
                 spawn.set_pos(self.death_spawn_pos)
                 heading_delta = 90.0 * (random.random() - 0.5)
                 spawn.set_heading(self.heading + heading_delta)
                 spawn.transform()
         super().die()
+
+
+@GameObjectFactory.register("AsteroidSpawner")
+class AsteroidSpawner(GameObjectBase):
+    """Spawns asteroids just to be annoying."""
+
+    def __init__(self, asteroid_types, spawn_freq):
+        self.asteroid_types = asteroid_types
+        self.spawn_freq = spawn_freq
+        self.time_to_next_spawn = random.randrange(spawn_freq)
+        print(self.asteroid_types)
+
+    def update(self, delta):
+        self.time_to_next_spawn -= delta
+        if self.time_to_next_spawn <= 0:
+            self.time_to_next_spawn = random.randrange(self.spawn_freq)
+            asteroid_type = random.choice(self.asteroid_types)
+            asteroid = GameObjectFactory.create(asteroid_type)
+            asteroid.set_pos(pygame.Vector2(640, 360))
+            asteroid.set_heading(random.randrange(0, 360))
+            asteroid.transform()

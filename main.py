@@ -4,7 +4,9 @@ import pygame
 
 sys.path.append("./GameEngine")
 
+from asteroid import Asteroid, AsteroidSpawner
 from collision_manager import CollisionManager
+from game import Game
 from game_object_factory import GameObjectFactory
 from level import Level
 from render_group import RenderGroup
@@ -18,7 +20,6 @@ def main():
     pygame.init()
 
     size = (1280, 720)
-    background = 50, 50, 50
     screen = pygame.display.set_mode(size, pygame.DOUBLEBUF | pygame.HWSURFACE)
 
     GameObjectFactory.initialize(open("Assets/inventory.json"))
@@ -27,16 +28,14 @@ def main():
     pygame.display.set_icon(GameObjectFactory.surfaces["ship"])
     pygame.display.set_caption("Game")
 
-    collision_manager = GameObjectFactory.create("CollisionManager")
-
-    render_group = GameObjectFactory.get_asset("RenderGroup")
+    game = GameObjectFactory.create("SpaceShooterGame", screen=screen)
 
     level = None
     if len(sys.argv) > 1:
         level = GameObjectFactory.create(sys.argv[1])
     else:
         level = GameObjectFactory.create("Level_01")
-    level.create_objects(render_group)
+    level.create_objects(game.render_group)
     player = level.player
 
     clock = pygame.time.Clock()
@@ -66,16 +65,7 @@ def main():
 
         # Update groups
         delta = clock.get_time()
-        render_group.update(screen.get_rect(), delta)
-
-        # Do collision detection and response
-        collision_manager.do_collisions()
-
-        # Render
-        screen.fill(background)
-        render_group.draw(screen)
-        pygame.display.flip()
-
+        game.update(delta)
         clock.tick(60)
 
     pygame.quit()

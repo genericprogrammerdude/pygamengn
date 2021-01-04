@@ -92,16 +92,26 @@
     },
 
     "game_types": {
-        "CollisionManager": {
-            "class_name": "CollisionManager",
+        "SpaceShooterGame": {
+            "class_name": "Game",
             "kwargs": {
-                "asset:collision_checks": [
-                    ["PlayerProjectilesGroup", "AsteroidsGroup"],
-                    ["PlayerProjectilesGroup", "TurretsGroup"],
-                    ["TurretProjectilesGroup", "PlayerGroup"],
-                    ["TurretProjectilesGroup", "AsteroidsGroup"],
-                    ["AsteroidsGroup", "PlayerGroup"]
+                "asset:render_group": "RenderGroup",
+                "game_object_type:collision_manager": "SpaceShooterGame/CollisionManager",
+                "game_object_type_list:updatables": [
+                    "Level_02/AsteroidSpawner"
                 ]
+            },
+            "CollisionManager": {
+                "class_name": "CollisionManager",
+                "kwargs": {
+                    "asset:collision_checks": [
+                        ["PlayerProjectilesGroup", "AsteroidsGroup"],
+                        ["PlayerProjectilesGroup", "TurretsGroup"],
+                        ["TurretProjectilesGroup", "PlayerGroup"],
+                        ["TurretProjectilesGroup", "AsteroidsGroup"],
+                        ["AsteroidsGroup", "PlayerGroup"]
+                    ]
+                }
             }
         },
         "PlayerShip": {
@@ -400,6 +410,18 @@
                         [1000, 540]
                     ]
                 }
+            },
+            "AsteroidSpawner": {
+                "class_name": "AsteroidSpawner",
+                "kwargs": {
+                    "asteroid_types": [
+                        "AsteroidBig",
+                        "AsteroidMedium",
+                        "AsteroidSmall",
+                        "AsteroidTiny"
+                    ],
+                    "spawn_freq": 2000
+                }
             }
         },
         "AsteroidBig": {
@@ -478,34 +500,6 @@
                 "velocity_decay_factor": 1.0,
                 "max_velocity": 500.0,
                 "angular_velocity": 45.0
-            }
-        },
-        "AsteroidParticleSystem": {
-            "class_name": "ParticleSystem",
-            "kwargs": {
-                "image_list:images": [
-                     "asteroid_00",
-                     "asteroid_01",
-                     "asteroid_02",
-                     "asteroid_03",
-                     "asteroid_04",
-                     "asteroid_05",
-                     "asteroid_06",
-                     "asteroid_07",
-                     "asteroid_08",
-                     "asteroid_09",
-                     "asteroid_10",
-                     "asteroid_11",
-                     "asteroid_12",
-                     "asteroid_13",
-                     "asteroid_14",
-                     "asteroid_15",
-                     "asteroid_16",
-                     "asteroid_17",
-                     "asteroid_18",
-                     "asteroid_19"
-                ],
-                "spawn_freq": 1000
             }
         },
         "Level_01EnemySpec2": {
