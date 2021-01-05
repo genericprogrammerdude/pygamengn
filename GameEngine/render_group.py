@@ -68,3 +68,8 @@ class RenderGroup(pygame.sprite.LayeredUpdates, GameObjectBase):
         for y in range(int(low_y - self.cam.y), int(hi_y - self.cam.y), self.grid_interval):
             ycor = self.view_rect.height - y
             pygame.draw.line(surface, self.grid_color, (0, ycor), (self.view_rect.width, ycor))
+
+    def get_world_view_rect(self):
+        rv = pygame.Rect(self.view_rect)
+        rv.topleft += self.cam
+        return rv

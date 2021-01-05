@@ -420,7 +420,8 @@
                         "AsteroidSmall",
                         "AsteroidTiny"
                     ],
-                    "spawn_freq": 2000
+                    "spawn_freq": 2000,
+                    "asset:render_group": "RenderGroup"
                 }
             }
         },
