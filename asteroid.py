@@ -1,9 +1,11 @@
 import random
+import sys
 
 import pygame
 
 from game_object_factory import GameObjectBase
 from game_object_factory import GameObjectFactory
+import geometry
 from projectile import Projectile
 from render_group import RenderGroup
 
@@ -65,6 +67,44 @@ class AsteroidSpawner(GameObjectBase):
             self.time_to_next_spawn = random.randrange(self.spawn_freq)
             asteroid_type = random.choice(self.asteroid_types)
             asteroid = GameObjectFactory.create(asteroid_type)
-            asteroid.set_pos(pygame.Vector2(640, 360))
             asteroid.set_heading(random.randrange(0, 360))
-            self.render_group.get_world_view_rect()
+            numpy_pos = self.get_initial_pos(self.render_group.get_world_view_rect(), asteroid)
+            pos = pygame.Vector2(numpy_pos[0], numpy_pos[1])
+            asteroid.set_pos(pos)
+
+    def get_initial_pos(self, world_view_rect, asteroid):
+        angle = 360 - random.randrange(0, 360)  # Flip the angle because positive y goes "down" on the screen
+        ray = geometry.Ray(world_view_rect.center, angle)
+        center_line = ray.get_segment()
+
+        quadrant = geometry.get_quadrant(angle)
+        edge_segs = []
+        if quadrant == 1:
+            edge_segs = [
+                geometry.Segment(world_view_rect.bottomright, world_view_rect.topright),
+                geometry.Segment(world_view_rect.topleft, world_view_rect.topright)
+            ]
+        elif quadrant == 2:
+            edge_segs = [
+                geometry.Segment(world_view_rect.topleft, world_view_rect.topright),
+                geometry.Segment(world_view_rect.bottomleft, world_view_rect.topleft)
+            ]
+        elif quadrant == 3:
+            edge_segs = [
+                geometry.Segment(world_view_rect.bottomleft, world_view_rect.bottomright),
+                geometry.Segment(world_view_rect.bottomleft, world_view_rect.topleft)
+            ]
+        else:
+            edge_segs = [
+                geometry.Segment(world_view_rect.bottomright, world_view_rect.topright),
+                geometry.Segment(world_view_rect.bottomleft, world_view_rect.bottomright)
+            ]
+
+        intersection = edge_segs[0].intersect_line(center_line)
+        if intersection is None:
+            intersection = edge_segs[1].intersect_line(center_line)
+
+        if intersection is None:
+            sys.stderr.write("AsteroidSpawner.get_initial_pos(): No intersection found. WTF?")
+
+        return intersection

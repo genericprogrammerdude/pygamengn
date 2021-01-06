@@ -7,10 +7,26 @@ class Segment:
         self.p0 = p0
         self.p1 = p1
 
-    def intersect(self, segment):
+    def __str__(self):
+        return "Segment(({0}, {1}), ({2}, {3}))".format(
+            self.p0[0],
+            self.p0[1],
+            self.p1[0],
+            self.p1[1]
+        )
+
+    def intersect_segment(self, segment):
         ip = line_intersect(self.p0, self.p1, segment.p0, segment.p1)
         if ip is not None:
             if not (self.point_in_segment(ip) and segment.point_in_segment(ip)):
+                return None
+        return ip
+
+    def intersect_line(self, segment):
+        """Same as intersect_segment(), but doesn't check for intersection point in segment."""
+        ip = line_intersect(self.p0, self.p1, segment.p0, segment.p1)
+        if ip is not None:
+            if not self.point_in_segment(ip):
                 return None
         return ip
 
@@ -27,27 +43,50 @@ class Segment:
 
 class Ray:
 
-    def __init__(self, origin, angle):
+    def __init__(self, origin, angle_deg):
         self.origin = origin
-        self.angle = angle
+        self.angle_deg = angle_deg
+
+    def __str__(self):
+        return "Ray(({0}, {1}), {2})".format(
+            self.origin[0],
+            self.origin[1],
+            self.angle_deg
+        )
 
     def inersect_segment(self, segment):
         p0 = self.origin
-        theta = numpy.deg2rad(self.angle)
-        p1 = (p0[0] + numpy.cos(theta), p0[1] + numpy.sin(theta))
+        theta = numpy.deg2rad(self.angle_deg)
+        cos = numpy.cos(theta)
+        sin = numpy.sin(theta)
+        p1 = (p0[0] + cos, p0[1] + sin)
         ip = line_intersect(p0, p1, segment.p0, segment.p1)
-        if segment.point_in_segment(ip) and self.point_in_ray(ip):
+        if ip is not None and segment.point_in_segment(ip) and self.point_in_ray(ip):
             return ip
         return None
 
-    def point_in_ray(self, point):
-        theta = numpy.deg2rad(self.angle)
+    def get_segment(self):
+        p0 = self.origin
+        theta = numpy.deg2rad(self.angle_deg)
         cos = numpy.cos(theta)
         sin = numpy.sin(theta)
-        p0 = numpy.array(self.origin)
-        p1 = numpy.array(point)
-        diff = p1 - p0
-        print(diff[0] / cos, diff[1] / sin)
+        p1 = (p0[0] + cos, p0[1] + sin)
+        return Segment(p0, p1)
+
+    def point_in_ray(self, point):
+        """DO NOT USE THIS. IT DOESN'T WORK."""
+        return None
+        theta = numpy.deg2rad(self.angle_deg)
+        cos = numpy.cos(theta)
+        sin = numpy.sin(theta)
+        factor_x = factor_y = 0
+        if cos != 0:
+            factor_x = ((point[0] - self.origin[0]) / cos)
+            return (factor_x < 0)
+        if sin != 0:
+            factor_y = ((point[1] - self.origin[1]) / sin)
+            return (factor_y < 0)
+        return False
 
 
 def line_intersect(a1, a2, b1, b2):
@@ -70,30 +109,15 @@ def line_intersect(a1, a2, b1, b2):
     return numpy.array([x / z, y / z])
 
 
-def test_segment_line():
-    # Parallel segments
-    a = Segment((0, 0), (4, 2))
-    b = Segment((1, 0), (3, 1))
-    print(a.intersect(b))
+def get_quadrant(angle_deg):
+    """Returns the quadrant for the given angle. Angle must be in degrees and normalized to [0, 360)."""
+    quadrant = 1
 
-    # Intersecting at (2, 1)
-    a = Segment((0, 0), (4, 2))
-    b = Segment((0, 3), (3, 0))
-    print(a.intersect(b))
+    if angle_deg >= 90 and angle_deg < 180:
+        quadrant = 2
+    elif angle_deg >= 180 and angle_deg < 270:
+        quadrant = 3
+    elif angle_deg >= 270 and angle_deg < 360:
+        quadrant = 4
 
-    # Intersecting at (1, 0.5)
-    a = Segment((0, 0), (4, 2))
-    b = Segment((2, 0), (0, 1))
-    print(a.intersect(b))
-
-    # No segment intersect, but lines do
-    a = Segment((2, 1), (4, 2))
-    b = Segment((0, 1), (2, 0))
-    print(a.intersect(b))
-    print(line_intersect((2, 1), (4, 2), (0, 1), (2, 0)))
-
-
-if __name__ == "__main__":
-    ray = Ray((1, 2), 45)
-    print(ray.point_in_ray((2, 3)))
-    print(ray.point_in_ray((0, 1)))
+    return quadrant
