@@ -67,13 +67,14 @@ class AsteroidSpawner(GameObjectBase):
             self.time_to_next_spawn = random.randrange(self.spawn_freq)
             asteroid_type = random.choice(self.asteroid_types)
             asteroid = GameObjectFactory.create(asteroid_type)
-            asteroid.set_heading(random.randrange(0, 360))
-            numpy_pos = self.get_initial_pos(self.render_group.get_world_view_rect(), asteroid)
-            pos = pygame.Vector2(numpy_pos[0], numpy_pos[1])
+            pos, angle = self.get_initial_pos(self.render_group.get_world_view_rect(), asteroid)
+            asteroid.set_heading(angle)
             asteroid.set_pos(pos)
 
     def get_initial_pos(self, world_view_rect, asteroid):
-        angle = 360 - random.randrange(0, 360)  # Flip the angle because positive y goes "down" on the screen
+        screen_angle = random.randrange(0, 360)
+        # Flip the angle because positive y goes "down" on the screen and add 90 because 0 is up
+        angle = geometry.normalize_angle(360 - screen_angle + 90)
         ray = geometry.Ray(world_view_rect.center, angle)
         center_line = ray.get_segment()
 
@@ -107,4 +108,5 @@ class AsteroidSpawner(GameObjectBase):
         if intersection is None:
             sys.stderr.write("AsteroidSpawner.get_initial_pos(): No intersection found. WTF?")
 
-        return intersection
+        screen_angle = geometry.normalize_angle(screen_angle + 180)
+        return (intersection, screen_angle)

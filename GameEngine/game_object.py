@@ -2,6 +2,7 @@ import pygame
 
 from game_object_factory import GameObjectBase
 from game_object_factory import GameObjectFactory
+import geometry
 from transform import Transform
 
 
@@ -68,7 +69,7 @@ class GameObject(pygame.sprite.Sprite, GameObjectBase):
     def set_heading(self, heading):
         """Sets the orientation of the game object."""
         self.dirty_image = self.dirty_image or self.heading != heading
-        self.heading = heading
+        self.heading = geometry.normalize_angle(heading)
 
     def set_image(self, image):
         """Sets a new image for the game object."""

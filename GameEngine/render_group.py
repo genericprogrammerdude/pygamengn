@@ -71,5 +71,5 @@ class RenderGroup(pygame.sprite.LayeredUpdates, GameObjectBase):
 
     def get_world_view_rect(self):
         rv = pygame.Rect(self.view_rect)
-        rv.topleft += self.cam
+        rv.topleft -= self.cam
         return rv

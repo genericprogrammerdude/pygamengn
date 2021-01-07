@@ -383,7 +383,6 @@
             "kwargs": {
                 "game_object_type:player_spec": "Level_01/PlayerSpec",
                 "game_object_type_list:enemy_specs": [          
-                    "Level_02/EnemySpec1"
                 ]
             },
             "PlayerSpec": {

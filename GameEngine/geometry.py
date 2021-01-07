@@ -1,4 +1,5 @@
 import numpy
+import pygame
 
 
 class Segment:
@@ -106,7 +107,7 @@ def line_intersect(a1, a2, b1, b2):
     x, y, z = numpy.cross(l1, l2)  # point of intersection
     if z == 0:  # lines are parallel
         return None  # (float('inf'), float('inf'))
-    return numpy.array([x / z, y / z])
+    return pygame.Vector2([x / z, y / z])
 
 
 def get_quadrant(angle_deg):
@@ -121,3 +122,9 @@ def get_quadrant(angle_deg):
         quadrant = 4
 
     return quadrant
+
+
+def normalize_angle(angle_deg):
+    """Returns the angle normalized to [0, 360)."""
+    angle = angle_deg % 360
+    return angle
