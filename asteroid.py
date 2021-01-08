@@ -1,11 +1,11 @@
+import math
 import random
-import sys
 
+import numpy
 import pygame
 
 from game_object_factory import GameObjectBase
 from game_object_factory import GameObjectFactory
-import geometry
 from projectile import Projectile
 from render_group import RenderGroup
 
@@ -24,7 +24,8 @@ class Asteroid(Projectile):
     def update(self, delta):
         spin_delta = (self.mover.angular_velocity * delta) / 1000.0 * self.spin_delta_factor
         self.spin_angle = self.spin_angle + spin_delta
-        self.pos, self.heading = self.mover.move(delta, self.pos, self.heading)
+        self.pos = self.pos + self.mover.move_bare(delta)
+#         self.pos, self.heading = self.mover.move(delta, self.pos, self.heading)
         self.image = pygame.transform.rotozoom(self.image_original, self.spin_angle, self.scale)
         self.mask = pygame.mask.from_surface(self.image, 16)
 
@@ -46,8 +47,9 @@ class Asteroid(Projectile):
             for spawn_type in self.death_spawn:
                 spawn = GameObjectFactory.create(spawn_type)
                 spawn.set_pos(self.death_spawn_pos)
-                heading_delta = 90.0 * (random.random() - 0.5)
-                spawn.set_heading(self.heading + heading_delta)
+                heading = self.heading + 90.0 * (random.random() - 0.5)
+                spawn.set_heading(heading)
+                spawn.mover.set_direction(pygame.Vector2(math.cos(heading), math.sin(heading)))
         super().die()
 
 
@@ -67,46 +69,30 @@ class AsteroidSpawner(GameObjectBase):
             self.time_to_next_spawn = random.randrange(self.spawn_freq)
             asteroid_type = random.choice(self.asteroid_types)
             asteroid = GameObjectFactory.create(asteroid_type)
-            pos, angle = self.get_initial_pos(self.render_group.get_world_view_rect(), asteroid)
-            asteroid.set_heading(angle)
+            pos, direction = self.get_random_pos_dir(self.render_group.get_world_view_rect())
+            asteroid.mover.set_direction(direction)
+            heading = numpy.rad2deg(math.atan2(direction.y, direction.x))
+            asteroid.set_heading(heading)
             asteroid.set_pos(pos)
 
-    def get_initial_pos(self, world_view_rect, asteroid):
-        screen_angle = random.randrange(0, 360)
-        # Flip the angle because positive y goes "down" on the screen and add 90 because 0 is up
-        angle = geometry.normalize_angle(360 - screen_angle + 90)
-        ray = geometry.Ray(world_view_rect.center, angle)
-        center_line = ray.get_segment()
+    def get_random_pos_dir(self, world_view_rect):
+        points = [self.get_random_point(world_view_rect), world_view_rect.center]  # , self.get_random_point(world_view_rect)]
+        direction = (points[1] - points[0]).normalize()
+        return points[0], direction
 
-        quadrant = geometry.get_quadrant(angle)
-        edge_segs = []
-        if quadrant == 1:
-            edge_segs = [
-                geometry.Segment(world_view_rect.bottomright, world_view_rect.topright),
-                geometry.Segment(world_view_rect.topleft, world_view_rect.topright)
-            ]
-        elif quadrant == 2:
-            edge_segs = [
-                geometry.Segment(world_view_rect.topleft, world_view_rect.topright),
-                geometry.Segment(world_view_rect.bottomleft, world_view_rect.topleft)
-            ]
-        elif quadrant == 3:
-            edge_segs = [
-                geometry.Segment(world_view_rect.bottomleft, world_view_rect.bottomright),
-                geometry.Segment(world_view_rect.bottomleft, world_view_rect.topleft)
-            ]
+    def get_random_point(self, world_view_rect):
+        point = ()
+        axis = random.randint(0, 1)
+        if axis == 0:
+            # Select random value along x axis and one of the two values of y for the top and bottom edges of the screen
+            point = pygame.Vector2(
+                random.randint(world_view_rect.topleft[0], world_view_rect.topright[0]),
+                random.choice([world_view_rect.topleft[1], world_view_rect.bottomleft[1]])
+            )
         else:
-            edge_segs = [
-                geometry.Segment(world_view_rect.bottomright, world_view_rect.topright),
-                geometry.Segment(world_view_rect.bottomleft, world_view_rect.bottomright)
-            ]
-
-        intersection = edge_segs[0].intersect_line(center_line)
-        if intersection is None:
-            intersection = edge_segs[1].intersect_line(center_line)
-
-        if intersection is None:
-            sys.stderr.write("AsteroidSpawner.get_initial_pos(): No intersection found. WTF?")
-
-        screen_angle = geometry.normalize_angle(screen_angle + 180)
-        return (intersection, screen_angle)
+            # Select random value along y axis and one of the two values of x for the left and right edges of the screen
+            point = pygame.Vector2(
+                random.choice([world_view_rect.topleft[0], world_view_rect.topright[0]]),
+                random.randint(world_view_rect.topleft[1], world_view_rect.bottomleft[1])
+            )
+        return point

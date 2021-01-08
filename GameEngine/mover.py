@@ -20,6 +20,7 @@ class MoverVelocity(Mover):
         self.velocity_decay_factor = velocity_decay_factor
         self.max_velocity = max_velocity
         self.angular_velocity = angular_velocity
+        self.direction = pygame.Vector2(0, 1)
 
     def move(self, delta, pos, heading):
         """Computes movement from the given parameters."""
@@ -28,5 +29,12 @@ class MoverVelocity(Mover):
         self.velocity = self.velocity * self.velocity_decay_factor
         return (pos + delta_pos, heading)
 
+    def move_bare(self, delta):
+        return self.direction * delta / 1000.0 * self.velocity
+
     def set_velocity(self, velocity):
         self.velocity = velocity
+
+    def set_direction(self, dir: pygame.Vector2):
+        """Sets direction of movement. dir is a pygame.Vector2."""
+        self.direction = dir
