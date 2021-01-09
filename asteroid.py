@@ -77,9 +77,15 @@ class AsteroidSpawner(GameObjectBase):
             asteroid.set_pos(pos)
 
     def get_random_pos_dir(self, world_view_rect):
-        points = [self.get_random_point(world_view_rect), world_view_rect.center]  # , self.get_random_point(world_view_rect)]
-        direction = (points[1] - points[0]).normalize()
-        return points[0], direction
+        # Aim roughly to the center of the screen
+        dest = pygame.Vector2(world_view_rect.center)
+        range_x = round(world_view_rect.width / 3)
+        dest.x += random.randint(-range_x, range_x)
+        range_y = round(world_view_rect.height / 3)
+        dest.y += random.randint(-range_y, range_y)
+        origin = self.get_random_point(world_view_rect)
+        direction = (dest - origin).normalize()
+        return origin, direction
 
     def get_random_point(self, world_view_rect):
         point = ()
