@@ -1,21 +1,22 @@
-import math
 import random
 
-import numpy
 import pygame
 
+from game_object import GameObject
 from game_object_factory import GameObjectBase
 from game_object_factory import GameObjectFactory
-from projectile import Projectile
 from render_group import RenderGroup
 from transform import Transform
 
 
 @GameObjectFactory.register("Asteroid")
-class Asteroid(Projectile):
+class Asteroid(GameObject):
 
     def __init__(self, images, damage, death_effect, mover, death_spawn):
-        super().__init__(random.choice(images), damage, death_effect, mover)
+        super().__init__(random.choice(images))
+        self.damage = damage
+        self.death_effect = death_effect
+        self.mover = mover
         self.spin_angle = random.randrange(0, 360)
         self.spin_delta_factor = random.choice([-1.0, 1.0])
         self.death_spawn = death_spawn
@@ -24,9 +25,12 @@ class Asteroid(Projectile):
     def update(self, delta):
         spin_delta = (45.0 * delta) / 1000.0 * self.spin_delta_factor
         self.spin_angle = self.spin_angle + spin_delta
+        self.set_heading(self.spin_angle)
         self.pos = self.pos + self.mover.move(delta)
-        self.image = pygame.transform.rotozoom(self.image_original, self.spin_angle, self.scale)
-        self.mask = pygame.mask.from_surface(self.image, 16)
+        super().update(delta)
+#         self.pos = self.pos + self.mover.move(delta)
+#         self.image = pygame.transform.rotozoom(self.image_original, self.spin_angle, self.scale)
+#         self.mask = pygame.mask.from_surface(self.image, 16)
 
         # Translate
         self.rect = self.image.get_rect()
@@ -42,17 +46,26 @@ class Asteroid(Projectile):
 
     def die(self):
         """Die. Plays an explosion if it was given an atlas for  the AnimatedTexture."""
-        if self.death_spawn and self.alive():
-            angle = -30.0
-            angle_inc = 60.0 / len(self.death_spawn)
-            for spawn_type in self.death_spawn:
-                spawn = GameObjectFactory.create(spawn_type)
-                spawn.set_pos(self.death_spawn_pos)
-                next_angle = angle + angle_inc
-                heading = random.uniform(angle, next_angle) % 360
-                angle = next_angle
-                direction = Transform.rotate(self.mover.direction, heading)
-                spawn.mover.set_direction(direction)
+        if self.alive():
+            if self.death_spawn:
+                angle = -30.0
+                angle_inc = 60.0 / len(self.death_spawn)
+                for spawn_type in self.death_spawn:
+                    spawn = GameObjectFactory.create(spawn_type)
+                    spawn.set_pos(self.death_spawn_pos)
+                    next_angle = angle + angle_inc
+                    heading = random.uniform(angle, next_angle) % 360
+                    angle = next_angle
+                    direction = Transform.rotate(self.mover.direction, heading)
+                    spawn.mover.set_direction(direction)
+
+            if self.death_effect:
+                effect = GameObjectFactory.create(self.death_effect)
+                group = self.groups()[0]
+                group.add(effect)
+                effect.set_pos(self.pos)
+                effect.play()
+
         super().die()
 
 

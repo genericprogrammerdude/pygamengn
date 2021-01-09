@@ -415,11 +415,9 @@
                 "kwargs": {
                     "asteroid_types": [
                         "AsteroidBig",
-                        "AsteroidMedium",
-                        "AsteroidSmall",
-                        "AsteroidTiny"
+                        "AsteroidMedium"
                     ],
-                    "spawn_freq": 2000,
+                    "spawn_freq": 1000,
                     "asset:render_group": "RenderGroup"
                 }
             }
