@@ -8,6 +8,7 @@ from game_object_factory import GameObjectBase
 from game_object_factory import GameObjectFactory
 from projectile import Projectile
 from render_group import RenderGroup
+from transform import Transform
 
 
 @GameObjectFactory.register("Asteroid")
@@ -19,13 +20,11 @@ class Asteroid(Projectile):
         self.spin_delta_factor = random.choice([-1.0, 1.0])
         self.death_spawn = death_spawn
         self.death_spawn_pos = None
-        self.mover.set_velocity(self.mover.velocity * (0.5 + random.random()))
 
     def update(self, delta):
-        spin_delta = (self.mover.angular_velocity * delta) / 1000.0 * self.spin_delta_factor
+        spin_delta = (45.0 * delta) / 1000.0 * self.spin_delta_factor
         self.spin_angle = self.spin_angle + spin_delta
-        self.pos = self.pos + self.mover.move_bare(delta)
-#         self.pos, self.heading = self.mover.move(delta, self.pos, self.heading)
+        self.pos = self.pos + self.mover.move(delta)
         self.image = pygame.transform.rotozoom(self.image_original, self.spin_angle, self.scale)
         self.mask = pygame.mask.from_surface(self.image, 16)
 
@@ -44,12 +43,16 @@ class Asteroid(Projectile):
     def die(self):
         """Die. Plays an explosion if it was given an atlas for  the AnimatedTexture."""
         if self.death_spawn and self.alive():
+            angle = -30.0
+            angle_inc = 60.0 / len(self.death_spawn)
             for spawn_type in self.death_spawn:
                 spawn = GameObjectFactory.create(spawn_type)
                 spawn.set_pos(self.death_spawn_pos)
-                heading = self.heading + 90.0 * (random.random() - 0.5)
-                spawn.set_heading(heading)
-                spawn.mover.set_direction(pygame.Vector2(math.cos(heading), math.sin(heading)))
+                next_angle = angle + angle_inc
+                heading = random.uniform(angle, next_angle) % 360
+                angle = next_angle
+                direction = Transform.rotate(self.mover.direction, heading)
+                spawn.mover.set_direction(direction)
         super().die()
 
 
@@ -71,8 +74,6 @@ class AsteroidSpawner(GameObjectBase):
             asteroid = GameObjectFactory.create(asteroid_type)
             pos, direction = self.get_random_pos_dir(self.render_group.get_world_view_rect())
             asteroid.mover.set_direction(direction)
-            heading = numpy.rad2deg(math.atan2(direction.y, direction.x))
-            asteroid.set_heading(heading)
             asteroid.set_pos(pos)
 
     def get_random_pos_dir(self, world_view_rect):

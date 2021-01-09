@@ -38,3 +38,22 @@ class MoverVelocity(Mover):
     def set_direction(self, dir: pygame.Vector2):
         """Sets direction of movement. dir is a pygame.Vector2."""
         self.direction = dir
+
+
+@GameObjectFactory.register("MoverVelDir")
+class MoverVelDir(Mover):
+    """Velocity- and direction-based mover."""
+
+    def __init__(self, velocity, direction):
+        self.velocity = velocity
+        self.direction = direction
+
+    def move(self, delta, *_):
+        return self.direction * delta / 1000.0 * self.velocity
+
+    def set_velocity(self, velocity):
+        self.velocity = velocity
+
+    def set_direction(self, direction: pygame.Vector2):
+        """Sets direction of movement. direction is a pygame.Vector2."""
+        self.direction = direction

@@ -494,12 +494,10 @@
             ]
         },
         "AsteroidMover": {
-            "class_name": "MoverVelocity",
+            "class_name": "MoverVelDir",
             "kwargs": {
                 "velocity": 50.0,
-                "velocity_decay_factor": 1.0,
-                "max_velocity": 500.0,
-                "angular_velocity": 45.0
+                "direction": [0, 1]
             }
         },
         "Level_01EnemySpec2": {
