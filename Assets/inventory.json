@@ -112,6 +112,13 @@
                 "image_list:images": ["explosion3", "explosion4"],
                 "frame_size": [256, 256]
             }
+        },
+        "fast_hand_font": {
+            "class_name": "FontAsset",
+            "kwargs": {
+                "font_fname": "Assets/fast-hand-font/FastHand-lgBMV.ttf",
+                "size": 42
+            }
         }
     },
 
@@ -123,7 +130,9 @@
                 "game_object_type:collision_manager": "SpaceShooterGame/CollisionManager",
                 "game_object_type_list:updatables": [
                     "Level_02/AsteroidSpawner"
-                ]
+                ],
+                "asset:font": "fast_hand_font",
+                "text_colour": [0, 200, 100]
             },
             "CollisionManager": {
                 "class_name": "CollisionManager",

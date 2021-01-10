@@ -125,6 +125,7 @@ class GameObjectFactory():
                     if parent_transform == None:
                         parent_transform = True
                     gob.attach(attachment_object, attachment_spec["offset"], parent_transform)
+                    gob.transform()
 
         return gob
 
