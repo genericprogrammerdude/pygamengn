@@ -12,15 +12,15 @@ from transform import Transform
 @GameObjectFactory.register("Asteroid")
 class Asteroid(GameObject):
 
-    def __init__(self, images, damage, death_effect, mover, death_spawn, heading):
+    def __init__(self, images, damage, mover, heading, health=100, death_effect=None, death_spawn=[]):
         super().__init__(random.choice(images))
         self.damage = damage
-        self.death_effect = death_effect
         self.mover = mover
-        self.spin_delta_factor = random.choice([-1.0, 1.0])
-        self.death_spawn = death_spawn
-        self.death_spawn_pos = None
         self.heading = heading
+        self.health = health
+        self.death_effect = death_effect
+        self.death_spawn = death_spawn
+        self.spin_delta_factor = random.choice([-1.0, 1.0])
 
     def update(self, delta):
         spin_delta = (45.0 * delta) / 1000.0 * self.spin_delta_factor
@@ -30,8 +30,6 @@ class Asteroid(GameObject):
 
     def handle_collision(self, gob, world_pos):
         """Reacts to collision against game object gob."""
-        self.death_spawn_pos = world_pos
-        self.take_damage(self.health)
         # Apply damage to the collided sprite
         gob.take_damage(self.damage)
 
@@ -46,15 +44,13 @@ class Asteroid(GameObject):
                     heading = random.uniform(angle, next_angle) % 360
                     angle = next_angle
                     spawn = GameObjectFactory.create(spawn_type, heading=heading)
-                    spawn.set_pos(self.death_spawn_pos)
+                    spawn.set_pos(self.pos)
                     direction = Transform.rotate(self.mover.direction, heading)
                     spawn.mover.set_direction(direction)
                     spawn.transform()
 
             if self.death_effect:
                 effect = GameObjectFactory.create(self.death_effect)
-                group = self.groups()[0]
-                group.add(effect)
                 effect.set_pos(self.pos)
                 effect.play()
 

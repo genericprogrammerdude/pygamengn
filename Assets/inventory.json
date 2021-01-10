@@ -82,10 +82,24 @@
                 ]
             }
         },
+        "explosion_small_atlas": {
+            "class_name": "Atlas",
+            "kwargs": {
+                "image_list:images": ["explosion1"],
+                "frame_size": [256, 256]
+            }
+        },
         "explosion_atlas": {
             "class_name": "Atlas",
             "kwargs": {
-                "image_list:images": ["explosion1", "explosion2", "explosion3", "explosion4"],
+                "image_list:images": ["explosion2", "explosion3", "explosion4"],
+                "frame_size": [256, 256]
+            }
+        },
+        "explosion_big_atlas": {
+            "class_name": "Atlas",
+            "kwargs": {
+                "image_list:images": ["explosion3", "explosion4"],
                 "frame_size": [256, 256]
             }
         }
@@ -121,7 +135,9 @@
                 "scale": 0.8,
                 "projectile_type": "PlayerProjectile",
                 "fire_freq": 200,
-                "game_object_type:mover": "PlayerShipMover"
+                "game_object_type:mover": "PlayerShipMover",
+                "death_effect": "ExplosionBig",
+                "damage": 50
             },
             "groups": [
                 "RenderGroup",
@@ -162,7 +178,8 @@
         "PlayerShield": {
             "class_name": "Shield",
             "kwargs": {
-                "image_list:images": ["shield3", "shield2", "shield1"]
+                "image_list:images": ["shield3", "shield2", "shield1"],
+                "damage": 50
             },
             "groups": [
                 "RenderGroup",
@@ -173,7 +190,7 @@
             "class_name": "Projectile",
             "kwargs": {
                 "image:image": "player_projectile",
-                "death_effect": "Explosion",
+                "death_effect": "ExplosionSmall",
                 "damage": 15,
                 "game_object_type:mover": "PlayerProjectileMover"
             },
@@ -198,30 +215,6 @@
                 "projectile_type": "EnemyTurretProjectile",
                 "scale": 1.25,
                 "fire_freq": 2250
-            },
-            "attachments": [
-                {
-                    "game_type": "EnemyTurretGun",
-                    "offset": [0.0, -15.0]
-                },
-                {
-                    "game_type": "TurretHealthBar",
-                    "offset": [0, 0],
-                    "parent_transform": false
-                }
-            ],
-            "groups": [
-                "RenderGroup",
-                "TurretsGroup"
-            ]
-        },
-        "EnemyTurretAsteroid": {
-            "class_name": "Turret",
-            "kwargs": {
-                "image:image": "turret",
-                "projectile_type": "AsteroidBig",
-                "scale": 1.25,
-                "fire_freq": 3000
             },
             "attachments": [
                 {
@@ -287,6 +280,28 @@
                 "asset:asset": "explosion_atlas",
                 "duration": 750,
                 "scale": 1
+            },
+            "groups": [
+                "RenderGroup"
+            ]
+        },
+        "ExplosionSmall": {
+            "class_name": "AnimatedTexture",
+            "kwargs": {
+                "asset:asset": "explosion_small_atlas",
+                "duration": 500,
+                "scale": 0.8
+            },
+            "groups": [
+                "RenderGroup"
+            ]
+        },
+        "ExplosionBig": {
+            "class_name": "AnimatedTexture",
+            "kwargs": {
+                "asset:asset": "explosion_big_atlas",
+                "duration": 1500,
+                "scale": 1.5
             },
             "groups": [
                 "RenderGroup"
@@ -392,24 +407,6 @@
                     "spawn_pos": [640, 360]
                 }
             },
-            "EnemySpec1": {
-                "class_name": "LevelObject",
-                "kwargs": {
-                    "game_type": "EnemyTurretAsteroid",
-                    "spawn_pos": [
-                        [320, 180]
-                    ]
-                }
-            },
-            "EnemySpec2": {
-                "class_name": "LevelObject",
-                "kwargs": {
-                    "game_type": "EnemyTurret",
-                    "spawn_pos": [
-                        [1000, 540]
-                    ]
-                }
-            },
             "AsteroidSpawner": {
                 "class_name": "AsteroidSpawner",
                 "kwargs": {
@@ -431,8 +428,9 @@
                     "asteroid_02",
                     "asteroid_03"
                 ],
+                "health": 40,
                 "death_effect": "Explosion",
-                "damage": 15,
+                "damage": 10,
                 "game_object_type:mover": "AsteroidMover",
                 "death_spawn": ["AsteroidMedium", "AsteroidMedium"]
             },
@@ -448,8 +446,9 @@
                     "asteroid_04",
                     "asteroid_05"
                 ],
+                "health": 20,
                 "death_effect": "Explosion",
-                "damage": 10,
+                "damage": 5,
                 "game_object_type:mover": "AsteroidMover",
                 "death_spawn": ["AsteroidSmall", "AsteroidTiny"]
             },
@@ -465,8 +464,9 @@
                     "asteroid_06",
                     "asteroid_07"
                 ],
-                "death_effect": "Explosion",
-                "damage": 5,
+                "health": 10,
+                "death_effect": "ExplosionSmall",
+                "damage": 2,
                 "game_object_type:mover": "AsteroidMover",
                 "death_spawn": []
             },
@@ -481,8 +481,9 @@
                 "image_list:images": [
                     "asteroid_08"
                 ],
-                "death_effect": "Explosion",
-                "damage": 2,
+                "health": 5,
+                "death_effect": "ExplosionSmall",
+                "damage": 1,
                 "game_object_type:mover": "AsteroidMover",
                 "death_spawn": []
             },
