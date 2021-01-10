@@ -10,7 +10,16 @@ from transform import Transform
 class GameObject(pygame.sprite.Sprite, GameObjectBase):
     """Basic game object."""
 
-    def __init__(self, image, is_collidable=True, scale=1.0, alpha=1.0, visible=True, heading=0, death_effect=None):
+    def __init__(self,
+                 image,
+                 is_collidable=True,
+                 scale=1.0,
+                 alpha=1.0,
+                 visible=True,
+                 heading=0,
+                 death_effect=None,
+                 damage=0
+    ):
         super().__init__()
 
         # Set the image to use for this sprite.
@@ -29,6 +38,7 @@ class GameObject(pygame.sprite.Sprite, GameObjectBase):
         self.alpha = alpha
         self.visible = visible
         self.death_effect = death_effect
+        self.damage = damage
 
     def update(self, delta):
         """Updates the game object. Delta time is in ms."""
@@ -87,16 +97,22 @@ class GameObject(pygame.sprite.Sprite, GameObjectBase):
         self.attachments.append(Attachment(game_object, offset, take_parent_transform))
         game_object.set_parent(self)
 
-    def take_damage(self, damage):
+    def handle_collision(self, gob, world_pos):
+        """Reacts to collision against game object gob."""
+        # Apply damage to the collided sprite
+        instigator = GameObject.get_root_parent(self)
+        gob.take_damage(self.damage, instigator)
+
+    def take_damage(self, damage, instigator):
         """Takes damage for this game object."""
         self.health -= damage
         if self.health <= 0:
             self.health = 0
             for attachment in self.attachments:
-                attachment.game_object.take_damage(attachment.game_object.health)
-            self.die()
+                attachment.game_object.take_damage(attachment.game_object.health, instigator)
+            self.die(instigator)
 
-    def die(self):
+    def die(self, instigator):
         """Die."""
         if self.alive() and self.death_effect:
             effect = GameObjectFactory.create(self.death_effect)
@@ -112,13 +128,17 @@ class GameObject(pygame.sprite.Sprite, GameObjectBase):
         """Sets the layer for rendering."""
         self._layer = layer_id
 
-    def handle_collision(self, gob, world_pos):
-        """Reacts to collision against game object gob."""
-        pass
-
     def set_parent(self, parent):
         """Sets this game object's parent."""
         self.parent = parent
+
+    @classmethod
+    def get_root_parent(cls, gob):
+        """Recurses up parent-child relationships to find the root parent."""
+        root = gob
+        while not root.parent is None:
+            root = gob.parent
+        return root
 
 
 class Attachment():

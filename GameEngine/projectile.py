@@ -27,6 +27,7 @@ class Projectile(GameObject):
         """Reacts to collision against game object gob."""
         # Set own position to the collision point so the explosion will play there when self dies
         self.set_pos(world_pos)
-        self.take_damage(self.health)
+        instigator = GameObject.get_root_parent(gob)
+        self.take_damage(self.health, instigator)
         # Apply damage to the collided sprite
-        gob.take_damage(self.damage)
+        super().handle_collision(gob, world_pos)

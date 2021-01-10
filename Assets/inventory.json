@@ -464,7 +464,8 @@
                     "death_effect": "Explosion",
                     "damage": 10,
                     "game_object_type:mover": "AsteroidMover",
-                    "death_spawn": ["AsteroidSmall", "AsteroidMedium"]
+                    "death_spawn": ["AsteroidSmall", "AsteroidMedium"],
+                    "score_on_die": 50
                 },
                 "attachments": [
                     {
@@ -485,7 +486,8 @@
                     "projectile_type": "Level_02/AsteroidProjectile",
                     "fire_freq": 2250,
                     "health": 20,
-                    "death_effect": "Explosion"
+                    "death_effect": "Explosion",
+                    "score_on_die": 20
                 },
                 "attachments": [
                     {
@@ -536,7 +538,8 @@
                 "death_effect": "Explosion",
                 "damage": 10,
                 "game_object_type:mover": "AsteroidMover",
-                "death_spawn": ["AsteroidMedium", "AsteroidMedium"]
+                "death_spawn": ["AsteroidMedium", "AsteroidMedium"],
+                "score_on_die": 30
             },
             "groups": [
                 "RenderGroup",
@@ -554,7 +557,8 @@
                 "death_effect": "Explosion",
                 "damage": 5,
                 "game_object_type:mover": "AsteroidMover",
-                "death_spawn": ["AsteroidSmall", "AsteroidTiny"]
+                "death_spawn": ["AsteroidSmall", "AsteroidTiny"],
+                "score_on_die": 20
             },
             "groups": [
                 "RenderGroup",
@@ -572,7 +576,8 @@
                 "death_effect": "ExplosionSmall",
                 "damage": 2,
                 "game_object_type:mover": "AsteroidMover",
-                "death_spawn": []
+                "death_spawn": [],
+                "score_on_die": 10
             },
             "groups": [
                 "RenderGroup",
@@ -589,7 +594,8 @@
                 "death_effect": "ExplosionSmall",
                 "damage": 1,
                 "game_object_type:mover": "AsteroidMover",
-                "death_spawn": []
+                "death_spawn": [],
+                "score_on_die": 7
             },
             "groups": [
                 "RenderGroup",

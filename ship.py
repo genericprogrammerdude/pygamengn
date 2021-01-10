@@ -18,6 +18,7 @@ class Ship(GameObject):
         self.time_since_last_fire = self.fire_freq
         self.death_effect = death_effect
         self.damage = damage
+        self.score = 0
 
     def update(self, delta):
         """Updates the ship."""
@@ -38,13 +39,8 @@ class Ship(GameObject):
             projectile.set_pos(self.pos)
             projectile.set_heading(self.heading)
             projectile.transform()
-
-            group = self.groups()[0]
-            group.add(projectile)
-
+            projectile.set_parent(self)
             self.time_since_last_fire = 0
 
-    def handle_collision(self, gob, world_pos):
-        """Reacts to collision against game object gob."""
-        # Apply damage to the collided sprite
-        gob.take_damage(self.damage)
+    def add_score(self, score):
+        self.score += score

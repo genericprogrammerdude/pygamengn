@@ -14,7 +14,7 @@ from updatable import Updatable
 @GameObjectFactory.register("Asteroid")
 class Asteroid(GameObject):
 
-    def __init__(self, images, damage, mover, heading, health=100, death_effect=None, death_spawn=[], **kwargs):
+    def __init__(self, images, damage, mover, heading, health, death_effect, death_spawn, score_on_die, **kwargs):
         super().__init__(random.choice(images))
         self.damage = damage
         self.mover = mover
@@ -23,6 +23,7 @@ class Asteroid(GameObject):
         self.death_effect = death_effect
         self.death_spawn = death_spawn
         self.spin_delta_factor = random.choice([-1.0, 1.0])
+        self.score_on_die = score_on_die
 
     def update(self, delta):
         spin_delta = (45.0 * delta) / 1000.0 * self.spin_delta_factor
@@ -32,7 +33,7 @@ class Asteroid(GameObject):
         for attachment in self.attachments:
             attachment.game_object.set_pos(self.pos)
 
-    def handle_collision(self, gob, *_):
+    def handle_collision(self, gob, world_pos):
         """Reacts to collision against game object gob."""
         # Apply damage to the collided sprite
         if isinstance(gob, Turret):
@@ -40,9 +41,9 @@ class Asteroid(GameObject):
             if gob.get_object_id() > self.get_object_id():
                 # Ignore collision because the turret is drawn over the asteroid, so they shouldn't collide
                 return
-        gob.take_damage(self.damage)
+        super().handle_collision(gob, world_pos)
 
-    def die(self):
+    def die(self, instigator):
         """Die. Plays an explosion if it was given an atlas for  the AnimatedTexture."""
         if self.alive():
             if self.death_spawn:
@@ -57,8 +58,11 @@ class Asteroid(GameObject):
                     direction = Transform.rotate(self.mover.direction, heading)
                     spawn.mover.set_direction(direction)
                     spawn.transform()
-
-        super().die()
+        try:
+            instigator.add_score(self.score_on_die)
+        except AttributeError:
+            pass
+        super().die(instigator)
 
 
 @GameObjectFactory.register("AsteroidSpawner")

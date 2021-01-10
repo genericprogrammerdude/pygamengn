@@ -11,8 +11,8 @@ class Shield(GameObject):
         self.image_index = 0
         self.damage = damage
 
-    def take_damage(self, damage):
-        super().take_damage(damage)
+    def take_damage(self, damage, instigator):
+        super().take_damage(damage, instigator)
 
         # Change shield image if necessary
         n = len(self.images)
@@ -23,8 +23,3 @@ class Shield(GameObject):
         if index != self.image_index:
             self.image_index = index
             self.set_image(self.images[index])
-
-    def handle_collision(self, gob, *_):
-        """Reacts to collision against game object gob."""
-        # Apply damage to the collided sprite
-        gob.take_damage(self.damage)
