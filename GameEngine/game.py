@@ -17,6 +17,9 @@ class Game(GameObjectBase):
         self.screen = screen
         self.is_paused = False
         self.blit_surfaces = []
+        self.player = None
+        self.Level = None
+        self.pause_updatables = False
 
     def update(self, delta):
         """Updates the game."""
@@ -41,14 +44,20 @@ class Game(GameObjectBase):
 
         self.collision_manager.do_collisions()
 
-        for updatable in self.updatables:
-            updatable.update(delta)
+        if not self.pause_updatables:
+            for updatable in self.updatables:
+                updatable.update(delta)
 
     def set_player(self, player):
         """Tells the updateables which game object is the player."""
         self.player = player
+        self.player.die_callback(self.handle_player_death)
         for updatable in self.updatables:
             updatable.set_player(player)
+
+    def set_level(self, level):
+        """Sets the level so Game knows what's going on."""
+        self.level = level
 
     def toggle_pause(self):
         self.is_paused = not self.is_paused
@@ -56,6 +65,10 @@ class Game(GameObjectBase):
     def add_blit_surface(self, blit_surface):
         """Adds a surface to blit when rendering. The list gets cleared after every game update."""
         self.blit_surfaces.append(blit_surface)
+
+    def handle_player_death(self):
+        """Invoked when the player dies."""
+        pass
 
 
 class BlitSurface:

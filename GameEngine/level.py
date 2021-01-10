@@ -12,6 +12,7 @@ class Level(GameObjectBase):
         self.player_spec = player_spec
         self.enemy_specs = enemy_specs
         self.player = None
+        self.render_group = None
 
     def create_objects(self, render_group):
         """Creates and initializes the game objects for the level."""
@@ -24,6 +25,7 @@ class Level(GameObjectBase):
                 enemy.set_pos(pygame.Vector2(spawn_pos))
                 enemy.set_target(self.player)
 
+        self.render_group = render_group
         render_group.set_target(self.player)
 
 

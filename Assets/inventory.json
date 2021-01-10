@@ -82,7 +82,7 @@
                 "layers": [
                     ["Projectile"],
                     ["EnemyTurret", "EnemyTurretGun", "TurretHealthBar"],
-                    ["Ship", "PlayerHealthBar"],
+                    ["Ship"],
                     ["Shield"],
                     ["Asteroid"],
                     ["Level_02/AsteroidProjectile"],

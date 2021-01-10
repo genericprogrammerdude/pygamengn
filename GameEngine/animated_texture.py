@@ -56,3 +56,6 @@ class AnimatedTexture(GameObject):
         self.animation_time = 0
         self.is_playing = False
         self.kill()
+
+    def take_damage(self, *_):
+        pass

@@ -39,35 +39,11 @@ def main():
     player = level.player
 
     game.set_player(player)
+    game.set_level(level)
 
     clock = pygame.time.Clock()
-    running = True
 
-    while running:
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                running = False
-            if event.type == pygame.KEYDOWN:
-                # Exit
-                if event.key == pygame.K_ESCAPE:
-                    running = False
-                if event.key == pygame.K_SPACE:
-                    player.fire()
-                if event.key == pygame.K_END:
-                    game.toggle_pause()
-
-        # Handle input for movement
-        pressed_keys = pygame.key.get_pressed()
-        if pressed_keys[pygame.K_a]:
-            player.set_heading(player.heading + player.mover.angular_velocity)
-        if pressed_keys[pygame.K_d]:
-            player.set_heading(player.heading - player.mover.angular_velocity)
-        if pressed_keys[pygame.K_w]:
-            player.set_velocity(player.mover.max_velocity)
-        if pressed_keys[pygame.K_s]:
-            player.set_velocity(player.mover.velocity * 0.8)
-
-        # Update groups
+    while game.running:
         delta = clock.get_time()
         game.update(delta)
         clock.tick(60)
