@@ -77,6 +77,7 @@
                     ["Ship", "PlayerHealthBar"],
                     ["Shield"],
                     ["Asteroid"],
+                    ["Level_02/AsteroidProjectile"],
                     ["Level_02/AsteroidTurret", "Level_02/AsteroidTurretGun"],
                     ["AnimatedTexture"],
                     ["HealthBar"]
@@ -257,7 +258,7 @@
             "class_name": "Projectile",
             "kwargs": {
                 "image:image": "turret_projectile",
-                "death_effect": "Explosion",
+                "death_effect": "ExplosionSmall",
                 "damage": 10,
                 "game_object_type:mover": "EnemyTurretProjectileMover"
             },
@@ -414,14 +415,6 @@
                     "asteroid_types": [
                         "AsteroidBig",
                         "AsteroidMedium",
-                        "AsteroidBig",
-                        "AsteroidMedium",
-                        "AsteroidBig",
-                        "AsteroidMedium",
-                        "AsteroidBig",
-                        "AsteroidMedium",
-                        "AsteroidBig",
-                        "AsteroidMedium",
                         "AsteroidMother"
                     ],
                     "spawn_freq": 1000,
@@ -432,7 +425,7 @@
                 "class_name": "Turret",
                 "kwargs": {
                     "image:image": "turret",
-                    "projectile_type": "EnemyTurretProjectile",
+                    "projectile_type": "Level_02/AsteroidProjectile",
                     "fire_freq": 2250
                 },
                 "attachments": [
@@ -455,6 +448,19 @@
                 "groups": [
                     "RenderGroup"
                 ]
+            },
+            "AsteroidProjectile": {
+                "class_name": "Projectile",
+                "kwargs": {
+                    "image:image": "turret_projectile",
+                    "death_effect": "ExplosionSmall",
+                    "damage": 10,
+                    "game_object_type:mover": "EnemyTurretProjectileMover"
+                },
+                "groups": [
+                    "RenderGroup",
+                    "AsteroidsGroup"
+                ]
             }
         },
         "AsteroidMother": {
@@ -475,7 +481,8 @@
             "attachments": [
                 {
                     "game_type": "Level_02/AsteroidTurret",
-                    "offset": [0, 0]
+                    "offset": [0, 0],
+                    "parent_transform": false
                 }
             ],
             "groups": [

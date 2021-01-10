@@ -38,6 +38,8 @@ def main():
     level.create_objects(game.render_group)
     player = level.player
 
+    game.set_player(player)
+
     clock = pygame.time.Clock()
     running = True
 

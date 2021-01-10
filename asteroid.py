@@ -7,6 +7,7 @@ from game_object_factory import GameObjectBase
 from game_object_factory import GameObjectFactory
 from render_group import RenderGroup
 from transform import Transform
+from updatable import Updatable
 
 
 @GameObjectFactory.register("Asteroid")
@@ -27,6 +28,8 @@ class Asteroid(GameObject):
         self.set_heading(self.heading + spin_delta)
         self.pos = self.pos + self.mover.move(delta)
         super().update(delta)
+        for attachment in self.attachments:
+            attachment.game_object.set_pos(self.pos)
 
     def handle_collision(self, gob, *_):
         """Reacts to collision against game object gob."""
@@ -58,7 +61,7 @@ class Asteroid(GameObject):
 
 
 @GameObjectFactory.register("AsteroidSpawner")
-class AsteroidSpawner(GameObjectBase):
+class AsteroidSpawner(Updatable):
     """Spawns asteroids just to be annoying."""
 
     def __init__(self, asteroid_types, spawn_freq, render_group):
@@ -66,6 +69,10 @@ class AsteroidSpawner(GameObjectBase):
         self.spawn_freq = spawn_freq
         self.time_to_next_spawn = random.randrange(spawn_freq)
         self.render_group = render_group
+
+    def set_player(self, player):
+        """Sets the player game object."""
+        self.player = player
 
     def update(self, delta):
         self.time_to_next_spawn -= delta
@@ -78,6 +85,8 @@ class AsteroidSpawner(GameObjectBase):
             asteroid.mover.set_direction(direction)
             asteroid.set_pos(pos)
             asteroid.transform()
+            for attachment in asteroid.attachments:
+                attachment.game_object.set_target(self.player)
 
     def get_random_pos_dir(self, world_view_rect):
         # Aim roughly to the center of the screen

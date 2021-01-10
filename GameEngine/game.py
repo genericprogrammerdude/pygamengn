@@ -33,3 +33,8 @@ class Game(GameObjectBase):
 
         for updatable in self.updatables:
             updatable.update(delta)
+
+    def set_player(self, player):
+        """Tells the updateables which game object is the player."""
+        for updatable in self.updatables:
+            updatable.set_player(player)
