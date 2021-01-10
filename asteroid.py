@@ -7,6 +7,7 @@ from game_object_factory import GameObjectBase
 from game_object_factory import GameObjectFactory
 from render_group import RenderGroup
 from transform import Transform
+from turret import Turret
 from updatable import Updatable
 
 
@@ -34,6 +35,10 @@ class Asteroid(GameObject):
     def handle_collision(self, gob, *_):
         """Reacts to collision against game object gob."""
         # Apply damage to the collided sprite
+        if isinstance(gob, Turret):
+            if gob.get_object_id() > self.get_object_id():
+                # Ignore collision because the turret is drawn over the asteroid, so they shouldn't collide
+                return
         gob.take_damage(self.damage)
 
     def die(self):
