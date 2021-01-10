@@ -1,3 +1,5 @@
+import random
+
 import pygame
 
 from game import BlitSurface
@@ -99,7 +101,7 @@ class SpaceShooterGame(Game):
     def kill_render_group(self):
         gobs = self.render_group.sprites()
         for gob in gobs:
-            gob.take_damage(100, None)
+            gob.take_damage(random.randint(0, 5), None)
 
     def build_time_text_surface(self):
         total_sec = self.time // 1000
