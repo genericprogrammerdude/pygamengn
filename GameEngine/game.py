@@ -14,9 +14,13 @@ class Game(GameObjectBase):
         self.collision_manager = collision_manager
         self.updatables = updatables
         self.screen = screen
+        self.is_paused = False
 
     def update(self, delta):
         """Updates the game."""
+
+        if self.is_paused:
+            delta = 0
 
         # Do collision detection and notification
         self.collision_manager.do_collisions()
@@ -38,3 +42,6 @@ class Game(GameObjectBase):
         """Tells the updateables which game object is the player."""
         for updatable in self.updatables:
             updatable.set_player(player)
+
+    def toggle_pause(self):
+        self.is_paused = not self.is_paused

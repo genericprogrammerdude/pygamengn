@@ -23,8 +23,8 @@ class CollisionManager(GameObjectBase):
             for gob_b in collisions[gob_a]:
                 if gob_a.alive() and gob_b.alive():
                     if gob_a.mask is None or gob_b.mask is None:
-                        sys.stderr.write("CollisionManager.collide_groups(): {0}, {1}\n".format(
-                            gob_a, gob_b))
+                        sys.stderr.write("CollisionManager.collide_groups(): Missing mask: {0}, {1}\n".format(
+                            gob_a.mask, gob_b.mask))
                         continue
                     collision = pygame.sprite.collide_mask(gob_a, gob_b)
                     if collision:

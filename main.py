@@ -53,6 +53,8 @@ def main():
                     running = False
                 if event.key == pygame.K_SPACE:
                     player.fire()
+                if event.key == pygame.K_END:
+                    game.toggle_pause()
 
         # Handle input for movement
         pressed_keys = pygame.key.get_pressed()
