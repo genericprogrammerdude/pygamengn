@@ -124,7 +124,7 @@
 
     "game_types": {
         "SpaceShooterGame": {
-            "class_name": "Game",
+            "class_name": "SpaceShooterGame",
             "kwargs": {
                 "asset:render_group": "RenderGroup",
                 "game_object_type:collision_manager": "SpaceShooterGame/CollisionManager",
