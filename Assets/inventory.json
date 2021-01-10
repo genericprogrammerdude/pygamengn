@@ -426,11 +426,48 @@
                     "asteroid_types": [
                         "AsteroidBig",
                         "AsteroidMedium",
-                        "AsteroidMother"
+                        "AsteroidBig",
+                        "AsteroidMedium",
+                        "AsteroidBig",
+                        "AsteroidMedium",
+                        "AsteroidBig",
+                        "AsteroidMedium",
+                        "AsteroidBig",
+                        "AsteroidMedium",
+                        "AsteroidBig",
+                        "AsteroidMedium",
+                        "Level_02/AsteroidMother"
                     ],
                     "spawn_freq": 1000,
                     "asset:render_group": "RenderGroup"
                 }
+            },
+            "AsteroidMother": {
+                "class_name": "Asteroid",
+                "kwargs": {
+                    "image_list:images": [
+                        "asteroid_00",
+                        "asteroid_01",
+                        "asteroid_02",
+                        "asteroid_03"
+                    ],
+                    "health": 40,
+                    "death_effect": "Explosion",
+                    "damage": 10,
+                    "game_object_type:mover": "AsteroidMover",
+                    "death_spawn": ["AsteroidSmall", "AsteroidMedium"]
+                },
+                "attachments": [
+                    {
+                        "game_type": "Level_02/AsteroidTurret",
+                        "offset": [0, 0],
+                        "parent_transform": false
+                    }
+                ],
+                "groups": [
+                    "RenderGroup",
+                    "AsteroidsGroup"
+                ]
             },
             "AsteroidTurret": {
                 "class_name": "Turret",
@@ -476,33 +513,6 @@
                     "AsteroidProjectilesGroup"
                 ]
             }
-        },
-        "AsteroidMother": {
-            "class_name": "Asteroid",
-            "kwargs": {
-                "image_list:images": [
-                    "asteroid_00",
-                    "asteroid_01",
-                    "asteroid_02",
-                    "asteroid_03"
-                ],
-                "health": 40,
-                "death_effect": "Explosion",
-                "damage": 10,
-                "game_object_type:mover": "AsteroidMover",
-                "death_spawn": ["AsteroidSmall", "AsteroidMedium"]
-            },
-            "attachments": [
-                {
-                    "game_type": "Level_02/AsteroidTurret",
-                    "offset": [0, 0],
-                    "parent_transform": false
-                }
-            ],
-            "groups": [
-                "RenderGroup",
-                "AsteroidsGroup"
-            ]
         },
         "AsteroidBig": {
             "class_name": "Asteroid",
