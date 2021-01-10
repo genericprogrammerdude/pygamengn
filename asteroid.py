@@ -52,11 +52,6 @@ class Asteroid(GameObject):
                     spawn.mover.set_direction(direction)
                     spawn.transform()
 
-            if self.death_effect:
-                effect = GameObjectFactory.create(self.death_effect)
-                effect.set_pos(self.pos)
-                effect.play()
-
         super().die()
 
 

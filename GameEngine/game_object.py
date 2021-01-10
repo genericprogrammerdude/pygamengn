@@ -10,7 +10,7 @@ from transform import Transform
 class GameObject(pygame.sprite.Sprite, GameObjectBase):
     """Basic game object."""
 
-    def __init__(self, image, is_collidable=True, scale=1.0, alpha=1.0, visible=True, heading=0):
+    def __init__(self, image, is_collidable=True, scale=1.0, alpha=1.0, visible=True, heading=0, death_effect=None):
         super().__init__()
 
         # Set the image to use for this sprite.
@@ -28,6 +28,7 @@ class GameObject(pygame.sprite.Sprite, GameObjectBase):
         self.attachments = []
         self.alpha = alpha
         self.visible = visible
+        self.death_effect = death_effect
 
     def update(self, delta):
         """Updates the game object. Delta time is in ms."""
@@ -84,7 +85,7 @@ class GameObject(pygame.sprite.Sprite, GameObjectBase):
     def attach(self, game_object, offset, take_parent_transform):
         """Attaches a game object to this game object at the give offset."""
         self.attachments.append(Attachment(game_object, offset, take_parent_transform))
-        game_object.parent = self
+        game_object.set_parent(self)
 
     def take_damage(self, damage):
         """Takes damage for this game object."""
@@ -96,6 +97,11 @@ class GameObject(pygame.sprite.Sprite, GameObjectBase):
             self.die()
 
     def die(self):
+        """Die."""
+        if self.alive() and self.death_effect:
+            effect = GameObjectFactory.create(self.death_effect)
+            effect.set_pos(self.pos)
+            effect.play()
         self.kill()
 
     def add_to_groups(self, groups):
@@ -109,6 +115,10 @@ class GameObject(pygame.sprite.Sprite, GameObjectBase):
     def handle_collision(self, gob, world_pos):
         """Reacts to collision against game object gob."""
         pass
+
+    def set_parent(self, parent):
+        """Sets this game object's parent."""
+        self.parent = parent
 
 
 class Attachment():

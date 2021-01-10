@@ -68,6 +68,14 @@
             "class_name": "SpriteGroup",
             "kwargs": {}
         },
+        "AsteroidProjectilesGroup": {
+            "class_name": "SpriteGroup",
+            "kwargs": {}
+        },
+        "AsteroidTurretsGroup": {
+            "class_name": "SpriteGroup",
+            "kwargs": {}
+        },
         "LayerManager": {
             "class_name": "LayerManager",
             "kwargs": {
@@ -125,7 +133,10 @@
                         ["PlayerProjectilesGroup", "TurretsGroup"],
                         ["TurretProjectilesGroup", "PlayerGroup"],
                         ["TurretProjectilesGroup", "AsteroidsGroup"],
-                        ["AsteroidsGroup", "PlayerGroup"]
+                        ["AsteroidsGroup", "PlayerGroup"],
+                        ["AsteroidProjectilesGroup", "AsteroidsGroup"],
+                        ["AsteroidProjectilesGroup", "PlayerGroup"],
+                        ["AsteroidTurretsGroup", "AsteroidsGroup"]
                     ]
                 }
             }
@@ -426,7 +437,9 @@
                 "kwargs": {
                     "image:image": "turret",
                     "projectile_type": "Level_02/AsteroidProjectile",
-                    "fire_freq": 2250
+                    "fire_freq": 2250,
+                    "health": 20,
+                    "death_effect": "Explosion"
                 },
                 "attachments": [
                     {
@@ -436,14 +449,15 @@
                 ],
                 "groups": [
                     "RenderGroup",
-                    "AsteroidsGroup"
+                    "AsteroidTurretsGroup"
                 ]
             },
             "AsteroidTurretGun": {
                 "class_name": "GameObject",
                 "kwargs": {
                     "image:image": "turret_gun",
-                    "scale": 0.8
+                    "scale": 0.8,
+                    "is_collidable": false
                 },
                 "groups": [
                     "RenderGroup"
@@ -459,7 +473,7 @@
                 },
                 "groups": [
                     "RenderGroup",
-                    "AsteroidsGroup"
+                    "AsteroidProjectilesGroup"
                 ]
             }
         },

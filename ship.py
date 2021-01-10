@@ -48,12 +48,3 @@ class Ship(GameObject):
         """Reacts to collision against game object gob."""
         # Apply damage to the collided sprite
         gob.take_damage(self.damage)
-
-    def die(self):
-        """Die."""
-        if self.alive() and self.death_effect:
-            effect = GameObjectFactory.create(self.death_effect)
-            effect.set_pos(self.pos)
-            effect.play()
-
-        super().die()

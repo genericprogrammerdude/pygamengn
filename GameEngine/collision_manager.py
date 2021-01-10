@@ -23,7 +23,7 @@ class CollisionManager(GameObjectBase):
             for gob_b in collisions[gob_a]:
                 if gob_a.alive() and gob_b.alive():
                     if gob_a.mask is None or gob_b.mask is None:
-                        sys.stderr.write("CollisionManager.collide_groups(): {0}, {0}\n".format(
+                        sys.stderr.write("CollisionManager.collide_groups(): {0}, {1}\n".format(
                             gob_a, gob_b))
                         continue
                     collision = pygame.sprite.collide_mask(gob_a, gob_b)
@@ -35,11 +35,12 @@ class CollisionManager(GameObjectBase):
 
     def collided(self, a, b):
         """Checks whether sprites a and b collide."""
-        if a == b:
+        if (a.parent and a.parent == b) or (b.parent and b.parent == a):
             return False
         if not (a.is_collidable and b.is_collidable):
-            print(a, "or", b, "has is_collidable == False and it's in a collision group.")
+            sys.stderr.write("CollisionManager.collided(): {0} or {1} has is_collidable == False and is in a collision group.\n".format(a, b))
             return False
-        if (a.parent and a.parent == b) or (b.parent and b.parent == a):
+        if a == b:
+            sys.stderr.write("CollisionManager.collided(): Same object. {0} or {1}.\n".format(a, b))
             return False
         return pygame.sprite.collide_rect(a, b)

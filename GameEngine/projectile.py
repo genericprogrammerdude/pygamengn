@@ -30,11 +30,3 @@ class Projectile(GameObject):
         self.take_damage(self.health)
         # Apply damage to the collided sprite
         gob.take_damage(self.damage)
-
-    def die(self):
-        """Die. Plays an explosion if it was given an atlas for  the AnimatedTexture."""
-        if self.death_effect and self.alive():
-            effect = GameObjectFactory.create(self.death_effect)
-            effect.set_pos(self.pos)
-            effect.play()
-        super().die()
