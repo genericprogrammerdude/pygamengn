@@ -12,7 +12,7 @@ from transform import Transform
 @GameObjectFactory.register("Asteroid")
 class Asteroid(GameObject):
 
-    def __init__(self, images, damage, mover, heading, health=100, death_effect=None, death_spawn=[]):
+    def __init__(self, images, damage, mover, heading, health=100, death_effect=None, death_spawn=[], **kwargs):
         super().__init__(random.choice(images))
         self.damage = damage
         self.mover = mover
@@ -28,7 +28,7 @@ class Asteroid(GameObject):
         self.pos = self.pos + self.mover.move(delta)
         super().update(delta)
 
-    def handle_collision(self, gob, world_pos):
+    def handle_collision(self, gob, *_):
         """Reacts to collision against game object gob."""
         # Apply damage to the collided sprite
         gob.take_damage(self.damage)
@@ -72,7 +72,8 @@ class AsteroidSpawner(GameObjectBase):
         if self.time_to_next_spawn <= 0:
             self.time_to_next_spawn = random.randrange(self.spawn_freq)
             asteroid_type = random.choice(self.asteroid_types)
-            asteroid = GameObjectFactory.create(asteroid_type, heading=random.randrange(0, 360))
+            heading = random.randrange(0, 360)
+            asteroid = GameObjectFactory.create(asteroid_type, heading=heading)
             pos, direction = self.get_random_pos_dir(self.render_group.get_world_view_rect())
             asteroid.mover.set_direction(direction)
             asteroid.set_pos(pos)

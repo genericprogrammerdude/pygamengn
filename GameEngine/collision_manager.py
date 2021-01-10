@@ -1,3 +1,5 @@
+import sys
+
 import pygame
 
 from game_object_factory import GameObjectBase
@@ -20,6 +22,10 @@ class CollisionManager(GameObjectBase):
         for gob_a in collisions.keys():
             for gob_b in collisions[gob_a]:
                 if gob_a.alive() and gob_b.alive():
+                    if gob_a.mask is None or gob_b.mask is None:
+                        sys.stderr.write("CollisionManager.collide_groups(): {0}, {0}\n".format(
+                            gob_a, gob_b))
+                        continue
                     collision = pygame.sprite.collide_mask(gob_a, gob_b)
                     if collision:
                         # Get world position of collision point for colliding GameObjects to know

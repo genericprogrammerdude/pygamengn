@@ -73,10 +73,11 @@
             "kwargs": {
                 "layers": [
                     ["Projectile"],
-                    ["Turret", "EnemyTurretGun", "TurretHealthBar"],
+                    ["EnemyTurret", "EnemyTurretGun", "TurretHealthBar"],
                     ["Ship", "PlayerHealthBar"],
                     ["Shield"],
                     ["Asteroid"],
+                    ["Level_02/AsteroidTurret", "Level_02/AsteroidTurretGun"],
                     ["AnimatedTexture"],
                     ["HealthBar"]
                 ]
@@ -412,12 +413,75 @@
                 "kwargs": {
                     "asteroid_types": [
                         "AsteroidBig",
-                        "AsteroidMedium"
+                        "AsteroidMedium",
+                        "AsteroidBig",
+                        "AsteroidMedium",
+                        "AsteroidBig",
+                        "AsteroidMedium",
+                        "AsteroidBig",
+                        "AsteroidMedium",
+                        "AsteroidBig",
+                        "AsteroidMedium",
+                        "AsteroidMother"
                     ],
                     "spawn_freq": 1000,
                     "asset:render_group": "RenderGroup"
                 }
+            },
+            "AsteroidTurret": {
+                "class_name": "Turret",
+                "kwargs": {
+                    "image:image": "turret",
+                    "projectile_type": "EnemyTurretProjectile",
+                    "fire_freq": 2250
+                },
+                "attachments": [
+                    {
+                        "game_type": "Level_02/AsteroidTurretGun",
+                        "offset": [0.0, -15.0]
+                    }
+                ],
+                "groups": [
+                    "RenderGroup",
+                    "AsteroidsGroup"
+                ]
+            },
+            "AsteroidTurretGun": {
+                "class_name": "GameObject",
+                "kwargs": {
+                    "image:image": "turret_gun",
+                    "scale": 0.8
+                },
+                "groups": [
+                    "RenderGroup"
+                ]
             }
+        },
+        "AsteroidMother": {
+            "class_name": "Asteroid",
+            "kwargs": {
+                "image_list:images": [
+                    "asteroid_00",
+                    "asteroid_01",
+                    "asteroid_02",
+                    "asteroid_03"
+                ],
+                "health": 40,
+                "death_effect": "Explosion",
+                "damage": 10,
+                "game_object_type:mover": "AsteroidMover",
+                "death_spawn": ["AsteroidSmall", "AsteroidMedium"]
+            },
+            "attachments": [
+                {
+                    "game_type": "Level_02/AsteroidTurret",
+                    "offset": [0, 0]
+                }
+            ],
+            "groups": [
+                "RenderGroup",
+                "AsteroidsGroup"
+            ]
         },
         "AsteroidBig": {
             "class_name": "Asteroid",
