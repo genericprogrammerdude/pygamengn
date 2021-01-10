@@ -69,6 +69,9 @@ class SpaceShooterGame(Game):
 
     def handle_input(self):
         """Reads input and makes things happen."""
+        if self.player is None:
+            return
+
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 self.running = False
