@@ -18,7 +18,8 @@ class GameObject(pygame.sprite.Sprite, GameObjectBase):
                  visible=True,
                  heading=0,
                  death_effect=None,
-                 damage=0
+                 damage=0,
+                 kill_when_off_screen=False
     ):
         super().__init__()
 
@@ -39,6 +40,7 @@ class GameObject(pygame.sprite.Sprite, GameObjectBase):
         self.visible = visible
         self.death_effect = death_effect
         self.damage = damage
+        self.kill_when_off_screen = kill_when_off_screen
 
     def update(self, delta):
         """Updates the game object. Delta time is in ms."""
@@ -87,10 +89,6 @@ class GameObject(pygame.sprite.Sprite, GameObjectBase):
         self.image = image
         self.image_original = self.image.copy()
         self.dirty_image = True
-
-    def kill_when_off_screen(self):
-        """This can be used by the Sprite Group to know if the object should be killed when it goes off screen."""
-        return False
 
     def attach(self, game_object, offset, take_parent_transform):
         """Attaches a game object to this game object at the give offset."""

@@ -50,7 +50,10 @@ class RenderGroup(pygame.sprite.LayeredUpdates, GameObjectBase):
                 transformed_rect = sprite.rect.move(cam)
                 if not self.view_rect.colliderect(transformed_rect):
                     # Ignore sprites that are outside of the view rectangle
-                    if sprite.kill_when_off_screen():
+                    if sprite.kill_when_off_screen:
+                        for attachment in sprite.attachments:
+                            attachment.game_object.kill()
+                        sprite.attachments.clear()
                         sprite.kill()
                 else:
                     surface.blit(sprite.image, transformed_rect)

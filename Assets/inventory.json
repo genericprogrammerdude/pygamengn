@@ -214,7 +214,8 @@
                 "image:image": "player_projectile",
                 "death_effect": "ExplosionSmall",
                 "damage": 15,
-                "game_object_type:mover": "PlayerProjectileMover"
+                "game_object_type:mover": "PlayerProjectileMover",
+                "kill_when_off_screen": true
             },
             "groups": [
                 "RenderGroup",
@@ -280,7 +281,8 @@
                 "image:image": "turret_projectile",
                 "death_effect": "ExplosionSmall",
                 "damage": 10,
-                "game_object_type:mover": "EnemyTurretProjectileMover"
+                "game_object_type:mover": "EnemyTurretProjectileMover",
+                "kill_when_off_screen": true
             },
             "groups": [
                 "RenderGroup",
@@ -400,7 +402,8 @@
                     "image:image": "turret_projectile2",
                     "death_effect": "Explosion",
                     "damage": 20,
-                    "game_object_type:mover": "EnemyTurretProjectileMover"
+                    "game_object_type:mover": "EnemyTurretProjectileMover",
+                    "kill_when_off_screen": true
                 },
                 "groups": [
                     "RenderGroup",
@@ -465,7 +468,8 @@
                     "damage": 10,
                     "game_object_type:mover": "AsteroidMover",
                     "death_spawn": ["AsteroidSmall", "AsteroidMedium"],
-                    "score_on_die": 50
+                    "score_on_die": 50,
+                    "kill_when_off_screen": true
                 },
                 "attachments": [
                     {
@@ -517,7 +521,8 @@
                     "image:image": "turret_projectile",
                     "death_effect": "ExplosionSmall",
                     "damage": 10,
-                    "game_object_type:mover": "EnemyTurretProjectileMover"
+                    "game_object_type:mover": "EnemyTurretProjectileMover",
+                    "kill_when_off_screen": true
                 },
                 "groups": [
                     "RenderGroup",
@@ -539,7 +544,8 @@
                 "damage": 10,
                 "game_object_type:mover": "AsteroidMover",
                 "death_spawn": ["AsteroidMedium", "AsteroidMedium"],
-                "score_on_die": 30
+                "score_on_die": 30,
+                "kill_when_off_screen": true
             },
             "groups": [
                 "RenderGroup",
@@ -558,7 +564,8 @@
                 "damage": 5,
                 "game_object_type:mover": "AsteroidMover",
                 "death_spawn": ["AsteroidSmall", "AsteroidTiny"],
-                "score_on_die": 20
+                "score_on_die": 20,
+                "kill_when_off_screen": true
             },
             "groups": [
                 "RenderGroup",
@@ -577,7 +584,8 @@
                 "damage": 2,
                 "game_object_type:mover": "AsteroidMover",
                 "death_spawn": [],
-                "score_on_die": 10
+                "score_on_die": 10,
+                "kill_when_off_screen": true
             },
             "groups": [
                 "RenderGroup",
@@ -595,7 +603,8 @@
                 "damage": 1,
                 "game_object_type:mover": "AsteroidMover",
                 "death_spawn": [],
-                "score_on_die": 7
+                "score_on_die": 7,
+                "kill_when_off_screen": true
             },
             "groups": [
                 "RenderGroup",

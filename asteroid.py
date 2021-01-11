@@ -15,7 +15,7 @@ from updatable import Updatable
 class Asteroid(GameObject):
 
     def __init__(self, images, damage, mover, heading, health, death_effect, death_spawn, score_on_die, **kwargs):
-        super().__init__(random.choice(images))
+        super().__init__(random.choice(images), **kwargs)
         self.damage = damage
         self.mover = mover
         self.heading = heading
