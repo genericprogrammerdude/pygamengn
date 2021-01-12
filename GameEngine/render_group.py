@@ -51,10 +51,7 @@ class RenderGroup(pygame.sprite.LayeredUpdates, GameObjectBase):
                 if not self.view_rect.colliderect(transformed_rect):
                     # Ignore sprites that are outside of the view rectangle
                     if sprite.kill_when_off_screen:
-                        for attachment in sprite.attachments:
-                            attachment.game_object.kill()
-                        sprite.attachments.clear()
-                        sprite.kill()
+                        self.kill_sprite(sprite)
                 else:
                     surface.blit(sprite.image, transformed_rect)
 
@@ -76,3 +73,10 @@ class RenderGroup(pygame.sprite.LayeredUpdates, GameObjectBase):
         rv = pygame.Rect(self.view_rect)
         rv.topleft -= self.cam
         return rv
+
+    def kill_sprite(self, sprite):
+        """Recursively kills the given sprite and all its attachments."""
+        for attachment in sprite.attachments:
+            self.kill_sprite(attachment.game_object)
+        sprite.attachments.clear()
+        sprite.kill()
