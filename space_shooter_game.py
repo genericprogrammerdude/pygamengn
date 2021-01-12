@@ -2,6 +2,7 @@ import random
 
 import pygame
 
+from UI.panel import Panel
 from game import BlitSurface
 from game import Game
 from game_object_factory import GameObjectFactory
@@ -29,6 +30,9 @@ class SpaceShooterGame(Game):
         surface = self.font.font.render(s, True, self.text_colour)
         self.score_text_width = surface.get_rect().width
 
+        # Load UI
+        self.ui = GameObjectFactory.create("Level_02/MyPanel")
+
     def update(self, delta):
         self.handle_input()
 
@@ -38,10 +42,15 @@ class SpaceShooterGame(Game):
             self.score = self.player.score
 
         # Put time and score text together
+        screen_rect = self.screen.get_rect()
         time_surface = self.build_time_text_surface()
         score_surface = self.build_score_text_surface()
-        self.add_blit_surface(BlitSurface(time_surface, (self.screen.get_rect().width - self.time_text_width, 0)))
+        self.add_blit_surface(BlitSurface(time_surface, (screen_rect.width - self.time_text_width, 0)))
         self.add_blit_surface(BlitSurface(score_surface, (self.score_text_width - score_surface.get_rect().width, 0)))
+
+        # Make UI ready for rendering as a collection of blit surfaces
+        self.ui.update(screen_rect, delta)
+#         self.blit_ui(self.ui)
 
         if self.player_is_dead:
             if self.cooldown_time > 0:
@@ -116,3 +125,8 @@ class SpaceShooterGame(Game):
     def build_score_text_surface(self):
         surface = self.font.font.render("{:03d}".format(self.score), True, self.text_colour)
         return surface
+
+    def blit_ui(self, ui):
+        self.add_blit_surface(BlitSurface(ui.image, ui.rect))
+        for child in ui.children:
+            self.blit_ui(child)

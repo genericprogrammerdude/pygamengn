@@ -36,7 +36,8 @@
         "asteroid_16": "Assets/SpaceShooterRedux/PNG/Meteors/meteorGrey_small1.png",
         "asteroid_17": "Assets/SpaceShooterRedux/PNG/Meteors/meteorGrey_small2.png",
         "asteroid_18": "Assets/SpaceShooterRedux/PNG/Meteors/meteorGrey_tiny1.png",
-        "asteroid_19": "Assets/SpaceShooterRedux/PNG/Meteors/meteorGrey_tiny2.png"
+        "asteroid_19": "Assets/SpaceShooterRedux/PNG/Meteors/meteorGrey_tiny2.png",
+        "ui_panel": "Assets/SpaceShooterRedux/PNG/UI/buttonBlue.png"
     },
 
     "assets": {
@@ -452,6 +453,49 @@
                     ],
                     "spawn_freq": 1000,
                     "asset:render_group": "RenderGroup"
+                }
+            },
+            "MyPanel": {
+                "class_name": "PanelColour",
+                "kwargs": {
+                    "colour": [200, 200, 200, 128],
+                    "pos": [0.25, 0.25],
+                    "size": [0.5, 0.5],
+                    "game_object_type_list:children": [
+                        "Level_02/MyPanel/ChildPanel1",
+                        "Level_02/MyPanel/ChildPanel2"
+                    ]
+                },
+                "ChildPanel1": {
+                    "class_name": "PanelColour",
+                    "kwargs": {
+                        "colour": [255, 20, 20, 128],
+                        "pos": [0.1, 0.1],
+                        "size": [0.25, 0.25],
+                        "game_object_type_list:children": [
+                            "Level_02/MyPanel/ChildPanel1/LeafPanel"
+                        ]
+                    },
+                    "LeafPanel": {
+                        "class_name": "PanelColour",
+                        "kwargs": {
+                            "colour": [255, 20, 255, 255],
+                            "pos": [0.4, 0.4],
+                            "size": [0.2, 0.2],
+                            "game_object_type_list:children": [
+                            ]
+                        }
+                    }
+                },
+                "ChildPanel2": {
+                    "class_name": "Panel",
+                    "kwargs": {
+                        "pos": [0.65, 0.65],
+                        "size": [0.25, 0.25],
+                        "image:image_asset": "ui_panel",
+                        "game_object_type_list:children": [
+                        ]
+                    }
                 }
             },
             "AsteroidMother": {
