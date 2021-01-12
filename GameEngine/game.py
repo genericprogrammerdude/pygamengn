@@ -1,7 +1,7 @@
 import pygame
 
+from UI.font_asset import FontAsset
 from collision_manager import CollisionManager
-from font_asset import FontAsset
 from game_object_factory import GameObjectBase
 from game_object_factory import GameObjectFactory
 

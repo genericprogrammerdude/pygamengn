@@ -11,6 +11,8 @@ class Panel(UIBase):
     def __init__(self, image_asset, **kwargs):
         super().__init__(**kwargs)
         self.image_asset = image_asset
+        rect = image_asset.get_rect()
+        self.aspect_ratio = rect.width / rect.height
 
     def resize(self):
         """Resizes the image to match the panel's size with its parent's rect."""
