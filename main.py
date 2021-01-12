@@ -20,7 +20,7 @@ def main():
     pygame.init()
 
     size = (1280, 720)
-    screen = pygame.display.set_mode(size, pygame.DOUBLEBUF | pygame.HWSURFACE)
+    screen = pygame.display.set_mode(size, pygame.DOUBLEBUF | pygame.HWSURFACE | pygame.RESIZABLE)
 
     GameObjectFactory.initialize(open("Assets/inventory.json"))
 
