@@ -23,7 +23,7 @@ class UIBase(GameObjectBase):
 
     def update(self, parent_rect, delta):
         """Updates the UI component and its children."""
-        if parent_rect != self.parent_rect:
+        if parent_rect != self.parent_rect or self.is_dirty():
             self.resize_to_parent(parent_rect)
             self.parent_rect = parent_rect
             self.resize()
@@ -47,6 +47,21 @@ class UIBase(GameObjectBase):
         size = (round(width), round(height))
         pos = parent_rect.topleft + pygame.Vector2(parent_rect.width * self.pos[0], parent_rect.height * self.pos[1])
         self.rect = pygame.Rect(pos.x, pos.y, size[0], size[1])
+
+    def propagate_font(self):
+        """Propagates font asset and text colour to children recursively."""
+        for child in self.children:
+            if child.font_asset is None:
+                child.font_asset = self.font_asset
+            if child.text_colour is None:
+                child.text_colour = self.text_colour
+            child.propagate_font()
+
+    def is_dirty(self):
+        """
+        Returns whether the component needs to be resized. Returning True guarantees the component will be re-drawn.
+        """
+        return False
 
     @abstractmethod
     def resize(self):

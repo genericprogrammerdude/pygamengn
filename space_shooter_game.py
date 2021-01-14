@@ -11,27 +11,17 @@ from game_object_factory import GameObjectFactory
 @GameObjectFactory.register("SpaceShooterGame")
 class SpaceShooterGame(Game):
 
-    def __init__(self, font, text_colour, **kwargs):
+    def __init__(self, main_menu_ui, score_ui, time_ui, **kwargs):
         super().__init__(**kwargs)
-        self.font = font
-        self.text_colour = text_colour
+        self.main_menu_ui = main_menu_ui
+        self.score_ui = score_ui
+        self.time_ui = time_ui
         self.time = 0
         self.score = 0
         self.player = None
         self.cooldown_time = 0
         self.player_is_dead = False
         self.running = True
-
-        # Assign biggest rectangle for time and score text
-        s = "00:00"
-        surface = self.font.font.render(s, True, self.text_colour)
-        self.time_text_width = surface.get_rect().width
-        s = "0000"
-        surface = self.font.font.render(s, True, self.text_colour)
-        self.score_text_width = surface.get_rect().width
-
-        # Load UI
-        self.ui = GameObjectFactory.create("Level_02/MyPanel")
 
     def update(self, delta):
         self.handle_input()
@@ -43,16 +33,16 @@ class SpaceShooterGame(Game):
 
         # Put time and score text together
         screen_rect = self.screen.get_rect()
-        time_surface = self.build_time_text_surface()
-        score_surface = self.build_score_text_surface()
-        self.add_blit_surface(BlitSurface(time_surface, (screen_rect.width - self.time_text_width, 0)))
-        self.add_blit_surface(BlitSurface(score_surface, (self.score_text_width - score_surface.get_rect().width, 0)))
-
-        # Make UI ready for rendering as a collection of blit surfaces
-        self.ui.update(screen_rect, delta)
-#         self.blit_ui(self.ui)
+        self.score_ui.set_text(str(self.score))
+        self.time_ui.set_text(self.get_time_string())
+        self.score_ui.update(screen_rect, delta)
+        self.time_ui.update(screen_rect, delta)
+        self.blit_ui(self.score_ui)
+        self.blit_ui(self.time_ui)
 
         if self.player_is_dead:
+            self.main_menu_ui.update(screen_rect, delta)
+            self.blit_ui(self.main_menu_ui)
             if self.cooldown_time > 0:
                 self.cooldown_time -= delta
                 if self.cooldown_time < 0:
@@ -115,16 +105,11 @@ class SpaceShooterGame(Game):
         for gob in gobs:
             gob.take_damage(random.randint(0, 5), None)
 
-    def build_time_text_surface(self):
+    def get_time_string(self):
         total_sec = self.time // 1000
         sec = total_sec % 60
         min = total_sec // 60
-        surface = self.font.font.render("{:02d}:{:02d}".format(min, sec), True, self.text_colour)
-        return surface
-
-    def build_score_text_surface(self):
-        surface = self.font.font.render("{:03d}".format(self.score), True, self.text_colour)
-        return surface
+        return "{:02d}:{:02d}".format(min, sec)
 
     def blit_ui(self, ui):
         self.add_blit_surface(BlitSurface(ui.image, ui.rect))

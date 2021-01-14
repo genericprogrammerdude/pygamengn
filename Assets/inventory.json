@@ -132,8 +132,9 @@
                 "game_object_type_list:updatables": [
                     "Level_02/AsteroidSpawner"
                 ],
-                "asset:font": "fast_hand_font",
-                "text_colour": [0, 200, 100]
+                "game_object_type:main_menu_ui": "Level_02/MyPanel",
+                "game_object_type:score_ui": "Level_02/ScorePanel",
+                "game_object_type:time_ui": "Level_02/TimePanel"
             },
             "CollisionManager": {
                 "class_name": "CollisionManager",
@@ -456,7 +457,7 @@
                 }
             },
             "MyPanel": {
-                "class_name": "PanelColour",
+                "class_name": "ColourPanel",
                 "kwargs": {
                     "pos": [0.25, 0.25],
                     "size": [0.5, 0.5],
@@ -468,7 +469,7 @@
                     "colour": [100, 100, 100, 128]
                 },
                 "ChildPanel1": {
-                    "class_name": "PanelColour",
+                    "class_name": "ColourPanel",
                     "kwargs": {
                         "pos": [0.1, 0.1],
                         "size": [0.25, 0.25],
@@ -479,7 +480,7 @@
                         "colour": [255, 20, 20, 128]
                     },
                     "LeafPanel": {
-                        "class_name": "PanelColour",
+                        "class_name": "ColourPanel",
                         "kwargs": {
                             "pos": [0.1, 0.4],
                             "size": [0.8, 0.2],
@@ -498,6 +499,30 @@
                         "fix_aspect_ratio": true,
                         "image:image_asset": "ui_panel"
                     }
+                }
+            },
+            "ScorePanel": {
+                "class_name": "TextPanel",
+                "kwargs": {
+                    "pos": [0, 0],
+                    "size": [0.2, 0.1],
+                    "game_object_type_list:children": [],
+                    "fix_aspect_ratio": true,
+                    "asset:font_asset": "fast_hand_font",
+                    "text_colour": [0, 200, 100],
+                    "text": "0000"
+                }
+            },
+            "TimePanel": {
+                "class_name": "TextPanel",
+                "kwargs": {
+                    "pos": [0.88, 0],
+                    "size": [0.2, 0.1],
+                    "game_object_type_list:children": [],
+                    "fix_aspect_ratio": true,
+                    "asset:font_asset": "fast_hand_font",
+                    "text_colour": [0, 200, 100],
+                    "text": "00:00"
                 }
             },
             "AsteroidMother": {
