@@ -505,7 +505,7 @@
                 "class_name": "ColourPanel",
                 "kwargs": {
                     "pos": [0, 0],
-                    "size": [0.2, 0.1],
+                    "size": [0.1, 0.06],
                     "game_object_type_list:children": [
                         "Level_02/ScorePanel/ScoreText"
                     ],
@@ -521,6 +521,8 @@
                         "fix_aspect_ratio": true,
                         "asset:font_asset": "fast_hand_font",
                         "text_colour": [0, 200, 100],
+                        "horz_align": "RIGHT",
+                        "vert_align": "CENTRE",
                         "text": "0000"
                     }
                 }
@@ -529,7 +531,7 @@
                 "class_name": "ColourPanel",
                 "kwargs": {
                     "pos": [0.88, 0],
-                    "size": [0.2, 0.1],
+                    "size": [0.12, 0.26],
                     "game_object_type_list:children": [
                         "Level_02/TimePanel/TimeText"
                     ],
@@ -545,6 +547,8 @@
                         "fix_aspect_ratio": true,
                         "asset:font_asset": "fast_hand_font",
                         "text_colour": [0, 200, 100],
+                        "horz_align": "CENTRE",
+                        "vert_align": "BOTTOM",
                         "text": "00:00"
                     }
                 }
