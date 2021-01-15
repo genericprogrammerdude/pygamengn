@@ -33,8 +33,8 @@ class SpaceShooterGame(Game):
 
         # Put time and score text together
         screen_rect = self.screen.get_rect()
-        self.score_ui.set_text(str(self.score))
-        self.time_ui.set_text(self.get_time_string())
+        self.score_ui.children[0].set_text(str(self.score))
+        self.time_ui.children[0].set_text(self.get_time_string())
         self.score_ui.update(screen_rect, delta)
         self.time_ui.update(screen_rect, delta)
         self.blit_ui(self.score_ui)

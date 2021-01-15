@@ -502,27 +502,51 @@
                 }
             },
             "ScorePanel": {
-                "class_name": "TextPanel",
+                "class_name": "ColourPanel",
                 "kwargs": {
                     "pos": [0, 0],
                     "size": [0.2, 0.1],
-                    "game_object_type_list:children": [],
+                    "game_object_type_list:children": [
+                        "Level_02/ScorePanel/ScoreText"
+                    ],
                     "fix_aspect_ratio": true,
-                    "asset:font_asset": "fast_hand_font",
-                    "text_colour": [0, 200, 100],
-                    "text": "0000"
+                    "colour": [100, 20, 100, 100]
+                },
+                "ScoreText": {
+                    "class_name": "TextPanel",
+                    "kwargs": {
+                        "pos": [0, 0],
+                        "size": [1, 1],
+                        "game_object_type_list:children": [],
+                        "fix_aspect_ratio": true,
+                        "asset:font_asset": "fast_hand_font",
+                        "text_colour": [0, 200, 100],
+                        "text": "0000"
+                    }
                 }
             },
             "TimePanel": {
-                "class_name": "TextPanel",
+                "class_name": "ColourPanel",
                 "kwargs": {
                     "pos": [0.88, 0],
                     "size": [0.2, 0.1],
-                    "game_object_type_list:children": [],
+                    "game_object_type_list:children": [
+                        "Level_02/TimePanel/TimeText"
+                    ],
                     "fix_aspect_ratio": true,
-                    "asset:font_asset": "fast_hand_font",
-                    "text_colour": [0, 200, 100],
-                    "text": "00:00"
+                    "colour": [100, 20, 100, 100]
+                },
+                "TimeText": {
+                    "class_name": "TextPanel",
+                    "kwargs": {
+                        "pos": [0, 0],
+                        "size": [1, 1],
+                        "game_object_type_list:children": [],
+                        "fix_aspect_ratio": true,
+                        "asset:font_asset": "fast_hand_font",
+                        "text_colour": [0, 200, 100],
+                        "text": "00:00"
+                    }
                 }
             },
             "AsteroidMother": {

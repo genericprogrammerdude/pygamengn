@@ -43,7 +43,6 @@ class TextPanel(UIBase):
         self.text_colour = text_colour
         self.text = text
         self.text_is_dirty = True
-        self.fix_aspect_ratio = True
 
     def set_text(self, text):
         self.text_is_dirty = (self.text != text)
@@ -55,7 +54,8 @@ class TextPanel(UIBase):
     def resize(self):
         """TextPanel ignores its parent rect and renders to the font size."""
         self.image = self.font_asset.font.render(self.text, True, self.text_colour)
-        pos = self.rect.topleft
-        image_rect = self.image.get_rect()
-        self.rect = pygame.Rect(pos[0], pos[1], image_rect.width, image_rect.height)
+        image_size = self.image.get_rect().size
+        if image_size[0] > self.parent_rect.size[0] or image_size[1] > self.parent_rect.size[1]:
+            size = self.scale_to_fit(self.image.get_rect().size, self.parent_rect.size)
+            self.image = pygame.transform.scale(self.image, size)
         self.text_is_dirty = False

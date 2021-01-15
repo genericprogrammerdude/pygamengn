@@ -67,3 +67,22 @@ class UIBase(GameObjectBase):
     def resize(self):
         """Called when the component resized its own rect to match its parent's rect."""
         pass
+
+    @classmethod
+    def scale_to_fit(cls, size, max_size):
+        """Scales a rectangle size to fit max_size maintaining the original aspect ratio."""
+        width = size[0]
+        height = size[1]
+        scale_x = max_size[0] / width
+        scale_y = max_size[1] / height
+
+        if scale_x < 1 or scale_y < 1:
+            aspect_ratio = width / height
+            if scale_x < scale_y:
+                width = max_size[0]
+                height = width / aspect_ratio
+            else:
+                height = max_size[1]
+                width = height * aspect_ratio
+
+        return (round(width), round(height))
