@@ -132,7 +132,7 @@
                 "game_object_type_list:updatables": [
                     "Level_02/AsteroidSpawner"
                 ],
-                "game_object_type:main_menu_ui": "Level_02/MyPanel",
+                "game_object_type:main_menu_ui": "MainMenu",
                 "game_object_type:score_ui": "Level_02/ScorePanel",
                 "game_object_type:time_ui": "Level_02/TimePanel"
             },
@@ -149,6 +149,71 @@
                         ["AsteroidProjectilesGroup", "PlayerGroup"],
                         ["AsteroidTurretsGroup", "AsteroidsGroup"]
                     ]
+                }
+            }
+        },
+        "MainMenu": {
+            "class_name": "MainMenu",
+            "kwargs": {
+                "pos": [0.25, 0.25],
+                "size": [0.5, 0.5],
+                "game_object_type_list:children": [
+                    "MainMenu/StartButton",
+                    "MainMenu/ExitButton"
+                ],
+                "fix_aspect_ratio": false,
+                "colour": [100, 100, 100, 128]
+            },
+            "StartButton": {
+                "class_name": "ColourPanel",
+                "kwargs": {
+                    "pos": [0.25, 0.2],
+                    "size": [0.5, 0.25],
+                    "game_object_type_list:children": [
+                        "MainMenu/StartButton/StartText"
+                    ],
+                    "fix_aspect_ratio": false,
+                    "colour": [200, 200, 200, 100]
+                },
+                "StartText": {
+                    "class_name": "TextPanel",
+                    "kwargs": {
+                        "pos": [0, 0],
+                        "size": [1, 1],
+                        "game_object_type_list:children": [],
+                        "fix_aspect_ratio": true,
+                        "asset:font_asset": "fast_hand_font",
+                        "text_colour": [0, 200, 100],
+                        "horz_align": "CENTRE",
+                        "vert_align": "CENTRE",
+                        "text": "Start"
+                    }
+                }
+            },
+            "ExitButton": {
+                "class_name": "ColourPanel",
+                "kwargs": {
+                    "pos": [0.25, 0.55],
+                    "size": [0.5, 0.25],
+                    "game_object_type_list:children": [
+                        "MainMenu/ExitButton/ExitText"
+                    ],
+                    "fix_aspect_ratio": false,
+                    "colour": [200, 200, 200, 100]
+                },
+                "ExitText": {
+                    "class_name": "TextPanel",
+                    "kwargs": {
+                        "pos": [0, 0],
+                        "size": [1, 1],
+                        "game_object_type_list:children": [],
+                        "fix_aspect_ratio": true,
+                        "asset:font_asset": "fast_hand_font",
+                        "text_colour": [0, 200, 100],
+                        "horz_align": "CENTRE",
+                        "vert_align": "CENTRE",
+                        "text": "Exit"
+                    }
                 }
             }
         },
@@ -454,51 +519,6 @@
                     ],
                     "spawn_freq": 1000,
                     "asset:render_group": "RenderGroup"
-                }
-            },
-            "MyPanel": {
-                "class_name": "ColourPanel",
-                "kwargs": {
-                    "pos": [0.25, 0.25],
-                    "size": [0.5, 0.5],
-                    "game_object_type_list:children": [
-                        "Level_02/MyPanel/ChildPanel1",
-                        "Level_02/MyPanel/ChildPanel2"
-                    ],
-                    "fix_aspect_ratio": false,
-                    "colour": [100, 100, 100, 128]
-                },
-                "ChildPanel1": {
-                    "class_name": "ColourPanel",
-                    "kwargs": {
-                        "pos": [0.1, 0.1],
-                        "size": [0.25, 0.25],
-                        "game_object_type_list:children": [
-                            "Level_02/MyPanel/ChildPanel1/LeafPanel"
-                        ],
-                        "fix_aspect_ratio": true,
-                        "colour": [255, 20, 20, 128]
-                    },
-                    "LeafPanel": {
-                        "class_name": "ColourPanel",
-                        "kwargs": {
-                            "pos": [0.1, 0.4],
-                            "size": [0.8, 0.2],
-                            "game_object_type_list:children": [],
-                            "fix_aspect_ratio": false,
-                            "colour": [255, 20, 255, 255]
-                        }
-                    }
-                },
-                "ChildPanel2": {
-                    "class_name": "Panel",
-                    "kwargs": {
-                        "pos": [0.65, 0.65],
-                        "size": [0.25, 0.25],
-                        "game_object_type_list:children": [],
-                        "fix_aspect_ratio": true,
-                        "image:image_asset": "ui_panel"
-                    }
                 }
             },
             "ScorePanel": {

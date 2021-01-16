@@ -2,10 +2,10 @@ import random
 
 import pygame
 
-from UI.panel import Panel
 from game import BlitSurface
 from game import Game
 from game_object_factory import GameObjectFactory
+from main_menu import MainMenu
 
 
 @GameObjectFactory.register("SpaceShooterGame")
