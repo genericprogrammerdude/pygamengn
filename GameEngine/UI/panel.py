@@ -2,6 +2,7 @@ from enum import Enum, auto
 
 import pygame
 
+from UI.font_asset import FontAsset
 from UI.ui_base import UIBase
 from game_object_factory import GameObjectFactory
 
