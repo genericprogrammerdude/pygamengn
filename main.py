@@ -2,17 +2,10 @@ import sys
 
 import pygame
 
-from asteroid import Asteroid, AsteroidSpawner
-from collision_manager import CollisionManager
-from game_object_factory import GameObjectFactory
-from render_group import RenderGroup
-from shield import Shield
-from ship import Ship
-from space_shooter_game import SpaceShooterGame
-from sprite_group import SpriteGroup
-from turret import Turret
-
 sys.path.append("./GameEngine")
+
+from game_object_factory import GameObjectFactory
+from space_shooter_game import SpaceShooterGame
 
 
 def main():

@@ -5,9 +5,11 @@ import pygame
 from game import BlitSurface
 from game import Game
 from game_object_factory import GameObjectFactory
-from level import Level, LevelObject
+from level import Level
 from main_menu import MainMenu
+from shield import Shield
 from ship import Ship
+from sprite_group import SpriteGroup
 
 
 @GameObjectFactory.register("SpaceShooterGame")
