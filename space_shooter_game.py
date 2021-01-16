@@ -5,23 +5,28 @@ import pygame
 from game import BlitSurface
 from game import Game
 from game_object_factory import GameObjectFactory
+from level import Level, LevelObject
 from main_menu import MainMenu
+from ship import Ship
 
 
 @GameObjectFactory.register("SpaceShooterGame")
 class SpaceShooterGame(Game):
 
-    def __init__(self, main_menu_ui, score_ui, time_ui, **kwargs):
+    def __init__(self, main_menu_ui, score_ui, time_ui, level, **kwargs):
         super().__init__(**kwargs)
         self.main_menu_ui = main_menu_ui
         self.score_ui = score_ui
         self.time_ui = time_ui
+        self.level = level
         self.time = 0
         self.score = 0
-        self.player = None
         self.cooldown_time = 0
         self.player_is_dead = False
         self.running = True
+
+        self.level.create_objects(self.render_group)
+        self.set_player(self.level.player)
 
     def update(self, delta):
         self.handle_input()
@@ -58,7 +63,6 @@ class SpaceShooterGame(Game):
                     # Everyone's dead. Reload.
                     self.player_is_dead = False
                     self.level.create_objects(self.render_group)
-                    self.set_level(self.level)
                     self.set_player(self.level.player)
                     # Resume updatable updates
                     self.pause_updatables = False

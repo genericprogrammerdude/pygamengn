@@ -134,7 +134,8 @@
                 ],
                 "game_object_type:main_menu_ui": "MainMenu",
                 "game_object_type:score_ui": "Level_02/ScorePanel",
-                "game_object_type:time_ui": "Level_02/TimePanel"
+                "game_object_type:time_ui": "Level_02/TimePanel",
+                "game_object_type:level": "Level_02"
             },
             "CollisionManager": {
                 "class_name": "CollisionManager",

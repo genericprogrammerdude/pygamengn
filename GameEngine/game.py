@@ -53,10 +53,6 @@ class Game(GameObjectBase):
         for updatable in self.updatables:
             updatable.set_player(player)
 
-    def set_level(self, level):
-        """Sets the level so Game knows what's going on."""
-        self.level = level
-
     def toggle_pause(self):
         self.is_paused = not self.is_paused
 

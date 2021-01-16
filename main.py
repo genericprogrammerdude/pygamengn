@@ -5,7 +5,6 @@ import pygame
 from asteroid import Asteroid, AsteroidSpawner
 from collision_manager import CollisionManager
 from game_object_factory import GameObjectFactory
-from level import Level
 from render_group import RenderGroup
 from shield import Shield
 from ship import Ship
@@ -29,17 +28,6 @@ def main():
     pygame.display.set_caption("Game")
 
     game = GameObjectFactory.create("SpaceShooterGame", screen=screen)
-
-    level = None
-    if len(sys.argv) > 1:
-        level = GameObjectFactory.create(sys.argv[1])
-    else:
-        level = GameObjectFactory.create("Level_01")
-    level.create_objects(game.render_group)
-    player = level.player
-
-    game.set_player(player)
-    game.set_level(level)
 
     clock = pygame.time.Clock()
 
