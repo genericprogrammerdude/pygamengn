@@ -1,6 +1,5 @@
 import pygame
 
-from UI.font_asset import FontAsset
 from collision_manager import CollisionManager
 from game_object_factory import GameObjectBase
 from game_object_factory import GameObjectFactory
@@ -18,7 +17,6 @@ class Game(GameObjectBase):
         self.is_paused = False
         self.blit_surfaces = []
         self.player = None
-        self.Level = None
         self.pause_updatables = False
 
     def update(self, delta):
