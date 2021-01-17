@@ -160,7 +160,8 @@
                     "MainMenu/ExitButton"
                 ],
                 "fix_aspect_ratio": false,
-                "colour": [100, 100, 100, 128]
+                "colour": [100, 100, 100, 128],
+                "game_object_type:asteroid_spawner": "MainMenu/AsteroidSpawner"
             },
             "StartButton": {
                 "class_name": "ColourPanel",
@@ -212,6 +213,19 @@
                         "vert_align": "CENTRE",
                         "text": "Exit"
                     }
+                }
+            },
+            "AsteroidSpawner": {
+                "class_name": "AsteroidSpawner",
+                "kwargs": {
+                    "asteroid_types": [
+                        "AsteroidBig",
+                        "AsteroidMedium",
+                        "AsteroidSmall",
+                        "AsteroidTiny"
+                    ],
+                    "spawn_freq": 3000,
+                    "asset:render_group": "RenderGroup"
                 }
             }
         },
