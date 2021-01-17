@@ -37,7 +37,7 @@
         "asteroid_17": "Assets/SpaceShooterRedux/PNG/Meteors/meteorGrey_small2.png",
         "asteroid_18": "Assets/SpaceShooterRedux/PNG/Meteors/meteorGrey_tiny1.png",
         "asteroid_19": "Assets/SpaceShooterRedux/PNG/Meteors/meteorGrey_tiny2.png",
-        "background": "Assets/SpaceShooterRedux/Backgrounds/blue.png"
+        "background": "Assets/SpaceShooterRedux/Backgrounds/darkPurple.png"
     },
 
     "assets": {
@@ -46,7 +46,7 @@
             "kwargs": {
                 "grid_draw": false,
                 "grid_color": [100, 100, 100],
-                "grid_interval": 256,
+                "grid_interval": 100,
                 "image:background": "background"
             }
         },
@@ -277,7 +277,6 @@
             "class_name": "Ship",
             "kwargs": {
                 "image:image": "ship",
-                "scale": 0.8,
                 "projectile_type": "PlayerProjectile",
                 "fire_freq": 200,
                 "game_object_type:mover": "PlayerShipMover",
