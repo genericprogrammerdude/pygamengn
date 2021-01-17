@@ -9,9 +9,8 @@ from game_object_factory import GameObjectFactory
 class PauseMenu(ColourPanel):
     """Pause menu UI."""
 
-    def __init__(self, asteroid_spawner, **kwargs):
+    def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self.asteroid_spawner = asteroid_spawner
         self.resume_button = self.children[0]
         self.exit_button = self.children[1]
         self.resume_callback = None
@@ -28,10 +27,10 @@ class PauseMenu(ColourPanel):
         self.propagate_mouse_pos(mouse_pos)
 
         for event in pygame.event.get():
-            if event.type == pygame.QUIT or (event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE):
+            if event.type == pygame.QUIT:
                 self.exit_callback()
-            elif event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
-                self.start_callback()
+            elif event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
+                self.resume_callback()
             elif event.type == pygame.MOUSEBUTTONUP:
                 if self.resume_button.rect.collidepoint(mouse_pos):
                     self.resume_callback()

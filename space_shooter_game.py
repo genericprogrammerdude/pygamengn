@@ -8,6 +8,7 @@ from game import Game
 from game_object_factory import GameObjectFactory
 from level import Level
 from main_menu import MainMenu
+from pause_menu import PauseMenu
 from shield import Shield
 from ship import Ship
 from sprite_group import SpriteGroup
@@ -17,6 +18,7 @@ class Mode(Enum):
     """The mode of the SpaceShooterGame defines game behaviour."""
     MAIN_MENU = auto()
     PLAY = auto()
+    PAUSE_MENU = auto()
 
 
 @GameObjectFactory.register("SpaceShooterGame")
@@ -35,6 +37,8 @@ class SpaceShooterGame(Game):
         self.mode = Mode.MAIN_MENU
         self.main_menu_ui.set_start_callback(self.start_play)
         self.main_menu_ui.set_exit_callback(self.exit_game)
+        self.pause_menu_ui.set_resume_callback(self.resume_play)
+        self.pause_menu_ui.set_exit_callback(self.exit_game)
 
     def update(self, delta):
         """Updates the game."""
@@ -43,7 +47,10 @@ class SpaceShooterGame(Game):
             self.update_play(delta)
 
         elif self.mode == Mode.MAIN_MENU:
-            self.update_main_menu(delta)
+            self.update_ui(delta, self.main_menu_ui)
+
+        elif self.mode == Mode.PAUSE_MENU:
+            self.update_ui(delta, self.pause_menu_ui)
 
         super().update(delta)
 
@@ -66,9 +73,9 @@ class SpaceShooterGame(Game):
 
         self.level.update(delta)
 
-    def update_main_menu(self, delta):
-        self.main_menu_ui.update(self.screen.get_rect(), delta)
-        self.blit_ui(self.main_menu_ui)
+    def update_ui(self, delta, ui):
+        ui.update(self.screen.get_rect(), delta)
+        self.blit_ui(ui)
 
     def start_play(self):
         """Starts PLAY mode."""
@@ -76,6 +83,11 @@ class SpaceShooterGame(Game):
         self.level.create_objects(self.render_group)
         self.set_player(self.level.player)
         self.time = 0
+
+    def resume_play(self):
+        """Resumes PLAY mode from PAUSE_MENU mode."""
+        self.mode = Mode.PLAY
+        self.toggle_pause()
 
     def exit_game(self):
         """Exits the application."""
@@ -89,7 +101,8 @@ class SpaceShooterGame(Game):
             if event.type == pygame.KEYDOWN:
                 # Exit
                 if event.key == pygame.K_ESCAPE:
-                    self.running = False
+                    self.toggle_pause()
+                    self.mode = Mode.PAUSE_MENU
                 if event.key == pygame.K_SPACE and self.player:
                     self.player.fire()
                 if event.key == pygame.K_END:
