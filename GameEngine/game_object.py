@@ -11,7 +11,7 @@ class GameObject(pygame.sprite.Sprite, GameObjectBase):
     """Basic game object."""
 
     def __init__(self,
-                 image,
+                 image_asset,
                  is_collidable=True,
                  scale=1.0,
                  alpha=1.0,
@@ -24,15 +24,18 @@ class GameObject(pygame.sprite.Sprite, GameObjectBase):
         super().__init__()
 
         # Set the image to use for this sprite.
-        self.image = image
-        self.image_original = self.image.copy()
+        self.image_asset = image_asset
+        self.image = self.image_asset
         self.rect = self.image.get_rect()
         self.scale = scale
         self.heading = heading
         self.pos = pygame.math.Vector2(0.0, 0.0)
         self.dirty_image = True
         self.is_collidable = is_collidable
-        self.mask = None  # The mask will be built on the first transform()
+        if self.is_collidable:
+            self.mask = pygame.mask.from_surface(self.image, 16)
+        else:
+            self.mask = None
         self.parent = None
         self.health = 100
         self.attachments = []
@@ -58,7 +61,7 @@ class GameObject(pygame.sprite.Sprite, GameObjectBase):
         """Transforms the object based on current heading, scale, and position."""
         # Rotate and scale if necessary
         if self.dirty_image:
-            self.image = pygame.transform.rotozoom(self.image_original, self.heading, self.scale)
+            self.image = pygame.transform.rotozoom(self.image_asset, self.heading, self.scale)
             if self.alpha != 1.0:
                 self.image.set_alpha(self.alpha * 255)
             self.rect = self.image.get_rect()
@@ -84,10 +87,10 @@ class GameObject(pygame.sprite.Sprite, GameObjectBase):
         self.dirty_image = self.dirty_image or self.heading != heading
         self.heading = geometry.normalize_angle(heading)
 
-    def set_image(self, image):
+    def set_image(self, image_asset):
         """Sets a new image for the game object."""
-        self.image = image
-        self.image_original = self.image.copy()
+        self.image_asset = image_asset
+        self.image = self.image_asset
         self.dirty_image = True
 
     def attach(self, game_object, offset, take_parent_transform):

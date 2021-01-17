@@ -11,8 +11,8 @@ from projectile import Projectile
 class Ship(GameObject):
     """Space ship game object."""
 
-    def __init__(self, image, projectile_type, fire_freq, mover, death_effect, damage, nav_arrow, **kwargs):
-        super().__init__(image, **kwargs)
+    def __init__(self, projectile_type, fire_freq, mover, death_effect, damage, nav_arrow, **kwargs):
+        super().__init__(**kwargs)
         self.mover = mover
         self.projectile_type = projectile_type
         self.fire_freq = fire_freq
@@ -68,3 +68,7 @@ class Ship(GameObject):
         """Sets the waypoint the ship should go to."""
         self.waypoint = waypoint
         self.nav_arrow.set_target(waypoint)
+
+    def die(self, instigator):
+        super().die(instigator)
+        self.nav_arrow.die(instigator)

@@ -286,7 +286,7 @@
         "PlayerShip": {
             "class_name": "Ship",
             "kwargs": {
-                "image:image": "ship",
+                "image:image_asset": "ship",
                 "projectile_type": "PlayerProjectile",
                 "fire_freq": 200,
                 "game_object_type:mover": "PlayerShipMover",
@@ -344,7 +344,7 @@
         "NavArrow": {
             "class_name": "NavArrow",
             "kwargs": {
-                "image:image": "arrow"
+                "image:image_asset": "arrow"
             },
             "groups": [
                 "RenderGroup"
@@ -353,7 +353,7 @@
         "PlayerProjectile": {
             "class_name": "Projectile",
             "kwargs": {
-                "image:image": "player_projectile",
+                "image:image_asset": "player_projectile",
                 "death_effect": "ExplosionSmall",
                 "damage": 15,
                 "game_object_type:mover": "PlayerProjectileMover",
@@ -376,7 +376,7 @@
         "EnemyTurret": {
             "class_name": "Turret",
             "kwargs": {
-                "image:image": "turret",
+                "image:image_asset": "turret",
                 "projectile_type": "EnemyTurretProjectile",
                 "scale": 1.25,
                 "fire_freq": 2250
@@ -411,7 +411,7 @@
         "EnemyTurretGun": {
             "class_name": "GameObject",
             "kwargs": {
-                "image:image": "turret_gun"
+                "image:image_asset": "turret_gun"
             },
             "groups": [
                 "RenderGroup"
@@ -420,7 +420,7 @@
         "EnemyTurretProjectile": {
             "class_name": "Projectile",
             "kwargs": {
-                "image:image": "turret_projectile",
+                "image:image_asset": "turret_projectile",
                 "death_effect": "ExplosionSmall",
                 "damage": 10,
                 "game_object_type:mover": "EnemyTurretProjectileMover",
@@ -506,7 +506,7 @@
             "EnemyTurret2": {
                 "class_name": "Turret",
                 "kwargs": {
-                    "image:image": "turret",
+                    "image:image_asset": "turret",
                     "projectile_type": "Level_01/EnemyTurret2Projectile",
                     "scale": 1.25,
                     "fire_freq": 1000
@@ -541,7 +541,7 @@
             "EnemyTurret2Projectile": {
                 "class_name": "Projectile",
                 "kwargs": {
-                    "image:image": "turret_projectile2",
+                    "image:image_asset": "turret_projectile2",
                     "death_effect": "Explosion",
                     "damage": 20,
                     "game_object_type:mover": "EnemyTurretProjectileMover",
@@ -682,7 +682,7 @@
             "AsteroidTurret": {
                 "class_name": "Turret",
                 "kwargs": {
-                    "image:image": "turret",
+                    "image:image_asset": "turret",
                     "projectile_type": "Level_02/AsteroidProjectile",
                     "fire_freq": 1500,
                     "health": 20,
@@ -703,7 +703,7 @@
             "AsteroidTurretGun": {
                 "class_name": "GameObject",
                 "kwargs": {
-                    "image:image": "turret_gun",
+                    "image:image_asset": "turret_gun",
                     "scale": 0.8,
                     "is_collidable": false
                 },
@@ -714,7 +714,7 @@
             "AsteroidProjectile": {
                 "class_name": "Projectile",
                 "kwargs": {
-                    "image:image": "turret_projectile",
+                    "image:image_asset": "turret_projectile",
                     "death_effect": "ExplosionSmall",
                     "damage": 10,
                     "game_object_type:mover": "EnemyTurretProjectileMover",
@@ -728,7 +728,7 @@
             "Waypoint": {
                 "class_name": "Waypoint",
                 "kwargs": {
-                    "image:image": "waypoint",
+                    "image:image_asset": "waypoint",
                     "kill_when_off_screen": false,
                     "distance": 1000,
                     "angular_velocity": 45.0

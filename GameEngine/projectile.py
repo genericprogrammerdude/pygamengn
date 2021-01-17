@@ -9,11 +9,9 @@ from mover import MoverVelocity
 @GameObjectFactory.register("Projectile")
 class Projectile(GameObject):
 
-    def __init__(self, image, damage, death_effect, mover, **kwargs):
-        super().__init__(image, **kwargs)
+    def __init__(self, mover, **kwargs):
+        super().__init__(**kwargs)
         self.mover = mover
-        self.damage = damage
-        self.death_effect = death_effect
 
     def kill_when_off_screen(self):
         """This can be used by the Sprite Group to know if the object should be killed when it goes off screen."""

@@ -14,13 +14,10 @@ from updatable import Updatable
 @GameObjectFactory.register("Asteroid")
 class Asteroid(GameObject):
 
-    def __init__(self, images, damage, mover, heading, health, death_effect, death_spawn, score_on_die, **kwargs):
-        super().__init__(random.choice(images), **kwargs)
-        self.damage = damage
+    def __init__(self, images, mover, health, death_spawn, score_on_die, **kwargs):
+        super().__init__(image_asset=random.choice(images), **kwargs)
         self.mover = mover
-        self.heading = heading
         self.health = health
-        self.death_effect = death_effect
         self.death_spawn = death_spawn
         self.spin_delta_factor = random.choice([-1.0, 1.0])
         self.score_on_die = score_on_die
