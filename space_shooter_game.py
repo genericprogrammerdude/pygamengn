@@ -1,3 +1,4 @@
+from enum import Enum, auto
 import random
 
 import pygame
@@ -10,6 +11,12 @@ from main_menu import MainMenu
 from shield import Shield
 from ship import Ship
 from sprite_group import SpriteGroup
+
+
+class Mode(Enum):
+    """The mode of the SpaceShooterGame defines game behaviour."""
+    MAIN_MENU = auto()
+    PLAY = auto()
 
 
 @GameObjectFactory.register("SpaceShooterGame")
@@ -27,11 +34,23 @@ class SpaceShooterGame(Game):
         self.player_is_dead = False
         self.running = True
         self.pause_updatables = False
+        self.mode = Mode.PLAY
 
         self.level.create_objects(self.render_group)
         self.set_player(self.level.player)
 
     def update(self, delta):
+        """Updates the game."""
+
+        if self.mode == Mode.PLAY:
+            self.update_play(delta)
+
+        elif self.mode == Mode.MAIN_MENU:
+            self.update_main_menu(delta)
+
+        super().update(delta)
+
+    def update_play(self, delta):
         self.handle_input()
 
         # Track round time and score
@@ -48,33 +67,34 @@ class SpaceShooterGame(Game):
         self.blit_ui(self.score_ui)
         self.blit_ui(self.time_ui)
 
+        self.level.update(delta)
+
         if self.player_is_dead:
-            self.main_menu_ui.update(screen_rect, delta)
-            self.blit_ui(self.main_menu_ui)
-            if self.cooldown_time > 0:
-                self.cooldown_time -= delta
-                if self.cooldown_time < 0:
-                    self.cooldown_time = 0
-                    # Reset game state
-                    self.kill_render_group()
-                    self.pause_updatables = True
+            self.mode = Mode.MAIN_MENU
+
+    def update_main_menu(self, delta):
+        self.main_menu_ui.update(self.screen.get_rect(), delta)
+        self.blit_ui(self.main_menu_ui)
+        if self.cooldown_time > 0:
+            self.cooldown_time -= delta
+            if self.cooldown_time < 0:
+                self.cooldown_time = 0
+                # Reset game state
+                self.kill_render_group()
+                self.pause_updatables = True
+        else:
+            # Keep killing game objects until there's nothing left in render group
+            if len(self.render_group.sprites()) > 0:
+                self.kill_render_group()
             else:
-                # Keep killing game objects until there's nothing left in render group
-                if len(self.render_group.sprites()) > 0:
-                    self.kill_render_group()
-                else:
-                    # Everyone's dead. Reload.
-                    self.player_is_dead = False
-                    self.level.create_objects(self.render_group)
-                    self.set_player(self.level.player)
-                    # Resume updatable updates
-                    self.pause_updatables = False
-                    self.time = 0
-
-        if not self.pause_updatables:
-            self.level.update(delta)
-
-        super().update(delta)
+                # Everyone's dead. Reload.
+                self.mode = Mode.PLAY
+                self.player_is_dead = False
+                self.level.create_objects(self.render_group)
+                self.set_player(self.level.player)
+                # Resume updatable updates
+                self.pause_updatables = False
+                self.time = 0
 
     def handle_input(self):
         """Reads input and makes things happen."""
