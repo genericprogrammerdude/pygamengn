@@ -45,6 +45,7 @@ class SpaceShooterGame(Game):
         """Updates the game."""
 
         if self.mode == Mode.PLAY:
+            pygame.mouse.set_visible(False)
             self.update_play(delta)
 
         elif self.mode == Mode.MAIN_MENU:
@@ -54,6 +55,7 @@ class SpaceShooterGame(Game):
             self.update_ui(delta, self.pause_menu_ui)
 
         elif self.mode == Mode.KILLING_ALL:
+            pygame.mouse.set_visible(False)
             self.update_killing(delta)
 
         super().update(delta)
@@ -78,6 +80,8 @@ class SpaceShooterGame(Game):
         self.level.update(delta)
 
     def update_ui(self, delta, ui):
+        """Updates the given UI component."""
+        pygame.mouse.set_visible(True)
         if self.time > 0:
             self.blit_ui(self.score_ui)
             self.blit_ui(self.time_ui)

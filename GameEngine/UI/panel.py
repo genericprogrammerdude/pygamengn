@@ -41,14 +41,16 @@ class ColourPanel(UIBase):
 
     def propagate_mouse_pos(self, pos):
         """Notifies the component that the mouse is hovering over it."""
-        super().propagate_mouse_pos(pos)
+        components = super().propagate_mouse_pos(pos)
         if self.colour != self.hover_colour:
             if self.rect.collidepoint(pos):
+                components.append(self)
                 if self.image.get_at((0, 0)) != self.hover_colour:
                     self.image.fill(self.hover_colour)
             else:
                 if self.image.get_at((0, 0)) != self.colour:
                     self.image.fill(self.colour)
+        return components
 
 
 @GameObjectFactory.register("TextPanel")

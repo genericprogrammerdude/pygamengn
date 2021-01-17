@@ -56,7 +56,16 @@ class UIBase(GameObjectBase):
 
     def propagate_mouse_pos(self, pos):
         """Tells the component and its children the position of the mouse pointer in screen coordinates."""
-        [child.propagate_mouse_pos(pos) for child in self.children]
+        components = []
+        for child in self.children:
+            components += child.propagate_mouse_pos(pos)
+
+        if len(components) > 0:
+            pygame.mouse.set_system_cursor(pygame.SYSTEM_CURSOR_HAND)
+        else:
+            pygame.mouse.set_system_cursor(pygame.SYSTEM_CURSOR_ARROW)
+
+        return components
 
     @abstractmethod
     def resize(self):
