@@ -664,7 +664,7 @@
                 "kwargs": {
                     "image:image": "turret",
                     "projectile_type": "Level_02/AsteroidProjectile",
-                    "fire_freq": 2250,
+                    "fire_freq": 1500,
                     "health": 20,
                     "death_effect": "Explosion",
                     "score_on_die": 20

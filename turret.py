@@ -31,7 +31,12 @@ class Turret(GameObject):
                 heading = math.degrees(math.atan2(fire_dir[0], fire_dir[1]) - math.pi)
                 self.set_heading(heading)
 
-                self.time_since_last_fire = self.time_since_last_fire + delta
+                # Increase fire frequency as the turret gets closer to its target
+                distance = fire_dir.length()
+                delta_factor = 1.0
+                if distance < 1000:
+                    delta_factor = 4.0 - distance / 250.0
+                self.time_since_last_fire = self.time_since_last_fire + delta * delta_factor
                 if self.time_since_last_fire >= self.fire_freq and self.alive():
                     self.fire()
             else:
