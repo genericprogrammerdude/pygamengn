@@ -48,20 +48,15 @@ class UIBase(GameObjectBase):
         pos = parent_rect.topleft + pygame.Vector2(parent_rect.width * self.pos[0], parent_rect.height * self.pos[1])
         self.rect = pygame.Rect(pos.x, pos.y, size[0], size[1])
 
-    def propagate_font(self):
-        """Propagates font asset and text colour to children recursively."""
-        for child in self.children:
-            if child.font_asset is None:
-                child.font_asset = self.font_asset
-            if child.text_colour is None:
-                child.text_colour = self.text_colour
-            child.propagate_font()
-
     def is_dirty(self):
         """
         Returns whether the component needs to be resized. Returning True guarantees the component will be re-drawn.
         """
         return False
+
+    def propagate_mouse_pos(self, pos):
+        """Tells the component and its children the position of the mouse pointer in screen coordinates."""
+        [child.propagate_mouse_pos(pos) for child in self.children]
 
     @abstractmethod
     def resize(self):

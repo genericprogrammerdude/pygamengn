@@ -21,25 +21,25 @@ class MainMenu(ColourPanel):
 
     def update(self, parent_rect, delta):
         """Updates the main menu."""
-        self.handle_input()
         super().update(parent_rect, delta)
+        self.handle_input()
         self.asteroid_spawner.update(delta)
 
     def handle_input(self):
         """Reads and handles input."""
+        mouse_pos = pygame.mouse.get_pos()
+        self.propagate_mouse_pos(mouse_pos)
+
         for event in pygame.event.get():
             if event.type == pygame.QUIT or (event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE):
                 self.exit_callback()
-            if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
+            elif event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
                 self.start_callback()
-
-    def click_start(self):
-        """Starts a new game."""
-        pass
-
-    def click_exit(self):
-        """Exits the application."""
-        pass
+            elif event.type == pygame.MOUSEBUTTONUP:
+                if self.start_button.rect.collidepoint(mouse_pos):
+                    self.start_callback()
+                elif self.exit_button.rect.collidepoint(mouse_pos):
+                    self.exit_callback()
 
     def set_start_callback(self, start_callback):
         """Sets the function to call when the start button is clicked."""

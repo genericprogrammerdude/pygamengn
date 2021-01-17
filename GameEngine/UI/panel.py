@@ -26,14 +26,29 @@ class Panel(UIBase):
 class ColourPanel(UIBase):
     """Basic UI panel that is a solid colour and has no image."""
 
-    def __init__(self, colour, **kwargs):
+    def __init__(self, colour, hover_colour=None, **kwargs):
         super().__init__(**kwargs)
-        self.colour = colour
+        self.colour = tuple(colour)
+        if hover_colour:
+            self.hover_colour = tuple(hover_colour)
+        else:
+            self.hover_colour = self.colour
 
     def resize(self):
         """Resizes the image to match the panel's size with its parent's rect."""
         self.image = pygame.Surface(self.rect.size, pygame.HWSURFACE | pygame.SRCALPHA)
         self.image.fill(self.colour)
+
+    def propagate_mouse_pos(self, pos):
+        """Notifies the component that the mouse is hovering over it."""
+        super().propagate_mouse_pos(pos)
+        if self.colour != self.hover_colour:
+            if self.rect.collidepoint(pos):
+                if self.image.get_at((0, 0)) != self.hover_colour:
+                    self.image.fill(self.hover_colour)
+            else:
+                if self.image.get_at((0, 0)) != self.colour:
+                    self.image.fill(self.colour)
 
 
 @GameObjectFactory.register("TextPanel")
