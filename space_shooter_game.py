@@ -78,6 +78,9 @@ class SpaceShooterGame(Game):
         self.level.update(delta)
 
     def update_ui(self, delta, ui):
+        if self.time > 0:
+            self.blit_ui(self.score_ui)
+            self.blit_ui(self.time_ui)
         ui.update(self.screen.get_rect(), delta)
         self.blit_ui(ui)
 
