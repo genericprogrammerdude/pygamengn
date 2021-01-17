@@ -30,10 +30,7 @@ class SpaceShooterGame(Game):
         self.level = level
         self.time = 0
         self.score = 0
-        self.cooldown_time = 0
-        self.player_is_dead = False
         self.running = True
-        self.pause_updatables = False
         self.mode = Mode.PLAY
 
         self.level.create_objects(self.render_group)
@@ -69,32 +66,22 @@ class SpaceShooterGame(Game):
 
         self.level.update(delta)
 
-        if self.player_is_dead:
-            self.mode = Mode.MAIN_MENU
-
     def update_main_menu(self, delta):
         self.main_menu_ui.update(self.screen.get_rect(), delta)
         self.blit_ui(self.main_menu_ui)
-        if self.cooldown_time > 0:
-            self.cooldown_time -= delta
-            if self.cooldown_time < 0:
-                self.cooldown_time = 0
-                # Reset game state
-                self.kill_render_group()
-                self.pause_updatables = True
-        else:
+
+        if self.killing:
             # Keep killing game objects until there's nothing left in render group
-            if len(self.render_group.sprites()) > 0:
-                self.kill_render_group()
-            else:
-                # Everyone's dead. Reload.
-                self.mode = Mode.PLAY
-                self.player_is_dead = False
-                self.level.create_objects(self.render_group)
-                self.set_player(self.level.player)
-                # Resume updatable updates
-                self.pause_updatables = False
-                self.time = 0
+            self.kill_render_group()
+            self.killing = (len(self.render_group.sprites()) > 0)
+        else:
+            # Everyone's dead. Reload.
+            self.mode = Mode.PLAY
+            self.player_is_dead = False
+            self.level.create_objects(self.render_group)
+            self.set_player(self.level.player)
+            # Resume updatable updates
+            self.time = 0
 
     def handle_input(self):
         """Reads input and makes things happen."""
@@ -126,8 +113,8 @@ class SpaceShooterGame(Game):
 
     def handle_player_death(self):
         """Invoked when the player dies."""
-        self.player_is_dead = True
-        self.cooldown_time = 1000
+        self.killing = True
+        self.mode = Mode.MAIN_MENU
         self.player = None
 
     def kill_render_group(self):
