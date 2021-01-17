@@ -13,7 +13,7 @@ from pause_menu import PauseMenu
 from shield import Shield
 from ship import Ship
 from sprite_group import SpriteGroup
-from trigger import Trigger
+from waypoint import Waypoint
 
 
 class Mode(Enum):
@@ -111,8 +111,8 @@ class SpaceShooterGame(Game):
         if self.waypoint:
             self.waypoint.die(self.player)
         angle = numpy.deg2rad(random.randrange(0, 360))
-        pos = self.player.pos + 500 * pygame.Vector2(numpy.cos(angle), numpy.sin(angle))
         self.waypoint = GameObjectFactory.create(self.waypoint_type)
+        pos = self.player.pos + self.waypoint.distance * pygame.Vector2(numpy.cos(angle), numpy.sin(angle))
         self.waypoint.set_pos(pos)
         self.waypoint.set_enter_callback(self.create_waypoint)
         self.player.set_waypoint(self.waypoint)

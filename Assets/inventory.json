@@ -726,10 +726,11 @@
                 ]
             },
             "Waypoint": {
-                "class_name": "Trigger",
+                "class_name": "Waypoint",
                 "kwargs": {
                     "image:image": "waypoint",
-                    "kill_when_off_screen": false
+                    "kill_when_off_screen": false,
+                    "distance": 1000
                 },
                 "groups": [
                     "RenderGroup",

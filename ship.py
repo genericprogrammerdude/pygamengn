@@ -35,7 +35,7 @@ class Ship(GameObject):
             # Position and orient the nav arrow
             direction = (self.waypoint.pos - self.pos).normalize()
             self.nav_arrow.set_pos(self.pos + direction * 150)
-            _, angle = dir.as_polar()
+            _, angle = direction.as_polar()
             self.nav_arrow.set_heading(270 - angle)
 
     def set_velocity(self, velocity):
