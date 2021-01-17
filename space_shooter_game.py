@@ -31,10 +31,7 @@ class SpaceShooterGame(Game):
         self.time = 0
         self.score = 0
         self.running = True
-        self.mode = Mode.PLAY
-
-        self.level.create_objects(self.render_group)
-        self.set_player(self.level.player)
+        self.mode = Mode.MAIN_MENU
 
     def update(self, delta):
         """Updates the game."""
