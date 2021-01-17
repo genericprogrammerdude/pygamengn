@@ -1,6 +1,7 @@
 from enum import Enum, auto
 import random
 
+import numpy
 import pygame
 
 from game import BlitSurface
@@ -12,6 +13,7 @@ from pause_menu import PauseMenu
 from shield import Shield
 from ship import Ship
 from sprite_group import SpriteGroup
+from trigger import Trigger
 
 
 class Mode(Enum):
@@ -25,13 +27,15 @@ class Mode(Enum):
 @GameObjectFactory.register("SpaceShooterGame")
 class SpaceShooterGame(Game):
 
-    def __init__(self, main_menu_ui, pause_menu_ui, score_ui, time_ui, level, **kwargs):
+    def __init__(self, main_menu_ui, pause_menu_ui, score_ui, time_ui, level, waypoint_type, **kwargs):
         super().__init__(**kwargs)
         self.main_menu_ui = main_menu_ui
         self.pause_menu_ui = pause_menu_ui
         self.score_ui = score_ui
         self.time_ui = time_ui
         self.level = level
+        self.waypoint_type = waypoint_type
+        self.waypoint = None
         self.time = 0
         self.score = 0
         self.running = True
@@ -100,6 +104,13 @@ class SpaceShooterGame(Game):
             self.level.create_objects(self.render_group)
             self.set_player(self.level.player)
             self.time = 0
+            self.create_waypoint()
+
+    def create_waypoint(self):
+        angle = numpy.deg2rad(random.randrange(0, 360))
+        pos = self.player.pos + 500 * pygame.Vector2(numpy.cos(angle), numpy.sin(angle))
+        self.waypoint = GameObjectFactory.create(self.waypoint_type)
+        self.waypoint.set_pos(pos)
 
     def start_play(self):
         """Prepares the game to start playing."""
