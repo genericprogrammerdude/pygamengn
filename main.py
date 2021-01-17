@@ -1,8 +1,10 @@
+import os
 import sys
 
-import pygame
-
 sys.path.append("./GameEngine")
+os.environ["PYGAME_HIDE_SUPPORT_PROMPT"] = "1"
+
+import pygame
 
 from game_object_factory import GameObjectFactory
 from space_shooter_game import SpaceShooterGame
