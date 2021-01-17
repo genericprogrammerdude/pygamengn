@@ -32,6 +32,8 @@ class SpaceShooterGame(Game):
         self.score = 0
         self.running = True
         self.mode = Mode.MAIN_MENU
+        self.main_menu_ui.set_start_callback(self.start_play)
+        self.main_menu_ui.set_exit_callback(self.exit_game)
 
     def update(self, delta):
         """Updates the game."""
@@ -64,17 +66,19 @@ class SpaceShooterGame(Game):
         self.level.update(delta)
 
     def update_main_menu(self, delta):
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT or (event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE):
-                self.running = False
-            if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
-                self.mode = Mode.PLAY
-                self.level.create_objects(self.render_group)
-                self.set_player(self.level.player)
-                self.time = 0
-
         self.main_menu_ui.update(self.screen.get_rect(), delta)
         self.blit_ui(self.main_menu_ui)
+
+    def start_play(self):
+        """Starts PLAY mode."""
+        self.mode = Mode.PLAY
+        self.level.create_objects(self.render_group)
+        self.set_player(self.level.player)
+        self.time = 0
+
+    def exit_game(self):
+        """Exits the application."""
+        self.running = False
 
     def handle_input(self):
         """Reads input and makes things happen."""
