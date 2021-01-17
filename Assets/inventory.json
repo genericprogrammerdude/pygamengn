@@ -130,6 +130,7 @@
                 "asset:render_group": "RenderGroup",
                 "game_object_type:collision_manager": "SpaceShooterGame/CollisionManager",
                 "game_object_type:main_menu_ui": "MainMenu",
+                "game_object_type:pause_menu_ui": "PauseMenu",
                 "game_object_type:score_ui": "Level_02/ScorePanel",
                 "game_object_type:time_ui": "Level_02/TimePanel",
                 "game_object_type:level": "Level_02"
@@ -228,6 +229,46 @@
                     ],
                     "spawn_freq": 3000,
                     "asset:render_group": "RenderGroup"
+                }
+            }
+        },
+        "PauseMenu": {
+            "class_name": "PauseMenu",
+            "kwargs": {
+                "pos": [0.25, 0.25],
+                "size": [0.5, 0.5],
+                "game_object_type_list:children": [
+                    "PauseMenu/PauseButton",
+                    "MainMenu/ExitButton"
+                ],
+                "fix_aspect_ratio": false,
+                "colour": [100, 100, 100, 128]
+            },
+            "PauseButton": {
+                "class_name": "ColourPanel",
+                "kwargs": {
+                    "pos": [0.25, 0.2],
+                    "size": [0.5, 0.25],
+                    "game_object_type_list:children": [
+                        "PauseMenu/PauseButton/PauseText"
+                    ],
+                    "fix_aspect_ratio": false,
+                    "colour": [200, 200, 200, 100],
+                    "hover_colour": [100, 210, 100, 100]
+                },
+                "PauseText": {
+                    "class_name": "TextPanel",
+                    "kwargs": {
+                        "pos": [0, 0],
+                        "size": [1, 1],
+                        "game_object_type_list:children": [],
+                        "fix_aspect_ratio": true,
+                        "asset:font_asset": "fast_hand_font",
+                        "text_colour": [0, 200, 100],
+                        "horz_align": "CENTRE",
+                        "vert_align": "CENTRE",
+                        "text": "Resume Game"
+                    }
                 }
             }
         },

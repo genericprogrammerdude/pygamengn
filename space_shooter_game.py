@@ -22,9 +22,10 @@ class Mode(Enum):
 @GameObjectFactory.register("SpaceShooterGame")
 class SpaceShooterGame(Game):
 
-    def __init__(self, main_menu_ui, score_ui, time_ui, level, **kwargs):
+    def __init__(self, main_menu_ui, pause_menu_ui, score_ui, time_ui, level, **kwargs):
         super().__init__(**kwargs)
         self.main_menu_ui = main_menu_ui
+        self.pause_menu_ui = pause_menu_ui
         self.score_ui = score_ui
         self.time_ui = time_ui
         self.level = level

@@ -3,7 +3,6 @@ import pygame
 from UI.font_asset import FontAsset
 from UI.panel import ColourPanel
 from asteroid import AsteroidSpawner
-from game import Game
 from game_object_factory import GameObjectFactory
 
 
