@@ -106,11 +106,16 @@ class SpaceShooterGame(Game):
             self.time = 0
             self.create_waypoint()
 
-    def create_waypoint(self):
+    def create_waypoint(self, gob=None):
+        """Creates a new waypoing."""
+        if self.waypoint:
+            self.waypoint.die(self.player)
         angle = numpy.deg2rad(random.randrange(0, 360))
         pos = self.player.pos + 500 * pygame.Vector2(numpy.cos(angle), numpy.sin(angle))
         self.waypoint = GameObjectFactory.create(self.waypoint_type)
         self.waypoint.set_pos(pos)
+        self.waypoint.set_enter_callback(self.create_waypoint)
+        self.player.set_waypoint(self.waypoint)
 
     def start_play(self):
         """Prepares the game to start playing."""

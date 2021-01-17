@@ -21,7 +21,3 @@ class Trigger(GameObject):
     def set_enter_callback(self, enter_callback):
         """Sets the callback to invoke when a game object enters the trigger."""
         self.enter_callback = enter_callback
-
-    def take_damage(self, damage, instigator):
-        """Takes damage for this game object."""
-        pass

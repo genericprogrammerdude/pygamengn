@@ -3,6 +3,7 @@ from game_object import GameObject
 from game_object_factory import GameObjectFactory
 from health_bar import HealthBar
 from mover import MoverVelocity
+from nav_arrow import NavArrow
 from projectile import Projectile
 
 
@@ -10,7 +11,7 @@ from projectile import Projectile
 class Ship(GameObject):
     """Space ship game object."""
 
-    def __init__(self, image, projectile_type, fire_freq, mover, death_effect, damage, **kwargs):
+    def __init__(self, image, projectile_type, fire_freq, mover, death_effect, damage, nav_arrow, **kwargs):
         super().__init__(image, **kwargs)
         self.mover = mover
         self.projectile_type = projectile_type
@@ -18,6 +19,7 @@ class Ship(GameObject):
         self.time_since_last_fire = self.fire_freq
         self.death_effect = death_effect
         self.damage = damage
+        self.nav_arrow = nav_arrow
         self.score = 0
         self.death_callbacks = []
 
@@ -28,6 +30,9 @@ class Ship(GameObject):
         # Now do the regular GameObject update
         super().update(delta)
         self.time_since_last_fire += delta
+
+        # Position nav arrow
+        # Orient arrow to point to the current waypoint
 
     def set_velocity(self, velocity):
         """Sets the ship's velocity."""
@@ -54,3 +59,8 @@ class Ship(GameObject):
         """Callback for when the death effect is done playing."""
         for callback in self.death_callbacks:
             callback()
+
+    def set_waypoint(self, waypoint):
+        """Sets the waypoint the ship should go to."""
+        self.waypoint = waypoint
+        self.nav_arrow.set_target(waypoint)

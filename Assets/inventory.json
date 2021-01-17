@@ -38,7 +38,8 @@
         "asteroid_18": "Assets/SpaceShooterRedux/PNG/Meteors/meteorGrey_tiny1.png",
         "asteroid_19": "Assets/SpaceShooterRedux/PNG/Meteors/meteorGrey_tiny2.png",
         "background": "Assets/SpaceShooterRedux/Backgrounds/darkPurple.png",
-        "waypoint": "Assets/SpaceShooterRedux/PNG/ufoBlue.png"
+        "waypoint": "Assets/SpaceShooterRedux/PNG/ufoBlue.png",
+        "arrow": "Assets/arrow.png"
     },
 
     "assets": {
@@ -95,6 +96,7 @@
                     ["Level_02/Waypoint"],
                     ["Level_02/AsteroidProjectile"],
                     ["Level_02/AsteroidTurret", "Level_02/AsteroidTurretGun"],
+                    ["NavArrow"],
                     ["AnimatedTexture"],
                     ["HealthBar"]
                 ]
@@ -289,7 +291,8 @@
                 "fire_freq": 200,
                 "game_object_type:mover": "PlayerShipMover",
                 "death_effect": "ExplosionBig",
-                "damage": 50
+                "damage": 50,
+                "game_object_type:nav_arrow": "NavArrow"
             },
             "groups": [
                 "RenderGroup",
@@ -336,6 +339,15 @@
             "groups": [
                 "RenderGroup",
                 "PlayerGroup"
+            ]
+        },
+        "NavArrow": {
+            "class_name": "NavArrow",
+            "kwargs": {
+                "image:image": "arrow"
+            },
+            "groups": [
+                "RenderGroup"
             ]
         },
         "PlayerProjectile": {
