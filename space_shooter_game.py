@@ -142,7 +142,6 @@ class SpaceShooterGame(Game):
 
     def handle_player_death(self):
         """Invoked when the player dies."""
-        self.killing = True
         self.mode = Mode.MAIN_MENU
         self.player = None
 

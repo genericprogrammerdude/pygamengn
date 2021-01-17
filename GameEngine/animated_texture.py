@@ -45,11 +45,15 @@ class AnimatedTexture(GameObject):
             if self.animation_time > self.duration:
                 self.reset()
                 self.kill()
+                if self.done_callback:
+                    self.done_callback()
+                    self.done_callback = None
 
-    def play(self):
+    def play(self, done_callback=None):
         self.is_playing = True
         self.set_heading(random.randint(0, 360))
         self.atlas_index = random.randint(0, len(self.asset.frames) - 1)
+        self.done_callback = done_callback
 
     def reset(self):
         """Resets the animation and leaves the object ready to play from the start."""

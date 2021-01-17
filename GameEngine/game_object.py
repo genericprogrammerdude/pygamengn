@@ -115,7 +115,7 @@ class GameObject(pygame.sprite.Sprite, GameObjectBase):
         if self.alive() and self.death_effect:
             effect = GameObjectFactory.create(self.death_effect)
             effect.set_pos(self.pos)
-            effect.play()
+            effect.play(self.death_effect_callback)
         self.kill()
 
     def add_to_groups(self, groups):
@@ -129,6 +129,10 @@ class GameObject(pygame.sprite.Sprite, GameObjectBase):
     def set_parent(self, parent):
         """Sets this game object's parent."""
         self.parent = parent
+
+    def death_effect_callback(self):
+        """Callback for when the death effect is done playing."""
+        pass
 
     @classmethod
     def get_root_parent(cls, gob):

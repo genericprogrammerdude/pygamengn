@@ -46,11 +46,11 @@ class Ship(GameObject):
     def add_score(self, score):
         self.score += score
 
-    def die(self, instigator):
-        for callback in self.death_callbacks:
-            callback()
-        super().die(instigator)
-
     def die_callback(self, callback):
         """Adds a callback to invoke when this game object dies."""
         self.death_callbacks.append(callback)
+
+    def death_effect_callback(self):
+        """Callback for when the death effect is done playing."""
+        for callback in self.death_callbacks:
+            callback()
