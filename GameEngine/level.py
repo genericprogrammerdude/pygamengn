@@ -8,9 +8,10 @@ from game_object_factory import GameObjectFactory
 class Level(GameObjectBase):
     """Abstraction to represent a level to play in."""
 
-    def __init__(self, player_spec, enemy_specs):
+    def __init__(self, player_spec, enemy_specs, updatables):
         self.player_spec = player_spec
         self.enemy_specs = enemy_specs
+        self.updatables = updatables
         self.player = None
         self.render_group = None
 
@@ -18,6 +19,8 @@ class Level(GameObjectBase):
         """Creates and initializes the game objects for the level."""
         self.player = GameObjectFactory.create(self.player_spec.game_type)
         self.player.set_pos(pygame.Vector2(self.player_spec.spawn_pos))
+        for updatable in self.updatables:
+            updatable.set_player(self.player)
 
         for enemy_spec in self.enemy_specs:
             for spawn_pos in enemy_spec.spawn_pos:
@@ -27,6 +30,11 @@ class Level(GameObjectBase):
 
         self.render_group = render_group
         render_group.set_target(self.player)
+
+    def update(self, delta):
+        """Updates all the updatables the level owns."""
+        for updatable in self.updatables:
+            updatable.update(delta)
 
 
 @GameObjectFactory.register("LevelObject")

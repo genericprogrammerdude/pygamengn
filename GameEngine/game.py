@@ -9,15 +9,13 @@ from game_object_factory import GameObjectFactory
 class Game(GameObjectBase):
     """Highest level entity to manage game state."""
 
-    def __init__(self, render_group, collision_manager, updatables, screen):
+    def __init__(self, render_group, collision_manager, screen):
         self.render_group = render_group
         self.collision_manager = collision_manager
-        self.updatables = updatables
         self.screen = screen
         self.is_paused = False
         self.blit_surfaces = []
         self.player = None
-        self.pause_updatables = False
 
     def update(self, delta):
         """Updates the game."""
@@ -42,16 +40,10 @@ class Game(GameObjectBase):
 
         self.collision_manager.do_collisions()
 
-        if not self.pause_updatables:
-            for updatable in self.updatables:
-                updatable.update(delta)
-
     def set_player(self, player):
         """Tells the updateables which game object is the player."""
         self.player = player
         self.player.die_callback(self.handle_player_death)
-        for updatable in self.updatables:
-            updatable.set_player(player)
 
     def toggle_pause(self):
         self.is_paused = not self.is_paused

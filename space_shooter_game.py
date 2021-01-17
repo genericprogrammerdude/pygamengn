@@ -26,6 +26,7 @@ class SpaceShooterGame(Game):
         self.cooldown_time = 0
         self.player_is_dead = False
         self.running = True
+        self.pause_updatables = False
 
         self.level.create_objects(self.render_group)
         self.set_player(self.level.player)
@@ -69,6 +70,9 @@ class SpaceShooterGame(Game):
                     # Resume updatable updates
                     self.pause_updatables = False
                     self.time = 0
+
+        if not self.pause_updatables:
+            self.level.update(delta)
 
         super().update(delta)
 

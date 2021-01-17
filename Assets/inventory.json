@@ -129,9 +129,6 @@
             "kwargs": {
                 "asset:render_group": "RenderGroup",
                 "game_object_type:collision_manager": "SpaceShooterGame/CollisionManager",
-                "game_object_type_list:updatables": [
-                    "Level_02/AsteroidSpawner"
-                ],
                 "game_object_type:main_menu_ui": "MainMenu",
                 "game_object_type:score_ui": "Level_02/ScorePanel",
                 "game_object_type:time_ui": "Level_02/TimePanel",
@@ -489,8 +486,11 @@
         "Level_02": {
             "class_name": "Level",
             "kwargs": {
-                "game_object_type:player_spec": "Level_01/PlayerSpec",
+                "game_object_type:player_spec": "Level_02/PlayerSpec",
                 "game_object_type_list:enemy_specs": [          
+                ],
+                "game_object_type_list:updatables": [
+                    "Level_02/AsteroidSpawner"
                 ]
             },
             "PlayerSpec": {
