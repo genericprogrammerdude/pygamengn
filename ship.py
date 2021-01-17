@@ -31,8 +31,12 @@ class Ship(GameObject):
         super().update(delta)
         self.time_since_last_fire += delta
 
-        # Position nav arrow
-        # Orient arrow to point to the current waypoint
+        if self.waypoint:
+            # Position and orient the nav arrow
+            direction = (self.waypoint.pos - self.pos).normalize()
+            self.nav_arrow.set_pos(self.pos + direction * 150)
+            _, angle = dir.as_polar()
+            self.nav_arrow.set_heading(270 - angle)
 
     def set_velocity(self, velocity):
         """Sets the ship's velocity."""
