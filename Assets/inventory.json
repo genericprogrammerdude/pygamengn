@@ -38,7 +38,7 @@
         "asteroid_18": "Assets/SpaceShooterRedux/PNG/Meteors/meteorGrey_tiny1.png",
         "asteroid_19": "Assets/SpaceShooterRedux/PNG/Meteors/meteorGrey_tiny2.png",
         "background": "Assets/SpaceShooterRedux/Backgrounds/darkPurple.png",
-        "waypoint": "Assets/SpaceShooterRedux/PNG/ufoBlue.png",
+        "waypoint": "Assets/SpaceShooterRedux/PNG/ufoRed.png",
         "arrow": "Assets/arrow.png"
     },
 
@@ -730,7 +730,8 @@
                 "kwargs": {
                     "image:image": "waypoint",
                     "kill_when_off_screen": false,
-                    "distance": 1000
+                    "distance": 1000,
+                    "angular_velocity": 45.0
                 },
                 "groups": [
                     "RenderGroup",
