@@ -66,22 +66,22 @@ class RenderGroup(pygame.sprite.LayeredUpdates, GameObjectBase):
 
     def __draw_background(self, surface):
         """Tiles the background image across the screen."""
-        low_x = int(math.floor(self.cam.x / self.grid_interval)) * self.grid_interval
+        rect = self.background.get_rect()
+        low_x = round(self.cam.x / rect.width) * rect.width
         hi_x = int(math.ceil(self.cam.x + self.view_rect.width))
         print(low_x, hi_x)
         xs = []
-        for x in range(int(low_x - self.cam.x), int(hi_x - self.cam.x), self.grid_interval):
+        for x in range(int(low_x - self.cam.x), int(hi_x - self.cam.x), rect.width):
             xcor = self.view_rect.width - x
             xs.append(xcor)
 
-        low_y = int(math.floor(self.cam.y / self.grid_interval)) * self.grid_interval
+        low_y = int(math.floor(self.cam.y / rect.height)) * rect.height
         hi_y = int(math.ceil(self.cam.y + self.view_rect.height))
         ys = []
-        for y in range(int(low_y - self.cam.y), int(hi_y - self.cam.y), self.grid_interval):
+        for y in range(int(low_y - self.cam.y), int(hi_y - self.cam.y), rect.height):
             ycor = self.view_rect.height - y
             ys.append(ycor)
 
-        rect = self.background.get_rect()
         for y in ys:
             for x in xs:
                 rect.x = x
