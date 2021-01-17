@@ -67,27 +67,20 @@ class SpaceShooterGame(Game):
         self.level.update(delta)
 
     def update_main_menu(self, delta):
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT or (event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE):
+                self.running = False
+            if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
+                self.mode = Mode.PLAY
+                self.level.create_objects(self.render_group)
+                self.set_player(self.level.player)
+                self.time = 0
+
         self.main_menu_ui.update(self.screen.get_rect(), delta)
         self.blit_ui(self.main_menu_ui)
 
-        if self.killing:
-            # Keep killing game objects until there's nothing left in render group
-            self.kill_render_group()
-            self.killing = (len(self.render_group.sprites()) > 0)
-        else:
-            # Everyone's dead. Reload.
-            self.mode = Mode.PLAY
-            self.player_is_dead = False
-            self.level.create_objects(self.render_group)
-            self.set_player(self.level.player)
-            # Resume updatable updates
-            self.time = 0
-
     def handle_input(self):
         """Reads input and makes things happen."""
-        if self.player is None:
-            return
-
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 self.running = False
@@ -95,10 +88,13 @@ class SpaceShooterGame(Game):
                 # Exit
                 if event.key == pygame.K_ESCAPE:
                     self.running = False
-                if event.key == pygame.K_SPACE:
+                if event.key == pygame.K_SPACE and self.player:
                     self.player.fire()
                 if event.key == pygame.K_END:
                     self.toggle_pause()
+
+        if self.player is None:
+            return
 
         # Handle input for movement
         pressed_keys = pygame.key.get_pressed()

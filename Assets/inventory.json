@@ -501,8 +501,7 @@
             "class_name": "Level",
             "kwargs": {
                 "game_object_type:player_spec": "Level_02/PlayerSpec",
-                "game_object_type_list:enemy_specs": [          
-                ],
+                "game_object_type_list:enemy_specs": [],
                 "game_object_type_list:updatables": [
                     "Level_02/AsteroidSpawner"
                 ]
