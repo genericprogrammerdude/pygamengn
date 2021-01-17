@@ -19,6 +19,7 @@ class Mode(Enum):
     MAIN_MENU = auto()
     PLAY = auto()
     PAUSE_MENU = auto()
+    KILLING_ALL = auto()
 
 
 @GameObjectFactory.register("SpaceShooterGame")
@@ -52,6 +53,9 @@ class SpaceShooterGame(Game):
         elif self.mode == Mode.PAUSE_MENU:
             self.update_ui(delta, self.pause_menu_ui)
 
+        elif self.mode == Mode.KILLING_ALL:
+            self.update_killing(delta)
+
         super().update(delta)
 
     def update_play(self, delta):
@@ -77,12 +81,22 @@ class SpaceShooterGame(Game):
         ui.update(self.screen.get_rect(), delta)
         self.blit_ui(ui)
 
+    def update_killing(self, delta):
+        """Updates game states when killing all game objects in the render group before starting play mode."""
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                self.running = False
+
+        self.kill_render_group()
+        if len(self.render_group.sprites()) <= 0:
+            self.mode = Mode.PLAY
+            self.level.create_objects(self.render_group)
+            self.set_player(self.level.player)
+            self.time = 0
+
     def start_play(self):
-        """Starts PLAY mode."""
-        self.mode = Mode.PLAY
-        self.level.create_objects(self.render_group)
-        self.set_player(self.level.player)
-        self.time = 0
+        """Prepares the game to start playing."""
+        self.mode = Mode.KILLING_ALL
 
     def resume_play(self):
         """Resumes PLAY mode from PAUSE_MENU mode."""
@@ -99,14 +113,11 @@ class SpaceShooterGame(Game):
             if event.type == pygame.QUIT:
                 self.running = False
             if event.type == pygame.KEYDOWN:
-                # Exit
                 if event.key == pygame.K_ESCAPE:
                     self.toggle_pause()
                     self.mode = Mode.PAUSE_MENU
                 if event.key == pygame.K_SPACE and self.player:
                     self.player.fire()
-                if event.key == pygame.K_END:
-                    self.toggle_pause()
 
         if self.player is None:
             return
