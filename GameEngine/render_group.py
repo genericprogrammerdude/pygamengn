@@ -8,7 +8,14 @@ from game_object_factory import GameObjectFactory
 @GameObjectFactory.register("RenderGroup")
 class RenderGroup(pygame.sprite.LayeredUpdates, GameObjectBase):
 
-    def __init__(self, world_rect=pygame.Rect(0, 0, 0, 0), grid_draw=False, grid_color=(100, 100, 100), grid_interval=100):
+    def __init__(
+            self,
+            world_rect=pygame.Rect(0, 0, 0, 0),
+            grid_draw=False,
+            grid_color=(100, 100, 100),
+            grid_interval=100,
+            background=None
+        ):
         super().__init__()
         self.target = None
         self.cam = pygame.Vector2(0, 0)
@@ -17,6 +24,7 @@ class RenderGroup(pygame.sprite.LayeredUpdates, GameObjectBase):
         self.grid_draw = grid_draw
         self.grid_color = grid_color
         self.grid_interval = grid_interval
+        self.background = background
 
     def set_target(self, target):
         """Sets the game object to follow."""
@@ -41,6 +49,7 @@ class RenderGroup(pygame.sprite.LayeredUpdates, GameObjectBase):
 
     def draw(self, surface):
         """Draws the sprites in the group on the given surface."""
+        self.__draw_background(surface)
         if self.grid_draw:
             self.__draw_grid(surface)
 
@@ -55,15 +64,39 @@ class RenderGroup(pygame.sprite.LayeredUpdates, GameObjectBase):
                 else:
                     surface.blit(sprite.image, transformed_rect)
 
+    def __draw_background(self, surface):
+        """Tiles the background image across the screen."""
+        low_x = int(math.floor(self.cam.x / self.grid_interval)) * self.grid_interval
+        hi_x = int(math.ceil(self.cam.x + self.view_rect.width))
+        print(low_x, hi_x)
+        xs = []
+        for x in range(int(low_x - self.cam.x), int(hi_x - self.cam.x), self.grid_interval):
+            xcor = self.view_rect.width - x
+            xs.append(xcor)
+
+        low_y = int(math.floor(self.cam.y / self.grid_interval)) * self.grid_interval
+        hi_y = int(math.ceil(self.cam.y + self.view_rect.height))
+        ys = []
+        for y in range(int(low_y - self.cam.y), int(hi_y - self.cam.y), self.grid_interval):
+            ycor = self.view_rect.height - y
+            ys.append(ycor)
+
+        rect = self.background.get_rect()
+        for y in ys:
+            for x in xs:
+                rect.x = x
+                rect.y = y
+                surface.blit(self.background, rect)
+
     def __draw_grid(self, surface):
         """Draws a grid as a background."""
-        low_x = int(math.floor(self.cam.x / self.grid_interval)) * 100
+        low_x = int(math.floor(self.cam.x / self.grid_interval)) * self.grid_interval
         hi_x = int(math.ceil(self.cam.x + self.view_rect.width))
         for x in range(int(low_x - self.cam.x), int(hi_x - self.cam.x), self.grid_interval):
             xcor = self.view_rect.width - x
             pygame.draw.line(surface, self.grid_color, (xcor, 0), (xcor, self.view_rect.height))
 
-        low_y = int(math.floor(self.cam.y / self.grid_interval)) * 100
+        low_y = int(math.floor(self.cam.y / self.grid_interval)) * self.grid_interval
         hi_y = int(math.ceil(self.cam.y + self.view_rect.height))
         for y in range(int(low_y - self.cam.y), int(hi_y - self.cam.y), self.grid_interval):
             ycor = self.view_rect.height - y

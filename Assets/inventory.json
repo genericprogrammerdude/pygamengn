@@ -37,16 +37,17 @@
         "asteroid_17": "Assets/SpaceShooterRedux/PNG/Meteors/meteorGrey_small2.png",
         "asteroid_18": "Assets/SpaceShooterRedux/PNG/Meteors/meteorGrey_tiny1.png",
         "asteroid_19": "Assets/SpaceShooterRedux/PNG/Meteors/meteorGrey_tiny2.png",
-        "ui_panel": "Assets/SpaceShooterRedux/PNG/UI/buttonBlue.png"
+        "background": "Assets/SpaceShooterRedux/Backgrounds/blue.png"
     },
 
     "assets": {
         "RenderGroup": {
             "class_name": "RenderGroup",
             "kwargs": {
-                "grid_draw": true,
+                "grid_draw": false,
                 "grid_color": [100, 100, 100],
-                "grid_interval": 100
+                "grid_interval": 256,
+                "image:background": "background"
             }
         },
         "PlayerGroup": {
