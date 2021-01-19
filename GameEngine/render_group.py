@@ -55,8 +55,7 @@ class RenderGroup(pygame.sprite.LayeredUpdates, GameObjectBase):
 
         for sprite in self.sprites():
             if sprite.visible:
-                cam = pygame.Vector2(round(self.cam.x), round(self.cam.y))
-                transformed_rect = sprite.rect.move(cam)
+                transformed_rect = sprite.rect.move(self.cam)
                 if not self.view_rect.colliderect(transformed_rect):
                     # Ignore sprites that are outside of the view rectangle
                     if sprite.kill_when_off_screen:
