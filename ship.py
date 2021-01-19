@@ -11,7 +11,7 @@ from projectile import Projectile
 class Ship(GameObject):
     """Space ship game object."""
 
-    def __init__(self, projectile_type, fire_freq, mover, death_effect, damage, nav_arrow, **kwargs):
+    def __init__(self, projectile_type, fire_freq, mover, death_effect, damage, **kwargs):
         super().__init__(**kwargs)
         self.mover = mover
         self.projectile_type = projectile_type
@@ -19,7 +19,6 @@ class Ship(GameObject):
         self.time_since_last_fire = self.fire_freq
         self.death_effect = death_effect
         self.damage = damage
-        self.nav_arrow = nav_arrow
         self.score = 0
         self.death_callbacks = []
 
@@ -30,13 +29,6 @@ class Ship(GameObject):
         # Now do the regular GameObject update
         super().update(delta)
         self.time_since_last_fire += delta
-
-        if self.waypoint:
-            # Position and orient the nav arrow
-            direction = (self.waypoint.pos - self.pos).normalize()
-            self.nav_arrow.set_pos(self.pos + direction * 150)
-            _, angle = direction.as_polar()
-            self.nav_arrow.set_heading(270 - angle)
 
     def set_velocity(self, velocity):
         """Sets the ship's velocity."""
@@ -67,8 +59,8 @@ class Ship(GameObject):
     def set_waypoint(self, waypoint):
         """Sets the waypoint the ship should go to."""
         self.waypoint = waypoint
-        self.nav_arrow.set_target(waypoint)
-
-    def die(self, instigator):
-        super().die(instigator)
-        self.nav_arrow.die(instigator)
+        for attachment in self.attachments:
+            try:
+                attachment.game_object.set_waypoint(waypoint)
+            except AttributeError:
+                pass

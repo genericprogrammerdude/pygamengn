@@ -291,8 +291,7 @@
                 "fire_freq": 200,
                 "game_object_type:mover": "PlayerShipMover",
                 "death_effect": "ExplosionBig",
-                "damage": 50,
-                "game_object_type:nav_arrow": "NavArrow"
+                "damage": 50
             },
             "groups": [
                 "RenderGroup",
@@ -302,6 +301,11 @@
                 {
                     "game_type": "PlayerShield",
                     "offset": [0.0, 0.0]
+                },
+                {
+                    "game_type": "NavArrow",
+                    "offset": [0, 0],
+                    "parent_transform": false
                 },
                 {
                     "game_type": "PlayerHealthBar",
