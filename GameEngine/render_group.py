@@ -39,8 +39,8 @@ class RenderGroup(pygame.sprite.LayeredUpdates, GameObjectBase):
 
         if self.target:
             # Keep the view_rect centered with the target's rect center
-            x = -self.target.rect.center[0] + self.view_rect.width / 2.0
-            y = -self.target.rect.center[1] + self.view_rect.height / 2.0
+            x = -self.target.rect.center[0] + self.view_rect.center[0]
+            y = -self.target.rect.center[1] + self.view_rect.center[1]
             self.cam += (pygame.Vector2((x, y)) - self.cam) * 0.05
             if self.world_rect.width > 0 and self.world_rect.height > 0:
                 # Keep the camera within the world_rect if one was given
