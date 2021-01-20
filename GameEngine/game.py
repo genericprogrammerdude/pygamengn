@@ -23,11 +23,11 @@ class Game(GameObjectBase):
         if self.is_paused:
             delta = 0
 
-        # Do collision detection and notification
-        self.collision_manager.do_collisions()
-
         # Update game objects for rendering
         self.render_group.update(self.screen.get_rect(), delta)
+
+        # Do collision detection and notification
+        self.collision_manager.do_collisions()
 
         # Render
         self.screen.fill((50, 50, 50))

@@ -20,6 +20,8 @@ class Ship(GameObject):
         self.death_effect = death_effect
         self.damage = damage
         self.score = 0
+        self.kills = 0
+        self.waypoints = 0
         self.death_callbacks = []
 
     def update(self, delta):
@@ -45,7 +47,11 @@ class Ship(GameObject):
             self.time_since_last_fire = 0
 
     def add_score(self, score):
+        self.kills += 1
         self.score += score
+
+    def increment_waypoint_count(self):
+        self.waypoints += 1
 
     def die_callback(self, callback):
         """Adds a callback to invoke when this game object dies."""
