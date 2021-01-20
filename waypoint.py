@@ -14,6 +14,6 @@ class Waypoint(Trigger):
         self.angular_velocity = angular_velocity * random.choice([-1, 1]) * (random.random() + 0.5)
 
     def update(self, delta):
-        super().update(delta)
         heading = (self.heading + delta * self.angular_velocity / 1000.0) % 360
         self.set_heading(heading)
+        super().update(delta)

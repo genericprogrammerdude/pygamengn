@@ -109,8 +109,6 @@ class GameObject(pygame.sprite.Sprite, GameObjectBase):
         self.health -= damage
         if self.health <= 0:
             self.health = 0
-            for attachment in self.attachments:
-                attachment.game_object.take_damage(attachment.game_object.health, instigator)
             self.die(instigator)
 
     def die(self, instigator):
@@ -119,6 +117,11 @@ class GameObject(pygame.sprite.Sprite, GameObjectBase):
             effect = GameObjectFactory.create(self.death_effect)
             effect.set_pos(self.pos)
             effect.play(self.death_effect_callback)
+
+        # Kill off attachments
+        for attachment in self.attachments:
+            attachment.game_object.take_damage(attachment.game_object.health, instigator)
+
         self.kill()
 
     def add_to_groups(self, groups):

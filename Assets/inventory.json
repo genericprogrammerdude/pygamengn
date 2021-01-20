@@ -27,19 +27,19 @@
         "asteroid_07": "Assets/SpaceShooterRedux/PNG/Meteors/meteorBrown_small2.png",
         "asteroid_08": "Assets/SpaceShooterRedux/PNG/Meteors/meteorBrown_tiny1.png",
         "asteroid_09": "Assets/SpaceShooterRedux/PNG/Meteors/meteorBrown_tiny2.png",
-        "asteroid_10": "Assets/SpaceShooterRedux/PNG/Meteors/meteorGrey_big1.png",
-        "asteroid_11": "Assets/SpaceShooterRedux/PNG/Meteors/meteorGrey_big2.png",
-        "asteroid_12": "Assets/SpaceShooterRedux/PNG/Meteors/meteorGrey_big3.png",
-        "asteroid_13": "Assets/SpaceShooterRedux/PNG/Meteors/meteorGrey_big4.png",
-        "asteroid_14": "Assets/SpaceShooterRedux/PNG/Meteors/meteorGrey_med1.png",
-        "asteroid_15": "Assets/SpaceShooterRedux/PNG/Meteors/meteorGrey_med2.png",
-        "asteroid_16": "Assets/SpaceShooterRedux/PNG/Meteors/meteorGrey_small1.png",
-        "asteroid_17": "Assets/SpaceShooterRedux/PNG/Meteors/meteorGrey_small2.png",
-        "asteroid_18": "Assets/SpaceShooterRedux/PNG/Meteors/meteorGrey_tiny1.png",
-        "asteroid_19": "Assets/SpaceShooterRedux/PNG/Meteors/meteorGrey_tiny2.png",
         "background": "Assets/SpaceShooterRedux/Backgrounds/darkPurple.png",
         "waypoint": "Assets/SpaceShooterRedux/PNG/ufoRed.png",
-        "arrow": "Assets/arrow.png"
+        "arrow": "Assets/arrow.png",
+        "0": "Assets/SpaceShooterRedux/PNG/UI/numeral0.png",
+        "1": "Assets/SpaceShooterRedux/PNG/UI/numeral1.png",
+        "2": "Assets/SpaceShooterRedux/PNG/UI/numeral2.png",
+        "3": "Assets/SpaceShooterRedux/PNG/UI/numeral3.png",
+        "4": "Assets/SpaceShooterRedux/PNG/UI/numeral4.png",
+        "5": "Assets/SpaceShooterRedux/PNG/UI/numeral5.png",
+        "6": "Assets/SpaceShooterRedux/PNG/UI/numeral6.png",
+        "7": "Assets/SpaceShooterRedux/PNG/UI/numeral7.png",
+        "8": "Assets/SpaceShooterRedux/PNG/UI/numeral8.png",
+        "9": "Assets/SpaceShooterRedux/PNG/UI/numeral9.png"
     },
 
     "assets": {
@@ -93,6 +93,7 @@
                     ["Ship"],
                     ["Shield"],
                     ["Level_02/Waypoint"],
+                    ["Level_02/Waypoint/LeftDigit", "Level_02/Waypoint/RightDigit"],
                     ["Asteroid"],
                     ["Level_02/AsteroidProjectile"],
                     ["Level_02/AsteroidTurret", "Level_02/AsteroidTurretGun"],
@@ -741,7 +742,37 @@
                 "groups": [
                     "RenderGroup",
                     "TriggersGroup"
-                ]
+                ],
+                "attachments": [
+                    {
+                        "game_type": "Level_02/Waypoint/LeftDigit",
+                        "offset": [-10.0, 0.0]
+                    },
+                    {
+                        "game_type": "Level_02/Waypoint/RightDigit",
+                        "offset": [10.0, 0.0]
+                    }
+                ],
+                "LeftDigit": {
+                    "class_name": "GameObject",
+                    "kwargs": {
+                        "image:image_asset": "0",
+                        "is_collidable": false
+                    },
+                    "groups": [
+                        "RenderGroup"
+                    ]
+                },
+                "RightDigit": {
+                    "class_name": "GameObject",
+                    "kwargs": {
+                        "image:image_asset": "1",
+                        "is_collidable": false
+                    },
+                    "groups": [
+                        "RenderGroup"
+                    ]
+                }
             }
         },
         "AsteroidBig": {
