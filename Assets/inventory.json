@@ -737,7 +737,19 @@
                     "image:image_asset": "waypoint",
                     "kill_when_off_screen": false,
                     "distance": 1000,
-                    "angular_velocity": 60.0
+                    "angular_velocity": 60.0,
+                    "image_list:digit_image_assets": [
+                        "0",
+                        "1",
+                        "2",
+                        "3",
+                        "4",
+                        "5",
+                        "6",
+                        "7",
+                        "8",
+                        "9"
+                    ]
                 },
                 "groups": [
                     "RenderGroup",

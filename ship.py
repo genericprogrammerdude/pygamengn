@@ -52,6 +52,7 @@ class Ship(GameObject):
 
     def increment_waypoint_count(self):
         self.waypoints += 1
+        self.waypoint.set_number(self.waypoints + 1)
 
     def die_callback(self, callback):
         """Adds a callback to invoke when this game object dies."""

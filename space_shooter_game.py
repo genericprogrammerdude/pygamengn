@@ -115,10 +115,10 @@ class SpaceShooterGame(Game):
         pos = self.player.pos + self.waypoint.distance * pygame.Vector2(numpy.cos(angle), numpy.sin(angle))
         self.waypoint.set_pos(pos)
         self.waypoint.set_enter_callback(self.create_waypoint)
+        self.player.set_waypoint(self.waypoint)
         if gob:
             # The presence of a valid gob indicates we're here as a result of a collision
             self.player.increment_waypoint_count()
-        self.player.set_waypoint(self.waypoint)
 
     def start_play(self):
         """Prepares the game to start playing."""
