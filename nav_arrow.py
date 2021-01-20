@@ -17,6 +17,7 @@ class NavArrow(GameObject):
         super().update(delta)
 
         if self.waypoint and self.parent:
+            self.visible = True
             diff = self.waypoint.pos - self.parent.pos
             dist_to_target = diff.length()
             direction = diff / dist_to_target
@@ -33,4 +34,4 @@ class NavArrow(GameObject):
                 self.alpha = dist_to_target / 1000.0
 
         else:
-            self.alpha = 0
+            self.visible = False

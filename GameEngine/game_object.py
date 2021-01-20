@@ -93,6 +93,10 @@ class GameObject(pygame.sprite.Sprite, GameObjectBase):
         self.image = self.image_asset
         self.dirty_image = True
 
+    def set_alpha(self, alpha):
+        self.dirty_image = (alpha != self.alpha)
+        self.alpha = alpha
+
     def attach(self, game_object, offset, take_parent_transform):
         """Attaches a game object to this game object at the give offset."""
         self.attachments.append(Attachment(game_object, offset, take_parent_transform))

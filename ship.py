@@ -11,14 +11,12 @@ from projectile import Projectile
 class Ship(GameObject):
     """Space ship game object."""
 
-    def __init__(self, projectile_type, fire_freq, mover, death_effect, damage, **kwargs):
+    def __init__(self, projectile_type, fire_freq, mover, **kwargs):
         super().__init__(**kwargs)
         self.mover = mover
         self.projectile_type = projectile_type
         self.fire_freq = fire_freq
         self.time_since_last_fire = self.fire_freq
-        self.death_effect = death_effect
-        self.damage = damage
         self.score = 0
         self.kills = 0
         self.waypoints = 0
@@ -52,7 +50,6 @@ class Ship(GameObject):
 
     def increment_waypoint_count(self):
         self.waypoints += 1
-
         self.waypoint.set_number(self.waypoints + 1)
 
     def die_callback(self, callback):
