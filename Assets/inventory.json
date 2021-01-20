@@ -599,7 +599,8 @@
                         "Level_02/AsteroidMother"
                     ],
                     "spawn_freq": 1000,
-                    "asset:render_group": "RenderGroup"
+                    "asset:render_group": "RenderGroup",
+                    "freq_accel_threshold": 20000
                 }
             },
             "ScorePanel": {
@@ -735,7 +736,7 @@
                     "image:image_asset": "waypoint",
                     "kill_when_off_screen": false,
                     "distance": 1000,
-                    "angular_velocity": 45.0
+                    "angular_velocity": 60.0
                 },
                 "groups": [
                     "RenderGroup",

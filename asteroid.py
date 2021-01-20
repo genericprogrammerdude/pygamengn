@@ -66,20 +66,32 @@ class Asteroid(GameObject):
 class AsteroidSpawner(Updatable):
     """Spawns asteroids just to be annoying."""
 
-    def __init__(self, asteroid_types, spawn_freq, render_group):
+    def __init__(self, asteroid_types, spawn_freq, render_group, freq_accel_threshold=None):
         self.asteroid_types = asteroid_types
         self.spawn_freq = spawn_freq
         self.time_to_next_spawn = random.randrange(spawn_freq)
         self.render_group = render_group
+        self.freq_accel_threshold = freq_accel_threshold
+        self.total_time = 0
 
     def set_player(self, player):
         """Sets the player game object."""
         self.player = player
+        self.total_time = 0
 
     def update(self, delta):
+        self.total_time += delta
         self.time_to_next_spawn -= delta
+
         if self.time_to_next_spawn <= 0:
-            self.time_to_next_spawn = random.randrange(self.spawn_freq)
+            # Compute time to next spawn using spawn_freq and freq_accel_threshold
+            freq_accelerator = 1
+            if self.freq_accel_threshold and self.total_time > self.freq_accel_threshold:
+                freq_accelerator = (self.total_time // self.freq_accel_threshold) * 1.25
+            spawn_freq = round(self.spawn_freq / freq_accelerator)
+            self.time_to_next_spawn = random.randrange(spawn_freq)
+
+            # Spawn new asteroid
             asteroid_type = random.choice(self.asteroid_types)
             heading = random.randrange(0, 360)
             asteroid = GameObjectFactory.create(asteroid_type, heading=heading)

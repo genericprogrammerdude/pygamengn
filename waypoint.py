@@ -11,7 +11,7 @@ class Waypoint(Trigger):
     def __init__(self, distance, angular_velocity, **kwargs):
         super().__init__(**kwargs)
         self.distance = distance
-        self.angular_velocity = angular_velocity * random.choice([-1, 1])
+        self.angular_velocity = angular_velocity * random.choice([-1, 1]) * (random.random() + 0.5)
 
     def update(self, delta):
         super().update(delta)
