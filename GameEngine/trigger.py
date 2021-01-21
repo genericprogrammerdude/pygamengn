@@ -8,8 +8,9 @@ from game_object_factory import GameObjectFactory
 class Trigger(GameObject):
     """A trigger triggers actions when game objects enter them."""
 
-    def __init__(self, **kwargs):
+    def __init__(self, enter_sound=None, **kwargs):
         super().__init__(**kwargs)
+        self.enter_sound = enter_sound
         self.enter_callback = None
         self.exit_callback = None
         self.gobs_in_trigger = []
@@ -32,6 +33,8 @@ class Trigger(GameObject):
         # Apply damage to the collided sprite
         if self.enter_callback:
             if not gob in self.gobs_in_trigger:
+                if self.enter_sound:
+                    self.enter_sound.play()
                 self.gobs_in_trigger.append(gob)
                 self.enter_callback(gob)
 

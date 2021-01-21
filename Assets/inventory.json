@@ -46,7 +46,8 @@
         "ship_shot": "Assets/SpaceShooterRedux/Bonus/sfx_laser1.ogg",
         "turret_shot": "Assets/SpaceShooterRedux/Bonus/sfx_laser2.ogg",
         "explosion_small": "Assets/Explosions/Explosion+1.wav",
-        "explosion_large": "Assets/Explosions/Explosion+5.wav"
+        "explosion_large": "Assets/Explosions/Explosion+5.wav",
+        "enter_sound": "Assets/SpaceShooterRedux/Bonus/sfx_shieldUp.ogg"
     },
 
     "assets": {
@@ -604,7 +605,8 @@
                         "7",
                         "8",
                         "9"
-                    ]
+                    ],
+                    "sound:enter_sound": "enter_sound"
                 },
                 "groups": [
                     "RenderGroup",
