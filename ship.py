@@ -28,8 +28,8 @@ class Ship(GameObject):
         self.waypoints = 0
         self.death_callbacks = []
         self.waypoint = waypoint
-        self.waypoint.visible = False
         self.waypoint.set_enter_callback(self.place_waypoint)
+        self.waypoint.visible = False
 
     def update(self, delta):
         """Updates the ship."""
@@ -39,8 +39,8 @@ class Ship(GameObject):
         super().update(delta)
         self.time_since_last_fire += delta
         if not self.waypoint.visible:
-            self.place_waypoint()
             self.waypoint.visible = True
+            self.place_waypoint()
 
     def attach(self, game_object, offset, take_parent_transform):
         """Attaches a game object to this game object at the give offset."""
