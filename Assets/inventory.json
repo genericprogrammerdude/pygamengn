@@ -143,8 +143,7 @@
                 "game_object_type:pause_menu_ui": "PauseMenu",
                 "game_object_type:score_ui": "Level_02/ScorePanel",
                 "game_object_type:time_ui": "Level_02/TimePanel",
-                "game_object_type:level": "Level_02",
-                "waypoint_type": "Level_02/Waypoint"
+                "game_object_type:level": "Level_02"
             },
             "CollisionManager": {
                 "class_name": "CollisionManager",
@@ -292,7 +291,8 @@
                 "fire_freq": 200,
                 "game_object_type:mover": "PlayerShipMover",
                 "death_effect": "ExplosionBig",
-                "damage": 50
+                "damage": 50,
+                "game_object_type:waypoint": "Level_02/Waypoint"
             },
             "groups": [
                 "RenderGroup",
@@ -735,6 +735,7 @@
                 "class_name": "Waypoint",
                 "kwargs": {
                     "image:image_asset": "waypoint",
+                    "death_effect": "Explosion",
                     "kill_when_off_screen": false,
                     "distance": 1000,
                     "angular_velocity": 60.0,

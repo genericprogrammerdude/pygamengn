@@ -13,7 +13,6 @@ from pause_menu import PauseMenu
 from shield import Shield
 from ship import Ship
 from sprite_group import SpriteGroup
-from waypoint import Waypoint
 
 
 class Mode(Enum):
@@ -27,15 +26,13 @@ class Mode(Enum):
 @GameObjectFactory.register("SpaceShooterGame")
 class SpaceShooterGame(Game):
 
-    def __init__(self, main_menu_ui, pause_menu_ui, score_ui, time_ui, level, waypoint_type, **kwargs):
+    def __init__(self, main_menu_ui, pause_menu_ui, score_ui, time_ui, level, **kwargs):
         super().__init__(**kwargs)
         self.main_menu_ui = main_menu_ui
         self.pause_menu_ui = pause_menu_ui
         self.score_ui = score_ui
         self.time_ui = time_ui
         self.level = level
-        self.waypoint_type = waypoint_type
-        self.waypoint = None
         self.time = 0
         self.score = 0
         self.running = True
@@ -104,21 +101,6 @@ class SpaceShooterGame(Game):
             self.level.create_objects(self.render_group)
             self.set_player(self.level.player)
             self.time = 0
-            self.create_waypoint()
-
-    def create_waypoint(self, gob=None):
-        """Creates a new waypoint."""
-        if self.waypoint:
-            self.waypoint.die(self.player)
-        angle = numpy.deg2rad(random.randrange(0, 360))
-        self.waypoint = GameObjectFactory.create(self.waypoint_type)
-        pos = self.player.pos + self.waypoint.distance * pygame.Vector2(numpy.cos(angle), numpy.sin(angle))
-        self.waypoint.set_pos(pos)
-        self.waypoint.set_enter_callback(self.create_waypoint)
-        self.player.set_waypoint(self.waypoint)
-        if gob:
-            # The presence of a valid gob indicates we're here as a result of a collision
-            self.player.increment_waypoint_count()
 
     def start_play(self):
         """Prepares the game to start playing."""
