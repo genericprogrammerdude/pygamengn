@@ -8,7 +8,7 @@ from game_object_factory import GameObjectFactory
 class Turret(GameObject):
     """Turret that will fire at the given target."""
 
-    def __init__(self, projectile_type, fire_freq, health, score_on_die, **kwargs):
+    def __init__(self, projectile_type, fire_freq, health, score_on_die, shot_sound, **kwargs):
         super().__init__(**kwargs)
         self.projectile_type = projectile_type
         self.target = None
@@ -16,6 +16,7 @@ class Turret(GameObject):
         self.time_since_last_fire = 0
         self.health = health
         self.score_on_die = score_on_die
+        self.shot_sound = shot_sound
 
     def set_target(self, target):
         """Sets the target to attack."""
@@ -52,6 +53,7 @@ class Turret(GameObject):
             # Set projectile parent the same as the turret's to avoid collisions between projectiles and turret parents
             projectile.set_parent(self.parent)
         self.time_since_last_fire = 0
+        self.shot_sound.play()
 
     def die(self, instigator):
         """Die."""

@@ -42,6 +42,11 @@
         "9": "Assets/SpaceShooterRedux/PNG/UI/numeral9.png"
     },
 
+    "sounds": {
+        "ship_shot": "Assets/SpaceShooterRedux/Bonus/sfx_laser1.ogg",
+        "turret_shot": "Assets/SpaceShooterRedux/Bonus/sfx_laser2.ogg"
+    },
+
     "assets": {
         "RenderGroup": {
             "class_name": "RenderGroup",
@@ -89,7 +94,6 @@
             "kwargs": {
                 "layers": [
                     ["Projectile"],
-                    ["EnemyTurret", "EnemyTurretGun", "TurretHealthBar"],
                     ["Ship"],
                     ["Shield"],
                     ["Level_02/Waypoint"],
@@ -292,7 +296,8 @@
                 "game_object_type:mover": "PlayerShipMover",
                 "death_effect": "ExplosionBig",
                 "damage": 50,
-                "game_object_type:waypoint": "Level_02/Waypoint"
+                "game_object_type:waypoint": "Level_02/Waypoint",
+                "sound:shot_sound": "ship_shot"
             },
             "groups": [
                 "RenderGroup",
@@ -378,73 +383,6 @@
                 "angular_velocity": 0.0
             }
         },
-        "EnemyTurret": {
-            "class_name": "Turret",
-            "kwargs": {
-                "image:image_asset": "turret",
-                "projectile_type": "EnemyTurretProjectile",
-                "scale": 1.25,
-                "fire_freq": 2250
-            },
-            "attachments": [
-                {
-                    "game_type": "EnemyTurretGun",
-                    "offset": [0.0, -15.0]
-                },
-                {
-                    "game_type": "TurretHealthBar",
-                    "offset": [0, 0],
-                    "parent_transform": false
-                }
-            ],
-            "groups": [
-                "RenderGroup",
-                "TurretsGroup"
-            ]
-        },
-        "TurretHealthBar": {
-            "class_name": "HealthBar",
-            "kwargs": {
-                "image_list:images": ["turret_health_bar_bg", "turret_health_bar_fg"],
-                "heading": 90,
-                "is_collidable": false
-            },
-            "groups": [
-                "RenderGroup"
-            ]
-        },
-        "EnemyTurretGun": {
-            "class_name": "GameObject",
-            "kwargs": {
-                "image:image_asset": "turret_gun"
-            },
-            "groups": [
-                "RenderGroup"
-            ]
-        },
-        "EnemyTurretProjectile": {
-            "class_name": "Projectile",
-            "kwargs": {
-                "image:image_asset": "turret_projectile",
-                "death_effect": "ExplosionSmall",
-                "damage": 10,
-                "game_object_type:mover": "EnemyTurretProjectileMover",
-                "kill_when_off_screen": true
-            },
-            "groups": [
-                "RenderGroup",
-                "TurretProjectilesGroup"
-            ]
-        },
-        "EnemyTurretProjectileMover": {
-            "class_name": "MoverVelocity",
-            "kwargs": {
-                "velocity": 500.0,
-                "velocity_decay_factor": 1.0,
-                "max_velocity": 500.0,
-                "angular_velocity": 0.0
-            }
-        },
         "Explosion": {
             "class_name": "AnimatedTexture",
             "kwargs": {
@@ -477,93 +415,6 @@
             "groups": [
                 "RenderGroup"
             ]
-        },
-        "Level_01": {
-            "class_name": "Level",
-            "kwargs": {
-                "game_object_type:player_spec": "Level_01/PlayerSpec",
-                "game_object_type_list:enemy_specs": [
-                    "Level_01/EnemySpec1",
-                    "Level_01/EnemySpec2"
-                ]
-            },
-            "EnemySpec1": {
-                "class_name": "LevelObject",
-                "kwargs": {
-                    "game_type": "EnemyTurret",
-                    "spawn_pos": [
-                        [320, 180],
-                        [320, 540],
-                        [960, 180],
-                        [960, 540]
-                    ]
-                }
-            },
-            "EnemySpec2": {
-                "class_name": "LevelObject",
-                "kwargs": {
-                    "game_type": "Level_01/EnemyTurret2",
-                    "spawn_pos": [
-                        [640, 640]
-                    ]
-                }
-            },
-            "EnemyTurret2": {
-                "class_name": "Turret",
-                "kwargs": {
-                    "image:image_asset": "turret",
-                    "projectile_type": "Level_01/EnemyTurret2Projectile",
-                    "scale": 1.25,
-                    "fire_freq": 1000
-                },
-                "attachments": [
-                    {
-                        "game_type": "EnemyTurretGun",
-                        "offset": [0.0, -15.0]
-                    },
-                    {
-                        "game_type": "Level_01/Turret2HealthBar",
-                        "offset": [0, 0],
-                        "parent_transform": false
-                    }
-                ],
-                "groups": [
-                    "RenderGroup",
-                    "TurretsGroup"
-                ]
-            },
-            "Turret2HealthBar": {
-                "class_name": "HealthBar",
-                "kwargs": {
-                    "image_list:images": ["player_health_bar_bg", "player_health_bar_fg"],
-                    "heading": 90,
-                    "is_collidable": false
-                },
-                "groups": [
-                    "RenderGroup"
-                ]
-            },
-            "EnemyTurret2Projectile": {
-                "class_name": "Projectile",
-                "kwargs": {
-                    "image:image_asset": "turret_projectile2",
-                    "death_effect": "Explosion",
-                    "damage": 20,
-                    "game_object_type:mover": "EnemyTurretProjectileMover",
-                    "kill_when_off_screen": true
-                },
-                "groups": [
-                    "RenderGroup",
-                    "TurretProjectilesGroup"
-                ]
-            },
-            "PlayerSpec": {
-                "class_name": "LevelObject",
-                "kwargs": {
-                    "game_type": "PlayerShip",
-                    "spawn_pos": [640, 360]
-                }
-            }
         },
         "Level_02": {
             "class_name": "Level",
@@ -693,7 +544,8 @@
                     "fire_freq": 1500,
                     "health": 20,
                     "death_effect": "Explosion",
-                    "score_on_die": 20
+                    "score_on_die": 20,
+                    "sound:shot_sound": "turret_shot"
                 },
                 "attachments": [
                     {
@@ -723,13 +575,22 @@
                     "image:image_asset": "turret_projectile",
                     "death_effect": "ExplosionSmall",
                     "damage": 10,
-                    "game_object_type:mover": "EnemyTurretProjectileMover",
+                    "game_object_type:mover": "Level_02/AsteroidProjectile/EnemyTurretProjectileMover",
                     "kill_when_off_screen": true
                 },
                 "groups": [
                     "RenderGroup",
                     "AsteroidProjectilesGroup"
-                ]
+                ],
+                "EnemyTurretProjectileMover": {
+                    "class_name": "MoverVelocity",
+                    "kwargs": {
+                        "velocity": 500.0,
+                        "velocity_decay_factor": 1.0,
+                        "max_velocity": 500.0,
+                        "angular_velocity": 0.0
+                    }
+                }
             },
             "Waypoint": {
                 "class_name": "Waypoint",
@@ -874,15 +735,6 @@
             "kwargs": {
                 "velocity": 50.0,
                 "direction": [0, 1]
-            }
-        },
-        "Level_01EnemySpec2": {
-            "class_name": "LevelObject",
-            "kwargs": {
-                "game_type": "EnemyTurret2",
-                "spawn_pos": [
-                    [640,360]
-                ]
             }
         }
     }

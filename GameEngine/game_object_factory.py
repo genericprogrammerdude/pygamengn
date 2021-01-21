@@ -36,6 +36,7 @@ class GameObjectFactory():
 
     registry = {}
     surfaces = {}
+    sounds = {}
     game_types = {}
     assets = {}
     layer_manager = None
@@ -51,6 +52,12 @@ class GameObjectFactory():
         data_images = data["surfaces"]
         for key in data_images.keys():
             cls.surfaces[key] = pygame.image.load(data_images[key]).convert_alpha()
+
+        # Load sounds
+        cls.sounds = {}
+        data_sounds = data["sounds"]
+        for key in data_sounds.keys():
+            cls.sounds[key] = pygame.mixer.Sound(data_sounds[key])
 
         # Assets and game_types can be assigned directly
         cls.game_types = data["game_types"]
@@ -166,6 +173,9 @@ class GameObjectFactory():
             elif key.startswith("image_list:"):
                 image_list = type_spec_kwargs[key]
                 resolved_refs[key[len("image_list:"):]] = [cls.surfaces[image_str] for image_str in image_list]
+            elif key.startswith("sound:"):
+                sound_name = type_spec_kwargs[key]
+                resolved_refs[key[len("sound:"):]] = cls.sounds[sound_name]
             elif key.startswith("game_object_type:"):
                 gob_type_name = type_spec_kwargs[key]
                 resolved_refs[key[len("type_spec_object:"):]] = GameObjectFactory.create(gob_type_name)

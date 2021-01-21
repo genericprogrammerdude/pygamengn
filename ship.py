@@ -17,7 +17,7 @@ from waypoint import Waypoint
 class Ship(GameObject):
     """Space ship game object."""
 
-    def __init__(self, projectile_type, fire_freq, mover, waypoint, **kwargs):
+    def __init__(self, projectile_type, fire_freq, mover, waypoint, shot_sound, **kwargs):
         super().__init__(**kwargs)
         self.mover = mover
         self.projectile_type = projectile_type
@@ -28,6 +28,7 @@ class Ship(GameObject):
         self.waypoints = 0
         self.death_callbacks = []
         self.waypoint = waypoint
+        self.shot_sound = shot_sound
         self.waypoint.set_enter_callback(self.place_waypoint)
         self.waypoint.visible = False
 
@@ -64,6 +65,7 @@ class Ship(GameObject):
             projectile.transform()
             projectile.set_parent(self)
             self.time_since_last_fire = 0
+            self.shot_sound.play()
 
     def add_score(self, score):
         self.kills += 1
