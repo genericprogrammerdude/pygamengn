@@ -69,7 +69,7 @@ class AsteroidSpawner(Updatable):
     def __init__(self, asteroid_types, spawn_freq, render_group, freq_accel_threshold=None):
         self.asteroid_types = asteroid_types
         self.spawn_freq = spawn_freq
-        self.time_to_next_spawn = random.randrange(spawn_freq)
+        self.time_to_next_spawn = spawn_freq
         self.render_group = render_group
         self.freq_accel_threshold = freq_accel_threshold
         self.total_time = 0
