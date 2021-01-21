@@ -9,11 +9,12 @@ from game_object_factory import GameObjectFactory
 @GameObjectFactory.register("AnimatedTexture")
 class AnimatedTexture(GameObject):
 
-    def __init__(self, asset, duration, scale=1.0):
-        super().__init__(asset.frames[0][0], False, scale)
+    def __init__(self, asset, duration, sound=None, **kwargs):
+        super().__init__(asset.frames[0][0], False, **kwargs)
         self.dirty_image = False
         self.asset = asset
         self.duration = duration
+        self.sound = sound
         self.animation_time = 0
         self.is_playing = False
         self.atlas_index = 0
@@ -54,6 +55,8 @@ class AnimatedTexture(GameObject):
         self.set_heading(random.randint(0, 360))
         self.atlas_index = random.randint(0, len(self.asset.frames) - 1)
         self.done_callback = done_callback
+        if self.sound:
+            self.sound.play()
 
     def reset(self):
         """Resets the animation and leaves the object ready to play from the start."""

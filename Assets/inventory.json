@@ -44,7 +44,9 @@
 
     "sounds": {
         "ship_shot": "Assets/SpaceShooterRedux/Bonus/sfx_laser1.ogg",
-        "turret_shot": "Assets/SpaceShooterRedux/Bonus/sfx_laser2.ogg"
+        "turret_shot": "Assets/SpaceShooterRedux/Bonus/sfx_laser2.ogg",
+        "explosion_small": "Assets/Explosions/Explosion+1.wav",
+        "explosion_large": "Assets/Explosions/Explosion+5.wav"
     },
 
     "assets": {
@@ -62,14 +64,6 @@
             "kwargs": {}
         },
         "PlayerProjectilesGroup": {
-            "class_name": "SpriteGroup",
-            "kwargs": {}
-        },
-        "TurretsGroup": {
-            "class_name": "SpriteGroup",
-            "kwargs": {}
-        },
-        "TurretProjectilesGroup": {
             "class_name": "SpriteGroup",
             "kwargs": {}
         },
@@ -154,9 +148,6 @@
                 "kwargs": {
                     "asset:collision_checks": [
                         ["PlayerProjectilesGroup", "AsteroidsGroup"],
-                        ["PlayerProjectilesGroup", "TurretsGroup"],
-                        ["TurretProjectilesGroup", "PlayerGroup"],
-                        ["TurretProjectilesGroup", "AsteroidsGroup"],
                         ["AsteroidsGroup", "PlayerGroup"],
                         ["AsteroidProjectilesGroup", "AsteroidsGroup"],
                         ["AsteroidProjectilesGroup", "PlayerGroup"],
@@ -399,7 +390,8 @@
             "kwargs": {
                 "asset:asset": "explosion_small_atlas",
                 "duration": 500,
-                "scale": 0.8
+                "scale": 0.8,
+                "sound:sound": "explosion_small"
             },
             "groups": [
                 "RenderGroup"
@@ -410,7 +402,8 @@
             "kwargs": {
                 "asset:asset": "explosion_big_atlas",
                 "duration": 1500,
-                "scale": 1.5
+                "scale": 1.5,
+                "sound:sound": "explosion_large"
             },
             "groups": [
                 "RenderGroup"
