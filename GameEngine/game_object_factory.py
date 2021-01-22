@@ -104,29 +104,26 @@ class GameObjectFactory():
             scoped_name = "/".join([scope, name])
 
         game_type = GameObjectFactory.__get_game_type(scoped_name)
-
-        base_scope = scoped_name
-
-        # Get layer id for the GameObject
-        layer_id = LayerManager.invalid_layer_id
-        if cls.layer_manager != None:
-            layer_id = cls.layer_manager.get_layer_id(name)
-            if layer_id == cls.layer_manager.invalid_layer_id:
-                layer_id = cls.layer_manager.get_layer_id(game_type["class_name"])
-
-        # name not found in known layers
-#         if layer_id == LayerManager.invalid_layer_id:
-#             sys.stderr.write("Game type name '{0}' doesn't have an assigned layer in LayerManager.\n".format(
-#                 name
-#             ))
-
-        gob = GameObjectFactory.__create_object(game_type, base_scope, **kwargs)
-        if layer_id != LayerManager.invalid_layer_id:
-            gob.set_layer_id(layer_id)
+        gob = GameObjectFactory.__create_object(game_type, scoped_name, **kwargs)
 
         # Add to groups as specified in type spec
         group_names = game_type.get("groups")
         if group_names:
+            if "RenderGroup" in group_names:
+                # Get layer id for the GameObject only if it's in the RenderGroup
+                layer_id = LayerManager.invalid_layer_id
+                if cls.layer_manager != None:
+                    layer_id = cls.layer_manager.get_layer_id(name)
+                    if layer_id == cls.layer_manager.invalid_layer_id:
+                        layer_id = cls.layer_manager.get_layer_id(game_type["class_name"])
+
+                # name not found in known layers
+                if layer_id != LayerManager.invalid_layer_id:
+                    gob.set_layer_id(layer_id)
+                else:
+                    sys.stderr.write("Game type name '{0}' doesn't have an assigned layer in LayerManager.\n".format(
+                        name
+                    ))
             groups = [cls.assets[name]["asset"] for name in group_names]
             gob.add_to_groups(groups)
 
@@ -134,7 +131,7 @@ class GameObjectFactory():
         attachment_specs = game_type.get("attachments")
         if gob and attachment_specs:
             for attachment_spec in attachment_specs:
-                attachment_object = GameObjectFactory.create(attachment_spec["game_type"], base_scope)
+                attachment_object = GameObjectFactory.create(attachment_spec["game_type"], scoped_name)
                 if attachment_object:
                     parent_transform = attachment_spec.get("parent_transform")
                     if parent_transform == None:

@@ -91,11 +91,10 @@
                     ["Projectile"],
                     ["Ship"],
                     ["Shield"],
-                    ["/PlayerShip/Waypoint"],
-                    ["/PlayerShip/Waypoint/LeftDigit", "/PlayerShip/Waypoint/RightDigit"],
+                    ["Waypoint", "LeftDigit", "RightDigit"],
                     ["Asteroid"],
-                    ["/Level_02/AsteroidProjectile"],
-                    ["/Level_02/AsteroidTurret", "/Level_02/AsteroidTurretGun"],
+                    ["AsteroidProjectile"],
+                    ["AsteroidTurret", "AsteroidTurretGun"],
                     ["NavArrow"],
                     ["AnimatedTexture"],
                     ["HealthBar"]
@@ -577,7 +576,7 @@
                 },
                 "attachments": [
                     {
-                        "game_type": "/Level_02/AsteroidTurret",
+                        "game_type": "AsteroidTurret",
                         "offset": [0, 0],
                         "parent_transform": false
                     }
@@ -585,60 +584,60 @@
                 "groups": [
                     "RenderGroup",
                     "AsteroidsGroup"
-                ]
-            },
-            "AsteroidTurret": {
-                "class_name": "Turret",
-                "kwargs": {
-                    "image:image_asset": "turret",
-                    "projectile_type": "/Level_02/AsteroidTurret/AsteroidProjectile",
-                    "fire_freq": 1500,
-                    "health": 20,
-                    "death_effect": "Explosion",
-                    "score_on_die": 20,
-                    "sound:shot_sound": "turret_shot"
-                },
-                "attachments": [
-                    {
-                        "game_type": "AsteroidTurretGun",
-                        "offset": [0.0, -15.0]
-                    }
                 ],
-                "groups": [
-                    "RenderGroup",
-                    "AsteroidTurretsGroup"
-                ],
-                "AsteroidTurretGun": {
-                    "class_name": "GameObject",
+                "AsteroidTurret": {
+                    "class_name": "Turret",
                     "kwargs": {
-                        "image:image_asset": "turret_gun",
-                        "scale": 0.8,
-                        "is_collidable": false
+                        "image:image_asset": "turret",
+                        "projectile_type": "/Level_02/AsteroidMother/AsteroidTurret/AsteroidProjectile",
+                        "fire_freq": 1500,
+                        "health": 20,
+                        "death_effect": "Explosion",
+                        "score_on_die": 20,
+                        "sound:shot_sound": "turret_shot"
                     },
-                    "groups": [
-                        "RenderGroup"
-                    ]
-                },
-                "AsteroidProjectile": {
-                    "class_name": "Projectile",
-                    "kwargs": {
-                        "image:image_asset": "turret_projectile",
-                        "death_effect": "ExplosionSmall",
-                        "damage": 10,
-                        "game_object_type:mover": "EnemyTurretProjectileMover",
-                        "kill_when_off_screen": true
-                    },
+                    "attachments": [
+                        {
+                            "game_type": "AsteroidTurretGun",
+                            "offset": [0.0, -15.0]
+                        }
+                    ],
                     "groups": [
                         "RenderGroup",
-                        "AsteroidProjectilesGroup"
+                        "AsteroidTurretsGroup"
                     ],
-                    "EnemyTurretProjectileMover": {
-                        "class_name": "MoverVelocity",
+                    "AsteroidTurretGun": {
+                        "class_name": "GameObject",
                         "kwargs": {
-                            "velocity": 500.0,
-                            "velocity_decay_factor": 1.0,
-                            "max_velocity": 500.0,
-                            "angular_velocity": 0.0
+                            "image:image_asset": "turret_gun",
+                            "scale": 0.8,
+                            "is_collidable": false
+                        },
+                        "groups": [
+                            "RenderGroup"
+                        ]
+                    },
+                    "AsteroidProjectile": {
+                        "class_name": "Projectile",
+                        "kwargs": {
+                            "image:image_asset": "turret_projectile",
+                            "death_effect": "ExplosionSmall",
+                            "damage": 10,
+                            "game_object_type:mover": "EnemyTurretProjectileMover",
+                            "kill_when_off_screen": true
+                        },
+                        "groups": [
+                            "RenderGroup",
+                            "AsteroidProjectilesGroup"
+                        ],
+                        "EnemyTurretProjectileMover": {
+                            "class_name": "MoverVelocity",
+                            "kwargs": {
+                                "velocity": 500.0,
+                                "velocity_decay_factor": 1.0,
+                                "max_velocity": 500.0,
+                                "angular_velocity": 0.0
+                            }
                         }
                     }
                 }
