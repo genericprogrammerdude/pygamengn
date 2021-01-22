@@ -91,11 +91,11 @@
                     ["Projectile"],
                     ["Ship"],
                     ["Shield"],
-                    ["Level_02/Waypoint"],
-                    ["Level_02/Waypoint/LeftDigit", "Level_02/Waypoint/RightDigit"],
+                    ["/PlayerShip/Waypoint"],
+                    ["/PlayerShip/Waypoint/LeftDigit", "/PlayerShip/Waypoint/RightDigit"],
                     ["Asteroid"],
-                    ["Level_02/AsteroidProjectile"],
-                    ["Level_02/AsteroidTurret", "Level_02/AsteroidTurretGun"],
+                    ["/Level_02/AsteroidProjectile"],
+                    ["/Level_02/AsteroidTurret", "/Level_02/AsteroidTurretGun"],
                     ["NavArrow"],
                     ["AnimatedTexture"],
                     ["HealthBar"]
@@ -140,8 +140,8 @@
                 "game_object_type:collision_manager": "SpaceShooterGame/CollisionManager",
                 "game_object_type:main_menu_ui": "MainMenu",
                 "game_object_type:pause_menu_ui": "PauseMenu",
-                "game_object_type:score_ui": "Level_02/ScorePanel",
-                "game_object_type:time_ui": "Level_02/TimePanel",
+                "game_object_type:score_ui": "/Level_02/ScorePanel",
+                "game_object_type:time_ui": "/Level_02/TimePanel",
                 "game_object_type:level": "Level_02"
             },
             "CollisionManager": {
@@ -164,12 +164,12 @@
                 "pos": [0.25, 0.25],
                 "size": [0.5, 0.5],
                 "game_object_type_list:children": [
-                    "MainMenu/StartButton",
-                    "MainMenu/ExitButton"
+                    "StartButton",
+                    "ExitButton"
                 ],
                 "fix_aspect_ratio": false,
                 "colour": [100, 100, 100, 128],
-                "game_object_type:asteroid_spawner": "MainMenu/AsteroidSpawner"
+                "game_object_type:asteroid_spawner": "AsteroidSpawner"
             },
             "StartButton": {
                 "class_name": "ColourPanel",
@@ -177,7 +177,7 @@
                     "pos": [0.25, 0.2],
                     "size": [0.5, 0.25],
                     "game_object_type_list:children": [
-                        "MainMenu/StartButton/StartText"
+                        "StartText"
                     ],
                     "fix_aspect_ratio": false,
                     "colour": [200, 200, 200, 100],
@@ -204,7 +204,7 @@
                     "pos": [0.25, 0.55],
                     "size": [0.5, 0.25],
                     "game_object_type_list:children": [
-                        "MainMenu/ExitButton/ExitText"
+                        "ExitText"
                     ],
                     "fix_aspect_ratio": false,
                     "colour": [200, 200, 200, 100],
@@ -245,8 +245,8 @@
                 "pos": [0.25, 0.25],
                 "size": [0.5, 0.5],
                 "game_object_type_list:children": [
-                    "PauseMenu/PauseButton",
-                    "MainMenu/ExitButton"
+                    "PauseButton",
+                    "/MainMenu/ExitButton"
                 ],
                 "fix_aspect_ratio": false,
                 "colour": [100, 100, 100, 128]
@@ -257,7 +257,7 @@
                     "pos": [0.25, 0.2],
                     "size": [0.5, 0.25],
                     "game_object_type_list:children": [
-                        "PauseMenu/PauseButton/PauseText"
+                        "PauseText"
                     ],
                     "fix_aspect_ratio": false,
                     "colour": [200, 200, 200, 100],
@@ -283,12 +283,12 @@
             "class_name": "Ship",
             "kwargs": {
                 "image:image_asset": "ship",
-                "projectile_type": "PlayerProjectile",
+                "projectile_type": "/PlayerShip/PlayerProjectile",
                 "fire_freq": 200,
                 "game_object_type:mover": "PlayerShipMover",
                 "death_effect": "ExplosionBig",
                 "damage": 50,
-                "game_object_type:waypoint": "Level_02/Waypoint",
+                "game_object_type:waypoint": "Waypoint",
                 "sound:shot_sound": "ship_shot"
             },
             "groups": [
@@ -310,69 +310,126 @@
                     "offset": [0, 0],
                     "parent_transform": false
                 }
-            ]
-        },
-        "PlayerShipMover": {
-            "class_name": "MoverVelocity",
-            "kwargs": {
-                "velocity": 0.0,
-                "velocity_decay_factor": 0.9,
-                "max_velocity": 200.0,
-                "angular_velocity": 1.5
-            }
-        },
-        "PlayerHealthBar": {
-            "class_name": "HealthBar",
-            "kwargs": {
-                "image_list:images": ["player_health_bar_bg", "player_health_bar_fg"],
-                "heading": 90,
-                "is_collidable": false
+            ],
+            "PlayerShipMover": {
+                "class_name": "MoverVelocity",
+                "kwargs": {
+                    "velocity": 0.0,
+                    "velocity_decay_factor": 0.9,
+                    "max_velocity": 200.0,
+                    "angular_velocity": 1.5
+                }
             },
-            "groups": [
-                "RenderGroup"
-            ]
-        },
-        "PlayerShield": {
-            "class_name": "Shield",
-            "kwargs": {
-                "image_list:images": ["shield3", "shield2", "shield1"],
-                "damage": 50
+            "PlayerHealthBar": {
+                "class_name": "HealthBar",
+                "kwargs": {
+                    "image_list:images": ["player_health_bar_bg", "player_health_bar_fg"],
+                    "heading": 90,
+                    "is_collidable": false
+                },
+                "groups": [
+                    "RenderGroup"
+                ]
             },
-            "groups": [
-                "RenderGroup",
-                "PlayerGroup"
-            ]
-        },
-        "NavArrow": {
-            "class_name": "NavArrow",
-            "kwargs": {
-                "image:image_asset": "arrow"
+            "PlayerShield": {
+                "class_name": "Shield",
+                "kwargs": {
+                    "image_list:images": ["shield3", "shield2", "shield1"],
+                    "damage": 50
+                },
+                "groups": [
+                    "RenderGroup",
+                    "PlayerGroup"
+                ]
             },
-            "groups": [
-                "RenderGroup"
-            ]
-        },
-        "PlayerProjectile": {
-            "class_name": "Projectile",
-            "kwargs": {
-                "image:image_asset": "player_projectile",
-                "death_effect": "ExplosionSmall",
-                "damage": 15,
-                "game_object_type:mover": "PlayerProjectileMover",
-                "kill_when_off_screen": true
+            "NavArrow": {
+                "class_name": "NavArrow",
+                "kwargs": {
+                    "image:image_asset": "arrow"
+                },
+                "groups": [
+                    "RenderGroup"
+                ]
             },
-            "groups": [
-                "RenderGroup",
-                "PlayerProjectilesGroup"
-            ]
-        },
-        "PlayerProjectileMover": {
-            "class_name": "MoverVelocity",
-            "kwargs": {
-                "velocity": 1200.0,
-                "velocity_decay_factor": 1.0,
-                "max_velocity": 800.0,
-                "angular_velocity": 0.0
+            "PlayerProjectile": {
+                "class_name": "Projectile",
+                "kwargs": {
+                    "image:image_asset": "player_projectile",
+                    "death_effect": "ExplosionSmall",
+                    "damage": 15,
+                    "game_object_type:mover": "PlayerProjectileMover",
+                    "kill_when_off_screen": true
+                },
+                "groups": [
+                    "RenderGroup",
+                    "PlayerProjectilesGroup"
+                ],
+                "PlayerProjectileMover": {
+                    "class_name": "MoverVelocity",
+                    "kwargs": {
+                        "velocity": 1200.0,
+                        "velocity_decay_factor": 1.0,
+                        "max_velocity": 800.0,
+                        "angular_velocity": 0.0
+                    }
+                }
+            },
+            "Waypoint": {
+                "class_name": "Waypoint",
+                "kwargs": {
+                    "image:image_asset": "waypoint",
+                    "death_effect": "Explosion",
+                    "kill_when_off_screen": false,
+                    "distance": 1000,
+                    "angular_velocity": 60.0,
+                    "image_list:digit_image_assets": [
+                        "0",
+                        "1",
+                        "2",
+                        "3",
+                        "4",
+                        "5",
+                        "6",
+                        "7",
+                        "8",
+                        "9"
+                    ],
+                    "sound:enter_sound": "enter_sound"
+                },
+                "groups": [
+                    "RenderGroup",
+                    "TriggersGroup"
+                ],
+                "attachments": [
+                    {
+                        "game_type": "LeftDigit",
+                        "offset": [-10.0, 0.0]
+                    },
+                    {
+                        "game_type": "RightDigit",
+                        "offset": [10.0, 0.0]
+                    }
+                ],
+                "LeftDigit": {
+                    "class_name": "GameObject",
+                    "kwargs": {
+                        "image:image_asset": "0",
+                        "is_collidable": false
+                    },
+                    "groups": [
+                        "RenderGroup"
+                    ]
+                },
+                "RightDigit": {
+                    "class_name": "GameObject",
+                    "kwargs": {
+                        "image:image_asset": "1",
+                        "is_collidable": false
+                    },
+                    "groups": [
+                        "RenderGroup"
+                    ]
+                }
             }
         },
         "Explosion": {
@@ -413,10 +470,10 @@
         "Level_02": {
             "class_name": "Level",
             "kwargs": {
-                "game_object_type:player_spec": "Level_02/PlayerSpec",
+                "game_object_type:player_spec": "PlayerSpec",
                 "game_object_type_list:enemy_specs": [],
                 "game_object_type_list:updatables": [
-                    "Level_02/AsteroidSpawner"
+                    "AsteroidSpawner"
                 ]
             },
             "PlayerSpec": {
@@ -442,7 +499,7 @@
                         "AsteroidMedium",
                         "AsteroidBig",
                         "AsteroidMedium",
-                        "Level_02/AsteroidMother"
+                        "AsteroidMother"
                     ],
                     "spawn_freq": 1000,
                     "asset:render_group": "RenderGroup",
@@ -455,7 +512,7 @@
                     "pos": [0, 0],
                     "size": [0.1, 0.06],
                     "game_object_type_list:children": [
-                        "Level_02/ScorePanel/ScoreText"
+                        "ScoreText"
                     ],
                     "fix_aspect_ratio": true,
                     "colour": [100, 100, 100, 100]
@@ -481,7 +538,7 @@
                     "pos": [0.88, 0],
                     "size": [0.12, 0.06],
                     "game_object_type_list:children": [
-                        "Level_02/TimePanel/TimeText"
+                        "TimeText"
                     ],
                     "fix_aspect_ratio": true,
                     "colour": [100, 100, 100, 100]
@@ -520,7 +577,7 @@
                 },
                 "attachments": [
                     {
-                        "game_type": "Level_02/AsteroidTurret",
+                        "game_type": "/Level_02/AsteroidTurret",
                         "offset": [0, 0],
                         "parent_transform": false
                     }
@@ -534,7 +591,7 @@
                 "class_name": "Turret",
                 "kwargs": {
                     "image:image_asset": "turret",
-                    "projectile_type": "Level_02/AsteroidProjectile",
+                    "projectile_type": "/Level_02/AsteroidProjectile",
                     "fire_freq": 1500,
                     "health": 20,
                     "death_effect": "Explosion",
@@ -543,7 +600,7 @@
                 },
                 "attachments": [
                     {
-                        "game_type": "Level_02/AsteroidTurretGun",
+                        "game_type": "/Level_02/AsteroidTurretGun",
                         "offset": [0.0, -15.0]
                     }
                 ],
@@ -569,7 +626,7 @@
                     "image:image_asset": "turret_projectile",
                     "death_effect": "ExplosionSmall",
                     "damage": 10,
-                    "game_object_type:mover": "Level_02/AsteroidProjectile/EnemyTurretProjectileMover",
+                    "game_object_type:mover": "EnemyTurretProjectileMover",
                     "kill_when_off_screen": true
                 },
                 "groups": [
@@ -584,63 +641,6 @@
                         "max_velocity": 500.0,
                         "angular_velocity": 0.0
                     }
-                }
-            },
-            "Waypoint": {
-                "class_name": "Waypoint",
-                "kwargs": {
-                    "image:image_asset": "waypoint",
-                    "death_effect": "Explosion",
-                    "kill_when_off_screen": false,
-                    "distance": 1000,
-                    "angular_velocity": 60.0,
-                    "image_list:digit_image_assets": [
-                        "0",
-                        "1",
-                        "2",
-                        "3",
-                        "4",
-                        "5",
-                        "6",
-                        "7",
-                        "8",
-                        "9"
-                    ],
-                    "sound:enter_sound": "enter_sound"
-                },
-                "groups": [
-                    "RenderGroup",
-                    "TriggersGroup"
-                ],
-                "attachments": [
-                    {
-                        "game_type": "Level_02/Waypoint/LeftDigit",
-                        "offset": [-10.0, 0.0]
-                    },
-                    {
-                        "game_type": "Level_02/Waypoint/RightDigit",
-                        "offset": [10.0, 0.0]
-                    }
-                ],
-                "LeftDigit": {
-                    "class_name": "GameObject",
-                    "kwargs": {
-                        "image:image_asset": "0",
-                        "is_collidable": false
-                    },
-                    "groups": [
-                        "RenderGroup"
-                    ]
-                },
-                "RightDigit": {
-                    "class_name": "GameObject",
-                    "kwargs": {
-                        "image:image_asset": "1",
-                        "is_collidable": false
-                    },
-                    "groups": [
-                        "RenderGroup"
-                    ]
                 }
             }
         },

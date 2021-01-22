@@ -34,6 +34,12 @@ class GameObjectFactory():
     https://medium.com/@geoffreykoh/implementing-the-factory-pattern-via-dynamic-registry-and-python-decorators-479fc1537bbe
     """
 
+    class UnknownGameType(Exception):
+        """Exception raised when trying to instantiate an unknown GameObject class."""
+
+        def __init__(self, message):
+            super().__init__(message)
+
     registry = {}
     surfaces = {}
     sounds = {}
@@ -68,7 +74,7 @@ class GameObjectFactory():
         # Create asset objects
         for key in cls.assets.keys():
             asset_spec = cls.assets[key]
-            asset_spec["asset"] = GameObjectFactory.__create_object(asset_spec)
+            asset_spec["asset"] = GameObjectFactory.__create_object(asset_spec, "")
 
         # Assign initialized assets to the fields that reference them
         for obj, key in cls.__asset_json_objects:
@@ -91,13 +97,15 @@ class GameObjectFactory():
             sys.stderr.write("GameObjectFactory: No LayerManager defined in inventory assets.\n")
 
     @classmethod
-    def create(cls, name: str, **kwargs) -> GameObjectBase:
+    def create(cls, name: str, scope="", **kwargs) -> GameObjectBase:
         """Creates a GameObject instance."""
-        try:
-            game_type = GameObjectFactory.__get_game_type(name)
-        except KeyError:
-            sys.stderr.write("Game type '{0}' not found.\n".format(name))
-            return None
+        scoped_name = name
+        if name[0] != '/':
+            scoped_name = "/".join([scope, name])
+
+        game_type = GameObjectFactory.__get_game_type(scoped_name)
+
+        base_scope = scoped_name
 
         # Get layer id for the GameObject
         layer_id = LayerManager.invalid_layer_id
@@ -112,7 +120,7 @@ class GameObjectFactory():
 #                 name
 #             ))
 
-        gob = GameObjectFactory.__create_object(game_type, **kwargs)
+        gob = GameObjectFactory.__create_object(game_type, base_scope, **kwargs)
         if layer_id != LayerManager.invalid_layer_id:
             gob.set_layer_id(layer_id)
 
@@ -126,7 +134,7 @@ class GameObjectFactory():
         attachment_specs = game_type.get("attachments")
         if gob and attachment_specs:
             for attachment_spec in attachment_specs:
-                attachment_object = GameObjectFactory.create(attachment_spec["game_type"])
+                attachment_object = GameObjectFactory.create(attachment_spec["game_type"], base_scope)
                 if attachment_object:
                     parent_transform = attachment_spec.get("parent_transform")
                     if parent_transform == None:
@@ -149,20 +157,20 @@ class GameObjectFactory():
     @classmethod
     def __get_game_type(cls, name: str) -> dict:
         """Gets the given game type, recursing into nested dictionaries as necessary."""
-        #
-        # TODO: Given game type A that references game type B, search for B in the "local context" first (i.e., search
-        # for B going up the hierarchy of dictionaries). This will remove the need to provide full context for
-        # referencing B from A. Instead of referencing "/CommonParent/B", A could reference "B" and that should be
-        # enough to find "/CommonParent/B" from A.
-        #
-        keys = name.split('/')
+        keys = name.lstrip('/').split('/')
         game_type = cls.game_types
-        for key in keys:
-            game_type = game_type[key]
-        return game_type
+        while len(keys) > 0:
+            try:
+                for key in keys:
+                    game_type = game_type[key]
+                return game_type
+            except KeyError:
+                del keys[0]
+                game_type = cls.game_types
+        raise GameObjectFactory.UnknownGameType("".join(["Unknown game type: ", name]))
 
     @classmethod
-    def __create_object(cls, type_spec, **kwargs) -> GameObjectBase:
+    def __create_object(cls, type_spec, scope, **kwargs) -> GameObjectBase:
         # Assemble new game type dictionary with resolved "image:", "image_list:", and "game_object_type:" fields
         resolved_refs = {}
         type_spec_kwargs = type_spec["kwargs"]
@@ -178,11 +186,11 @@ class GameObjectFactory():
                 resolved_refs[key[len("sound:"):]] = cls.sounds[sound_name]
             elif key.startswith("game_object_type:"):
                 gob_type_name = type_spec_kwargs[key]
-                resolved_refs[key[len("type_spec_object:"):]] = GameObjectFactory.create(gob_type_name)
+                resolved_refs[key[len("type_spec_object:"):]] = GameObjectFactory.create(gob_type_name, scope)
             elif key.startswith("game_object_type_list:"):
                 gob_type_list = type_spec_kwargs[key]
                 resolved_refs[key[len("game_object_type_list:"):]] = [
-                    GameObjectFactory.create(gob_type_name) for gob_type_name in gob_type_list
+                    GameObjectFactory.create(gob_type_name, scope) for gob_type_name in gob_type_list
                 ]
             else:
                 resolved_refs[key] = type_spec_kwargs[key]
