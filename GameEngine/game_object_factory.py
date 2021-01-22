@@ -109,21 +109,11 @@ class GameObjectFactory():
         # Add to groups as specified in type spec
         group_names = game_type.get("groups")
         if group_names:
-            if "RenderGroup" in group_names:
-                # Get layer id for the GameObject only if it's in the RenderGroup
-                layer_id = LayerManager.invalid_layer_id
-                if cls.layer_manager != None:
-                    layer_id = cls.layer_manager.get_layer_id(name)
-                    if layer_id == cls.layer_manager.invalid_layer_id:
-                        layer_id = cls.layer_manager.get_layer_id(game_type["class_name"])
+            # TODO: Only GameObjects that will require rendering need a layer_id. For now, the best way for this
+            # class to know that is if the gob is in a group called "RenderGroup". This is bad hard-coding!
+            if "RenderGroup" in group_names and cls.layer_manager:
+                cls.layer_manager.set_layer_id(gob, scoped_name, game_type["class_name"])
 
-                # name not found in known layers
-                if layer_id != LayerManager.invalid_layer_id:
-                    gob.set_layer_id(layer_id)
-                else:
-                    sys.stderr.write("Game type name '{0}' doesn't have an assigned layer in LayerManager.\n".format(
-                        name
-                    ))
             groups = [cls.assets[name]["asset"] for name in group_names]
             gob.add_to_groups(groups)
 
@@ -261,3 +251,20 @@ class LayerManager(GameObjectBase):
             if name in layer:
                 return index
         return self.invalid_layer_id
+
+    def set_layer_id(self, gob, scoped_name, class_name):
+        """Sets the gob's layer id using scoped_name first and class_name second to find the right layer."""
+        # Get layer id for the GameObject only if it's in the RenderGroup
+        layer_id = self.get_layer_id(scoped_name)
+        if layer_id == self.invalid_layer_id:
+            layer_id = self.get_layer_id(class_name)
+
+        if layer_id != LayerManager.invalid_layer_id:
+            gob.set_layer_id(layer_id)
+        else:
+            sys.stderr.write(
+                "Game type name '{0}' of class '{1}' doesn't have an assigned layer in LayerManager.\n".format(
+                    scoped_name,
+                    class_name
+                )
+            )
