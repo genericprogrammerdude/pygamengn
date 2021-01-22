@@ -499,7 +499,7 @@
                         "AsteroidMedium",
                         "AsteroidBig",
                         "AsteroidMedium",
-                        "AsteroidMother"
+                        "/Level_02/AsteroidMother"
                     ],
                     "spawn_freq": 1000,
                     "asset:render_group": "RenderGroup",
