@@ -181,6 +181,7 @@
                         "StartText"
                     ],
                     "fix_aspect_ratio": false,
+                    "name": "start_button",
                     "colour": [200, 200, 200, 100],
                     "hover_colour": [100, 210, 100, 100]
                 },
@@ -208,6 +209,7 @@
                         "ExitText"
                     ],
                     "fix_aspect_ratio": false,
+                    "name": "exit_button",
                     "colour": [200, 200, 200, 100],
                     "hover_colour": [100, 210, 100, 100]
                 },
@@ -286,7 +288,9 @@
                 "pos": [0.25, 0.15],
                 "size": [0.5, 0.7],
                 "game_object_type:children": [
-                    "ContinueButton"
+                    "ContinueButton",
+                    "AsteroidSpinner",
+                    "WaypointSpinner"
                 ],
                 "fix_aspect_ratio": false,
                 "colour": [100, 100, 100, 128],
@@ -301,6 +305,7 @@
                         "ContinueText"
                     ],
                     "fix_aspect_ratio": false,
+                    "name": "continue_button",
                     "colour": [200, 200, 200, 100],
                     "hover_colour": [100, 210, 100, 100]
                 },
@@ -317,6 +322,30 @@
                         "vert_align": "CENTRE",
                         "text": "Continue"
                     }
+                }
+            },
+            "AsteroidSpinner": {
+                "class_name": "Spinner",
+                "kwargs": {
+                    "pos": [0.1, 0.1],
+                    "size": [0.1, 0.1],
+                    "game_object_type:children": [],
+                    "fix_aspect_ratio": true,
+                    "name": "asteroid_spinner",
+                    "image:image_asset": "asteroid_04",
+                    "angular_velocity": 45
+                }
+            },
+            "WaypointSpinner": {
+                "class_name": "Spinner",
+                "kwargs": {
+                    "pos": [0.1, 0.3],
+                    "size": [0.1, 0.1],
+                    "game_object_type:children": [],
+                    "fix_aspect_ratio": true,
+                    "name": "waypoint_spinner",
+                    "image:image_asset": "waypoint",
+                    "angular_velocity": -45
                 }
             }
         },

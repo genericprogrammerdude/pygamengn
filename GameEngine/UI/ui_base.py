@@ -10,12 +10,13 @@ from game_object_base import GameObjectBase
 class UIBase(GameObjectBase):
     """Base class for UI components."""
 
-    def __init__(self, pos, size, children, fix_aspect_ratio):
-        super().__init__()
+    def __init__(self, pos, size, children, fix_aspect_ratio, name="", **kwargs):
+        super().__init__(**kwargs)
         self.pos = pos
         self.size = size
         self.children = children
         self.fix_aspect_ratio = fix_aspect_ratio
+        self.name = name
         self.parent_rect = None
         self.rect = None
         self.image = None
@@ -66,6 +67,12 @@ class UIBase(GameObjectBase):
             pygame.mouse.set_system_cursor(pygame.SYSTEM_CURSOR_ARROW)
 
         return components
+
+    def bind_children(self):
+        """Binds children to class members to make them accessible."""
+        for child in self.children:
+            if child.name:
+                setattr(self, child.name, child)
 
     @abstractmethod
     def resize(self):

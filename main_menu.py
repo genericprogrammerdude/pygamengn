@@ -12,9 +12,8 @@ class MainMenu(ColourPanel):
 
     def __init__(self, asteroid_spawner, **kwargs):
         super().__init__(**kwargs)
+        self.bind_children()
         self.asteroid_spawner = asteroid_spawner
-        self.start_button = self.children[0]
-        self.exit_button = self.children[1]
         self.start_callback = None
         self.exit_callback = None
 
