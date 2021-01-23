@@ -1,10 +1,10 @@
 import pygame
 
+from class_registrar import ClassRegistrar
 from game_object import GameObject
-from game_object_factory import GameObjectFactory
 
 
-@GameObjectFactory.register("HealthBar")
+@ClassRegistrar.register("HealthBar")
 class HealthBar(GameObject):
 
     def __init__(self, images, **kwargs):

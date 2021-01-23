@@ -1,10 +1,10 @@
 import pygame
 
+from class_registrar import ClassRegistrar
 from game_object import GameObject
-from game_object_factory import GameObjectFactory
 
 
-@GameObjectFactory.register("Trigger")
+@ClassRegistrar.register("Trigger")
 class Trigger(GameObject):
     """A trigger triggers actions when game objects enter them."""
 

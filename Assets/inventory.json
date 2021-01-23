@@ -228,7 +228,7 @@
             "AsteroidSpawner": {
                 "class_name": "AsteroidSpawner",
                 "kwargs": {
-                    "asteroid_types": [
+                    "type_spec:asteroid_types": [
                         "AsteroidBig",
                         "AsteroidMedium",
                         "AsteroidSmall",
@@ -283,10 +283,10 @@
             "class_name": "Ship",
             "kwargs": {
                 "image:image_asset": "ship",
-                "projectile_type": "/PlayerShip/PlayerProjectile",
+                "type_spec:projectile_type": "/PlayerShip/PlayerProjectile",
                 "fire_freq": 200,
                 "game_object_type:mover": "PlayerShipMover",
-                "death_effect": "ExplosionBig",
+                "type_spec:death_effect": "ExplosionBig",
                 "damage": 50,
                 "game_object_type:waypoint": "Waypoint",
                 "sound:shot_sound": "ship_shot"
@@ -355,7 +355,7 @@
                 "class_name": "Projectile",
                 "kwargs": {
                     "image:image_asset": "player_projectile",
-                    "death_effect": "ExplosionSmall",
+                    "type_spec:death_effect": "ExplosionSmall",
                     "damage": 15,
                     "game_object_type:mover": "PlayerProjectileMover",
                     "kill_when_off_screen": true
@@ -378,7 +378,7 @@
                 "class_name": "Waypoint",
                 "kwargs": {
                     "image:image_asset": "waypoint",
-                    "death_effect": "Explosion",
+                    "type_spec:death_effect": "Explosion",
                     "kill_when_off_screen": false,
                     "distance": 1000,
                     "angular_velocity": 60.0,
@@ -479,14 +479,14 @@
             "PlayerSpec": {
                 "class_name": "LevelObject",
                 "kwargs": {
-                    "game_type": "PlayerShip",
+                    "type_spec:game_type": "/PlayerShip",
                     "spawn_pos": [640, 360]
                 }
             },
             "AsteroidSpawner": {
                 "class_name": "AsteroidSpawner",
                 "kwargs": {
-                    "asteroid_types": [
+                    "type_spec:asteroid_types": [
                         "AsteroidBig",
                         "AsteroidMedium",
                         "AsteroidBig",
@@ -568,10 +568,10 @@
                         "asteroid_03"
                     ],
                     "health": 40,
-                    "death_effect": "Explosion",
+                    "type_spec:death_effect": "Explosion",
                     "damage": 10,
                     "game_object_type:mover": "AsteroidMover",
-                    "death_spawn": ["AsteroidSmall", "AsteroidMedium"],
+                    "type_spec:death_spawn": ["AsteroidSmall", "AsteroidMedium"],
                     "score_on_die": 50,
                     "kill_when_off_screen": true
                 },
@@ -590,10 +590,10 @@
                     "class_name": "Turret",
                     "kwargs": {
                         "image:image_asset": "turret",
-                        "projectile_type": "/Level_02/AsteroidMother/AsteroidTurret/AsteroidProjectile",
+                        "type_spec:projectile_type": "/Level_02/AsteroidMother/AsteroidTurret/AsteroidProjectile",
                         "fire_freq": 1500,
                         "health": 20,
-                        "death_effect": "Explosion",
+                        "type_spec:death_effect": "Explosion",
                         "score_on_die": 20,
                         "sound:shot_sound": "turret_shot"
                     },
@@ -622,7 +622,7 @@
                         "class_name": "Projectile",
                         "kwargs": {
                             "image:image_asset": "turret_projectile",
-                            "death_effect": "ExplosionSmall",
+                            "type_spec:death_effect": "ExplosionSmall",
                             "damage": 10,
                             "game_object_type:mover": "EnemyTurretProjectileMover",
                             "kill_when_off_screen": true
@@ -654,10 +654,10 @@
                     "asteroid_03"
                 ],
                 "health": 40,
-                "death_effect": "Explosion",
+                "type_spec:death_effect": "Explosion",
                 "damage": 10,
                 "game_object_type:mover": "AsteroidMover",
-                "death_spawn": ["AsteroidMedium", "AsteroidMedium"],
+                "type_spec:death_spawn": ["AsteroidMedium", "AsteroidMedium"],
                 "score_on_die": 30,
                 "kill_when_off_screen": true
             },
@@ -674,10 +674,10 @@
                     "asteroid_05"
                 ],
                 "health": 20,
-                "death_effect": "Explosion",
+                "type_spec:death_effect": "Explosion",
                 "damage": 5,
                 "game_object_type:mover": "AsteroidMover",
-                "death_spawn": ["AsteroidSmall", "AsteroidTiny"],
+                "type_spec:death_spawn": ["AsteroidSmall", "AsteroidTiny"],
                 "score_on_die": 20,
                 "kill_when_off_screen": true
             },
@@ -694,10 +694,10 @@
                     "asteroid_07"
                 ],
                 "health": 10,
-                "death_effect": "ExplosionSmall",
+                "type_spec:death_effect": "ExplosionSmall",
                 "damage": 2,
                 "game_object_type:mover": "AsteroidMover",
-                "death_spawn": [],
+                "type_spec:death_spawn": [],
                 "score_on_die": 10,
                 "kill_when_off_screen": true
             },
@@ -713,10 +713,10 @@
                     "asteroid_08"
                 ],
                 "health": 5,
-                "death_effect": "ExplosionSmall",
+                "type_spec:death_effect": "ExplosionSmall",
                 "damage": 1,
                 "game_object_type:mover": "AsteroidMover",
-                "death_spawn": [],
+                "type_spec:death_spawn": [],
                 "score_on_die": 7,
                 "kill_when_off_screen": true
             },

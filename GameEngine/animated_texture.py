@@ -1,12 +1,13 @@
 import random
+
 import pygame
 
 from atlas import Atlas
+from class_registrar import ClassRegistrar
 from game_object import GameObject
-from game_object_factory import GameObjectFactory
 
 
-@GameObjectFactory.register("AnimatedTexture")
+@ClassRegistrar.register("AnimatedTexture")
 class AnimatedTexture(GameObject):
 
     def __init__(self, asset, duration, sound=None, **kwargs):

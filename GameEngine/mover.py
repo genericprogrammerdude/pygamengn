@@ -1,8 +1,8 @@
 import numpy
 import pygame
 
-from game_object_factory import GameObjectBase
-from game_object_factory import GameObjectFactory
+from class_registrar import ClassRegistrar
+from game_object_base import GameObjectBase
 
 
 class Mover(GameObjectBase):
@@ -12,7 +12,7 @@ class Mover(GameObjectBase):
         pass
 
 
-@GameObjectFactory.register("MoverVelocity")
+@ClassRegistrar.register("MoverVelocity")
 class MoverVelocity(Mover):
     """Velocity-based mover."""
 
@@ -34,7 +34,7 @@ class MoverVelocity(Mover):
         self.velocity = velocity
 
 
-@GameObjectFactory.register("MoverVelDir")
+@ClassRegistrar.register("MoverVelDir")
 class MoverVelDir(Mover):
     """Velocity- and direction-based mover."""
 

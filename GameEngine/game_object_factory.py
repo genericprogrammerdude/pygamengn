@@ -1,29 +1,10 @@
-from _py_abc import ABCMeta
 import json
 import sys
-from typing import Callable
 
 import pygame
 
-
-class GameObjectBase(metaclass=ABCMeta):
-    """Base class for GameObject."""
-
-    __next_object_id = 0
-
-    def __str__(self):
-        return "{0}: {1}".format(self.__object_id, super().__str__())
-
-    def set_object_id(self):
-        """
-        Sets the object id. This is meant to aid debugging and should only be set once (when GameObjectFactory
-        creates the object.
-        """
-        self.__object_id = GameObjectBase.__next_object_id
-        GameObjectBase.__next_object_id += 1
-
-    def get_object_id(self):
-        return self.__object_id
+from game_object_base import GameObjectBase
+from layer_manager import LayerManager
 
 
 class GameObjectFactory():
@@ -50,7 +31,8 @@ class GameObjectFactory():
     __asset_json_objects = []
 
     @classmethod
-    def initialize(cls, inventory_fp):
+    def initialize(cls, registry, inventory_fp):
+        cls.registry = registry
         data = json.load(inventory_fp, object_hook=GameObjectFactory.__json_object_hook)
 
         # Load surfaces
@@ -88,13 +70,6 @@ class GameObjectFactory():
                 cls.__assign_asset_list(asset_name, asset_list)
             del obj[key]
         del cls.__asset_json_objects
-
-        # Initialize layer manager if there is one
-        layer_manager_spec = cls.assets.get("LayerManager")
-        if layer_manager_spec:
-            cls.layer_manager = layer_manager_spec["asset"]
-        else:
-            sys.stderr.write("GameObjectFactory: No LayerManager defined in inventory assets.\n")
 
     @classmethod
     def create(cls, name: str, scope="", **kwargs) -> GameObjectBase:
@@ -142,6 +117,15 @@ class GameObjectFactory():
             return None
 
     @classmethod
+    def set_layer_manager_asset_name(cls, name):
+        """Sets the layer manager asset name for the factory to automatically assign layers to GameObjects."""
+        layer_manager_spec = cls.assets.get(name)
+        if layer_manager_spec:
+            cls.layer_manager = layer_manager_spec["asset"]
+        else:
+            sys.stderr.write("GameObjectFactory: LayerManager '{0}' not in inventory assets.\n".format(name))
+
+    @classmethod
     def __get_game_type(cls, name: str) -> dict:
         """Gets the given game type, recursing into nested dictionaries as necessary."""
         keys = name.lstrip('/').split('/')
@@ -179,6 +163,15 @@ class GameObjectFactory():
                 resolved_refs[key[len("game_object_type_list:"):]] = [
                     GameObjectFactory.create(gob_type_name, scope) for gob_type_name in gob_type_list
                 ]
+            elif key.startswith("type_spec:"):
+                gob_type_name = type_spec_kwargs[key]
+                if isinstance(gob_type_name, str):
+                    resolved_refs[key[len("type_spec:"):]] = TypeSpec(cls, gob_type_name)
+                elif isinstance(gob_type_name, list):
+                    type_list = type_spec_kwargs[key]
+                    resolved_refs[key[len("type_spec:"):]] = [
+                        TypeSpec(cls, type_name) for type_name in type_list
+                    ]
             else:
                 resolved_refs[key] = type_spec_kwargs[key]
 
@@ -215,56 +208,14 @@ class GameObjectFactory():
                 asset_list.append([])
                 cls.__assign_asset_list(asset_name, asset_list[-1])
 
-    @classmethod
-    def register(cls, name: str) -> Callable:
-        """Registers a new GameObject child class."""
 
-        def inner_wrapper(wrapped_class: GameObjectBase) -> Callable:
-            if name in cls.registry:
-                sys.stderr.write("Class '{0}' already registered. Overwriting old value.".format(name))
-            cls.registry[name] = wrapped_class
-            return wrapped_class
+class TypeSpec:
+    """GameObject constructor for objects that create objects at runtime."""
 
-        return inner_wrapper
+    def __init__(self, factory, spec):
+        self.factory = factory
+        self.spec = spec
 
-
-@GameObjectFactory.register("LayerManager")
-class LayerManager(GameObjectBase):
-    """
-    Manages draw layers semi-automatically.
-
-    The order of GameObject subclasses defined in self.layers determines the draw order. Abstract game types
-    declared in the inventory file can also be used in self.layers.
-
-    GameObjectFactory sets the 'layer' constructor argument in every GameObject instance it creates. The value of
-    the parameter comes from the object's class or abstract game type, as defined in LayerManager's 'layers' list.
-    """
-
-    invalid_layer_id = -1
-
-    def __init__(self, layers):
-        self.layers = layers
-
-    def get_layer_id(self, name):
-        """Returns the layer for the given game type name."""
-        for index, layer in enumerate(self.layers):
-            if name in layer:
-                return index
-        return self.invalid_layer_id
-
-    def set_layer_id(self, gob, scoped_name, class_name):
-        """Sets the gob's layer id using scoped_name first and class_name second to find the right layer."""
-        # Get layer id for the GameObject only if it's in the RenderGroup
-        layer_id = self.get_layer_id(scoped_name)
-        if layer_id == self.invalid_layer_id:
-            layer_id = self.get_layer_id(class_name)
-
-        if layer_id != LayerManager.invalid_layer_id:
-            gob.set_layer_id(layer_id)
-        else:
-            sys.stderr.write(
-                "Game type name '{0}' of class '{1}' doesn't have an assigned layer in LayerManager.\n".format(
-                    scoped_name,
-                    class_name
-                )
-            )
+    def create(self, **kwargs):
+        """Creates an instance from the spec."""
+        return self.factory.create(self.spec, **kwargs)

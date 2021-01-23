@@ -1,11 +1,12 @@
 import pygame
 
+from class_registrar import ClassRegistrar
 from collision_manager import CollisionManager
-from game_object_factory import GameObjectBase
-from game_object_factory import GameObjectFactory
+from game_object_base import GameObjectBase
+from render_group import RenderGroup
 
 
-@GameObjectFactory.register("Game")
+@ClassRegistrar.register("Game")
 class Game(GameObjectBase):
     """Highest level entity to manage game state."""
 

@@ -1,11 +1,12 @@
 import os
 import sys
 
-sys.path.append("./GameEngine")
 os.environ["PYGAME_HIDE_SUPPORT_PROMPT"] = "1"
+sys.path.append("./GameEngine")
 
 import pygame
 
+from class_registrar import ClassRegistrar
 from game_object_factory import GameObjectFactory
 from space_shooter_game import SpaceShooterGame
 
@@ -16,13 +17,15 @@ def main():
     size = (1280, 720)
     screen = pygame.display.set_mode(size, pygame.DOUBLEBUF | pygame.HWSURFACE | pygame.RESIZABLE)
 
-    GameObjectFactory.initialize(open("Assets/inventory.json"))
+    factory = GameObjectFactory()
+    factory.initialize(ClassRegistrar.registry, open("Assets/inventory.json"))
+    factory.set_layer_manager_asset_name("LayerManager")
 
     # Create world
     pygame.display.set_icon(GameObjectFactory.surfaces["ship"])
     pygame.display.set_caption("Game")
 
-    game = GameObjectFactory.create("SpaceShooterGame", screen=screen)
+    game = factory.create("SpaceShooterGame", screen=screen)
 
     clock = pygame.time.Clock()
 

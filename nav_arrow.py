@@ -1,8 +1,8 @@
+from class_registrar import ClassRegistrar
 from game_object import GameObject
-from game_object_factory import GameObjectFactory
 
 
-@GameObjectFactory.register("NavArrow")
+@ClassRegistrar.register("NavArrow")
 class NavArrow(GameObject):
 
     def __init__(self, **kwargs):

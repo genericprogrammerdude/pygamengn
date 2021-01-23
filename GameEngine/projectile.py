@@ -1,12 +1,12 @@
 import pygame
 
 from animated_texture import AnimatedTexture
+from class_registrar import ClassRegistrar
 from game_object import GameObject
-from game_object_factory import GameObjectFactory
 from mover import MoverVelocity
 
 
-@GameObjectFactory.register("Projectile")
+@ClassRegistrar.register("Projectile")
 class Projectile(GameObject):
 
     def __init__(self, mover, **kwargs):

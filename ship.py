@@ -4,8 +4,8 @@ import numpy
 import pygame
 
 from asteroid import Asteroid
+from class_registrar import ClassRegistrar
 from game_object import GameObject
-from game_object_factory import GameObjectFactory
 from health_bar import HealthBar
 from mover import MoverVelocity
 from nav_arrow import NavArrow
@@ -13,7 +13,7 @@ from projectile import Projectile
 from waypoint import Waypoint
 
 
-@GameObjectFactory.register("Ship")
+@ClassRegistrar.register("Ship")
 class Ship(GameObject):
     """Space ship game object."""
 
@@ -59,7 +59,7 @@ class Ship(GameObject):
     def fire(self):
         """Fires a Projectile at the target."""
         if self.time_since_last_fire > self.fire_freq and self.alive():
-            projectile = GameObjectFactory.create(self.projectile_type)
+            projectile = self.projectile_type.create()
             projectile.set_pos(self.pos)
             projectile.set_heading(self.heading)
             projectile.transform()

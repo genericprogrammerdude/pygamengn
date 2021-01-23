@@ -1,8 +1,8 @@
+from class_registrar import ClassRegistrar
 from game_object import GameObject
-from game_object_factory import GameObjectFactory
 
 
-@GameObjectFactory.register("Shield")
+@ClassRegistrar.register("Shield")
 class Shield(GameObject):
 
     def __init__(self, images, damage):

@@ -1,10 +1,10 @@
 import random
 
-from game_object_factory import GameObjectFactory
+from class_registrar import ClassRegistrar
 from trigger import Trigger
 
 
-@GameObjectFactory.register("Waypoint")
+@ClassRegistrar.register("Waypoint")
 class Waypoint(Trigger):
     """A trigger triggers actions when game objects enter them."""
 

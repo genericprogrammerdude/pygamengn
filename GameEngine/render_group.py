@@ -1,12 +1,13 @@
 import math
 import pygame
 
-from game_object_factory import GameObjectBase
-from game_object_factory import GameObjectFactory
+from class_registrar import ClassRegistrar
+from game_object_base import GameObjectBase
 
 
-@GameObjectFactory.register("RenderGroup")
+@ClassRegistrar.register("RenderGroup")
 class RenderGroup(pygame.sprite.LayeredUpdates, GameObjectBase):
+    """A sprite group that takes care of rendering."""
 
     def __init__(
             self,

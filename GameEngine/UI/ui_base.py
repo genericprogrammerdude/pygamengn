@@ -2,11 +2,11 @@ from abc import abstractmethod
 
 import pygame
 
-from game_object_factory import GameObjectBase
-from game_object_factory import GameObjectFactory
+from class_registrar import ClassRegistrar
+from game_object_base import GameObjectBase
 
 
-@GameObjectFactory.register("UIBase")
+@ClassRegistrar.register("UIBase")
 class UIBase(GameObjectBase):
     """Base class for UI components."""
 

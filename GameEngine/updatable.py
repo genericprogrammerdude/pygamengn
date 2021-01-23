@@ -1,7 +1,6 @@
 import abc
 
-from game_object_factory import GameObjectBase, GameObjectFactory
-from game_object_factory import GameObjectFactory
+from game_object_base import GameObjectBase
 
 
 class Updatable(GameObjectBase):

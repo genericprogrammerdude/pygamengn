@@ -1,10 +1,10 @@
 import math
 
+from class_registrar import ClassRegistrar
 from game_object import GameObject
-from game_object_factory import GameObjectFactory
 
 
-@GameObjectFactory.register("Turret")
+@ClassRegistrar.register("Turret")
 class Turret(GameObject):
     """Turret that will fire at the given target."""
 
@@ -45,7 +45,7 @@ class Turret(GameObject):
 
     def fire(self):
         """Fires a projectile_type object at the target."""
-        projectile = GameObjectFactory.create(self.projectile_type)
+        projectile = self.projectile_type.create()
         projectile.set_pos(self.pos)
         projectile.set_heading(self.heading)
         projectile.transform()

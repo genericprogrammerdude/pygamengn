@@ -4,10 +4,10 @@ import pygame
 
 from UI.font_asset import FontAsset
 from UI.ui_base import UIBase
-from game_object_factory import GameObjectFactory
+from class_registrar import ClassRegistrar
 
 
-@GameObjectFactory.register("Panel")
+@ClassRegistrar.register("Panel")
 class Panel(UIBase):
     """Basic UI panel that shows an image."""
 
@@ -22,7 +22,7 @@ class Panel(UIBase):
         self.image = pygame.transform.scale(self.image_asset, self.rect.size)
 
 
-@GameObjectFactory.register("ColourPanel")
+@ClassRegistrar.register("ColourPanel")
 class ColourPanel(UIBase):
     """Basic UI panel that is a solid colour and has no image."""
 
@@ -53,7 +53,7 @@ class ColourPanel(UIBase):
         return components
 
 
-@GameObjectFactory.register("TextPanel")
+@ClassRegistrar.register("TextPanel")
 class TextPanel(UIBase):
     """Panel that sets its size to the size of the text in it. This panel ignores the parent rect."""
 

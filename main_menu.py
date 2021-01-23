@@ -3,10 +3,10 @@ import pygame
 from UI.font_asset import FontAsset
 from UI.panel import ColourPanel
 from asteroid import AsteroidSpawner
-from game_object_factory import GameObjectFactory
+from class_registrar import ClassRegistrar
 
 
-@GameObjectFactory.register("MainMenu")
+@ClassRegistrar.register("MainMenu")
 class MainMenu(ColourPanel):
     """Main menu UI."""
 

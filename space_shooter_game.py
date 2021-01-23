@@ -4,9 +4,9 @@ import random
 import numpy
 import pygame
 
+from class_registrar import ClassRegistrar
 from game import BlitSurface
 from game import Game
-from game_object_factory import GameObjectFactory
 from level import Level
 from main_menu import MainMenu
 from pause_menu import PauseMenu
@@ -23,7 +23,7 @@ class Mode(Enum):
     KILLING_ALL = auto()
 
 
-@GameObjectFactory.register("SpaceShooterGame")
+@ClassRegistrar.register("SpaceShooterGame")
 class SpaceShooterGame(Game):
 
     def __init__(self, main_menu_ui, pause_menu_ui, score_ui, time_ui, level, **kwargs):

@@ -2,11 +2,11 @@ import sys
 
 import pygame
 
-from game_object_factory import GameObjectBase
-from game_object_factory import GameObjectFactory
+from class_registrar import ClassRegistrar
+from game_object_base import GameObjectBase
 
 
-@GameObjectFactory.register("CollisionManager")
+@ClassRegistrar.register("CollisionManager")
 class CollisionManager(GameObjectBase):
     """Manages collision detection and response."""
 

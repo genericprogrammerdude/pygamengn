@@ -1,12 +1,12 @@
 import pygame
 
-from game_object_factory import GameObjectBase
-from game_object_factory import GameObjectFactory
+from class_registrar import ClassRegistrar
+from game_object_base import GameObjectBase
 import geometry
 from transform import Transform
 
 
-@GameObjectFactory.register("GameObject")
+@ClassRegistrar.register("GameObject")
 class GameObject(pygame.sprite.Sprite, GameObjectBase):
     """Basic game object."""
 
@@ -118,7 +118,7 @@ class GameObject(pygame.sprite.Sprite, GameObjectBase):
     def die(self, instigator):
         """Die."""
         if self.alive() and self.death_effect:
-            effect = GameObjectFactory.create(self.death_effect)
+            effect = self.death_effect.create()
             effect.set_pos(self.pos)
             effect.play(self.death_effect_callback)
 

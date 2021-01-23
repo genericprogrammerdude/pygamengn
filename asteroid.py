@@ -2,16 +2,14 @@ import random
 
 import pygame
 
+from class_registrar import ClassRegistrar
 from game_object import GameObject
-from game_object_factory import GameObjectBase
-from game_object_factory import GameObjectFactory
-from render_group import RenderGroup
 from transform import Transform
 from turret import Turret
 from updatable import Updatable
 
 
-@GameObjectFactory.register("Asteroid")
+@ClassRegistrar.register("Asteroid")
 class Asteroid(GameObject):
 
     def __init__(self, images, mover, health, death_spawn, score_on_die, **kwargs):
@@ -50,7 +48,7 @@ class Asteroid(GameObject):
                     next_angle = angle + angle_inc
                     heading = random.uniform(angle, next_angle) % 360
                     angle = next_angle
-                    spawn = GameObjectFactory.create(spawn_type, heading=heading)
+                    spawn = spawn_type.create(heading=heading)
                     spawn.set_pos(self.pos)
                     direction = Transform.rotate(self.mover.direction, heading)
                     spawn.mover.set_direction(direction)
@@ -62,7 +60,7 @@ class Asteroid(GameObject):
         super().die(instigator)
 
 
-@GameObjectFactory.register("AsteroidSpawner")
+@ClassRegistrar.register("AsteroidSpawner")
 class AsteroidSpawner(Updatable):
     """Spawns asteroids just to be annoying."""
 
@@ -92,9 +90,8 @@ class AsteroidSpawner(Updatable):
             self.time_to_next_spawn = random.randrange(spawn_freq)
 
             # Spawn new asteroid
-            asteroid_type = random.choice(self.asteroid_types)
-            heading = random.randrange(0, 360)
-            asteroid = GameObjectFactory.create(asteroid_type, heading=heading)
+            asteroid_type_spec = random.choice(self.asteroid_types)
+            asteroid = asteroid_type_spec.create()
             pos, direction = self.get_random_pos_dir(self.render_group.get_world_view_rect())
             asteroid.mover.set_direction(direction)
             asteroid.set_pos(pos)
