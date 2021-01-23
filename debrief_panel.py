@@ -1,6 +1,7 @@
 import pygame
 
 from UI.panel import ColourPanel
+from UI.spinner import Spinner
 from class_registrar import ClassRegistrar
 
 
@@ -10,9 +11,13 @@ class DebriefPanel(ColourPanel):
 
     def __init__(self, asteroid_spawner, **kwargs):
         super().__init__(**kwargs)
+        self.bind_children()
         self.asteroid_spawner = asteroid_spawner
-        self.continue_button = self.children[0]
         self.continue_callback = None
+        self.score = 0
+        self.time = 0
+        self.asteroid_count = 0
+        self.waypoint_count = 0
 
     def update(self, parent_rect, delta):
         """Updates the main menu."""
@@ -27,7 +32,7 @@ class DebriefPanel(ColourPanel):
 
         for event in pygame.event.get():
             if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
-                self.cotinue_callback()
+                self.continue_callback()
             elif event.type == pygame.MOUSEBUTTONUP:
                 if self.continue_button.rect.collidepoint(mouse_pos):
                     self.continue_callback()
@@ -35,3 +40,10 @@ class DebriefPanel(ColourPanel):
     def set_continue_callback(self, continue_callback):
         """Sets the function to call when the continue button is clicked."""
         self.continue_callback = continue_callback
+
+    def set_score_data(self, score, time, asteroid_count, waypoint_count):
+        """Sets the data that is to be compiled into a final score."""
+        self.score = score
+        self.time = time
+        self.asteroid_count = asteroid_count
+        self.waypoint_count = waypoint_count
