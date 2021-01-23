@@ -1,5 +1,5 @@
 {
-    "surfaces": {
+    "images": {
         "ship": "Assets/SpaceShooterRedux/PNG/playerShip2_blue.png",
         "explosion1": "Assets/Explosions/explosion1.png",
         "explosion2": "Assets/Explosions/explosion2.png",

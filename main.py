@@ -17,12 +17,11 @@ def main():
     size = (1280, 720)
     screen = pygame.display.set_mode(size, pygame.DOUBLEBUF | pygame.HWSURFACE | pygame.RESIZABLE)
 
-    factory = GameObjectFactory()
-    factory.initialize(ClassRegistrar.registry, open("Assets/inventory.json"))
+    factory = GameObjectFactory(ClassRegistrar.registry, open("Assets/inventory.json"))
     factory.set_layer_manager_asset_name("LayerManager")
 
     # Create world
-    pygame.display.set_icon(GameObjectFactory.surfaces["ship"])
+    pygame.display.set_icon(factory.images["ship"])
     pygame.display.set_caption("Game")
 
     game = factory.create("SpaceShooterGame", screen=screen)
