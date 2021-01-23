@@ -11,13 +11,13 @@ class ClassRegistrar:
     registry = {}
 
     @classmethod
-    def register(self, name: str) -> Callable:
+    def register(cls, name: str) -> Callable:
         """Registers a new GameObject child class."""
 
         def inner_wrapper(wrapped_class: GameObjectBase) -> Callable:
-            if name in self.registry:
+            if name in cls.registry:
                 sys.stderr.write("Class '{0}' already registered. Overwriting old value.".format(name))
-            self.registry[name] = wrapped_class
+            cls.registry[name] = wrapped_class
             return wrapped_class
 
         return inner_wrapper
