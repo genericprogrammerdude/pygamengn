@@ -140,6 +140,7 @@
                 "game_object_type:collision_manager": "SpaceShooterGame/CollisionManager",
                 "game_object_type:main_menu_ui": "MainMenu",
                 "game_object_type:pause_menu_ui": "PauseMenu",
+                "game_object_type:debrief_panel": "DebriefPanel",
                 "game_object_type:score_ui": "/Level_02/ScorePanel",
                 "game_object_type:time_ui": "/Level_02/TimePanel",
                 "game_object_type:level": "Level_02"
@@ -275,6 +276,46 @@
                         "horz_align": "CENTRE",
                         "vert_align": "CENTRE",
                         "text": "Resume Game"
+                    }
+                }
+            }
+        },
+        "DebriefPanel": {
+            "class_name": "DebriefPanel",
+            "kwargs": {
+                "pos": [0.25, 0.15],
+                "size": [0.5, 0.7],
+                "game_object_type:children": [
+                    "ContinueButton"
+                ],
+                "fix_aspect_ratio": false,
+                "colour": [100, 100, 100, 128],
+                "game_object_type:asteroid_spawner": "/MainMenu/AsteroidSpawner"
+            },
+            "ContinueButton": {
+                "class_name": "ColourPanel",
+                "kwargs": {
+                    "pos": [0.25, 0.7],
+                    "size": [0.5, 0.15],
+                    "game_object_type:children": [
+                        "ContinueText"
+                    ],
+                    "fix_aspect_ratio": false,
+                    "colour": [200, 200, 200, 100],
+                    "hover_colour": [100, 210, 100, 100]
+                },
+                "ContinueText": {
+                    "class_name": "TextPanel",
+                    "kwargs": {
+                        "pos": [0, 0],
+                        "size": [1, 1],
+                        "game_object_type:children": [],
+                        "fix_aspect_ratio": true,
+                        "asset:font_asset": "fast_hand_font",
+                        "text_colour": [0, 200, 100],
+                        "horz_align": "CENTRE",
+                        "vert_align": "CENTRE",
+                        "text": "Continue"
                     }
                 }
             }
