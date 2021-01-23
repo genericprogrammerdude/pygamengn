@@ -132,23 +132,45 @@ class GameObjectFactory():
         resolved_refs = {}
         type_spec_kwargs = type_spec["kwargs"]
         for key in type_spec_kwargs:
+
             if key.startswith("image:"):
                 image_name = type_spec_kwargs[key]
-                resolved_refs[key[len("image:"):]] = self.images[image_name]
-            elif key.startswith("image_list:"):
-                image_list = type_spec_kwargs[key]
-                resolved_refs[key[len("image_list:"):]] = [self.images[image_str] for image_str in image_list]
+                if isinstance(image_name, str):
+                    resolved_refs[key[len("image:"):]] = self.images[image_name]
+                elif isinstance(image_name, list):
+                    image_list = type_spec_kwargs[key]
+                    resolved_refs[key[len("image:"):]] = [self.images[image_str] for image_str in image_list]
+                else:
+                    sys.stderr.write("GameObjectFactory.__create_object(): Unrecognized type '{0}'".format(
+                        image_name
+                    ))
+
             elif key.startswith("sound:"):
                 sound_name = type_spec_kwargs[key]
-                resolved_refs[key[len("sound:"):]] = self.sounds[sound_name]
+                if isinstance(sound_name, str):
+                    resolved_refs[key[len("sound:"):]] = self.sounds[sound_name]
+                elif isinstance(sound_name, list):
+                    sound_list = type_spec_kwargs[key]
+                    resolved_refs[key[len("sound:"):]] = [self.sounds[sound_str] for sound_str in sound_list]
+                else:
+                    sys.stderr.write("GameObjectFactory.__create_object(): Unrecognized type '{0}'".format(
+                        sound_name
+                    ))
+
             elif key.startswith("game_object_type:"):
                 gob_type_name = type_spec_kwargs[key]
-                resolved_refs[key[len("type_spec_object:"):]] = self.create(gob_type_name, scope)
-            elif key.startswith("game_object_type_list:"):
-                gob_type_list = type_spec_kwargs[key]
-                resolved_refs[key[len("game_object_type_list:"):]] = [
-                    self.create(gob_type_name, scope) for gob_type_name in gob_type_list
-                ]
+                if isinstance(gob_type_name, str):
+                    resolved_refs[key[len("game_object_type:"):]] = self.create(gob_type_name, scope)
+                elif isinstance(gob_type_name, list):
+                    gob_type_list = type_spec_kwargs[key]
+                    resolved_refs[key[len("game_object_type:"):]] = [
+                        self.create(gob_type_name, scope) for gob_type_name in gob_type_list
+                    ]
+                else:
+                    sys.stderr.write("GameObjectFactory.__create_object(): Unrecognized type '{0}'".format(
+                        gob_type_name
+                    ))
+
             elif key.startswith("type_spec:"):
                 gob_type_name = type_spec_kwargs[key]
                 if isinstance(gob_type_name, str):
@@ -158,6 +180,10 @@ class GameObjectFactory():
                     resolved_refs[key[len("type_spec:"):]] = [
                         TypeSpec(self, type_name) for type_name in type_list
                     ]
+                else:
+                    sys.stderr.write("GameObjectFactory.__create_object(): Unrecognized type '{0}'".format(
+                        gob_type_name
+                    ))
             else:
                 resolved_refs[key] = type_spec_kwargs[key]
 

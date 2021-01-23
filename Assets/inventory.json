@@ -105,21 +105,21 @@
         "explosion_small_atlas": {
             "class_name": "Atlas",
             "kwargs": {
-                "image_list:images": ["explosion1"],
+                "image:images": ["explosion1"],
                 "frame_size": [256, 256]
             }
         },
         "explosion_atlas": {
             "class_name": "Atlas",
             "kwargs": {
-                "image_list:images": ["explosion2", "explosion3", "explosion4"],
+                "image:images": ["explosion2", "explosion3", "explosion4"],
                 "frame_size": [256, 256]
             }
         },
         "explosion_big_atlas": {
             "class_name": "Atlas",
             "kwargs": {
-                "image_list:images": ["explosion3", "explosion4"],
+                "image:images": ["explosion3", "explosion4"],
                 "frame_size": [256, 256]
             }
         },
@@ -163,7 +163,7 @@
             "kwargs": {
                 "pos": [0.25, 0.25],
                 "size": [0.5, 0.5],
-                "game_object_type_list:children": [
+                "game_object_type:children": [
                     "StartButton",
                     "ExitButton"
                 ],
@@ -176,7 +176,7 @@
                 "kwargs": {
                     "pos": [0.25, 0.2],
                     "size": [0.5, 0.25],
-                    "game_object_type_list:children": [
+                    "game_object_type:children": [
                         "StartText"
                     ],
                     "fix_aspect_ratio": false,
@@ -188,7 +188,7 @@
                     "kwargs": {
                         "pos": [0, 0],
                         "size": [1, 1],
-                        "game_object_type_list:children": [],
+                        "game_object_type:children": [],
                         "fix_aspect_ratio": true,
                         "asset:font_asset": "fast_hand_font",
                         "text_colour": [0, 200, 100],
@@ -203,7 +203,7 @@
                 "kwargs": {
                     "pos": [0.25, 0.55],
                     "size": [0.5, 0.25],
-                    "game_object_type_list:children": [
+                    "game_object_type:children": [
                         "ExitText"
                     ],
                     "fix_aspect_ratio": false,
@@ -215,7 +215,7 @@
                     "kwargs": {
                         "pos": [0, 0],
                         "size": [1, 1],
-                        "game_object_type_list:children": [],
+                        "game_object_type:children": [],
                         "fix_aspect_ratio": true,
                         "asset:font_asset": "fast_hand_font",
                         "text_colour": [0, 200, 100],
@@ -244,7 +244,7 @@
             "kwargs": {
                 "pos": [0.25, 0.25],
                 "size": [0.5, 0.5],
-                "game_object_type_list:children": [
+                "game_object_type:children": [
                     "PauseButton",
                     "/MainMenu/ExitButton"
                 ],
@@ -256,7 +256,7 @@
                 "kwargs": {
                     "pos": [0.25, 0.2],
                     "size": [0.5, 0.25],
-                    "game_object_type_list:children": [
+                    "game_object_type:children": [
                         "PauseText"
                     ],
                     "fix_aspect_ratio": false,
@@ -268,7 +268,7 @@
                     "kwargs": {
                         "pos": [0, 0],
                         "size": [1, 1],
-                        "game_object_type_list:children": [],
+                        "game_object_type:children": [],
                         "fix_aspect_ratio": true,
                         "asset:font_asset": "fast_hand_font",
                         "text_colour": [0, 200, 100],
@@ -323,7 +323,7 @@
             "PlayerHealthBar": {
                 "class_name": "HealthBar",
                 "kwargs": {
-                    "image_list:images": ["player_health_bar_bg", "player_health_bar_fg"],
+                    "image:images": ["player_health_bar_bg", "player_health_bar_fg"],
                     "heading": 90,
                     "is_collidable": false
                 },
@@ -334,7 +334,7 @@
             "PlayerShield": {
                 "class_name": "Shield",
                 "kwargs": {
-                    "image_list:images": ["shield3", "shield2", "shield1"],
+                    "image:images": ["shield3", "shield2", "shield1"],
                     "damage": 50
                 },
                 "groups": [
@@ -382,7 +382,7 @@
                     "kill_when_off_screen": false,
                     "distance": 1000,
                     "angular_velocity": 60.0,
-                    "image_list:digit_image_assets": [
+                    "image:digit_image_assets": [
                         "0",
                         "1",
                         "2",
@@ -471,8 +471,8 @@
             "class_name": "Level",
             "kwargs": {
                 "game_object_type:player_spec": "PlayerSpec",
-                "game_object_type_list:enemy_specs": [],
-                "game_object_type_list:updatables": [
+                "game_object_type:enemy_specs": [],
+                "game_object_type:updatables": [
                     "AsteroidSpawner"
                 ]
             },
@@ -511,7 +511,7 @@
                 "kwargs": {
                     "pos": [0, 0],
                     "size": [0.1, 0.06],
-                    "game_object_type_list:children": [
+                    "game_object_type:children": [
                         "ScoreText"
                     ],
                     "fix_aspect_ratio": true,
@@ -522,7 +522,7 @@
                     "kwargs": {
                         "pos": [0, 0],
                         "size": [1, 1],
-                        "game_object_type_list:children": [],
+                        "game_object_type:children": [],
                         "fix_aspect_ratio": true,
                         "asset:font_asset": "fast_hand_font",
                         "text_colour": [0, 200, 100],
@@ -537,7 +537,7 @@
                 "kwargs": {
                     "pos": [0.88, 0],
                     "size": [0.12, 0.06],
-                    "game_object_type_list:children": [
+                    "game_object_type:children": [
                         "TimeText"
                     ],
                     "fix_aspect_ratio": true,
@@ -548,7 +548,7 @@
                     "kwargs": {
                         "pos": [0, 0],
                         "size": [1, 1],
-                        "game_object_type_list:children": [],
+                        "game_object_type:children": [],
                         "fix_aspect_ratio": true,
                         "asset:font_asset": "fast_hand_font",
                         "text_colour": [0, 200, 100],
@@ -561,7 +561,7 @@
             "AsteroidMother": {
                 "class_name": "Asteroid",
                 "kwargs": {
-                    "image_list:images": [
+                    "image:images": [
                         "asteroid_00",
                         "asteroid_01",
                         "asteroid_02",
@@ -647,7 +647,7 @@
         "AsteroidBig": {
             "class_name": "Asteroid",
             "kwargs": {
-                "image_list:images": [
+                "image:images": [
                     "asteroid_00",
                     "asteroid_01",
                     "asteroid_02",
@@ -669,7 +669,7 @@
         "AsteroidMedium": {
             "class_name": "Asteroid",
             "kwargs": {
-                "image_list:images": [
+                "image:images": [
                     "asteroid_04",
                     "asteroid_05"
                 ],
@@ -689,7 +689,7 @@
         "AsteroidSmall": {
             "class_name": "Asteroid",
             "kwargs": {
-                "image_list:images": [
+                "image:images": [
                     "asteroid_06",
                     "asteroid_07"
                 ],
@@ -709,7 +709,7 @@
         "AsteroidTiny": {
             "class_name": "Asteroid",
             "kwargs": {
-                "image_list:images": [
+                "image:images": [
                     "asteroid_08"
                 ],
                 "health": 5,
