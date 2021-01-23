@@ -248,25 +248,26 @@
                 "pos": [0.25, 0.25],
                 "size": [0.5, 0.5],
                 "game_object_type:children": [
-                    "PauseButton",
+                    "ResumeButton",
                     "/MainMenu/ExitButton"
                 ],
                 "fix_aspect_ratio": false,
                 "colour": [100, 100, 100, 128]
             },
-            "PauseButton": {
+            "ResumeButton": {
                 "class_name": "ColourPanel",
                 "kwargs": {
                     "pos": [0.25, 0.2],
                     "size": [0.5, 0.25],
                     "game_object_type:children": [
-                        "PauseText"
+                        "ResumeText"
                     ],
                     "fix_aspect_ratio": false,
+                    "name": "resume_button",
                     "colour": [200, 200, 200, 100],
                     "hover_colour": [100, 210, 100, 100]
                 },
-                "PauseText": {
+                "ResumeText": {
                     "class_name": "TextPanel",
                     "kwargs": {
                         "pos": [0, 0],
