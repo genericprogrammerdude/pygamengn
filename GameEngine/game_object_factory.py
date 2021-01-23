@@ -96,15 +96,6 @@ class GameObjectFactory():
 
         return gob
 
-    def get_asset(self, name: str) -> GameObjectBase:
-        """Returns an initialized asset."""
-        asset_spec = self.assets[name]
-        if asset_spec:
-            return asset_spec["asset"]
-        else:
-            sys.stderr.write("Asset {0} does not exist.\n".format(name))
-            return None
-
     def set_layer_manager_asset_name(self, name):
         """Sets the layer manager asset name for the factory to automatically assign layers to GameObjects."""
         layer_manager_spec = self.assets.get(name)
