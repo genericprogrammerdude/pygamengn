@@ -181,7 +181,6 @@ class GameObjectFactory():
         try:
             gob_class = self.registry[type_spec["class_name"]]
             gob = gob_class(**resolved_refs, **kwargs)
-            gob.set_object_id()
             return gob
         except KeyError:
             sys.stderr.write("GameObjectBase subclass '{0}' not found.\n".format(type_spec["class_name"]))

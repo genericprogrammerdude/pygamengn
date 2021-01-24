@@ -21,7 +21,8 @@ class GameObject(pygame.sprite.Sprite, GameObjectBase):
                  damage=0,
                  kill_when_off_screen=False
     ):
-        super().__init__()
+        pygame.sprite.Sprite.__init__(self)
+        GameObjectBase.__init__(self)
 
         # Set the image to use for this sprite.
         self.image_asset = image_asset

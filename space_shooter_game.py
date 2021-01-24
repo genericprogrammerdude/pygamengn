@@ -28,7 +28,18 @@ class Mode(Enum):
 @ClassRegistrar.register("SpaceShooterGame")
 class SpaceShooterGame(Game):
 
-    def __init__(self, main_menu_ui, pause_menu_ui, debrief_panel, score_ui, time_ui, level, **kwargs):
+    def __init__(
+            self,
+            main_menu_ui,
+            pause_menu_ui,
+            debrief_panel,
+            score_ui,
+            time_ui,
+            level,
+            asteroid_multiplier,
+            waypoint_multiplier,
+            **kwargs
+        ):
         super().__init__(**kwargs)
         self.main_menu_ui = main_menu_ui
         self.pause_menu_ui = pause_menu_ui
@@ -36,10 +47,12 @@ class SpaceShooterGame(Game):
         self.score_ui = score_ui
         self.time_ui = time_ui
         self.level = level
+        self.asteroid_multiplier = asteroid_multiplier
+        self.waypoint_multiplier = waypoint_multiplier
         self.time = 0
         self.score = 0
         self.running = True
-        self.mode = Mode.MAIN_MENU
+        self.mode = Mode.DEBRIEF
         self.main_menu_ui.set_start_callback(self.start_play)
         self.main_menu_ui.set_exit_callback(self.exit_game)
         self.pause_menu_ui.set_resume_callback(self.resume_play)
@@ -155,6 +168,14 @@ class SpaceShooterGame(Game):
     def handle_player_death(self):
         """Invoked when the player dies."""
         self.mode = Mode.DEBRIEF
+        self.debrief_panel.set_score_data(
+            self.score,
+            self.time,
+            self.player.kills,
+            self.player.waypoints,
+            self.asteroid_multiplier,
+            self.waypoint_multiplier
+        )
         self.player = None
 
     def kill_render_group(self):

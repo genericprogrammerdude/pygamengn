@@ -143,7 +143,9 @@
                 "game_object_type:debrief_panel": "DebriefPanel",
                 "game_object_type:score_ui": "/Level_02/ScorePanel",
                 "game_object_type:time_ui": "/Level_02/TimePanel",
-                "game_object_type:level": "Level_02"
+                "game_object_type:level": "Level_02",
+                "asteroid_multiplier": 10,
+                "waypoint_multiplier": 50
             },
             "CollisionManager": {
                 "class_name": "CollisionManager",
@@ -371,12 +373,12 @@
                             "size": [1, 1],
                             "game_object_type:children": [],
                             "fix_aspect_ratio": true,
-                            "name": "count_text",
+                            "name": "asteroid_count_text",
                             "asset:font_asset": "fast_hand_font",
                             "text_colour": [0, 200, 100],
                             "horz_align": "RIGHT",
                             "vert_align": "CENTRE",
-                            "text": "99"
+                            "text": "0"
                         }
                     }
                 },
@@ -398,12 +400,12 @@
                             "size": [1, 1],
                             "game_object_type:children": [],
                             "fix_aspect_ratio": true,
-                            "name": "multiplier_text",
+                            "name": "asteroid_multiplier_text",
                             "asset:font_asset": "fast_hand_font",
                             "text_colour": [0, 200, 100],
                             "horz_align": "RIGHT",
                             "vert_align": "CENTRE",
-                            "text": "x99"
+                            "text": "x0"
                         }
                     }
                 },
@@ -425,12 +427,12 @@
                             "size": [1, 1],
                             "game_object_type:children": [],
                             "fix_aspect_ratio": true,
-                            "name": "total_text",
+                            "name": "asteroid_total_text",
                             "asset:font_asset": "fast_hand_font",
                             "text_colour": [0, 200, 100],
                             "horz_align": "RIGHT",
                             "vert_align": "CENTRE",
-                            "text": "9999"
+                            "text": "0"
                         }
                     }
                 }
@@ -480,12 +482,12 @@
                             "size": [1, 1],
                             "game_object_type:children": [],
                             "fix_aspect_ratio": true,
-                            "name": "count_text",
+                            "name": "waypoint_count_text",
                             "asset:font_asset": "fast_hand_font",
                             "text_colour": [0, 200, 100],
                             "horz_align": "RIGHT",
                             "vert_align": "CENTRE",
-                            "text": "99"
+                            "text": "0"
                         }
                     }
                 },
@@ -507,12 +509,12 @@
                             "size": [1, 1],
                             "game_object_type:children": [],
                             "fix_aspect_ratio": true,
-                            "name": "multiplier_text",
+                            "name": "waypoint_multiplier_text",
                             "asset:font_asset": "fast_hand_font",
                             "text_colour": [0, 200, 100],
                             "horz_align": "RIGHT",
                             "vert_align": "CENTRE",
-                            "text": "x99"
+                            "text": "x0"
                         }
                     }
                 },
@@ -534,12 +536,12 @@
                             "size": [1, 1],
                             "game_object_type:children": [],
                             "fix_aspect_ratio": true,
-                            "name": "total_text",
+                            "name": "waypoint_total_text",
                             "asset:font_asset": "fast_hand_font",
                             "text_colour": [0, 200, 100],
                             "horz_align": "RIGHT",
                             "vert_align": "CENTRE",
-                            "text": "9999"
+                            "text": "0"
                         }
                     }
                 }
@@ -587,7 +589,6 @@
                             "size": [1, 1],
                             "game_object_type:children": [],
                             "fix_aspect_ratio": true,
-                            "name": "multiplier_text",
                             "asset:font_asset": "fast_hand_font",
                             "text_colour": [0, 200, 100],
                             "horz_align": "RIGHT",
@@ -614,12 +615,12 @@
                             "size": [1, 1],
                             "game_object_type:children": [],
                             "fix_aspect_ratio": true,
-                            "name": "total_text",
+                            "name": "total_score_text",
                             "asset:font_asset": "fast_hand_font",
                             "text_colour": [0, 200, 100],
                             "horz_align": "RIGHT",
                             "vert_align": "CENTRE",
-                            "text": "9999"
+                            "text": "0"
                         }
                     }
                 }

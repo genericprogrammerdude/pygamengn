@@ -68,11 +68,14 @@ class UIBase(GameObjectBase):
 
         return components
 
-    def bind_children(self):
+    def bind_children(self, parent=None):
         """Binds children to class members to make them accessible."""
+        if not parent:
+            parent = self
         for child in self.children:
+            child.bind_children(parent)
             if child.name:
-                setattr(self, child.name, child)
+                setattr(parent, child.name, child)
 
     @abstractmethod
     def resize(self):
