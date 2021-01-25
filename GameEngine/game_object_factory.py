@@ -1,3 +1,4 @@
+import copy
 import json
 import sys
 
@@ -63,6 +64,9 @@ class GameObjectFactory():
                 self.__assign_asset_list(asset_name, asset_list)
             del obj[key]
         del self.__asset_json_objects
+
+        # Build entries for game types that inherit from other types
+        self.__build_derived_types()
 
     def create(self, name: str, scope="", **kwargs) -> GameObjectBase:
         """Creates a GameObject instance."""
@@ -207,6 +211,36 @@ class GameObjectFactory():
             else:
                 asset_list.append([])
                 self.__assign_asset_list(asset_name, asset_list[-1])
+
+    def __build_derived_types(self):
+        """Builds entries in game_types that are for types that derived from other types."""
+        for key in list(self.game_types.keys()):
+            key_parts = key.split(':')
+            if len(key_parts) == 2:
+                child_type = key_parts[0]
+                parent_type = key_parts[1]
+                if not child_type in self.game_types and parent_type in self.game_types:
+                    self.game_types[child_type] = copy.deepcopy(self.game_types[parent_type])
+                    for child_key in self.game_types[key]:
+                        self.__recursive_copy(self.game_types[key], self.game_types[child_type], child_key)
+                    del self.game_types[key]
+
+                else:
+                    sys.stderr.write("Derived type '{0}' already exists or parent '{1}' not found.".format(
+                        child_type, parent_type
+                    ))
+            else:
+                    sys.stderr.write("Error parsing derived type name '{0}'.".format(key))
+
+    def __recursive_copy(self, from_obj, to_obj, key):
+        """Recursively copies dictionary keys."""
+        if isinstance(from_obj[key], dict):
+            for subkey in from_obj[key]:
+                self.__recursive_copy(from_obj[key], to_obj[key], subkey)
+        elif isinstance(from_obj[key], list):
+            to_obj[key] = copy.deepcopy(from_obj[key])
+        else:
+            to_obj[key] = from_obj[key]
 
 
 class TypeSpec:
