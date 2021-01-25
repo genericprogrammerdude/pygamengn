@@ -226,11 +226,9 @@ class GameObjectFactory():
                     del self.game_types[key]
 
                 else:
-                    sys.stderr.write("Derived type '{0}' already exists or parent '{1}' not found.".format(
+                    sys.stderr.write("Derived type '{0}' already exists or parent '{1}' not found.\n".format(
                         child_type, parent_type
                     ))
-            else:
-                    sys.stderr.write("Error parsing derived type name '{0}'.".format(key))
 
     def __recursive_copy(self, from_obj, to_obj, key):
         """Recursively copies dictionary keys."""
