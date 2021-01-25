@@ -29,41 +29,22 @@ class GameObjectFactory():
         data = json.load(inventory_fp, object_hook=self.__json_object_hook)
         inventory_fp.close()
 
-        # Load images
-        self.images = {}
-        data_images = data["images"]
-        for key in data_images.keys():
-            self.images[key] = pygame.image.load(data_images[key]).convert_alpha()
-
-        # Load sounds
-        self.sounds = {}
-        data_sounds = data["sounds"]
-        for key in data_sounds.keys():
-            self.sounds[key] = pygame.mixer.Sound(data_sounds[key])
-
-        # Assets and game_types can be assigned directly
+        # Initialize game types
         self.game_types = data["game_types"]
 
-        # Initialize assets with surfaces and the corresponding asset object
-        self.assets = data["assets"]
+        # Load images and sounds, and initialize assets
+        self.images = self.__create_assets(data["images"], lambda v: pygame.image.load(v).convert_alpha())
+        self.sounds = self.__create_assets(data["sounds"], lambda v: pygame.mixer.Sound(v))
+        self.assets = self.__create_assets(data["assets"], lambda v: self.__create_object(v, ""))
 
-        # Create asset objects
-        for key in self.assets.keys():
-            asset_spec = self.assets[key]
-            asset_spec["asset"] = self.__create_object(asset_spec, "")
-
-        # Assign initialized assets to the fields that reference them
-        for obj, key in self.__asset_json_objects:
-            asset_name = obj[key]
-            if isinstance(asset_name, str):
-                obj[key[len("asset:"):]] = self.assets[asset_name]["asset"]
-            elif isinstance(asset_name, list):
-                inner_key = key[len("asset:"):]
-                obj[inner_key] = []
-                asset_list = obj[inner_key]
-                self.__assign_asset_list(asset_name, asset_list)
-            del obj[key]
-        del self.__asset_json_objects
+        # Keys that get special treatment
+        self.special_keys = [
+            ("image:", lambda name: self.images[name]),
+            ("sound:", lambda name: self.sounds[name]),
+            ("asset:", lambda name: self.assets[name]),
+            ("game_object_type:", lambda name, scope: self.create(name, scope)),
+            ("type_spec:", lambda name: TypeSpec(self, name))
+        ]
 
         # Build entries for game types that inherit from other types
         self.__build_derived_types()
@@ -83,7 +64,7 @@ class GameObjectFactory():
             if isinstance(gob, pygame.sprite.Sprite) and self.layer_manager:
                 self.layer_manager.set_layer_id(gob, scoped_name, game_type["class_name"])
 
-            groups = [self.assets[name]["asset"] for name in group_names]
+            groups = [self.assets[name] for name in group_names]
             gob.add_to_groups(groups)
 
         # Create attachments
@@ -104,7 +85,7 @@ class GameObjectFactory():
         """Sets the layer manager asset name for the factory to automatically assign layers to GameObjects."""
         layer_manager_spec = self.assets.get(name)
         if layer_manager_spec:
-            self.layer_manager = layer_manager_spec["asset"]
+            self.layer_manager = layer_manager_spec
         else:
             sys.stderr.write("GameObjectFactory: LayerManager '{0}' not in inventory assets.\n".format(name))
 
@@ -122,11 +103,18 @@ class GameObjectFactory():
                 game_type = self.game_types
         raise GameObjectFactory.UnknownGameType("".join(["Unknown game type: ", name]))
 
+#     def __resolve_refs(self, name, resolved_refs, retriever_func):
+#         """Resolves references."""
+
     def __create_object(self, type_spec, scope, **kwargs) -> GameObjectBase:
-        # Assemble new game type dictionary with resolved "image:", "image_list:", and "game_object_type:" fields
+        """Creates and returns a GameObjectBase instance from the given type specification."""
         resolved_refs = {}
         type_spec_kwargs = type_spec["kwargs"]
         for key in type_spec_kwargs:
+
+#             for special_key, object_retriever in self.special_keys:
+#                 if key.startswith(special_key):
+#                     resolved_refs = self.__resolve_refs(type_spec_kwargs[key], object_retriever)
 
             if key.startswith("image:"):
                 image_name = type_spec_kwargs[key]
@@ -150,6 +138,19 @@ class GameObjectFactory():
                 else:
                     sys.stderr.write("GameObjectFactory.__create_object(): Unrecognized type '{0}'".format(
                         sound_name
+                    ))
+
+            elif key.startswith("asset:"):
+                asset_name = type_spec_kwargs[key]
+                if isinstance(asset_name, str):
+                    resolved_refs[key[len("asset:"):]] = self.assets[asset_name]
+                elif isinstance(asset_name, list):
+                    inner_key = key[len("asset:"):]
+                    resolved_refs[inner_key] = []
+                    self.__assign_asset_list(asset_name, resolved_refs[inner_key])
+                else:
+                    sys.stderr.write("GameObjectFactory.__create_object(): Unrecognized type '{0}'".format(
+                        asset_name
                     ))
 
             elif key.startswith("game_object_type:"):
@@ -190,6 +191,19 @@ class GameObjectFactory():
             sys.stderr.write("GameObjectBase subclass '{0}' not found.\n".format(type_spec["class_name"]))
             return None
 
+    def __assign_asset_list(self, asset_names, asset_list):
+        """
+        Goes into asset_list and assigns the initialized assets to the right asset spec elements in the assets
+        dictionary. This enables support for nested lists of assets in the asset specs. See the CollisionManager
+        for an example of a GameObject that relies on this.
+        """
+        for asset_name in asset_names:
+            if isinstance(asset_name, str):
+                asset_list.append(self.assets[asset_name])
+            else:
+                asset_list.append([])
+                self.__assign_asset_list(asset_name, asset_list[-1])
+
     def __json_object_hook(self, obj_dict):
         """Keeps track of JSON objects (dictionaries) that will have to be initialized further."""
         for key in obj_dict.keys():
@@ -199,18 +213,12 @@ class GameObjectFactory():
                 self.__asset_list_json_objects.append((obj_dict, key))
         return obj_dict
 
-    def __assign_asset_list(self, asset_names, asset_list):
-        """
-        Goes into asset_list and assigns the initialized assets to the right asset spec elements in the assets
-        dictionary. This enables support for nested lists of assets in the asset specs. See the CollisionManager
-        for an example of a GameObject that relies on this.
-        """
-        for asset_name in asset_names:
-            if isinstance(asset_name, str):
-                asset_list.append(self.assets[asset_name]["asset"])
-            else:
-                asset_list.append([])
-                self.__assign_asset_list(asset_name, asset_list[-1])
+    def __create_assets(self, dictionary, creator_func):
+        """Creates a dictionary of loaded and initialized assets using the creator_func."""
+        rv = {}
+        for key, value in dictionary.items():
+            rv[key] = creator_func(value)
+        return rv
 
     def __build_derived_types(self):
         """Builds entries in game_types that are for types that derived from other types."""

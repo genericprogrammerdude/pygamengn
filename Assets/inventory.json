@@ -285,6 +285,173 @@
                 }
             }
         },
+        "DebriefRowPanel": {
+            "class_name": "ColourPanel",
+            "kwargs": {
+                "size": [0.8, 0.1],
+                "game_object_type:children": [
+                    "Spinner",
+                    "Count",
+                    "Multiplier",
+                    "Total"
+                ],
+                "fix_aspect_ratio": false,
+                "name": "asteroid_row_panel",
+                "colour": [150, 150, 150, 100]
+            },
+            "Spinner": {
+                "class_name": "Spinner",
+                "kwargs": {
+                    "pos": [0, 0],
+                    "size": [0.1, 1],
+                    "game_object_type:children": [],
+                    "fix_aspect_ratio": true,
+                    "name": "spinner"
+                }
+            },
+            "Count": {
+                "class_name": "ColourPanel",
+                "kwargs": {
+                    "pos": [0.1, 0],
+                    "size": [0.3, 1],
+                    "game_object_type:children": [
+                        "CountText"
+                    ],
+                    "fix_aspect_ratio": false,
+                    "colour": [0, 0, 0, 0]
+                },
+                "CountText": {
+                    "class_name": "TextPanel",
+                    "kwargs": {
+                        "pos": [0, 0],
+                        "size": [1, 1],
+                        "game_object_type:children": [],
+                        "fix_aspect_ratio": true,
+                        "asset:font_asset": "fast_hand_font",
+                        "text_colour": [0, 200, 100],
+                        "horz_align": "RIGHT",
+                        "vert_align": "CENTRE",
+                        "text": "0"
+                    }
+                }
+            },
+            "Multiplier": {
+                "class_name": "ColourPanel",
+                "kwargs": {
+                    "pos": [0.4, 0],
+                    "size": [0.3, 1],
+                    "game_object_type:children": [
+                        "MultiplierText"
+                    ],
+                    "fix_aspect_ratio": false,
+                    "colour": [0, 0, 0, 0]
+                },
+                "MultiplierText": {
+                    "class_name": "TextPanel",
+                    "kwargs": {
+                        "pos": [0, 0],
+                        "size": [1, 1],
+                        "game_object_type:children": [],
+                        "fix_aspect_ratio": true,
+                        "asset:font_asset": "fast_hand_font",
+                        "text_colour": [0, 200, 100],
+                        "horz_align": "RIGHT",
+                        "vert_align": "CENTRE",
+                        "text": "x0"
+                    }
+                }
+            },
+            "Total": {
+                "class_name": "ColourPanel",
+                "kwargs": {
+                    "pos": [0.7, 0],
+                    "size": [0.3, 1],
+                    "game_object_type:children": [
+                        "TotalText"
+                    ],
+                    "fix_aspect_ratio": false,
+                    "colour": [0, 0, 0, 0]
+                },
+                "TotalText": {
+                    "class_name": "TextPanel",
+                    "kwargs": {
+                        "pos": [0, 0],
+                        "size": [1, 1],
+                        "game_object_type:children": [],
+                        "fix_aspect_ratio": true,
+                        "asset:font_asset": "fast_hand_font",
+                        "text_colour": [0, 200, 100],
+                        "horz_align": "RIGHT",
+                        "vert_align": "CENTRE",
+                        "text": "0"
+                    }
+                }
+            }
+        },
+        "AsteroidRowPanel:DebriefRowPanel": {
+            "kwargs": {
+                "pos": [0.1, 0.15]
+            },
+            "Spinner": {
+                "kwargs": {
+                    "image:image_asset": "asteroid_04",
+                    "angular_velocity": 45
+                }
+            },
+            "Count": {
+                "CountText": {
+                    "kwargs": {
+                        "name": "asteroid_count_text"
+                    }
+                }
+            },
+            "Multiplier": {
+                "MultiplierText": {
+                    "kwargs": {
+                        "name": "asteroid_multiplier_text"
+                    }
+                }
+            },
+            "Total": {
+                "TotalText": {
+                    "kwargs": {
+                        "name": "asteroid_total_text"
+                    }
+                }
+            }
+        },
+        "WaypointRowPanel:DebriefRowPanel": {
+            "kwargs": {
+                "pos": [0.1, 0.3]
+            },
+            "Spinner": {
+                "kwargs": {
+                    "image:image_asset": "waypoint",
+                    "angular_velocity": -45
+                }
+            },
+            "Count": {
+                "CountText": {
+                    "kwargs": {
+                        "name": "waypoint_count_text"
+                    }
+                }
+            },
+            "Multiplier": {
+                "MultiplierText": {
+                    "kwargs": {
+                        "name": "waypoint_multiplier_text"
+                    }
+                }
+            },
+            "Total": {
+                "TotalText": {
+                    "kwargs": {
+                        "name": "waypoint_total_text"
+                    }
+                }
+            }
+        },
         "DebriefPanel": {
             "class_name": "DebriefPanel",
             "kwargs": {
@@ -292,8 +459,8 @@
                 "size": [0.5, 0.7],
                 "game_object_type:children": [
                     "ContinueButton",
-                    "AsteroidRowPanel",
-                    "WaypointRowPanel",
+                    "/AsteroidRowPanel",
+                    "/WaypointRowPanel",
                     "FinalScorePanel"
                 ],
                 "fix_aspect_ratio": false,
@@ -325,224 +492,6 @@
                         "horz_align": "CENTRE",
                         "vert_align": "CENTRE",
                         "text": "Continue"
-                    }
-                }
-            },
-            "AsteroidRowPanel": {
-                "class_name": "ColourPanel",
-                "kwargs": {
-                    "pos": [0.1, 0.15],
-                    "size": [0.8, 0.1],
-                    "game_object_type:children": [
-                        "Spinner",
-                        "Count",
-                        "Multiplier",
-                        "Total"
-                    ],
-                    "fix_aspect_ratio": false,
-                    "name": "asteroid_row_panel",
-                    "colour": [150, 150, 150, 100]
-                },
-                "Spinner": {
-                    "class_name": "Spinner",
-                    "kwargs": {
-                        "pos": [0, 0],
-                        "size": [0.1, 1],
-                        "game_object_type:children": [],
-                        "fix_aspect_ratio": true,
-                        "name": "spinner",
-                        "image:image_asset": "asteroid_04",
-                        "angular_velocity": 45
-                    }
-                },
-                "Count": {
-                    "class_name": "ColourPanel",
-                    "kwargs": {
-                        "pos": [0.1, 0],
-                        "size": [0.3, 1],
-                        "game_object_type:children": [
-                            "CountText"
-                        ],
-                        "fix_aspect_ratio": false,
-                        "colour": [0, 0, 0, 0]
-                    },
-                    "CountText": {
-                        "class_name": "TextPanel",
-                        "kwargs": {
-                            "pos": [0, 0],
-                            "size": [1, 1],
-                            "game_object_type:children": [],
-                            "fix_aspect_ratio": true,
-                            "name": "asteroid_count_text",
-                            "asset:font_asset": "fast_hand_font",
-                            "text_colour": [0, 200, 100],
-                            "horz_align": "RIGHT",
-                            "vert_align": "CENTRE",
-                            "text": "0"
-                        }
-                    }
-                },
-                "Multiplier": {
-                    "class_name": "ColourPanel",
-                    "kwargs": {
-                        "pos": [0.4, 0],
-                        "size": [0.3, 1],
-                        "game_object_type:children": [
-                            "MultiplierText"
-                        ],
-                        "fix_aspect_ratio": false,
-                        "colour": [0, 0, 0, 0]
-                    },
-                    "MultiplierText": {
-                        "class_name": "TextPanel",
-                        "kwargs": {
-                            "pos": [0, 0],
-                            "size": [1, 1],
-                            "game_object_type:children": [],
-                            "fix_aspect_ratio": true,
-                            "name": "asteroid_multiplier_text",
-                            "asset:font_asset": "fast_hand_font",
-                            "text_colour": [0, 200, 100],
-                            "horz_align": "RIGHT",
-                            "vert_align": "CENTRE",
-                            "text": "x0"
-                        }
-                    }
-                },
-                "Total": {
-                    "class_name": "ColourPanel",
-                    "kwargs": {
-                        "pos": [0.7, 0],
-                        "size": [0.3, 1],
-                        "game_object_type:children": [
-                            "TotalText"
-                        ],
-                        "fix_aspect_ratio": false,
-                        "colour": [0, 0, 0, 0]
-                    },
-                    "TotalText": {
-                        "class_name": "TextPanel",
-                        "kwargs": {
-                            "pos": [0, 0],
-                            "size": [1, 1],
-                            "game_object_type:children": [],
-                            "fix_aspect_ratio": true,
-                            "name": "asteroid_total_text",
-                            "asset:font_asset": "fast_hand_font",
-                            "text_colour": [0, 200, 100],
-                            "horz_align": "RIGHT",
-                            "vert_align": "CENTRE",
-                            "text": "0"
-                        }
-                    }
-                }
-            },
-            "WaypointRowPanel": {
-                "class_name": "ColourPanel",
-                "kwargs": {
-                    "pos": [0.1, 0.3],
-                    "size": [0.8, 0.1],
-                    "game_object_type:children": [
-                        "Spinner",
-                        "Count",
-                        "Multiplier",
-                        "Total"
-                    ],
-                    "fix_aspect_ratio": false,
-                    "name": "waypoint_row_panel",
-                    "colour": [150, 150, 150, 100]
-                },
-                "Spinner": {
-                    "class_name": "Spinner",
-                    "kwargs": {
-                        "pos": [0, 0],
-                        "size": [0.1, 1],
-                        "game_object_type:children": [],
-                        "fix_aspect_ratio": true,
-                        "name": "spinner",
-                        "image:image_asset": "waypoint",
-                        "angular_velocity": -45
-                    }
-                },
-                "Count": {
-                    "class_name": "ColourPanel",
-                    "kwargs": {
-                        "pos": [0.1, 0],
-                        "size": [0.3, 1],
-                        "game_object_type:children": [
-                            "CountText"
-                        ],
-                        "fix_aspect_ratio": false,
-                        "colour": [0, 0, 0, 0]
-                    },
-                    "CountText": {
-                        "class_name": "TextPanel",
-                        "kwargs": {
-                            "pos": [0, 0],
-                            "size": [1, 1],
-                            "game_object_type:children": [],
-                            "fix_aspect_ratio": true,
-                            "name": "waypoint_count_text",
-                            "asset:font_asset": "fast_hand_font",
-                            "text_colour": [0, 200, 100],
-                            "horz_align": "RIGHT",
-                            "vert_align": "CENTRE",
-                            "text": "0"
-                        }
-                    }
-                },
-                "Multiplier": {
-                    "class_name": "ColourPanel",
-                    "kwargs": {
-                        "pos": [0.4, 0],
-                        "size": [0.3, 1],
-                        "game_object_type:children": [
-                            "MultiplierText"
-                        ],
-                        "fix_aspect_ratio": false,
-                        "colour": [0, 0, 0, 0]
-                    },
-                    "MultiplierText": {
-                        "class_name": "TextPanel",
-                        "kwargs": {
-                            "pos": [0, 0],
-                            "size": [1, 1],
-                            "game_object_type:children": [],
-                            "fix_aspect_ratio": true,
-                            "name": "waypoint_multiplier_text",
-                            "asset:font_asset": "fast_hand_font",
-                            "text_colour": [0, 200, 100],
-                            "horz_align": "RIGHT",
-                            "vert_align": "CENTRE",
-                            "text": "x0"
-                        }
-                    }
-                },
-                "Total": {
-                    "class_name": "ColourPanel",
-                    "kwargs": {
-                        "pos": [0.7, 0],
-                        "size": [0.3, 1],
-                        "game_object_type:children": [
-                            "TotalText"
-                        ],
-                        "fix_aspect_ratio": false,
-                        "colour": [0, 0, 0, 0]
-                    },
-                    "TotalText": {
-                        "class_name": "TextPanel",
-                        "kwargs": {
-                            "pos": [0, 0],
-                            "size": [1, 1],
-                            "game_object_type:children": [],
-                            "fix_aspect_ratio": true,
-                            "name": "waypoint_total_text",
-                            "asset:font_asset": "fast_hand_font",
-                            "text_colour": [0, 200, 100],
-                            "horz_align": "RIGHT",
-                            "vert_align": "CENTRE",
-                            "text": "0"
-                        }
                     }
                 }
             },
