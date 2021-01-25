@@ -24,9 +24,8 @@ class GameObjectFactory():
 
     def __init__(self, registry, inventory_fp):
         self.layer_manager = None
-        self.__asset_json_objects = []
         self.registry = registry
-        data = json.load(inventory_fp, object_hook=self.__json_object_hook)
+        data = json.load(inventory_fp)
         inventory_fp.close()
 
         # Initialize game types
@@ -203,15 +202,6 @@ class GameObjectFactory():
             else:
                 asset_list.append([])
                 self.__assign_asset_list(asset_name, asset_list[-1])
-
-    def __json_object_hook(self, obj_dict):
-        """Keeps track of JSON objects (dictionaries) that will have to be initialized further."""
-        for key in obj_dict.keys():
-            if key.startswith("asset:"):
-                self.__asset_json_objects.append((obj_dict, key))
-            elif key.startswith("asset_list:"):
-                self.__asset_list_json_objects.append((obj_dict, key))
-        return obj_dict
 
     def __create_assets(self, dictionary, creator_func):
         """Creates a dictionary of loaded and initialized assets using the creator_func."""
