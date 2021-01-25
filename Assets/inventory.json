@@ -1070,14 +1070,7 @@
             "groups": [
                 "RenderGroup",
                 "AsteroidsGroup"
-            ],
-            "AChild": {
-                "class_name": "ClassName",
-                "kwargs": {
-                    "arg0": "value0",
-                    "arg1": 1
-                }
-            }
+            ]
         },
         "AsteroidMover": {
             "class_name": "MoverVelDir",
