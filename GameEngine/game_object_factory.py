@@ -28,6 +28,15 @@ class GameObjectFactory():
         data = json.load(inventory_fp)
         inventory_fp.close()
 
+        # Keys that get special treatment
+        self.special_keys = [
+            ("image:", lambda name, scope: self.images[name]),
+            ("sound:", lambda name, scope: self.sounds[name]),
+            ("asset:", lambda name, scope: self.assets[name]),
+            ("game_object_type:", lambda name, scope: self.create(name, scope)),
+            ("type_spec:", lambda name, scope: TypeSpec(self, name))
+        ]
+
         # Initialize game types
         self.game_types = data["game_types"]
 
@@ -35,15 +44,6 @@ class GameObjectFactory():
         self.images = self.__create_assets(data["images"], lambda v: pygame.image.load(v).convert_alpha())
         self.sounds = self.__create_assets(data["sounds"], lambda v: pygame.mixer.Sound(v))
         self.assets = self.__create_assets(data["assets"], lambda v: self.__create_object(v, ""))
-
-        # Keys that get special treatment
-        self.special_keys = [
-            ("image:", lambda name: self.images[name]),
-            ("sound:", lambda name: self.sounds[name]),
-            ("asset:", lambda name: self.assets[name]),
-            ("game_object_type:", lambda name, scope: self.create(name, scope)),
-            ("type_spec:", lambda name: TypeSpec(self, name))
-        ]
 
         # Build entries for game types that inherit from other types
         self.__build_derived_types()
@@ -102,84 +102,38 @@ class GameObjectFactory():
                 game_type = self.game_types
         raise GameObjectFactory.UnknownGameType("".join(["Unknown game type: ", name]))
 
-#     def __resolve_refs(self, name, resolved_refs, retriever_func):
-#         """Resolves references."""
+    def __resolve_refs(self, attribute_key, attribute_value, special_key, resolved_refs, scope):
+        """Resolves references."""
+        # Get the name of the key to populate in resolved_refs
+        key = attribute_key[len(special_key[0]):]
+
+        if isinstance(attribute_value, str):
+            # Simple string value -> assign it to resolved_refs
+            resolved_refs[key] = special_key[1](attribute_value, scope)  # self_dict[attribute_value]
+
+        elif isinstance(attribute_value, list):
+            # The value is a list -> recurse and assign
+            resolved_refs[key] = []
+            self.__assign_asset_list(attribute_value, resolved_refs[key], special_key[1], scope)
+        else:
+            sys.stderr.write("GameObjectFactory.__resolve_refs(): Unrecognized type '{0}' for key '{1}'\n".format(
+                type(attribute_value),
+                attribute_key
+            ))
 
     def __create_object(self, type_spec, scope, **kwargs) -> GameObjectBase:
         """Creates and returns a GameObjectBase instance from the given type specification."""
         resolved_refs = {}
         type_spec_kwargs = type_spec["kwargs"]
         for key in type_spec_kwargs:
+            is_special_key = False
 
-#             for special_key, object_retriever in self.special_keys:
-#                 if key.startswith(special_key):
-#                     resolved_refs = self.__resolve_refs(type_spec_kwargs[key], object_retriever)
+            for special_key in self.special_keys:
+                if key.startswith(special_key[0]):
+                    is_special_key = True
+                    self.__resolve_refs(key, type_spec_kwargs[key], special_key, resolved_refs, scope)
 
-            if key.startswith("image:"):
-                image_name = type_spec_kwargs[key]
-                if isinstance(image_name, str):
-                    resolved_refs[key[len("image:"):]] = self.images[image_name]
-                elif isinstance(image_name, list):
-                    image_list = type_spec_kwargs[key]
-                    resolved_refs[key[len("image:"):]] = [self.images[image_str] for image_str in image_list]
-                else:
-                    sys.stderr.write("GameObjectFactory.__create_object(): Unrecognized type '{0}'".format(
-                        image_name
-                    ))
-
-            elif key.startswith("sound:"):
-                sound_name = type_spec_kwargs[key]
-                if isinstance(sound_name, str):
-                    resolved_refs[key[len("sound:"):]] = self.sounds[sound_name]
-                elif isinstance(sound_name, list):
-                    sound_list = type_spec_kwargs[key]
-                    resolved_refs[key[len("sound:"):]] = [self.sounds[sound_str] for sound_str in sound_list]
-                else:
-                    sys.stderr.write("GameObjectFactory.__create_object(): Unrecognized type '{0}'".format(
-                        sound_name
-                    ))
-
-            elif key.startswith("asset:"):
-                asset_name = type_spec_kwargs[key]
-                if isinstance(asset_name, str):
-                    resolved_refs[key[len("asset:"):]] = self.assets[asset_name]
-                elif isinstance(asset_name, list):
-                    inner_key = key[len("asset:"):]
-                    resolved_refs[inner_key] = []
-                    self.__assign_asset_list(asset_name, resolved_refs[inner_key])
-                else:
-                    sys.stderr.write("GameObjectFactory.__create_object(): Unrecognized type '{0}'".format(
-                        asset_name
-                    ))
-
-            elif key.startswith("game_object_type:"):
-                gob_type_name = type_spec_kwargs[key]
-                if isinstance(gob_type_name, str):
-                    resolved_refs[key[len("game_object_type:"):]] = self.create(gob_type_name, scope)
-                elif isinstance(gob_type_name, list):
-                    gob_type_list = type_spec_kwargs[key]
-                    resolved_refs[key[len("game_object_type:"):]] = [
-                        self.create(gob_type_name, scope) for gob_type_name in gob_type_list
-                    ]
-                else:
-                    sys.stderr.write("GameObjectFactory.__create_object(): Unrecognized type '{0}'".format(
-                        gob_type_name
-                    ))
-
-            elif key.startswith("type_spec:"):
-                gob_type_name = type_spec_kwargs[key]
-                if isinstance(gob_type_name, str):
-                    resolved_refs[key[len("type_spec:"):]] = TypeSpec(self, gob_type_name)
-                elif isinstance(gob_type_name, list):
-                    type_list = type_spec_kwargs[key]
-                    resolved_refs[key[len("type_spec:"):]] = [
-                        TypeSpec(self, type_name) for type_name in type_list
-                    ]
-                else:
-                    sys.stderr.write("GameObjectFactory.__create_object(): Unrecognized type '{0}'".format(
-                        gob_type_name
-                    ))
-            else:
+            if not is_special_key:
                 resolved_refs[key] = type_spec_kwargs[key]
 
         try:
@@ -190,7 +144,7 @@ class GameObjectFactory():
             sys.stderr.write("GameObjectBase subclass '{0}' not found.\n".format(type_spec["class_name"]))
             return None
 
-    def __assign_asset_list(self, asset_names, asset_list):
+    def __assign_asset_list(self, asset_names, asset_list, asset_retriever, scope):
         """
         Goes into asset_list and assigns the initialized assets to the right asset spec elements in the assets
         dictionary. This enables support for nested lists of assets in the asset specs. See the CollisionManager
@@ -198,10 +152,10 @@ class GameObjectFactory():
         """
         for asset_name in asset_names:
             if isinstance(asset_name, str):
-                asset_list.append(self.assets[asset_name])
+                asset_list.append(asset_retriever(asset_name, scope))
             else:
                 asset_list.append([])
-                self.__assign_asset_list(asset_name, asset_list[-1])
+                self.__assign_asset_list(asset_name, asset_list[-1], asset_retriever, scope)
 
     def __create_assets(self, dictionary, creator_func):
         """Creates a dictionary of loaded and initialized assets using the creator_func."""
