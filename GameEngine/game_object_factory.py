@@ -185,6 +185,8 @@ class GameObjectFactory():
         """Recursively copies dictionary keys."""
         if isinstance(from_obj[key], dict):
             for subkey in from_obj[key]:
+                if not key in to_obj:
+                    to_obj[key] = {}
                 self.__recursive_copy(from_obj[key], to_obj[key], subkey)
         elif isinstance(from_obj[key], list):
             to_obj[key] = copy.deepcopy(from_obj[key])

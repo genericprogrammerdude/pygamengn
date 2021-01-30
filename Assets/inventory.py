@@ -353,7 +353,7 @@ game_types = {
                     ]
                 },
                 "CountText": {
-                    "base_type": "/DebriefPanel/DebriefRowPanel/Count/CountText",
+                    "base_type": "/DebriefPanel/DebriefRowPanel/RowText",
                     "kwargs": {
                         "name": "asteroid_count_text"
                     }
@@ -367,7 +367,7 @@ game_types = {
                     ]
                 },
                 "MultiplierText": {
-                    "base_type": "/DebriefPanel/DebriefRowPanel/Multiplier/MultiplierText",
+                    "base_type": "/DebriefPanel/DebriefRowPanel/RowText",
                     "kwargs": {
                         "name": "asteroid_multiplier_text"
                     }
@@ -381,7 +381,7 @@ game_types = {
                     ]
                 },
                 "TotalText": {
-                    "base_type": "/DebriefPanel/DebriefRowPanel/Total/TotalText",
+                    "base_type": "/DebriefPanel/DebriefRowPanel/RowText",
                     "kwargs": {
                         "name": "asteroid_total_text"
                     }
@@ -414,7 +414,7 @@ game_types = {
                     ]
                 },
                 "CountText": {
-                    "base_type": "/DebriefPanel/DebriefRowPanel/Count/CountText",
+                    "base_type": "/DebriefPanel/DebriefRowPanel/RowText",
                     "kwargs": {
                         "name": "waypoint_count_text"
                     }
@@ -428,7 +428,7 @@ game_types = {
                     ]
                 },
                 "MultiplierText": {
-                    "base_type": "/DebriefPanel/DebriefRowPanel/Multiplier/MultiplierText",
+                    "base_type": "/DebriefPanel/DebriefRowPanel/RowText",
                     "kwargs": {
                         "name": "waypoint_multiplier_text"
                     }
@@ -442,7 +442,7 @@ game_types = {
                     ]
                 },
                 "TotalText": {
-                    "base_type": "/DebriefPanel/DebriefRowPanel/Total/TotalText",
+                    "base_type": "/DebriefPanel/DebriefRowPanel/RowText",
                     "kwargs": {
                         "name": "waypoint_total_text"
                     }
@@ -552,25 +552,8 @@ game_types = {
                 "kwargs": {
                     "pos": [0.1, 0],
                     "size": [0.3, 1],
-                    "game_object:children": [
-                        "CountText"
-                    ],
                     "fix_aspect_ratio": False,
                     "colour": [0, 0, 0, 0]
-                },
-                "CountText": {
-                    "class_name": "TextPanel",
-                    "kwargs": {
-                        "pos": [0, 0],
-                        "size": [1, 1],
-                        "game_object:children": [],
-                        "fix_aspect_ratio": True,
-                        "asset:font_asset": "fast_hand_font",
-                        "text_colour": [0, 200, 100],
-                        "horz_align": "RIGHT",
-                        "vert_align": "CENTRE",
-                        "text": "0"
-                    }
                 }
             },
             "Multiplier": {
@@ -578,25 +561,8 @@ game_types = {
                 "kwargs": {
                     "pos": [0.4, 0],
                     "size": [0.3, 1],
-                    "game_object:children": [
-                        "MultiplierText"
-                    ],
                     "fix_aspect_ratio": False,
                     "colour": [0, 0, 0, 0]
-                },
-                "MultiplierText": {
-                    "class_name": "TextPanel",
-                    "kwargs": {
-                        "pos": [0, 0],
-                        "size": [1, 1],
-                        "game_object:children": [],
-                        "fix_aspect_ratio": True,
-                        "asset:font_asset": "fast_hand_font",
-                        "text_colour": [0, 200, 100],
-                        "horz_align": "RIGHT",
-                        "vert_align": "CENTRE",
-                        "text": "x0"
-                    }
                 }
             },
             "Total": {
@@ -604,25 +570,22 @@ game_types = {
                 "kwargs": {
                     "pos": [0.7, 0],
                     "size": [0.3, 1],
-                    "game_object:children": [
-                        "TotalText"
-                    ],
                     "fix_aspect_ratio": False,
                     "colour": [0, 0, 0, 0]
-                },
-                "TotalText": {
-                    "class_name": "TextPanel",
-                    "kwargs": {
-                        "pos": [0, 0],
-                        "size": [1, 1],
-                        "game_object:children": [],
-                        "fix_aspect_ratio": True,
-                        "asset:font_asset": "fast_hand_font",
-                        "text_colour": [0, 200, 100],
-                        "horz_align": "RIGHT",
-                        "vert_align": "CENTRE",
-                        "text": "0"
-                    }
+                }
+            },
+            "RowText": {
+                "class_name": "TextPanel",
+                "kwargs": {
+                    "pos": [0, 0],
+                    "size": [1, 1],
+                    "game_object:children": [],
+                    "fix_aspect_ratio": True,
+                    "asset:font_asset": "fast_hand_font",
+                    "text_colour": [0, 200, 100],
+                    "horz_align": "RIGHT",
+                    "vert_align": "CENTRE",
+                    "text": "0"
                 }
             }
         }
