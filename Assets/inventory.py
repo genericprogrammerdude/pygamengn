@@ -136,13 +136,13 @@ game_types = {
         "class_name": "SpaceShooterGame",
         "kwargs": {
             "asset:render_group": "RenderGroup",
-            "game_object:collision_manager": "SpaceShooterGame/CollisionManager",
-            "game_object:main_menu_ui": "MainMenu",
-            "game_object:pause_menu_ui": "PauseMenu",
-            "game_object:debrief_panel": "DebriefPanel",
+            "game_object:collision_manager": "CollisionManager",
+            "game_object:main_menu_ui": "/MainMenu",
+            "game_object:pause_menu_ui": "/PauseMenu",
+            "game_object:debrief_panel": "/DebriefPanel",
             "game_object:score_ui": "/Level_02/ScorePanel",
             "game_object:time_ui": "/Level_02/TimePanel",
-            "game_object:level": "Level_02",
+            "game_object:level": "/Level_02",
             "asteroid_multiplier": 10,
             "waypoint_multiplier": 50
         },
@@ -284,173 +284,6 @@ game_types = {
             }
         }
     },
-    "DebriefRowPanel": {
-        "class_name": "ColourPanel",
-        "kwargs": {
-            "size": [0.8, 0.1],
-            "game_object:children": [
-                "Spinner",
-                "Count",
-                "Multiplier",
-                "Total"
-            ],
-            "fix_aspect_ratio": False,
-            "name": "asteroid_row_panel",
-            "colour": [150, 150, 150, 100]
-        },
-        "Spinner": {
-            "class_name": "Spinner",
-            "kwargs": {
-                "pos": [0, 0],
-                "size": [0.1, 1],
-                "game_object:children": [],
-                "fix_aspect_ratio": True,
-                "name": "spinner"
-            }
-        },
-        "Count": {
-            "class_name": "ColourPanel",
-            "kwargs": {
-                "pos": [0.1, 0],
-                "size": [0.3, 1],
-                "game_object:children": [
-                    "CountText"
-                ],
-                "fix_aspect_ratio": False,
-                "colour": [0, 0, 0, 0]
-            },
-            "CountText": {
-                "class_name": "TextPanel",
-                "kwargs": {
-                    "pos": [0, 0],
-                    "size": [1, 1],
-                    "game_object:children": [],
-                    "fix_aspect_ratio": True,
-                    "asset:font_asset": "fast_hand_font",
-                    "text_colour": [0, 200, 100],
-                    "horz_align": "RIGHT",
-                    "vert_align": "CENTRE",
-                    "text": "0"
-                }
-            }
-        },
-        "Multiplier": {
-            "class_name": "ColourPanel",
-            "kwargs": {
-                "pos": [0.4, 0],
-                "size": [0.3, 1],
-                "game_object:children": [
-                    "MultiplierText"
-                ],
-                "fix_aspect_ratio": False,
-                "colour": [0, 0, 0, 0]
-            },
-            "MultiplierText": {
-                "class_name": "TextPanel",
-                "kwargs": {
-                    "pos": [0, 0],
-                    "size": [1, 1],
-                    "game_object:children": [],
-                    "fix_aspect_ratio": True,
-                    "asset:font_asset": "fast_hand_font",
-                    "text_colour": [0, 200, 100],
-                    "horz_align": "RIGHT",
-                    "vert_align": "CENTRE",
-                    "text": "x0"
-                }
-            }
-        },
-        "Total": {
-            "class_name": "ColourPanel",
-            "kwargs": {
-                "pos": [0.7, 0],
-                "size": [0.3, 1],
-                "game_object:children": [
-                    "TotalText"
-                ],
-                "fix_aspect_ratio": False,
-                "colour": [0, 0, 0, 0]
-            },
-            "TotalText": {
-                "class_name": "TextPanel",
-                "kwargs": {
-                    "pos": [0, 0],
-                    "size": [1, 1],
-                    "game_object:children": [],
-                    "fix_aspect_ratio": True,
-                    "asset:font_asset": "fast_hand_font",
-                    "text_colour": [0, 200, 100],
-                    "horz_align": "RIGHT",
-                    "vert_align": "CENTRE",
-                    "text": "0"
-                }
-            }
-        }
-    },
-    "AsteroidRowPanel:DebriefRowPanel": {
-        "kwargs": {
-            "pos": [0.1, 0.15]
-        },
-        "Spinner": {
-            "kwargs": {
-                "image:image_asset": "asteroid_04",
-                "angular_velocity": 45
-            }
-        },
-        "Count": {
-            "CountText": {
-                "kwargs": {
-                    "name": "asteroid_count_text"
-                }
-            }
-        },
-        "Multiplier": {
-            "MultiplierText": {
-                "kwargs": {
-                    "name": "asteroid_multiplier_text"
-                }
-            }
-        },
-        "Total": {
-            "TotalText": {
-                "kwargs": {
-                    "name": "asteroid_total_text"
-                }
-            }
-        }
-    },
-    "WaypointRowPanel:DebriefRowPanel": {
-        "kwargs": {
-            "pos": [0.1, 0.3]
-        },
-        "Spinner": {
-            "kwargs": {
-                "image:image_asset": "waypoint",
-                "angular_velocity":-45
-            }
-        },
-        "Count": {
-            "CountText": {
-                "kwargs": {
-                    "name": "waypoint_count_text"
-                }
-            }
-        },
-        "Multiplier": {
-            "MultiplierText": {
-                "kwargs": {
-                    "name": "waypoint_multiplier_text"
-                }
-            }
-        },
-        "Total": {
-            "TotalText": {
-                "kwargs": {
-                    "name": "waypoint_total_text"
-                }
-            }
-        }
-    },
     "DebriefPanel": {
         "class_name": "DebriefPanel",
         "kwargs": {
@@ -458,8 +291,8 @@ game_types = {
             "size": [0.5, 0.7],
             "game_object:children": [
                 "ContinueButton",
-                "/AsteroidRowPanel",
-                "/WaypointRowPanel",
+                "AsteroidRowPanel",
+                "WaypointRowPanel",
                 "FinalScorePanel"
             ],
             "fix_aspect_ratio": False,
@@ -491,6 +324,128 @@ game_types = {
                     "horz_align": "CENTRE",
                     "vert_align": "CENTRE",
                     "text": "Continue"
+                }
+            }
+        },
+        "AsteroidRowPanel": {
+            "base_type": "/DebriefPanel/DebriefRowPanel",
+            "kwargs": {
+                "game_object:children": [
+                    "Spinner",
+                    "Count",
+                    "Multiplier",
+                    "Total"
+                ],
+                "pos": [0.1, 0.15]
+            },
+            "Spinner": {
+                "base_type": "/DebriefPanel/DebriefRowPanel/Spinner",
+                "kwargs": {
+                    "image:image_asset": "asteroid_04",
+                    "angular_velocity": 45
+                }
+            },
+            "Count": {
+                "base_type": "/DebriefPanel/DebriefRowPanel/Count",
+                "kwargs": {
+                    "game_object:children": [
+                        "CountText"
+                    ]
+                },
+                "CountText": {
+                    "base_type": "/DebriefPanel/DebriefRowPanel/Count/CountText",
+                    "kwargs": {
+                        "name": "asteroid_count_text"
+                    }
+                }
+            },
+            "Multiplier": {
+                "base_type": "/DebriefPanel/DebriefRowPanel/Multiplier",
+                "kwargs": {
+                    "game_object:children": [
+                        "MultiplierText"
+                    ]
+                },
+                "MultiplierText": {
+                    "base_type": "/DebriefPanel/DebriefRowPanel/Multiplier/MultiplierText",
+                    "kwargs": {
+                        "name": "asteroid_multiplier_text"
+                    }
+                }
+            },
+            "Total": {
+                "base_type": "/DebriefPanel/DebriefRowPanel/Total",
+                "kwargs": {
+                    "game_object:children": [
+                        "TotalText"
+                    ]
+                },
+                "TotalText": {
+                    "base_type": "/DebriefPanel/DebriefRowPanel/Total/TotalText",
+                    "kwargs": {
+                        "name": "asteroid_total_text"
+                    }
+                }
+            }
+        },
+        "WaypointRowPanel": {
+            "base_type": "/DebriefPanel/DebriefRowPanel",
+            "kwargs": {
+                "game_object:children": [
+                    "Spinner",
+                    "Count",
+                    "Multiplier",
+                    "Total"
+                ],
+                "pos": [0.1, 0.3]
+            },
+            "Spinner": {
+                "base_type": "/DebriefPanel/DebriefRowPanel/Spinner",
+                "kwargs": {
+                    "image:image_asset": "waypoint",
+                    "angular_velocity":-45
+                }
+            },
+            "Count": {
+                "base_type": "/DebriefPanel/DebriefRowPanel/Count",
+                "kwargs": {
+                    "game_object:children": [
+                        "CountText"
+                    ]
+                },
+                "CountText": {
+                    "base_type": "/DebriefPanel/DebriefRowPanel/Count/CountText",
+                    "kwargs": {
+                        "name": "waypoint_count_text"
+                    }
+                }
+            },
+            "Multiplier": {
+                "base_type": "/DebriefPanel/DebriefRowPanel/Multiplier",
+                "kwargs": {
+                    "game_object:children": [
+                        "MultiplierText"
+                    ]
+                },
+                "MultiplierText": {
+                    "base_type": "/DebriefPanel/DebriefRowPanel/Multiplier/MultiplierText",
+                    "kwargs": {
+                        "name": "waypoint_multiplier_text"
+                    }
+                }
+            },
+            "Total": {
+                "base_type": "/DebriefPanel/DebriefRowPanel/Total",
+                "kwargs": {
+                    "game_object:children": [
+                        "TotalText"
+                    ]
+                },
+                "TotalText": {
+                    "base_type": "/DebriefPanel/DebriefRowPanel/Total/TotalText",
+                    "kwargs": {
+                        "name": "waypoint_total_text"
+                    }
                 }
             }
         },
@@ -572,6 +527,104 @@ game_types = {
                     }
                 }
             }
+        },
+        "DebriefRowPanel": {
+            "class_name": "ColourPanel",
+            "kwargs": {
+                "size": [0.8, 0.1],
+                "game_object:children": [],
+                "fix_aspect_ratio": False,
+                "name": "asteroid_row_panel",
+                "colour": [150, 150, 150, 100]
+            },
+            "Spinner": {
+                "class_name": "Spinner",
+                "kwargs": {
+                    "pos": [0, 0],
+                    "size": [0.1, 1],
+                    "game_object:children": [],
+                    "fix_aspect_ratio": True,
+                    "name": "spinner"
+                }
+            },
+            "Count": {
+                "class_name": "ColourPanel",
+                "kwargs": {
+                    "pos": [0.1, 0],
+                    "size": [0.3, 1],
+                    "game_object:children": [
+                        "CountText"
+                    ],
+                    "fix_aspect_ratio": False,
+                    "colour": [0, 0, 0, 0]
+                },
+                "CountText": {
+                    "class_name": "TextPanel",
+                    "kwargs": {
+                        "pos": [0, 0],
+                        "size": [1, 1],
+                        "game_object:children": [],
+                        "fix_aspect_ratio": True,
+                        "asset:font_asset": "fast_hand_font",
+                        "text_colour": [0, 200, 100],
+                        "horz_align": "RIGHT",
+                        "vert_align": "CENTRE",
+                        "text": "0"
+                    }
+                }
+            },
+            "Multiplier": {
+                "class_name": "ColourPanel",
+                "kwargs": {
+                    "pos": [0.4, 0],
+                    "size": [0.3, 1],
+                    "game_object:children": [
+                        "MultiplierText"
+                    ],
+                    "fix_aspect_ratio": False,
+                    "colour": [0, 0, 0, 0]
+                },
+                "MultiplierText": {
+                    "class_name": "TextPanel",
+                    "kwargs": {
+                        "pos": [0, 0],
+                        "size": [1, 1],
+                        "game_object:children": [],
+                        "fix_aspect_ratio": True,
+                        "asset:font_asset": "fast_hand_font",
+                        "text_colour": [0, 200, 100],
+                        "horz_align": "RIGHT",
+                        "vert_align": "CENTRE",
+                        "text": "x0"
+                    }
+                }
+            },
+            "Total": {
+                "class_name": "ColourPanel",
+                "kwargs": {
+                    "pos": [0.7, 0],
+                    "size": [0.3, 1],
+                    "game_object:children": [
+                        "TotalText"
+                    ],
+                    "fix_aspect_ratio": False,
+                    "colour": [0, 0, 0, 0]
+                },
+                "TotalText": {
+                    "class_name": "TextPanel",
+                    "kwargs": {
+                        "pos": [0, 0],
+                        "size": [1, 1],
+                        "game_object:children": [],
+                        "fix_aspect_ratio": True,
+                        "asset:font_asset": "fast_hand_font",
+                        "text_colour": [0, 200, 100],
+                        "horz_align": "RIGHT",
+                        "vert_align": "CENTRE",
+                        "text": "0"
+                    }
+                }
+            }
         }
     },
     "PlayerShip": {
@@ -592,16 +645,16 @@ game_types = {
         ],
         "attachments": [
             {
-                "game_type": "PlayerShield",
+                "game_type": "/PlayerShip/PlayerShield",
                 "offset": [0.0, 0.0]
             },
             {
-                "game_type": "NavArrow",
+                "game_type": "/PlayerShip/NavArrow",
                 "offset": [0, 0],
                 "parent_transform": False
             },
             {
-                "game_type": "PlayerHealthBar",
+                "game_type": "/PlayerShip/PlayerHealthBar",
                 "offset": [0, 0],
                 "parent_transform": False
             }
@@ -697,11 +750,11 @@ game_types = {
             ],
             "attachments": [
                 {
-                    "game_type": "LeftDigit",
+                    "game_type": "/PlayerShip/Waypoint/LeftDigit",
                     "offset": [-10.0, 0.0]
                 },
                 {
-                    "game_type": "RightDigit",
+                    "game_type": "/PlayerShip/Waypoint/RightDigit",
                     "offset": [10.0, 0.0]
                 }
             ],
@@ -865,14 +918,14 @@ game_types = {
                 "health": 40,
                 "type_spec:death_effect": "Explosion",
                 "damage": 10,
-                "game_object:mover": "AsteroidMover",
+                "game_object:mover": "/AsteroidMover",
                 "type_spec:death_spawn": ["AsteroidSmall", "AsteroidMedium"],
                 "score_on_die": 50,
                 "kill_when_off_screen": True
             },
             "attachments": [
                 {
-                    "game_type": "AsteroidTurret",
+                    "game_type": "/Level_02/AsteroidMother/AsteroidTurret",
                     "offset": [0, 0],
                     "parent_transform": False
                 }
@@ -894,7 +947,7 @@ game_types = {
                 },
                 "attachments": [
                     {
-                        "game_type": "AsteroidTurretGun",
+                        "game_type": "/Level_02/AsteroidMother/AsteroidTurret/AsteroidTurretGun",
                         "offset": [0.0, -15.0]
                     }
                 ],
@@ -951,7 +1004,7 @@ game_types = {
             "health": 40,
             "type_spec:death_effect": "Explosion",
             "damage": 10,
-            "game_object:mover": "AsteroidMover",
+            "game_object:mover": "/AsteroidMover",
             "type_spec:death_spawn": ["AsteroidMedium", "AsteroidMedium"],
             "score_on_die": 30,
             "kill_when_off_screen": True
@@ -971,7 +1024,7 @@ game_types = {
             "health": 20,
             "type_spec:death_effect": "Explosion",
             "damage": 5,
-            "game_object:mover": "AsteroidMover",
+            "game_object:mover": "/AsteroidMover",
             "type_spec:death_spawn": ["AsteroidSmall", "AsteroidTiny"],
             "score_on_die": 20,
             "kill_when_off_screen": True
@@ -991,7 +1044,7 @@ game_types = {
             "health": 10,
             "type_spec:death_effect": "ExplosionSmall",
             "damage": 2,
-            "game_object:mover": "AsteroidMover",
+            "game_object:mover": "/AsteroidMover",
             "type_spec:death_spawn": [],
             "score_on_die": 10,
             "kill_when_off_screen": True
@@ -1010,7 +1063,7 @@ game_types = {
             "health": 5,
             "type_spec:death_effect": "ExplosionSmall",
             "damage": 1,
-            "game_object:mover": "AsteroidMover",
+            "game_object:mover": "/AsteroidMover",
             "type_spec:death_spawn": [],
             "score_on_die": 7,
             "kill_when_off_screen": True
