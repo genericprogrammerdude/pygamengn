@@ -1,5 +1,4 @@
 import copy
-import json
 import sys
 
 import pygame
@@ -9,12 +8,7 @@ from layer_manager import LayerManager
 
 
 class GameObjectFactory():
-    """
-    GameObject factory.
-
-    The following article helped a lot on the details of the implementation of GameObjectFactory:
-    https://medium.com/@geoffreykoh/implementing-the-factory-pattern-via-dynamic-registry-and-python-decorators-479fc1537bbe
-    """
+    """Factory to create GameObjectBase instances."""
 
     class UnknownGameType(Exception):
         """Exception raised when trying to instantiate an unknown GameObject class."""
@@ -22,28 +16,26 @@ class GameObjectFactory():
         def __init__(self, message):
             super().__init__(message)
 
-    def __init__(self, registry, inventory_fp):
+    def __init__(self, registry, images, sounds, assets, game_types):
         self.layer_manager = None
         self.registry = registry
-        data = json.load(inventory_fp)
-        inventory_fp.close()
 
         # Keys that get special treatment
         self.special_keys = [
             ("image:", lambda name, scope: self.images[name]),
             ("sound:", lambda name, scope: self.sounds[name]),
             ("asset:", lambda name, scope: self.assets[name]),
-            ("game_object_type:", lambda name, scope: self.create(name, scope)),
+            ("game_object:", lambda name, scope: self.create(name, scope)),
             ("type_spec:", lambda name, scope: TypeSpec(self, name))
         ]
 
         # Initialize game types
-        self.game_types = data["game_types"]
+        self.game_types = game_types
 
         # Load images and sounds, and initialize assets
-        self.images = self.__create_assets(data["images"], lambda v: pygame.image.load(v).convert_alpha())
-        self.sounds = self.__create_assets(data["sounds"], lambda v: pygame.mixer.Sound(v))
-        self.assets = self.__create_assets(data["assets"], lambda v: self.__create_object(v, ""))
+        self.images = self.__create_assets(images, lambda v: pygame.image.load(v).convert_alpha())
+        self.sounds = self.__create_assets(sounds, lambda v: pygame.mixer.Sound(v))
+        self.assets = self.__create_assets(assets, lambda v: self.__create_object(v, ""))
 
         # Build entries for game types that inherit from other types
         self.__build_derived_types()

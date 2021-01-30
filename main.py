@@ -17,8 +17,7 @@ def main():
     size = (1280, 720)
     screen = pygame.display.set_mode(size, pygame.DOUBLEBUF | pygame.HWSURFACE | pygame.RESIZABLE)
 
-    factory = GameObjectFactory(ClassRegistrar.registry, open("Assets/inventory.json"))
-    factory.set_layer_manager_asset_name("LayerManager")
+    factory = create_factory()
 
     # Create world
     pygame.display.set_icon(factory.images["ship"])
@@ -34,6 +33,14 @@ def main():
         clock.tick(60)
 
     pygame.quit()
+
+
+def create_factory() -> GameObjectFactory:
+    """Instantiates GameObjectFactory, the factory that will create all the game objects."""
+    from Assets.inventory import images, sounds, assets, game_types
+    factory = GameObjectFactory(ClassRegistrar.registry, images, sounds, assets, game_types)
+    factory.set_layer_manager_asset_name("LayerManager")
+    return factory
 
 
 if __name__ == "__main__":

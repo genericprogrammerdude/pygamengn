@@ -6,7 +6,12 @@ from game_object_base import GameObjectBase
 
 
 class ClassRegistrar:
-    """Every GameObjectBase child class can register itself with the class registrar to make itself loadable."""
+    """
+    Every GameObjectBase child class can register itself with the class registrar to make itself loadable.
+
+    The following article helped a lot on the details of the implementation of GameObjectFactory:
+    https://medium.com/@geoffreykoh/implementing-the-factory-pattern-via-dynamic-registry-and-python-decorators-479fc1537bbe
+    """
 
     registry = {}
 
