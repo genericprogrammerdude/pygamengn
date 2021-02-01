@@ -597,7 +597,7 @@ game_types = {
             "type_spec:projectile_type": "/PlayerShip/PlayerProjectile",
             "fire_freq": 200,
             "game_object:mover": "PlayerShipMover",
-            "type_spec:death_effect": "ExplosionBig",
+            "type_spec:death_effect": "/Explosions/ExplosionBig",
             "damage": 50,
             "game_object:waypoint": "Waypoint",
             "sound:shot_sound": "ship_shot"
@@ -666,7 +666,7 @@ game_types = {
             "class_name": "Projectile",
             "kwargs": {
                 "image:image_asset": "player_projectile",
-                "type_spec:death_effect": "ExplosionSmall",
+                "type_spec:death_effect": "/Explosions/ExplosionSmall",
                 "damage": 15,
                 "game_object:mover": "PlayerProjectileMover",
                 "kill_when_off_screen": True
@@ -689,7 +689,7 @@ game_types = {
             "class_name": "Waypoint",
             "kwargs": {
                 "image:image_asset": "waypoint",
-                "type_spec:death_effect": "Explosion",
+                "type_spec:death_effect": "/Explosions/Explosion",
                 "kill_when_off_screen": False,
                 "distance": 1000,
                 "angular_velocity": 60.0,
@@ -743,40 +743,42 @@ game_types = {
             }
         }
     },
-    "Explosion": {
-        "class_name": "AnimatedTexture",
-        "kwargs": {
-            "asset:asset": "explosion_atlas",
-            "duration": 750,
-            "scale": 1
+    "Explosions": {
+        "Explosion": {
+            "class_name": "AnimatedTexture",
+            "kwargs": {
+                "asset:asset": "explosion_atlas",
+                "duration": 750,
+                "scale": 1
+            },
+            "groups": [
+                "RenderGroup"
+            ]
         },
-        "groups": [
-            "RenderGroup"
-        ]
-    },
-    "ExplosionSmall": {
-        "class_name": "AnimatedTexture",
-        "kwargs": {
-            "asset:asset": "explosion_small_atlas",
-            "duration": 500,
-            "scale": 0.8,
-            "sound:sound": "explosion_small"
+        "ExplosionSmall": {
+            "class_name": "AnimatedTexture",
+            "kwargs": {
+                "asset:asset": "explosion_small_atlas",
+                "duration": 500,
+                "scale": 0.8,
+                "sound:sound": "explosion_small"
+            },
+            "groups": [
+                "RenderGroup"
+            ]
         },
-        "groups": [
-            "RenderGroup"
-        ]
-    },
-    "ExplosionBig": {
-        "class_name": "AnimatedTexture",
-        "kwargs": {
-            "asset:asset": "explosion_big_atlas",
-            "duration": 1500,
-            "scale": 1.5,
-            "sound:sound": "explosion_large"
-        },
-        "groups": [
-            "RenderGroup"
-        ]
+        "ExplosionBig": {
+            "class_name": "AnimatedTexture",
+            "kwargs": {
+                "asset:asset": "explosion_big_atlas",
+                "duration": 1500,
+                "scale": 1.5,
+                "sound:sound": "explosion_large"
+            },
+            "groups": [
+                "RenderGroup"
+            ]
+        }
     },
     "Level_02": {
         "class_name": "Level",
@@ -899,7 +901,7 @@ game_types = {
                 "type_spec:projectile_type": "/AsteroidMother/AsteroidTurret/AsteroidProjectile",
                 "fire_freq": 1500,
                 "health": 20,
-                "type_spec:death_effect": "Explosion",
+                "type_spec:death_effect": "/Explosions/Explosion",
                 "score_on_die": 20,
                 "sound:shot_sound": "turret_shot"
             },
@@ -928,7 +930,7 @@ game_types = {
                 "class_name": "Projectile",
                 "kwargs": {
                     "image:image_asset": "turret_projectile",
-                    "type_spec:death_effect": "ExplosionSmall",
+                    "type_spec:death_effect": "/Explosions/ExplosionSmall",
                     "damage": 10,
                     "game_object:mover": "EnemyTurretProjectileMover",
                     "kill_when_off_screen": True
@@ -952,7 +954,7 @@ game_types = {
     "AsteroidBase": {
         "class_name": "Asteroid",
         "kwargs": {
-            "type_spec:death_effect": "Explosion",
+            "type_spec:death_effect": "/Explosions/Explosion",
             "game_object:mover": "AsteroidMover",
             "type_spec:death_spawn": [],
             "kill_when_off_screen": True
@@ -1016,7 +1018,7 @@ game_types = {
                 "asteroid_08"
             ],
             "health": 5,
-            "type_spec:death_effect": "ExplosionSmall",
+            "type_spec:death_effect": "/Explosions/ExplosionSmall",
             "damage": 1,
             "score_on_die": 7
         }
