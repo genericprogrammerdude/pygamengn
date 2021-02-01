@@ -3,7 +3,7 @@ import os
 import sys
 
 os.environ["PYGAME_HIDE_SUPPORT_PROMPT"] = "1"
-sys.path.append("./GameEngine")
+sys.path.append("./pygameng")
 
 import pygame
 
