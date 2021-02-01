@@ -92,9 +92,9 @@ assets = {
                 ["Shield"],
                 ["Waypoint", "/PlayerShip/Waypoint/LeftDigit", "/PlayerShip/Waypoint/RightDigit"],
                 ["Asteroid"],
-                ["/Level_02/AsteroidMother/AsteroidTurret/AsteroidProjectile"],
-                ["/Level_02/AsteroidMother/AsteroidTurret"],
-                ["/Level_02/AsteroidMother/AsteroidTurret/AsteroidTurretGun"],
+                ["/AsteroidMother/AsteroidTurret/AsteroidProjectile"],
+                ["/AsteroidMother/AsteroidTurret"],
+                ["/AsteroidMother/AsteroidTurret/AsteroidTurretGun"],
                 ["NavArrow"],
                 ["AnimatedTexture"],
                 ["HealthBar"]
@@ -140,8 +140,8 @@ game_types = {
             "game_object:main_menu_ui": "/MainMenu",
             "game_object:pause_menu_ui": "/PauseMenu",
             "game_object:debrief_panel": "/DebriefPanel",
-            "game_object:score_ui": "/Level_02/ScorePanel",
-            "game_object:time_ui": "/Level_02/TimePanel",
+            "game_object:score_ui": "/ScorePanel",
+            "game_object:time_ui": "/TimePanel",
             "game_object:level": "/Level_02",
             "asteroid_multiplier": 10,
             "waypoint_multiplier": 50
@@ -798,6 +798,7 @@ game_types = {
             "class_name": "AsteroidSpawner",
             "kwargs": {
                 "type_spec:asteroid_types": [
+                    # Ugly hack to reduce the number of times AsteroidMother is selected
                     "AsteroidBig",
                     "AsteroidMedium",
                     "AsteroidBig",
@@ -810,139 +811,139 @@ game_types = {
                     "AsteroidMedium",
                     "AsteroidBig",
                     "AsteroidMedium",
-                    "/Level_02/AsteroidMother"
+                    "AsteroidMother"
                 ],
                 "spawn_freq": 1000,
                 "asset:render_group": "RenderGroup",
                 "freq_accel_threshold": 20000
             }
         },
-        "ScorePanel": {
-            "class_name": "ColourPanel",
+    },
+    "ScorePanel": {
+        "class_name": "ColourPanel",
+        "kwargs": {
+            "pos": [0, 0],
+            "size": [0.1, 0.06],
+            "game_object:children": [
+                "ScoreText"
+            ],
+            "fix_aspect_ratio": True,
+            "colour": [100, 100, 100, 100]
+        },
+        "ScoreText": {
+            "class_name": "TextPanel",
             "kwargs": {
                 "pos": [0, 0],
-                "size": [0.1, 0.06],
-                "game_object:children": [
-                    "ScoreText"
-                ],
+                "size": [1, 1],
+                "game_object:children": [],
                 "fix_aspect_ratio": True,
-                "colour": [100, 100, 100, 100]
-            },
-            "ScoreText": {
-                "class_name": "TextPanel",
-                "kwargs": {
-                    "pos": [0, 0],
-                    "size": [1, 1],
-                    "game_object:children": [],
-                    "fix_aspect_ratio": True,
-                    "asset:font_asset": "fast_hand_font",
-                    "text_colour": [0, 200, 100],
-                    "horz_align": "RIGHT",
-                    "vert_align": "CENTRE",
-                    "text": "0000"
-                }
+                "asset:font_asset": "fast_hand_font",
+                "text_colour": [0, 200, 100],
+                "horz_align": "RIGHT",
+                "vert_align": "CENTRE",
+                "text": "0000"
             }
+        }
+    },
+    "TimePanel": {
+        "class_name": "ColourPanel",
+        "kwargs": {
+            "pos": [0.88, 0],
+            "size": [0.12, 0.06],
+            "game_object:children": [
+                "TimeText"
+            ],
+            "fix_aspect_ratio": True,
+            "colour": [100, 100, 100, 100]
         },
-        "TimePanel": {
-            "class_name": "ColourPanel",
+        "TimeText": {
+            "class_name": "TextPanel",
             "kwargs": {
-                "pos": [0.88, 0],
-                "size": [0.12, 0.06],
-                "game_object:children": [
-                    "TimeText"
-                ],
+                "pos": [0, 0],
+                "size": [1, 1],
+                "game_object:children": [],
                 "fix_aspect_ratio": True,
-                "colour": [100, 100, 100, 100]
-            },
-            "TimeText": {
-                "class_name": "TextPanel",
-                "kwargs": {
-                    "pos": [0, 0],
-                    "size": [1, 1],
-                    "game_object:children": [],
-                    "fix_aspect_ratio": True,
-                    "asset:font_asset": "fast_hand_font",
-                    "text_colour": [0, 200, 100],
-                    "horz_align": "CENTRE",
-                    "vert_align": "CENTRE",
-                    "text": "00:00"
-                }
+                "asset:font_asset": "fast_hand_font",
+                "text_colour": [0, 200, 100],
+                "horz_align": "CENTRE",
+                "vert_align": "CENTRE",
+                "text": "00:00"
             }
+        }
+    },
+    "AsteroidMother": {
+        "base_type": "AsteroidBase",
+        "kwargs": {
+            "image:images": [
+                "asteroid_00",
+                "asteroid_01",
+                "asteroid_02",
+                "asteroid_03"
+            ],
+            "health": 40,
+            "damage": 10,
+            "type_spec:death_spawn": ["AsteroidSmall", "AsteroidMedium"],
+            "score_on_die": 50
         },
-        "AsteroidMother": {
-            "base_type": "AsteroidBase",
+        "attachments": [
+            {
+                "game_type": "/AsteroidMother/AsteroidTurret",
+                "offset": [0, 0],
+                "parent_transform": False
+            }
+        ],
+        "AsteroidTurret": {
+            "class_name": "Turret",
             "kwargs": {
-                "image:images": [
-                    "asteroid_00",
-                    "asteroid_01",
-                    "asteroid_02",
-                    "asteroid_03"
-                ],
-                "health": 40,
-                "damage": 10,
-                "type_spec:death_spawn": ["AsteroidSmall", "AsteroidMedium"],
-                "score_on_die": 50
+                "image:image_asset": "turret",
+                "type_spec:projectile_type": "/AsteroidMother/AsteroidTurret/AsteroidProjectile",
+                "fire_freq": 1500,
+                "health": 20,
+                "type_spec:death_effect": "Explosion",
+                "score_on_die": 20,
+                "sound:shot_sound": "turret_shot"
             },
             "attachments": [
                 {
-                    "game_type": "/Level_02/AsteroidMother/AsteroidTurret",
-                    "offset": [0, 0],
-                    "parent_transform": False
+                    "game_type": "/AsteroidMother/AsteroidTurret/AsteroidTurretGun",
+                    "offset": [0.0, -15.0]
                 }
             ],
-            "AsteroidTurret": {
-                "class_name": "Turret",
+            "groups": [
+                "RenderGroup",
+                "AsteroidTurretsGroup"
+            ],
+            "AsteroidTurretGun": {
+                "class_name": "GameObject",
                 "kwargs": {
-                    "image:image_asset": "turret",
-                    "type_spec:projectile_type": "/Level_02/AsteroidMother/AsteroidTurret/AsteroidProjectile",
-                    "fire_freq": 1500,
-                    "health": 20,
-                    "type_spec:death_effect": "Explosion",
-                    "score_on_die": 20,
-                    "sound:shot_sound": "turret_shot"
+                    "image:image_asset": "turret_gun",
+                    "scale": 0.8,
+                    "is_collidable": False
                 },
-                "attachments": [
-                    {
-                        "game_type": "/Level_02/AsteroidMother/AsteroidTurret/AsteroidTurretGun",
-                        "offset": [0.0, -15.0]
-                    }
-                ],
+                "groups": [
+                    "RenderGroup"
+                ]
+            },
+            "AsteroidProjectile": {
+                "class_name": "Projectile",
+                "kwargs": {
+                    "image:image_asset": "turret_projectile",
+                    "type_spec:death_effect": "ExplosionSmall",
+                    "damage": 10,
+                    "game_object:mover": "EnemyTurretProjectileMover",
+                    "kill_when_off_screen": True
+                },
                 "groups": [
                     "RenderGroup",
-                    "AsteroidTurretsGroup"
+                    "AsteroidProjectilesGroup"
                 ],
-                "AsteroidTurretGun": {
-                    "class_name": "GameObject",
+                "EnemyTurretProjectileMover": {
+                    "class_name": "MoverVelocity",
                     "kwargs": {
-                        "image:image_asset": "turret_gun",
-                        "scale": 0.8,
-                        "is_collidable": False
-                    },
-                    "groups": [
-                        "RenderGroup"
-                    ]
-                },
-                "AsteroidProjectile": {
-                    "class_name": "Projectile",
-                    "kwargs": {
-                        "image:image_asset": "turret_projectile",
-                        "type_spec:death_effect": "ExplosionSmall",
-                        "damage": 10,
-                        "game_object:mover": "EnemyTurretProjectileMover",
-                        "kill_when_off_screen": True
-                    },
-                    "groups": [
-                        "RenderGroup",
-                        "AsteroidProjectilesGroup"
-                    ],
-                    "EnemyTurretProjectileMover": {
-                        "class_name": "MoverVelocity",
-                        "kwargs": {
-                            "velocity": 500.0,
-                            "velocity_decay_factor": 1.0,
-                            "max_velocity": 500.0,
-                            "angular_velocity": 0.0
-                        }
+                        "velocity": 500.0,
+                        "velocity_decay_factor": 1.0,
+                        "max_velocity": 500.0,
+                        "angular_velocity": 0.0
                     }
                 }
             }
