@@ -870,7 +870,7 @@ game_types = {
             }
         },
         "AsteroidMother": {
-            "class_name": "Asteroid",
+            "base_type": "AsteroidBase",
             "kwargs": {
                 "image:images": [
                     "asteroid_00",
@@ -879,12 +879,9 @@ game_types = {
                     "asteroid_03"
                 ],
                 "health": 40,
-                "type_spec:death_effect": "Explosion",
                 "damage": 10,
-                "game_object:mover": "/AsteroidMover",
                 "type_spec:death_spawn": ["AsteroidSmall", "AsteroidMedium"],
-                "score_on_die": 50,
-                "kill_when_off_screen": True
+                "score_on_die": 50
             },
             "attachments": [
                 {
@@ -892,10 +889,6 @@ game_types = {
                     "offset": [0, 0],
                     "parent_transform": False
                 }
-            ],
-            "groups": [
-                "RenderGroup",
-                "AsteroidsGroup"
             ],
             "AsteroidTurret": {
                 "class_name": "Turret",
@@ -955,8 +948,28 @@ game_types = {
             }
         }
     },
-    "AsteroidBig": {
+    "AsteroidBase": {
         "class_name": "Asteroid",
+        "kwargs": {
+            "type_spec:death_effect": "Explosion",
+            "game_object:mover": "AsteroidMover",
+            "type_spec:death_spawn": [],
+            "kill_when_off_screen": True
+        },
+        "groups": [
+            "RenderGroup",
+            "AsteroidsGroup"
+        ],
+        "AsteroidMover": {
+            "class_name": "MoverVelDir",
+            "kwargs": {
+                "velocity": 50.0,
+                "direction": [0, 1]
+            }
+        }
+    },
+    "AsteroidBig": {
+        "base_type": "AsteroidBase",
         "kwargs": {
             "image:images": [
                 "asteroid_00",
@@ -965,60 +978,38 @@ game_types = {
                 "asteroid_03"
             ],
             "health": 40,
-            "type_spec:death_effect": "Explosion",
             "damage": 10,
-            "game_object:mover": "/AsteroidMover",
             "type_spec:death_spawn": ["AsteroidMedium", "AsteroidMedium"],
-            "score_on_die": 30,
-            "kill_when_off_screen": True
-        },
-        "groups": [
-            "RenderGroup",
-            "AsteroidsGroup"
-        ]
+            "score_on_die": 30
+        }
     },
     "AsteroidMedium": {
-        "class_name": "Asteroid",
+        "base_type": "AsteroidBase",
         "kwargs": {
             "image:images": [
                 "asteroid_04",
                 "asteroid_05"
             ],
             "health": 20,
-            "type_spec:death_effect": "Explosion",
             "damage": 5,
-            "game_object:mover": "/AsteroidMover",
             "type_spec:death_spawn": ["AsteroidSmall", "AsteroidTiny"],
-            "score_on_die": 20,
-            "kill_when_off_screen": True
-        },
-        "groups": [
-            "RenderGroup",
-            "AsteroidsGroup"
-        ]
+            "score_on_die": 20
+        }
     },
     "AsteroidSmall": {
-        "class_name": "Asteroid",
+        "base_type": "AsteroidBase",
         "kwargs": {
             "image:images": [
                 "asteroid_06",
                 "asteroid_07"
             ],
             "health": 10,
-            "type_spec:death_effect": "ExplosionSmall",
             "damage": 2,
-            "game_object:mover": "/AsteroidMover",
-            "type_spec:death_spawn": [],
-            "score_on_die": 10,
-            "kill_when_off_screen": True
-        },
-        "groups": [
-            "RenderGroup",
-            "AsteroidsGroup"
-        ]
+            "score_on_die": 10
+        }
     },
     "AsteroidTiny": {
-        "class_name": "Asteroid",
+        "base_type": "AsteroidBase",
         "kwargs": {
             "image:images": [
                 "asteroid_08"
@@ -1026,21 +1017,7 @@ game_types = {
             "health": 5,
             "type_spec:death_effect": "ExplosionSmall",
             "damage": 1,
-            "game_object:mover": "/AsteroidMover",
-            "type_spec:death_spawn": [],
-            "score_on_die": 7,
-            "kill_when_off_screen": True
-        },
-        "groups": [
-            "RenderGroup",
-            "AsteroidsGroup"
-        ]
-    },
-    "AsteroidMover": {
-        "class_name": "MoverVelDir",
-        "kwargs": {
-            "velocity": 50.0,
-            "direction": [0, 1]
+            "score_on_die": 7
         }
     }
 }
