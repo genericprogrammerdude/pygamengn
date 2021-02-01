@@ -1,4 +1,4 @@
-import sys
+import logging
 
 from class_registrar import ClassRegistrar
 from game_object_base import GameObjectBase
@@ -38,8 +38,8 @@ class LayerManager(GameObjectBase):
         if layer_id != LayerManager.INVALID_LAYER_ID:
             gob.set_layer_id(layer_id)
         else:
-            sys.stderr.write(
-                "Game type name '{0}' of class '{1}' doesn't have an assigned layer in LayerManager.\n".format(
+            logging.warn(
+                "Game type name '{0}' of class '{1}' doesn't have an assigned layer in LayerManager".format(
                     scoped_name,
                     class_name
                 )

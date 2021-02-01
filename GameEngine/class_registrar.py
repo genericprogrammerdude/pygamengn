@@ -1,4 +1,4 @@
-import sys
+import logging
 
 from typing import Callable
 
@@ -21,7 +21,7 @@ class ClassRegistrar:
 
         def inner_wrapper(wrapped_class: GameObjectBase) -> Callable:
             if name in cls.registry:
-                sys.stderr.write("Class '{0}' already registered. Overwriting old value.".format(name))
+                logging.warn("Class '{0}' already registered; overwriting old value".format(name))
             cls.registry[name] = wrapped_class
             return wrapped_class
 

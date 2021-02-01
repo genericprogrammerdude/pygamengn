@@ -1,3 +1,4 @@
+import logging
 import os
 import sys
 
@@ -12,6 +13,8 @@ from space_shooter_game import SpaceShooterGame
 
 
 def main():
+    logging.basicConfig(level=logging.INFO, format="%(levelname)s: %(filename)s:%(lineno)d: %(message)s")
+
     pygame.init()
 
     size = (1280, 720)

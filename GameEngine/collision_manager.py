@@ -1,4 +1,4 @@
-import sys
+import logging
 
 import pygame
 
@@ -36,16 +36,16 @@ class CollisionManager(GameObjectBase):
         if (a.parent and a.parent == b) or (b.parent and b.parent == a):
             return False
         if not (a.is_collidable and b.is_collidable):
-            sys.stderr.write("CollisionManager.collided(): {0} or {1} has is_collidable == False and is in a collision group.\n".format(a, b))
+            logging.warn("{0} or {1} has is_collidable == False and is in a collision group".format(a, b))
             return False
         if a == b:
-            sys.stderr.write("CollisionManager.collided(): Same object. {0} or {1}.\n".format(a, b))
+            logging.warn("Same object collision: {0} and {1}".format(a, b))
             return False
         return pygame.sprite.collide_rect(a, b)
 
     def has_mask(self, gob):
         """Checks whether game object gob has a collision mask. Returns True if it does, False otherwise."""
         if gob.mask is None:
-            sys.stderr.write("CollisionManager.has_mask(): Missing mask: {0}\n".format(gob))
+            logging.warn("Missing mask for {0}".format(gob))
             return False
         return True

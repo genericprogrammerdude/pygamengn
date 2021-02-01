@@ -1,5 +1,5 @@
 import copy
-import sys
+import logging
 
 import pygame
 
@@ -40,6 +40,8 @@ class GameObjectFactory():
     def create(self, name: str, **kwargs) -> GameObjectBase:
         """Creates a GameObject instance."""
         game_type = self.__get_game_type(name)
+
+        logging.debug("Creating {0}".format(name))
 
         base_type = game_type.get("base_type")
         if base_type:
@@ -98,7 +100,7 @@ class GameObjectFactory():
             gob = gob_class(**resolved_refs, **kwargs)
             return gob
         except KeyError:
-            sys.stderr.write("GameObjectBase subclass '{0}' not found.\n".format(type_spec["class_name"]))
+            logging.critical("GameObjectBase subclass '{0}' not found".format(type_spec["class_name"]))
             return None
 
     def __get_game_type(self, name: str) -> dict:
@@ -110,6 +112,7 @@ class GameObjectFactory():
                 game_type = game_type[key]
             return game_type
         except KeyError:
+            logging.critical("Unknown game type: {0}. Raising UnknownGameType exception".format(name))
             raise GameObjectFactory.UnknownGameType("".join(["Unknown game type: ", name]))
 
     def __resolve_refs(self, attribute_key, attribute_value, special_key, resolved_refs):
@@ -126,10 +129,7 @@ class GameObjectFactory():
             resolved_refs[key] = []
             self.__assign_asset_list(attribute_value, resolved_refs[key], special_key[1])
         else:
-            sys.stderr.write("GameObjectFactory.__resolve_refs(): Unrecognized type '{0}' for key '{1}'\n".format(
-                type(attribute_value),
-                attribute_key
-            ))
+            logging.warn("Unrecognized type '{0}' for key '{1}'".format(type(attribute_value), attribute_key))
 
     def set_layer_manager_asset_name(self, name):
         """Sets the layer manager asset name for the factory to automatically assign layers to GameObjects."""
@@ -137,7 +137,7 @@ class GameObjectFactory():
         if layer_manager_spec:
             self.layer_manager = layer_manager_spec
         else:
-            sys.stderr.write("GameObjectFactory: LayerManager '{0}' not in inventory assets.\n".format(name))
+            logging.warn("LayerManager '{0}' not in inventory assets".format(name))
 
     def __assign_asset_list(self, asset_names, asset_list, asset_retriever):
         """
