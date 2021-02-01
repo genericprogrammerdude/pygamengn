@@ -6,9 +6,8 @@ os.environ["PYGAME_HIDE_SUPPORT_PROMPT"] = "1"
 sys.path.append("./pygameng")
 
 import pygame
+import pygameng
 
-from class_registrar import ClassRegistrar
-from game_object_factory import GameObjectFactory
 from space_shooter_game import SpaceShooterGame
 
 
@@ -38,10 +37,10 @@ def main():
     pygame.quit()
 
 
-def create_factory() -> GameObjectFactory:
+def create_factory() -> pygameng.GameObjectFactory:
     """Instantiates GameObjectFactory, the factory that will create all the game objects."""
     from Assets.inventory import images, sounds, assets, game_types
-    factory = GameObjectFactory(ClassRegistrar.registry, images, sounds, assets, game_types)
+    factory = pygameng.GameObjectFactory(pygameng.ClassRegistrar.registry, images, sounds, assets, game_types)
     factory.set_layer_manager_asset_name("LayerManager")
     return factory
 

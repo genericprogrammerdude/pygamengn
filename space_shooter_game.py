@@ -1,19 +1,15 @@
 from enum import Enum, auto
 import random
 
-import numpy
 import pygame
+import pygameng
 
-from class_registrar import ClassRegistrar
 from debrief_panel import DebriefPanel
-from game import BlitSurface
-from game import Game
-from level import Level
 from main_menu import MainMenu
 from pause_menu import PauseMenu
-from shield import Shield
 from ship import Ship
-from sprite_group import SpriteGroup
+from shield import Shield
+from waypoint import Waypoint
 
 
 class Mode(Enum):
@@ -25,8 +21,8 @@ class Mode(Enum):
     DEBRIEF = auto()
 
 
-@ClassRegistrar.register("SpaceShooterGame")
-class SpaceShooterGame(Game):
+@pygameng.ClassRegistrar.register("SpaceShooterGame")
+class SpaceShooterGame(pygameng.Game):
 
     def __init__(
             self,
@@ -190,6 +186,6 @@ class SpaceShooterGame(Game):
         return "{:02d}:{:02d}".format(min, sec)
 
     def blit_ui(self, ui):
-        self.add_blit_surface(BlitSurface(ui.image, ui.rect))
+        self.add_blit_surface(pygameng.BlitSurface(ui.image, ui.rect))
         for child in ui.children:
             self.blit_ui(child)

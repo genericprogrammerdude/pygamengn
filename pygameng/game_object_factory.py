@@ -4,7 +4,6 @@ import logging
 import pygame
 
 from game_object_base import GameObjectBase
-from layer_manager import LayerManager
 
 
 class GameObjectFactory():
