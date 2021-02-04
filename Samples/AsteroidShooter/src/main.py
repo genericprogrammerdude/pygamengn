@@ -1,9 +1,7 @@
 import logging
 import os
-import sys
 
 os.environ["PYGAME_HIDE_SUPPORT_PROMPT"] = "1"
-sys.path.append("./pygameng")
 
 import pygame
 import pygameng
@@ -39,7 +37,7 @@ def main():
 
 def create_factory() -> pygameng.GameObjectFactory:
     """Instantiates GameObjectFactory, the factory that will create all the game objects."""
-    from Assets.inventory import images, sounds, assets, game_types
+    from inventory import images, sounds, assets, game_types
     factory = pygameng.GameObjectFactory(pygameng.ClassRegistrar.registry, images, sounds, assets, game_types)
     factory.set_layer_manager_asset_name("LayerManager")
     return factory
