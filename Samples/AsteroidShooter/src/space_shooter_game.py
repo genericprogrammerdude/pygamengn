@@ -50,6 +50,7 @@ class SpaceShooterGame(pygamengn.Game):
         self.running = True
         self.mode = Mode.MAIN_MENU
         self.main_menu_ui.set_start_callback(self.start_play)
+        self.main_menu_ui.set_multiplayer_callback(self.multiplayer_play)
         self.main_menu_ui.set_exit_callback(self.exit_game)
         self.pause_menu_ui.set_resume_callback(self.resume_play)
         self.pause_menu_ui.set_exit_callback(self.exit_game)
@@ -121,6 +122,11 @@ class SpaceShooterGame(pygamengn.Game):
     def start_play(self):
         """Prepares the game to start playing."""
         self.mode = Mode.KILLING_ALL
+
+    def multiplayer_play(self):
+        """Prepares the game to start playing."""
+        self.mode = Mode.KILLING_ALL
+        print("Multiplayer game")
 
     def resume_play(self):
         """Resumes PLAY mode from PAUSE_MENU mode."""
