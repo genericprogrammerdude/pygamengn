@@ -1,5 +1,6 @@
 import copy
 import logging
+import os
 
 import pygame
 
@@ -15,7 +16,7 @@ class GameObjectFactory():
         def __init__(self, message):
             super().__init__(message)
 
-    def __init__(self, registry, images, sounds, assets, game_types):
+    def __init__(self, registry, assets_dir, images, sounds, assets, game_types):
         self.layer_manager = None
         self.registry = registry
 
@@ -24,6 +25,7 @@ class GameObjectFactory():
             ("image:", lambda name: self.images[name]),
             ("sound:", lambda name: self.sounds[name]),
             ("asset:", lambda name: self.assets[name]),
+            ("font:", lambda name: os.path.join(assets_dir, name)),
             ("game_object:", lambda name: self.create(name)),
             ("type_spec:", lambda name: TypeSpec(self, name))
         ]
@@ -32,8 +34,8 @@ class GameObjectFactory():
         self.game_types = self.__init_game_types(game_types)
 
         # Load images and sounds, and initialize assets
-        self.images = self.__create_assets(images, lambda v: pygame.image.load(v).convert_alpha())
-        self.sounds = self.__create_assets(sounds, lambda v: pygame.mixer.Sound(v))
+        self.images = self.__create_assets(images, lambda v: pygame.image.load(os.path.join(assets_dir, v)).convert_alpha())
+        self.sounds = self.__create_assets(sounds, lambda v: pygame.mixer.Sound(os.path.join(assets_dir, v)))
         self.assets = self.__create_assets(assets, lambda v: self.__create_object(v))
 
     def create(self, name: str, **kwargs) -> GameObjectBase:
