@@ -1,6 +1,6 @@
 # pygamengn
 
-A game engine built on [pygame](https://www.pygame.org/ "pygame").
+A game engine built on [pygame](https://www.pygame.org/ "pygame"). This engine is developed for fun and in the best shooting-from-the-hip coding tradition, with limited thought put into the design of its components. Expect little. 
 
 ## Dependencies
 
