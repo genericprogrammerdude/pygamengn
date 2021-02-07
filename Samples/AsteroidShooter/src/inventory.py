@@ -173,20 +173,16 @@ game_types = {
             "colour": [100, 100, 100, 128],
             "game_object:asteroid_spawner": "AsteroidSpawner"
         },
-        "StartButton": {
+        "MenuButton": {
             "class_name": "ColourPanel",
             "kwargs": {
-                "pos": [0.25, 0.2],
                 "size": [0.5, 0.25],
-                "game_object:children": [
-                    "StartText"
-                ],
+                "game_object:children": [],
                 "fix_aspect_ratio": False,
-                "name": "start_button",
                 "colour": [200, 200, 200, 100],
                 "hover_colour": [100, 210, 100, 100]
             },
-            "StartText": {
+            "MenuButtonText": {
                 "class_name": "TextPanel",
                 "kwargs": {
                     "pos": [0, 0],
@@ -196,35 +192,38 @@ game_types = {
                     "asset:font_asset": "fast_hand_font",
                     "text_colour": [0, 200, 100],
                     "horz_align": "CENTRE",
-                    "vert_align": "CENTRE",
+                    "vert_align": "CENTRE"
+                }
+            }
+        },
+        "StartButton": {
+            "base_type": "/MainMenu/MenuButton",
+            "kwargs": {
+                "pos": [0.25, 0.2],
+                "game_object:children": [
+                    "StartText"
+                ],
+                "name": "start_button"
+            },
+            "StartText": {
+                "base_type": "/MainMenu/MenuButton/MenuButtonText",
+                "kwargs": {
                     "text": "Start"
                 }
             }
         },
         "ExitButton": {
-            "class_name": "ColourPanel",
+            "base_type": "/MainMenu/MenuButton",
             "kwargs": {
                 "pos": [0.25, 0.55],
-                "size": [0.5, 0.25],
                 "game_object:children": [
                     "ExitText"
                 ],
-                "fix_aspect_ratio": False,
-                "name": "exit_button",
-                "colour": [200, 200, 200, 100],
-                "hover_colour": [100, 210, 100, 100]
+                "name": "exit_button"
             },
             "ExitText": {
-                "class_name": "TextPanel",
+                "base_type": "/MainMenu/MenuButton/MenuButtonText",
                 "kwargs": {
-                    "pos": [0, 0],
-                    "size": [1, 1],
-                    "game_object:children": [],
-                    "fix_aspect_ratio": True,
-                    "asset:font_asset": "fast_hand_font",
-                    "text_colour": [0, 200, 100],
-                    "horz_align": "CENTRE",
-                    "vert_align": "CENTRE",
                     "text": "Exit"
                 }
             }
@@ -256,29 +255,17 @@ game_types = {
             "colour": [100, 100, 100, 128]
         },
         "ResumeButton": {
-            "class_name": "ColourPanel",
+            "base_type": "/MainMenu/MenuButton",
             "kwargs": {
                 "pos": [0.25, 0.2],
-                "size": [0.5, 0.25],
                 "game_object:children": [
                     "ResumeText"
                 ],
-                "fix_aspect_ratio": False,
-                "name": "resume_button",
-                "colour": [200, 200, 200, 100],
-                "hover_colour": [100, 210, 100, 100]
+                "name": "resume_button"
             },
             "ResumeText": {
-                "class_name": "TextPanel",
+                "base_type": "/MainMenu/MenuButton/MenuButtonText",
                 "kwargs": {
-                    "pos": [0, 0],
-                    "size": [1, 1],
-                    "game_object:children": [],
-                    "fix_aspect_ratio": True,
-                    "asset:font_asset": "fast_hand_font",
-                    "text_colour": [0, 200, 100],
-                    "horz_align": "CENTRE",
-                    "vert_align": "CENTRE",
                     "text": "Resume Game"
                 }
             }
