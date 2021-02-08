@@ -42,7 +42,7 @@ class GameObjectFactory():
         """Creates a GameObject instance."""
         game_type = self.__get_game_type(name)
 
-        logging.debug("Creating {0}".format(name))
+#         logging.debug("Creating {0}".format(name))
 
         base_type = game_type.get("base_type")
         if base_type:

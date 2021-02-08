@@ -13,7 +13,7 @@ from space_shooter_game import SpaceShooterGame
 
 
 def main():
-    logging.basicConfig(level=logging.INFO, format="%(levelname)s: %(filename)s:%(lineno)d: %(message)s")
+    logging.basicConfig(level=logging.DEBUG, format="%(levelname)s: %(filename)s:%(lineno)d: %(message)s")
 
     pygame.init()
 
@@ -30,10 +30,20 @@ def main():
 
     clock = pygame.time.Clock()
 
+    server = pygamengn.Server()
+    server.start()
+
+    client = pygamengn.Client(server.address[0], server.address[1])
+
     while game.running:
+        client.connect()
+        client.send(b"Hello, World")
+        print("client received: \"{0}\"".format(client.receive()))
         delta = clock.get_time()
         game.update(delta)
         clock.tick(60)
+
+    server.stop()
 
     pygame.quit()
 
