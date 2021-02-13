@@ -29,5 +29,6 @@ class Server():
 
     def stop(self):
         logging.debug("Server.stop()")
+        self.server_thread.join(0.5)
         self.server.shutdown()
         self.server.server_close()

@@ -2,7 +2,7 @@ import logging
 import socketserver
 
 
-class RequestHandler(socketserver.BaseRequestHandler):
+class RequestHandler(socketserver.StreamRequestHandler):
     """Handler for requests received by the server."""
 
     def handle(self):

@@ -23,14 +23,12 @@ class Client():
         logging.debug("Sent {0} bytes".format(sent_count))
 
     def receive(self):
-        chunks = []
-        received_count = 0
-        while received_count < len(self.message):
-            chunk = self.sock.recv(min(len(self.message) - received_count, 2048))
-            if chunk == b"":
-                logging.debug("Socket connection broken")
-            else:
-                chunks.append(chunk)
-                received_count += len(chunk)
-                logging.debug("Received {0}/{1} bytes".format(received_count, len(self.message)))
-        return b"".join(chunks)
+        try:
+            data = self.sock.recv(2048).decode()
+        except ConnectionResetError:
+            logging.debug("ConnectionResetError. Re-connecting")
+            self.connect()
+            data = None
+        if data:
+            logging.debug("Received {0} bytes".format(len(data)))
+        return data

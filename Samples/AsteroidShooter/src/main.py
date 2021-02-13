@@ -34,12 +34,15 @@ def main():
     server.start()
 
     client = pygamengn.Client(server.address[0], server.address[1])
+    client.connect()
+
+    t = 0
 
     while game.running:
-        client.connect()
-        client.send(b"Hello, World")
+        client.send("Hello, World: {0}".format(t).encode())
         print("client received: \"{0}\"".format(client.receive()))
         delta = clock.get_time()
+        t += delta
         game.update(delta)
         clock.tick(60)
 
