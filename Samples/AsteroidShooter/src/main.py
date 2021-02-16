@@ -33,19 +33,28 @@ def main():
     server = pygamengn.Server()
     server.start()
 
-    client = pygamengn.Client(server.address[0], server.address[1])
+    client = pygamengn.Client(server.address)
     client.connect()
 
     t = 0
+    send = True
+    search_strings = ["morpheus", "ring", "\U0001f436"]
+    search_strings_index = 1
 
     while game.running:
-        client.send("Hello, World: {0}".format(t).encode())
-        print("client received: \"{0}\"".format(client.receive()))
         delta = clock.get_time()
         t += delta
         game.update(delta)
+
+        client.send(search_strings[search_strings_index])
+        search_strings_index = (search_strings_index + 1) % len(search_strings)
+
+        server.tick()
+        client.tick()
+
         clock.tick(60)
 
+    client.stop()
     server.stop()
 
     pygame.quit()

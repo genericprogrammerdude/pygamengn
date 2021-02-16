@@ -1,34 +1,61 @@
 import logging
-import socketserver
-import threading
+import selectors
+import socket
 
-from network.request_handler import RequestHandler
+from network.server_message import ServerMessage
 
 
 class Server():
-    """Create a server to listen to clients and broadcast data."""
+    """
+    Multiplayer server.
 
-    def __init__(self):
-        self.address = ("localhost", 0)
-        self.client_name = " "
-        self.clients = []
-        self.client_names = []
+    This code is adapted from a Python sockets tutorial on Real Python:
+    https://realpython.com/python-sockets
+
+    Code from the tutorial:
+    https://github.com/realpython/materials/tree/cdbe7ef2392ea9488badf47e405f0c7e533802f0/python-sockets-tutorial
+    """
+
+    def __init__(self, address=("localhost", 0)):
+        self.address = address
+        self.selector = selectors.DefaultSelector()
 
     def start(self):
         """Starts the server."""
-        logging.debug("Server.start()")
-
-        self.server = socketserver.ThreadingTCPServer(self.address, RequestHandler)
-        self.address = self.server.server_address
-        logging.debug("server address: {0}:{1}".format(self.address[0], self.address[1]))
-
-        self.server_thread = threading.Thread(target=self.server.serve_forever, name="pygamengn-server")
-        self.server_thread.daemon = True
-        self.server_thread.start()
-        logging.debug("Server loop running in {0}".format(self.server_thread.getName()))
+        logging.debug("Start server")
+        lsock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        # Avoid bind() exception: OSError: [Errno 48] Address already in use
+        lsock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+        lsock.bind(self.address)
+        self.address = lsock.getsockname()
+        lsock.listen()
+        logging.debug("Listening on {0}:{1}".format(self.address[0], self.address[1]))
+        lsock.setblocking(False)
+        self.selector.register(lsock, selectors.EVENT_READ, data=None)
 
     def stop(self):
-        logging.debug("Server.stop()")
-        self.server_thread.join(0.5)
-        self.server.shutdown()
-        self.server.server_close()
+        logging.debug("Stop server")
+        self.selector.close()
+
+    def tick(self):
+        """Does server work."""
+        events = self.selector.select(timeout=-1)
+        for key, mask in events:
+            if key.data is None:
+                self.__accept_connection(key.fileobj)
+            else:
+                message = key.data
+                try:
+                    message.process_events(mask)
+                except Exception as e:
+                    logging.error("Exception processing events")
+                    logging.error(e)
+                    message.close()
+
+    def __accept_connection(self, sock):
+        """Accepts a new connection."""
+        conn, addr = sock.accept()
+        logging.debug("Accepted connection from {0}:{1}".format(addr[0], addr[1]))
+        conn.setblocking(False)
+        message = ServerMessage(self.selector, conn, addr)
+        self.selector.register(conn, selectors.EVENT_READ, data=message)
