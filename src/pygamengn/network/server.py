@@ -51,9 +51,9 @@ class Server():
                 message = key.data
                 try:
                     message.process_events(mask)
-                except Exception as e:
-                    logging.error(e)
-                    message.close()
+                except RuntimeError:
+                    self.connected_clients[message.addr].close()
+                    del self.connected_clients[message.addr]
 
     def __accept_connection(self, sock):
         """Accepts a new connection."""

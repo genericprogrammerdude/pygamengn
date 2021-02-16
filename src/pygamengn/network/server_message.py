@@ -1,9 +1,5 @@
-import io
-import json
 import logging
 import selectors
-import struct
-import sys
 
 import message_util
 
