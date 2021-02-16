@@ -48,12 +48,12 @@ class Server():
             if key.data is None:
                 self.__accept_connection(key.fileobj)
             else:
-                message = key.data
+                connected_client = key.data
                 try:
-                    message.process_events(mask)
+                    connected_client.process_events(mask)
                 except RuntimeError:
-                    self.connected_clients[message.addr].close()
-                    del self.connected_clients[message.addr]
+                    self.connected_clients[connected_client.address].close()
+                    del self.connected_clients[connected_client.address]
 
     def __accept_connection(self, sock):
         """Accepts a new connection."""
