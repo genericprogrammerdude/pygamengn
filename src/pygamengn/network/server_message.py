@@ -83,16 +83,14 @@ class ServerMessage:
     def read(self):
         self._read()
 
-        if self._jsonheader_len is None:
+        if not self._jsonheader_len:
             self._jsonheader_len, self._recv_buffer = message_util.process_protoheader(self._recv_buffer)
 
-        if self._jsonheader_len is not None:
-            if self.jsonheader is None:
-                self.jsonheader, self._recv_buffer = message_util.process_json_header(self._jsonheader_len, self._recv_buffer)
+        if self._jsonheader_len and not self.jsonheader:
+            self.jsonheader, self._recv_buffer = message_util.process_json_header(self._jsonheader_len, self._recv_buffer)
 
-        if self.jsonheader:
-            if self.request is None:
-                self.process_request()
+        if self.jsonheader and not self.request:
+            self.process_request()
 
     def write(self):
         if self.request:
