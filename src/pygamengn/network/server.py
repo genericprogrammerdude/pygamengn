@@ -30,7 +30,7 @@ class Server():
         lsock.bind(self.address)
         self.address = lsock.getsockname()
         lsock.listen()
-        logging.debug("Listening on {0}:{1}".format(self.address[0], self.address[1]))
+        logging.debug(f"Listening on {self.address[0]}:{self.address[1]}")
         lsock.setblocking(False)
         self.selector.register(lsock, selectors.EVENT_READ, data=None)
 
@@ -59,7 +59,7 @@ class Server():
         """Accepts a new connection."""
         conn, addr = sock.accept()
         conn.setblocking(False)
-        logging.debug("Accepted connection from {0}:{1}".format(addr[0], addr[1]))
+        logging.debug(f"Accepted connection from {addr[0]}:{addr[1]}")
         connected_client = ConnectedClient(conn, addr, self.selector)
         self.connected_clients[addr] = connected_client
         connected_client.activate()
