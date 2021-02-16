@@ -22,19 +22,14 @@ class ServerMessage:
         self.request = None
         self.response_created = False
         self.reader.reset()
-        self.writer.reset()
 
-    def _set_selector_events_mask(self, mode):
-        """Set selector to listen for events: mode is 'r', 'w', or 'rw'."""
-        if mode == "r":
-            events = selectors.EVENT_READ
-        elif mode == "w":
-            events = selectors.EVENT_WRITE
-        elif mode == "rw":
-            events = selectors.EVENT_READ | selectors.EVENT_WRITE
-        else:
-            raise ValueError(f"Invalid events mask mode {repr(mode)}.")
-        self.selector.modify(self.sock, events, data=self)
+    def __set_read_mode(self):
+        """Sets selector to look for read events."""
+        self.selector.modify(self.sock, selectors.EVENT_READ, data=self)
+
+    def __set_write_mode(self):
+        """Sets selector to look for write events."""
+        self.selector.modify(self.sock, selectors.EVENT_WRITE, data=self)
 
     def process_events(self, mask):
         if mask & selectors.EVENT_READ:
@@ -48,11 +43,12 @@ class ServerMessage:
                     message = self.create_response()
                     self.writer.set_buffer(message)
                 if self.writer.write():
+                    logging.debug(f"Sent response to {self.addr[0]}:{self.addr[1]}")
                     self.__reset()
-                    self._set_selector_events_mask("r")
+                    self.__set_read_mode()
 
     def close(self):
-        logging.debug("Closing connection to {0}:{1}".format(self.addr[0], self.addr[1]))
+        logging.debug(f"Closing connection to {self.addr[0]}:{self.addr[1]}")
         try:
             self.selector.unregister(self.sock)
         except Exception as e:
@@ -77,7 +73,7 @@ class ServerMessage:
             logging.debug(f"Received {header['content-type']} request from {self.addr}")
 
         # Set selector to listen for write events, we're done reading.
-        self._set_selector_events_mask("w")
+        self.__set_write_mode()
         self.__processed_count += 1
 
     def create_response(self):

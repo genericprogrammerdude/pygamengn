@@ -6,10 +6,6 @@ class ProtoWriter:
 
     def __init__(self, sock):
         self.__sock = sock
-        self.reset()
-
-    def reset(self):
-        """Resets the reader so it can start reading a new message."""
         self.__buffer = b""
 
     def set_buffer(self, buffer):
