@@ -5,7 +5,7 @@ class ProtoReader:
     """ProtoReader worker for the pygamengn protocol."""
 
     def __init__(self, sock):
-        self.sock = sock
+        self.__sock = sock
         self.reset()
 
     def reset(self):
@@ -38,7 +38,7 @@ class ProtoReader:
     def __read(self):
         try:
             # Should be ready to read
-            data = self.sock.recv(4096)
+            data = self.__sock.recv(4096)
         except BlockingIOError:
             # Resource temporarily unavailable (errno EWOULDBLOCK)
             pass

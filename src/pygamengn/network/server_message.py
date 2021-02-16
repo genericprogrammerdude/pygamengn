@@ -4,6 +4,7 @@ import selectors
 import message_util
 
 from proto_reader import ProtoReader
+from proto_writer import ProtoWriter
 
 
 class ServerMessage:
@@ -13,14 +14,15 @@ class ServerMessage:
         self.sock = sock
         self.addr = addr
         self.reader = ProtoReader(sock)
+        self.writer = ProtoWriter(sock)
         self.__reset()
         self.__processed_count = 0
 
     def __reset(self):
-        self._send_buffer = b""
         self.request = None
         self.response_created = False
         self.reader.reset()
+        self.writer.reset()
 
     def _set_selector_events_mask(self, mode):
         """Set selector to listen for events: mode is 'r', 'w', or 'rw'."""
@@ -34,23 +36,6 @@ class ServerMessage:
             raise ValueError(f"Invalid events mask mode {repr(mode)}.")
         self.selector.modify(self.sock, events, data=self)
 
-    def _write(self):
-        if self._send_buffer:
-            logging.debug(f"Sending {repr(self._send_buffer)} to {self.addr[0]}:{self.addr[1]}")
-            try:
-                # Should be ready to write
-                sent = self.sock.send(self._send_buffer)
-            except BlockingIOError:
-                # Resource temporarily unavailable (errno EWOULDBLOCK)
-                pass
-            else:
-                self._send_buffer = self._send_buffer[sent:]
-                # Close when the buffer is drained. The response has been sent.
-                if sent and not self._send_buffer:
-                    # logging.debug("Sent response #{0}".format(self.__processed_count))
-                    self.__reset()
-                    self._set_selector_events_mask("r")
-
     def process_events(self, mask):
         if mask & selectors.EVENT_READ:
             message = self.reader.read()
@@ -58,13 +43,13 @@ class ServerMessage:
                 self.process_request(**message)
 
         if mask & selectors.EVENT_WRITE:
-            self.write()
-
-    def write(self):
-        if self.request:
-            if not self.response_created:
-                self.create_response()
-        self._write()
+            if self.request:
+                if not self.response_created:
+                    message = self.create_response()
+                    self.writer.set_buffer(message)
+                if self.writer.write():
+                    self.__reset()
+                    self._set_selector_events_mask("r")
 
     def close(self):
         logging.debug("Closing connection to {0}:{1}".format(self.addr[0], self.addr[1]))
@@ -101,4 +86,4 @@ class ServerMessage:
         response = message_util.create_response_json_content(action, value)
         message = message_util.create_message(**response)
         self.response_created = True
-        self._send_buffer += message
+        return message
