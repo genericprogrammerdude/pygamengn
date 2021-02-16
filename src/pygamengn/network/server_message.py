@@ -84,7 +84,7 @@ class ServerMessage:
         self._read()
 
         if self._jsonheader_len is None:
-            self.process_protoheader()
+            self._jsonheader_len, self._recv_buffer = message_util.process_protoheader(self._recv_buffer)
 
         if self._jsonheader_len is not None:
             if self.jsonheader is None:
@@ -121,14 +121,6 @@ class ServerMessage:
         finally:
             # Delete reference to socket object for garbage collection
             self.sock = None
-
-    def process_protoheader(self):
-        hdrlen = 2
-        if len(self._recv_buffer) >= hdrlen:
-            self._jsonheader_len = struct.unpack(
-                ">H", self._recv_buffer[:hdrlen]
-            )[0]
-            self._recv_buffer = self._recv_buffer[hdrlen:]
 
     def process_jsonheader(self):
         hdrlen = self._jsonheader_len

@@ -41,7 +41,7 @@ def create_response_json_content(action, value):
             "ring": "In the caves beneath the Misty Mountains. \U0001f48d",
             "\U0001f436": "\U0001f43e Playing ball! \U0001f3d0",
         }
-        answer = request_search.get(value) or f'No match for "{query}".'
+        answer = request_search.get(value) or f'No match for "{value}".'
         content = {"result": answer}
     else:
         content = {"result": f'Error: invalid action "{action}".'}
@@ -61,6 +61,17 @@ def create_response_binary_content(request):
         "content_encoding": "binary",
     }
     return response
+
+
+def process_protoheader(buffer):
+    """Reads the protocol header length and returns the message length and message (without the header length bytes)."""
+    header_len = 2
+    if len(buffer) >= header_len:
+        json_header_len = struct.unpack(">H", buffer[:header_len])[0]
+        buffer = buffer[header_len:]
+        return (json_header_len, buffer)
+    else:
+        return (None, buffer)
 
 #############################################
 # ClientMessage
