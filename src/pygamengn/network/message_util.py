@@ -73,6 +73,22 @@ def process_protoheader(buffer):
     else:
         return (None, buffer)
 
+
+def process_json_header(json_header_len, buffer):
+    if len(buffer) >= json_header_len:
+        json_header = json_decode(buffer[:json_header_len], "utf-8")
+        buffer = buffer[json_header_len:]
+        validate_json_header(json_header)
+        return (json_header, buffer)
+    else:
+        return (None, buffer)
+
+
+def validate_json_header(json_header):
+    for required_field in ("byteorder", "content-length", "content-type", "content-encoding"):
+        if required_field not in json_header:
+            raise ValueError(f'Missing required header "{reqhdr}".')
+
 #############################################
 # ClientMessage
 #############################################

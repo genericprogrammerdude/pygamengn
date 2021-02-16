@@ -88,7 +88,7 @@ class ServerMessage:
 
         if self._jsonheader_len is not None:
             if self.jsonheader is None:
-                self.process_jsonheader()
+                self.jsonheader, self._recv_buffer = message_util.process_json_header(self._jsonheader_len, self._recv_buffer)
 
         if self.jsonheader:
             if self.request is None:
@@ -121,20 +121,6 @@ class ServerMessage:
         finally:
             # Delete reference to socket object for garbage collection
             self.sock = None
-
-    def process_jsonheader(self):
-        hdrlen = self._jsonheader_len
-        if len(self._recv_buffer) >= hdrlen:
-            self.jsonheader = message_util.json_decode(self._recv_buffer[:hdrlen], "utf-8")
-            self._recv_buffer = self._recv_buffer[hdrlen:]
-            for reqhdr in (
-                "byteorder",
-                "content-length",
-                "content-type",
-                "content-encoding",
-            ):
-                if reqhdr not in self.jsonheader:
-                    raise ValueError(f'Missing required header "{reqhdr}".')
 
     def process_request(self):
         content_len = self.jsonheader["content-length"]
