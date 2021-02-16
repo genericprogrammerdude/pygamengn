@@ -16,3 +16,7 @@ class ConnectedClient:
         """Activates the connection to the client to start receiving data."""
         self.message = ServerMessage(self.selector, self.socket, self.address)
         self.selector.register(self.socket, selectors.EVENT_READ, data=self.message)
+
+    def close(self):
+        """Closes the connection to the client."""
+        self.message.close()

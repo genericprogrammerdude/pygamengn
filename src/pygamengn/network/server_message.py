@@ -72,7 +72,6 @@ class ServerMessage:
                     # logging.debug("Sent response #{0}".format(self.__processed_count))
                     self.__reset()
                     self._set_selector_events_mask("r")
-#                     self.close()
 
     def process_events(self, mask):
         if mask & selectors.EVENT_READ:
@@ -96,7 +95,6 @@ class ServerMessage:
         if self.request:
             if not self.response_created:
                 self.create_response()
-
         self._write()
 
     def close(self):
@@ -104,18 +102,12 @@ class ServerMessage:
         try:
             self.selector.unregister(self.sock)
         except Exception as e:
-            print(
-                "error: selector.unregister() exception for",
-                f"{self.addr}: {repr(e)}",
-            )
+            logging.error(f"selector.unregister() exception for {self.addr}: {repr(e)}")
 
         try:
             self.sock.close()
         except OSError as e:
-            print(
-                "error: socket.close() exception for",
-                f"{self.addr}: {repr(e)}",
-            )
+            logging.error(f"socket.close() exception for {self.addr}: {repr(e)}")
         finally:
             # Delete reference to socket object for garbage collection
             self.sock = None

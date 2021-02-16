@@ -19,6 +19,7 @@ class Server():
     def __init__(self, address=("localhost", 54879)):
         self.address = address
         self.selector = selectors.DefaultSelector()
+        self.connected_clients = {}
 
     def start(self):
         """Starts the server."""
@@ -35,6 +36,9 @@ class Server():
 
     def stop(self):
         logging.debug("Stop server")
+        for address, connected_client in self.connected_clients.items():
+            connected_client.close()
+            logging.debug(f"Closed connection to {address[0]}:{address[1]}")
         self.selector.close()
 
     def tick(self):
@@ -57,6 +61,7 @@ class Server():
         conn.setblocking(False)
         logging.debug("Accepted connection from {0}:{1}".format(addr[0], addr[1]))
         connected_client = ConnectedClient(conn, addr, self.selector)
+        self.connected_clients[addr] = connected_client
         connected_client.activate()
 
 
