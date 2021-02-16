@@ -58,7 +58,7 @@ class ServerMessage:
 
     def _write(self):
         if self._send_buffer:
-            logging.debug("Sending {0} to {1}:{2}".format(repr(self._send_buffer), self.addr[0], self.addr[1]))
+            logging.debug(f"Sending {repr(self._send_buffer)} to {self.addr[0]}:{self.addr[1]}")
             try:
                 # Should be ready to write
                 sent = self.sock.send(self._send_buffer)
