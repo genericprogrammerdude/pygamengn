@@ -5,6 +5,8 @@ import selectors
 import struct
 import sys
 
+import message_util
+
 request_search = {
     "morpheus": "Follow the white rabbit. \U0001f430",
     "ring": "In the caves beneath the Misty Mountains. \U0001f48d",
@@ -72,54 +74,6 @@ class ServerMessage:
                     self._set_selector_events_mask("r")
 #                     self.close()
 
-    def _json_encode(self, obj, encoding):
-        return json.dumps(obj, ensure_ascii=False).encode(encoding)
-
-    def _json_decode(self, json_bytes, encoding):
-        tiow = io.TextIOWrapper(
-            io.BytesIO(json_bytes), encoding=encoding, newline=""
-        )
-        obj = json.load(tiow)
-        tiow.close()
-        return obj
-
-    def _create_message(self, *, content_bytes, content_type, content_encoding):
-        jsonheader = {
-            "byteorder": sys.byteorder,
-            "content-type": content_type,
-            "content-encoding": content_encoding,
-            "content-length": len(content_bytes),
-        }
-        jsonheader_bytes = self._json_encode(jsonheader, "utf-8")
-        message_hdr = struct.pack(">H", len(jsonheader_bytes))
-        message = message_hdr + jsonheader_bytes + content_bytes
-        return message
-
-    def _create_response_json_content(self):
-        action = self.request.get("action")
-        if action == "search":
-            query = self.request.get("value")
-            answer = request_search.get(query) or f'No match for "{query}".'
-            content = {"result": answer}
-        else:
-            content = {"result": f'Error: invalid action "{action}".'}
-        content_encoding = "utf-8"
-        response = {
-            "content_bytes": self._json_encode(content, content_encoding),
-            "content_type": "text/json",
-            "content_encoding": content_encoding,
-        }
-        return response
-
-    def _create_response_binary_content(self):
-        response = {
-            "content_bytes": b"First 10 bytes of request: "
-            +self.request[:10],
-            "content_type": "binary/custom-server-binary-type",
-            "content_encoding": "binary",
-        }
-        return response
-
     def process_events(self, mask):
         if mask & selectors.EVENT_READ:
             self.read()
@@ -179,9 +133,7 @@ class ServerMessage:
     def process_jsonheader(self):
         hdrlen = self._jsonheader_len
         if len(self._recv_buffer) >= hdrlen:
-            self.jsonheader = self._json_decode(
-                self._recv_buffer[:hdrlen], "utf-8"
-            )
+            self.jsonheader = message_util.json_decode(self._recv_buffer[:hdrlen], "utf-8")
             self._recv_buffer = self._recv_buffer[hdrlen:]
             for reqhdr in (
                 "byteorder",
@@ -200,7 +152,7 @@ class ServerMessage:
         self._recv_buffer = self._recv_buffer[content_len:]
         if self.jsonheader["content-type"] == "text/json":
             encoding = self.jsonheader["content-encoding"]
-            self.request = self._json_decode(data, encoding)
+            self.request = message_util.json_decode(data, encoding)
             logging.debug("Received request {0} from {1}:{2}".format(repr(self.request), self.addr[0], self.addr[1]))
         else:
             # Binary or unknown content-type
@@ -215,10 +167,12 @@ class ServerMessage:
 
     def create_response(self):
         if self.jsonheader["content-type"] == "text/json":
-            response = self._create_response_json_content()
+            action = self.request.get("action")
+            value = self.request.get("value")
+            response = message_util.create_response_json_content(action, value)
         else:
             # Binary or unknown content-type
-            response = self._create_response_binary_content()
-        message = self._create_message(**response)
+            response = message_util.create_response_binary_content(self.request)
+        message = message_util.create_message(**response)
         self.response_created = True
         self._send_buffer += message

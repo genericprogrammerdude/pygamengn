@@ -2,7 +2,7 @@ import logging
 import selectors
 import socket
 
-from server_message import ServerMessage
+from connected_client import ConnectedClient
 
 
 class Server():
@@ -54,10 +54,10 @@ class Server():
     def __accept_connection(self, sock):
         """Accepts a new connection."""
         conn, addr = sock.accept()
-        logging.debug("Accepted connection from {0}:{1}".format(addr[0], addr[1]))
         conn.setblocking(False)
-        message = ServerMessage(self.selector, conn, addr)
-        self.selector.register(conn, selectors.EVENT_READ, data=message)
+        logging.debug("Accepted connection from {0}:{1}".format(addr[0], addr[1]))
+        connected_client = ConnectedClient(conn, addr, self.selector)
+        connected_client.activate()
 
 
 if __name__ == "__main__":
