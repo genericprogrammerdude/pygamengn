@@ -67,7 +67,7 @@ class ServerMessage:
                 self._send_buffer = self._send_buffer[sent:]
                 # Close when the buffer is drained. The response has been sent.
                 if sent and not self._send_buffer:
-                    logging.debug("Done sending response #{0}".format(self.__processed_count))
+                    # logging.debug("Sent response #{0}".format(self.__processed_count))
                     self.__reset()
                     self._set_selector_events_mask("r")
 #                     self.close()

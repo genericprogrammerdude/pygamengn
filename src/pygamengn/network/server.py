@@ -2,7 +2,7 @@ import logging
 import selectors
 import socket
 
-from network.server_message import ServerMessage
+from server_message import ServerMessage
 
 
 class Server():
@@ -16,7 +16,7 @@ class Server():
     https://github.com/realpython/materials/tree/cdbe7ef2392ea9488badf47e405f0c7e533802f0/python-sockets-tutorial
     """
 
-    def __init__(self, address=("localhost", 0)):
+    def __init__(self, address=("localhost", 54879)):
         self.address = address
         self.selector = selectors.DefaultSelector()
 
@@ -48,7 +48,6 @@ class Server():
                 try:
                     message.process_events(mask)
                 except Exception as e:
-                    logging.error("Exception processing events")
                     logging.error(e)
                     message.close()
 
@@ -59,3 +58,20 @@ class Server():
         conn.setblocking(False)
         message = ServerMessage(self.selector, conn, addr)
         self.selector.register(conn, selectors.EVENT_READ, data=message)
+
+
+if __name__ == "__main__":
+    import time
+    logging.basicConfig(level=logging.DEBUG, format="%(levelname)s: %(filename)s:%(lineno)d: %(message)s")
+
+    server = Server()
+    server.start()
+
+    done = False
+    while not done:
+        try:
+            server.tick()
+            time.sleep(0.017)
+        except KeyboardInterrupt:
+            server.stop()
+            done = True

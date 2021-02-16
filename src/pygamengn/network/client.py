@@ -2,7 +2,7 @@ import logging
 import selectors
 import socket
 
-from network.client_message import ClientMessage
+from client_message import ClientMessage
 
 
 class Client():
@@ -31,7 +31,6 @@ class Client():
         self.selector.register(self.sock, self.events, message)
 
     def send(self, search_string):
-        logging.debug("Sending message")
         request = self.create_request("search", search_string)
         message = ClientMessage(self.selector, self.sock, self.address, request)
         self.selector.modify(self.sock, self.events, message)
@@ -72,3 +71,26 @@ class Client():
         """Stops the client."""
         logging.debug("Stop client")
         self.selector.close()
+
+
+if __name__ == "__main__":
+    import time
+    logging.basicConfig(level=logging.DEBUG, format="%(levelname)s: %(filename)s:%(lineno)d: %(message)s")
+
+    search_strings = ["morpheus", "ring", "\U0001f436"]
+    search_strings_index = 1
+
+    client = Client(("localhost", 54879))
+    client.connect()
+
+    done = False
+    while not done:
+        try:
+            client.tick()
+            time.sleep(0.5)
+            client.send(search_strings[search_strings_index])
+            search_strings_index = (search_strings_index + 1) % len(search_strings)
+
+        except KeyboardInterrupt:
+            client.stop()
+            done = True

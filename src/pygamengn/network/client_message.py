@@ -19,6 +19,7 @@ class ClientMessage:
         self._jsonheader_len = None
         self.jsonheader = None
         self.response = None
+        self.__processed_count = 0
 
     def _set_selector_events_mask(self, mode):
         """Set selector to listen for events: mode is 'r', 'w', or 'rw'."""
@@ -47,7 +48,7 @@ class ClientMessage:
 
     def _write(self):
         if self._send_buffer:
-            logging.debug("Sending {0} to {1}:{2}".format(repr(self._send_buffer), self.addr[0], self.addr[1]))
+            # logging.debug("Sending {0} to {1}:{2}".format(repr(self._send_buffer), self.addr[0], self.addr[1]))
             try:
                 # Should be ready to write
                 sent = self.sock.send(self._send_buffer)
@@ -68,7 +69,7 @@ class ClientMessage:
         tiow.close()
         return obj
 
-    def _create_message(self, *, content_bytes, content_type, content_encoding):
+    def _create_message(self, content_bytes, content_type, content_encoding):
         jsonheader = {
             "byteorder": sys.byteorder,
             "content-type": content_type,
@@ -114,6 +115,7 @@ class ClientMessage:
             self.queue_request()
 
         self._write()
+        logging.debug("Sent {0}".format(self.request["content"]))
 
         if self._request_queued:
             if not self._send_buffer:
@@ -194,7 +196,7 @@ class ClientMessage:
         if self.jsonheader["content-type"] == "text/json":
             encoding = self.jsonheader["content-encoding"]
             self.response = self._json_decode(data, encoding)
-            logging.debug("Received response {0} from {1}:{2}".format(repr(self.response), self.addr[0], self.addr[1]))
+            # logging.debug("Received response {0} from {1}:{2}".format(repr(self.response), self.addr[0], self.addr[1]))
             self._process_response_json_content()
         else:
             # Binary or unknown content-type
@@ -205,5 +207,5 @@ class ClientMessage:
             )
             self._process_response_binary_content()
         # Close when response has been processed
-        logging.debug("Done processing response")
+        self.__processed_count += 1
 #         self.close()
