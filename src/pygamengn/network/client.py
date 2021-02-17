@@ -16,6 +16,7 @@ class Client():
         self.events = selectors.EVENT_READ | selectors.EVENT_WRITE
 
     def connect(self):
+        """Connects to the server."""
         logging.debug("Connecting to {0}:{1}".format(self.address[0], self.address[1]))
         self.socket.connect_ex(self.address)
         request = self.__create_request("search", "morpheus")
@@ -23,6 +24,7 @@ class Client():
         self.selector.register(self.socket, self.events, message)
 
     def send(self, search_string):
+        """Sends a message to the server. Assumes that selector and socket are valid and in good state."""
         request = self.__create_request("search", search_string)
         message = ClientMessage(self.selector, self.socket, self.address, request)
         self.selector.modify(self.socket, self.events, message)
@@ -38,9 +40,10 @@ class Client():
             message = key.data
             try:
                 message.process_events(mask)
-            except ConnectionRefusedError:
-                logging.debug("ConnectionRefusedError")
+            except (RuntimeError, ConnectionRefusedError, ConnectionResetError) as e:
+                logging.debug(f"Client disconnected: {e}")
                 message.close()
+                self.stop()
 
     def stop(self):
         """Stops the client."""
@@ -77,8 +80,12 @@ if __name__ == "__main__":
         try:
             client.tick()
             time.sleep(0.5)
-            client.send(search_strings[search_strings_index])
-            search_strings_index = (search_strings_index + 1) % len(search_strings)
+            try:
+                client.send(search_strings[search_strings_index])
+                search_strings_index = (search_strings_index + 1) % len(search_strings)
+            except ValueError:
+                logging.debug("Client socket is invalid")
+                done = True
 
         except KeyboardInterrupt:
             client.stop()
