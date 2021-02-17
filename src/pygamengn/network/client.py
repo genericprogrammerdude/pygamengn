@@ -6,34 +6,26 @@ from client_message import ClientMessage
 
 
 class Client():
-    """
-    Multiplayer client.
-
-    This code is adapted from a Python sockets tutorial on Real Python:
-    https://realpython.com/python-sockets
-
-    Code from the tutorial:
-    https://github.com/realpython/materials/tree/cdbe7ef2392ea9488badf47e405f0c7e533802f0/python-sockets-tutorial
-    """
+    """Multiplayer client."""
 
     def __init__(self, address):
         self.address = address
         self.selector = selectors.DefaultSelector()
-        self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        self.sock.setblocking(False)
+        self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self.socket.setblocking(False)
         self.events = selectors.EVENT_READ | selectors.EVENT_WRITE
 
     def connect(self):
         logging.debug("Connecting to {0}:{1}".format(self.address[0], self.address[1]))
-        self.sock.connect_ex(self.address)
+        self.socket.connect_ex(self.address)
         request = self.create_request("search", "morpheus")
-        message = ClientMessage(self.selector, self.sock, self.address, request)
-        self.selector.register(self.sock, self.events, message)
+        message = ClientMessage(self.selector, self.socket, self.address, request)
+        self.selector.register(self.socket, self.events, message)
 
     def send(self, search_string):
         request = self.create_request("search", search_string)
-        message = ClientMessage(self.selector, self.sock, self.address, request)
-        self.selector.modify(self.sock, self.events, message)
+        message = ClientMessage(self.selector, self.socket, self.address, request)
+        self.selector.modify(self.socket, self.events, message)
 
     def create_request(self, action, value):
         if action == "search":
@@ -60,11 +52,8 @@ class Client():
             message = key.data
             try:
                 message.process_events(mask)
-            except Exception:
-                print(
-                    "main: error: exception for",
-                    f"{message.addr}:\n{traceback.format_exc()}",
-                )
+            except ConnectionRefusedError:
+                logging.debug("ConnectionRefusedError")
                 message.close()
 
     def stop(self):

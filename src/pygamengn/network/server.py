@@ -6,15 +6,7 @@ from connected_client import ConnectedClient
 
 
 class Server():
-    """
-    Multiplayer server.
-
-    This code is adapted from a Python sockets tutorial on Real Python:
-    https://realpython.com/python-sockets
-
-    Code from the tutorial:
-    https://github.com/realpython/materials/tree/cdbe7ef2392ea9488badf47e405f0c7e533802f0/python-sockets-tutorial
-    """
+    """Multiplayer server."""
 
     def __init__(self, address=("localhost", 54879)):
         self.address = address
@@ -51,7 +43,8 @@ class Server():
                 connected_client = key.data
                 try:
                     connected_client.process_events(mask)
-                except RuntimeError:
+                except (RuntimeError, ConnectionResetError) as e:
+                    logging.debug(f"Client disconnected: {e}")
                     self.connected_clients[connected_client.address].close()
                     del self.connected_clients[connected_client.address]
 

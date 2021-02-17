@@ -37,6 +37,7 @@ class ConnectedClient:
         self.selector.modify(self.socket, selectors.EVENT_WRITE, data=self)
 
     def process_events(self, mask):
+        """Processes events."""
         if mask & selectors.EVENT_READ:
             message = self.reader.read()
             if message and not self.request:
@@ -65,14 +66,13 @@ class ConnectedClient:
         except OSError as e:
             logging.error(f"socket.close() exception for {self.address}: {repr(e)}")
         finally:
-            # Delete reference to socket object for garbage collection
             self.socket = None
 
     def __process_request(self, header, payload):
         if header["content-type"] == "text/json":
             encoding = header["content-encoding"]
             self.request = message_util.json_decode(payload, encoding)
-            logging.debug("Received request {0} from {1}:{2}".format(repr(self.request), self.address[0], self.address[1]))
+            logging.debug(f"Received request {repr(self.request)} from {self.address[0]}:{self.address[1]}")
         else:
             # Binary or unknown content-type
             self.request = payload
