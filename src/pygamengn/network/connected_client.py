@@ -14,15 +14,15 @@ class ConnectedClient:
         self.socket = connection_socket
         self.address = client_address
         self.selector = selector
-        self.reader = ProtoReader(self.socket)
-        self.writer = ProtoWriter(self.socket)
+        self.__reader = ProtoReader(self.socket)
+        self.__writer = ProtoWriter(self.socket)
         self.__reset()
         self.__processed_count = 0
 
     def __reset(self):
         self.request = None
         self.response_created = False
-        self.reader.reset()
+        self.__reader.reset()
 
     def activate(self):
         """Activates the connection to the client to start receiving data."""
@@ -39,7 +39,7 @@ class ConnectedClient:
     def process_events(self, mask):
         """Processes events."""
         if mask & selectors.EVENT_READ:
-            message = self.reader.read()
+            message = self.__reader.read()
             if message and not self.request:
                 self.__process_request(**message)
 
@@ -47,8 +47,8 @@ class ConnectedClient:
             if self.request:
                 if not self.response_created:
                     message = self.__create_response()
-                    self.writer.set_buffer(message)
-                if self.writer.write():
+                    self.__writer.set_buffer(message)
+                if self.__writer.write():
                     logging.debug(f"Sent response to {self.address[0]}:{self.address[1]}")
                     self.__reset()
                     self.__set_read_mode()

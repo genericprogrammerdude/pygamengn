@@ -18,28 +18,14 @@ class Client():
     def connect(self):
         logging.debug("Connecting to {0}:{1}".format(self.address[0], self.address[1]))
         self.socket.connect_ex(self.address)
-        request = self.create_request("search", "morpheus")
+        request = self.__create_request("search", "morpheus")
         message = ClientMessage(self.selector, self.socket, self.address, request)
         self.selector.register(self.socket, self.events, message)
 
     def send(self, search_string):
-        request = self.create_request("search", search_string)
+        request = self.__create_request("search", search_string)
         message = ClientMessage(self.selector, self.socket, self.address, request)
         self.selector.modify(self.socket, self.events, message)
-
-    def create_request(self, action, value):
-        if action == "search":
-            return dict(
-                type="text/json",
-                encoding="utf-8",
-                content=dict(action=action, value=value),
-            )
-        else:
-            return dict(
-                type="binary/custom-client-binary-type",
-                encoding="binary",
-                content=bytes(action + value, encoding="utf-8"),
-            )
 
     def tick(self):
         """Does client work."""
@@ -60,6 +46,20 @@ class Client():
         """Stops the client."""
         logging.debug("Stop client")
         self.selector.close()
+
+    def __create_request(self, action, value):
+        if action == "search":
+            return dict(
+                type="text/json",
+                encoding="utf-8",
+                content=dict(action=action, value=value),
+            )
+        else:
+            return dict(
+                type="binary/custom-client-binary-type",
+                encoding="binary",
+                content=bytes(action + value, encoding="utf-8"),
+            )
 
 
 if __name__ == "__main__":
