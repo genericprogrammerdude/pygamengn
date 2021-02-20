@@ -3,6 +3,7 @@ import selectors
 import socket
 
 from client_message import ClientMessage
+from proto_message import ProtoMessage
 
 
 class Client():
@@ -26,7 +27,9 @@ class Client():
     def send(self, search_string):
         """Sends a message to the server. Assumes that selector and socket are valid and in good state."""
         request = self.__create_request("search", search_string)
-        message = ClientMessage(self.selector, self.socket, self.address, request)
+        proto_message = ProtoMessage(search_string)
+        proto_message.build()
+        message = ClientMessage(self.selector, self.socket, self.address, proto_message)
         self.selector.modify(self.socket, self.events, message)
 
     def tick(self):
@@ -42,12 +45,22 @@ class Client():
                 message.process_events(mask)
             except (RuntimeError, ConnectionRefusedError, ConnectionResetError) as e:
                 logging.debug(f"Client disconnected: {e}")
-                message.close()
                 self.stop()
 
     def stop(self):
         """Stops the client."""
         logging.debug("Stop client")
+        try:
+            self.selector.unregister(self.socket)
+        except Exception as e:
+            logging.debug(f"selector.unregister() exception for {self.address}: {repr(e)}")
+
+        try:
+            self.socket.close()
+        except OSError as e:
+            logging.debug(f"socket.close() exception for {self.address}: {repr(e)}")
+        finally:
+            self.socket = None
         self.selector.close()
 
     def __create_request(self, action, value):
