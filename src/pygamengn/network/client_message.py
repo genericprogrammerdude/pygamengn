@@ -38,6 +38,6 @@ class ClientMessage:
                 self.__proto_message.reset()
                 self.__set_read_mode()
 
-    def __process_response(self, dict):
-        logging.debug(f"Received response: {dict}")
+    def __process_response(self, dictionary):
+        logging.debug(f"Received response: {dictionary}")
         self.__processed_count += 1

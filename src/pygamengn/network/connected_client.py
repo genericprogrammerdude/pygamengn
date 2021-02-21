@@ -68,8 +68,8 @@ class ConnectedClient:
         finally:
             self.socket = None
 
-    def __process_request(self, dict):
-        self.request = dict
+    def __process_request(self, dictionary):
+        self.request = dictionary
         logging.debug(f"Received request {repr(self.request)} from {self.address[0]}:{self.address[1]}")
         # Set selector to listen for write events, we're done reading.
         self.__set_write_mode()
@@ -82,6 +82,19 @@ class ConnectedClient:
             self.__player_name = self.request["name"]
             print(self.__player_name)
 
-            message = ProtoMessage.init_message({})
+            message = ProtoMessage.init_message({
+                "object1": {
+                    "game_type": "/Some/gob_type/from/inventory",
+                    "pos": [23, 32],
+                    "heading": 54,
+                    "health": 100
+                },
+                "Player1": {
+                    "game_type": "/Ship",
+                    "pos": (0, 2),
+                    "heading": 0,
+                    "health": 58
+                }
+            })
             self.response_created = True
             return message
