@@ -2,8 +2,9 @@ import logging
 import selectors
 import socket
 
-from client_message import ClientMessage
 from proto_message import ProtoMessage
+from proto_reader import ProtoReader
+from proto_writer import ProtoWriter
 
 
 class Client():
@@ -14,23 +15,18 @@ class Client():
         self.selector = selectors.DefaultSelector()
         self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.socket.setblocking(False)
-        self.events = selectors.EVENT_READ | selectors.EVENT_WRITE
+        self.__proto_message = None
+        self.__processed_count = 0
+        self.__reader = ProtoReader(self.socket)
+        self.__writer = ProtoWriter(self.socket)
 
     def connect(self):
         """Connects to the server."""
         logging.debug("Connecting to {0}:{1}".format(self.address[0], self.address[1]))
         self.socket.connect_ex(self.address)
-        proto_message = ProtoMessage.connect_message("Player2")
-        proto_message.build()
-        message = ClientMessage(self.selector, self.socket, self.address, proto_message)
-        self.selector.register(self.socket, selectors.EVENT_WRITE, message)
-
-    def send(self, search_string):
-        """Sends a message to the server. Assumes that selector and socket are valid and in good state."""
-        proto_message = ProtoMessage(search_string)
-        proto_message.build()
-        message = ClientMessage(self.selector, self.socket, self.address, proto_message)
-        self.selector.modify(self.socket, self.events, message)
+        self.__proto_message = ProtoMessage.connect_message("Player2")
+        self.__proto_message.build()
+        self.selector.register(self.socket, selectors.EVENT_WRITE)
 
     def tick(self):
         """Does client work."""
@@ -39,10 +35,9 @@ class Client():
             return
 
         events = self.selector.select(timeout=-1)
-        for key, mask in events:
-            message = key.data
+        for _, mask in events:
             try:
-                message.process_events(mask)
+                self.__process_events(mask)
             except (RuntimeError, ConnectionRefusedError, ConnectionResetError) as e:
                 logging.debug(f"Client disconnected: {e}")
                 self.stop()
@@ -63,6 +58,37 @@ class Client():
             self.socket = None
         self.selector.close()
 
+    def __process_events(self, mask):
+        """Processes events."""
+        if mask & selectors.EVENT_READ:
+            done_reading = self.__reader.read()
+            if done_reading:
+                self.__process_response(self.__reader.obj)
+                self.__reader.reset()
+                self.__set_write_mode()
+
+        if mask & selectors.EVENT_WRITE:
+            assert self.__proto_message.buffer
+            self.__writer.set_buffer(self.__proto_message.buffer)
+            done_writing = self.__writer.write()
+            logging.debug(f"Sent {self.__proto_message.payload}")
+
+            if done_writing:
+                self.__proto_message.reset()
+                self.__set_read_mode()
+
+    def __process_response(self, dictionary):
+        logging.debug(f"Received response: {dictionary}")
+        self.__processed_count += 1
+
+    def __set_read_mode(self):
+        """Sets selector to look for read events."""
+        self.selector.modify(self.socket, selectors.EVENT_READ)
+
+    def __set_write_mode(self):
+        """Sets selector to look for write events."""
+        self.selector.modify(self.socket, selectors.EVENT_WRITE)
+
 
 if __name__ == "__main__":
     import time
@@ -79,13 +105,7 @@ if __name__ == "__main__":
         try:
             client.tick()
             time.sleep(0.02)
-#             try:
-#                 client.send(search_strings[search_strings_index])
-#                 search_strings_index = (search_strings_index + 1) % len(search_strings)
-#             except ValueError:
-#                 logging.debug("Client socket is invalid")
-#                 done = True
 
-        except KeyboardInterrupt:
+        except (AssertionError, KeyboardInterrupt):
             client.stop()
             done = True
