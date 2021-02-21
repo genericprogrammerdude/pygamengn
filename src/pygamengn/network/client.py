@@ -55,7 +55,8 @@ class Client():
                     "callback": self.transition_playing
                 },
                 ClientInput.STOP: {
-                    "state": ClientState.DISCONNECTED
+                    "state": ClientState.DISCONNECTED,
+                    "callback": self.stop
                 }
             }
         })
@@ -157,4 +158,7 @@ if __name__ == "__main__":
 
         except (AssertionError, KeyboardInterrupt):
             client.stop()
+            done = True
+
+        except ValueError:
             done = True
