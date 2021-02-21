@@ -1,8 +1,6 @@
 import logging
 import selectors
 
-import message_util
-
 from proto_message import ProtoMessage
 from proto_reader import ProtoReader
 from proto_writer import ProtoWriter

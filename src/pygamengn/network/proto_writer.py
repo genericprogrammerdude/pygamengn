@@ -1,6 +1,3 @@
-import message_util
-
-
 class ProtoWriter:
     """ProtoWriter worker for the pygamengn protocol."""
 

@@ -1,7 +1,6 @@
+import json
 import struct
 import sys
-
-import message_util
 
 
 class ProtoMessage:
@@ -15,7 +14,7 @@ class ProtoMessage:
         """Builds the protocol message and leaves the buffer ready for sending."""
         content_type = "text/json"
         content_encoding = "utf-8"
-        content_bytes = message_util.json_encode(self.__payload, content_encoding)
+        content_bytes = self.__json_encode(self.__payload, content_encoding)
 
         json_header = {
             "byteorder": sys.byteorder,
@@ -23,7 +22,7 @@ class ProtoMessage:
             "content-encoding": content_encoding,
             "content-length": len(content_bytes),
         }
-        json_header_bytes = message_util.json_encode(json_header, "utf-8")
+        json_header_bytes = self.__json_encode(json_header, "utf-8")
         message_hdr = struct.pack(">H", len(json_header_bytes))
         self.__buffer = message_hdr + json_header_bytes + content_bytes
 
@@ -38,6 +37,11 @@ class ProtoMessage:
     @property
     def payload(self):
         return self.__payload
+
+    @classmethod
+    def __json_encode(cls, content, content_encoding):
+        """Encodes the given content as a JSON object."""
+        return json.dumps(content, ensure_ascii=False).encode(content_encoding)
 
     @classmethod
     def connect_message(cls, player_name):
