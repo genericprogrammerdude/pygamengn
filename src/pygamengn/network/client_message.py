@@ -13,7 +13,7 @@ class ClientMessage:
         self.selector = selector
         self.socket = sock
         self.address = addr
-        self.proto_message = proto_message
+        self.__proto_message = proto_message
         self.response = None
         self.__processed_count = 0
         self.__reader = ProtoReader(self.socket)
@@ -24,9 +24,7 @@ class ClientMessage:
         self.selector.modify(self.socket, selectors.EVENT_READ, data=self)
 
     def _process_response_json_content(self):
-        content = self.response
-        result = content.get("result")
-        logging.debug(f"Received response: {result}")
+        logging.debug(f"Received response: {self.response['message']}")
 
     def _process_response_binary_content(self):
         content = self.response
@@ -41,11 +39,12 @@ class ClientMessage:
                 self.__reader.reset()
 
         if mask & selectors.EVENT_WRITE:
-            self.__writer.set_buffer(self.proto_message.buffer)
+            self.__writer.set_buffer(self.__proto_message.buffer)
             done_writing = self.__writer.write()
-            logging.debug(f"Sent {self.proto_message.payload}")
+            logging.debug(f"Sent {self.__proto_message.payload}")
 
             if done_writing:
+                self.__proto_message.reset()
                 self.__set_read_mode()
 
     def __process_response(self, header, payload):

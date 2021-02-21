@@ -20,10 +20,10 @@ class Client():
         """Connects to the server."""
         logging.debug("Connecting to {0}:{1}".format(self.address[0], self.address[1]))
         self.socket.connect_ex(self.address)
-        proto_message = ProtoMessage("morpheus")
+        proto_message = ProtoMessage.connect_message("Player2")
         proto_message.build()
         message = ClientMessage(self.selector, self.socket, self.address, proto_message)
-        self.selector.register(self.socket, self.events, message)
+        self.selector.register(self.socket, selectors.EVENT_WRITE, message)
 
     def send(self, search_string):
         """Sends a message to the server. Assumes that selector and socket are valid and in good state."""
@@ -78,13 +78,13 @@ if __name__ == "__main__":
     while not done:
         try:
             client.tick()
-            time.sleep(0.5)
-            try:
-                client.send(search_strings[search_strings_index])
-                search_strings_index = (search_strings_index + 1) % len(search_strings)
-            except ValueError:
-                logging.debug("Client socket is invalid")
-                done = True
+            time.sleep(0.02)
+#             try:
+#                 client.send(search_strings[search_strings_index])
+#                 search_strings_index = (search_strings_index + 1) % len(search_strings)
+#             except ValueError:
+#                 logging.debug("Client socket is invalid")
+#                 done = True
 
         except KeyboardInterrupt:
             client.stop()

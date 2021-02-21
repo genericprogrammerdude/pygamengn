@@ -10,6 +10,7 @@ class ProtoWriter:
 
     def set_buffer(self, buffer):
         """Sets the buffer to write to the socket."""
+        assert not self.__buffer
         self.__buffer = buffer
 
     def write(self):

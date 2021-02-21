@@ -3,6 +3,7 @@ import selectors
 
 import message_util
 
+from proto_message import ProtoMessage
 from proto_reader import ProtoReader
 from proto_writer import ProtoWriter
 
@@ -47,7 +48,7 @@ class ConnectedClient:
             if self.request:
                 if not self.response_created:
                     message = self.__create_response()
-                    self.__writer.set_buffer(message)
+                    self.__writer.set_buffer(message.buffer)
                 if self.__writer.write():
                     logging.debug(f"Sent response to {self.address[0]}:{self.address[1]}")
                     self.__reset()
@@ -83,9 +84,12 @@ class ConnectedClient:
         self.__processed_count += 1
 
     def __create_response(self):
-        action = self.request.get("action")
-        value = self.request.get("value")
-        response = message_util.create_response_json_content(action, value)
-        message = message_util.create_message(**response)
-        self.response_created = True
-        return message
+        message = self.request.get("message")
+
+        if message == "CONNECT":
+            self.__player_name = self.request["name"]
+            print(self.__player_name)
+
+            message = ProtoMessage.init_message({})
+            self.response_created = True
+            return message
