@@ -7,16 +7,25 @@ import socket
 from proto_message import ProtoMessage
 from proto_reader import ProtoReader
 from proto_writer import ProtoWriter
+from fsm import FiniteStateMachine
+
+
+class ClientState(Enum):
+    DISCONNECTED = auto()
+    CONNECTED = auto()
+    READY = auto()
+    PLAYING = auto()
+
+
+class ClientInput(Enum):
+    INIT = "INIT"
+    START = "START"
+    UPDATE = "UPDATE"
+    STOP = "STOP"
 
 
 class Client():
     """Multiplayer client."""
-
-    class ClientState(Enum):
-        DISCONNECTED = auto()
-        CONNECTED = auto()
-        READY = auto()
-        PLAYING = auto()
 
     def __init__(self, address):
         self.__address = address
@@ -27,13 +36,35 @@ class Client():
         self.__processed_count = 0
         self.__reader = ProtoReader(self.__socket)
         self.__writer = ProtoWriter(self.__socket)
+        self.__fsm = FiniteStateMachine(ClientState.DISCONNECTED, {
+            ClientState.DISCONNECTED: {
+                ClientInput.INIT: {
+                    "state": ClientState.CONNECTED,
+                    "callback": self.transition_connected
+                }
+            },
+            ClientState.CONNECTED: {
+                ClientInput.START: {
+                    "state": ClientState.PLAYING,
+                    "callback": self.transition_playing
+                }
+            },
+            ClientState.PLAYING: {
+                ClientInput.UPDATE: {
+                    "state": ClientState.PLAYING,
+                    "callback": self.transition_playing
+                },
+                ClientInput.STOP: {
+                    "state": ClientState.DISCONNECTED
+                }
+            }
+        })
 
-    def connect(self):
+    def connect(self, player_name):
         """Connects to the server."""
         logging.debug("Connecting to {0}:{1}".format(self.__address[0], self.__address[1]))
         self.__socket.connect_ex(self.__address)
-        self.__proto_message = ProtoMessage.connect_message("Player2")
-        self.__proto_message.build()
+        self.__proto_message = ProtoMessage.connect_message(player_name)
         self.__selector.register(self.__socket, selectors.EVENT_WRITE)
 
     def tick(self):
@@ -66,6 +97,18 @@ class Client():
             self.__socket = None
         self.__selector.close()
 
+    def transition_connected(self):
+        """Executes the transition to the CONNECTED state."""
+        logging.debug("transition_connected()")
+        self.__proto_message = ProtoMessage.ready_message()
+        return True
+
+    def transition_playing(self):
+        """Executes the transition to the PLAYING state."""
+        logging.debug("transition_playing()")
+        self.__proto_message = ProtoMessage.input_message(["FORWARD", "LEFT", "FIRE"])
+        return True
+
     def __process_events(self, mask):
         """Processes events."""
         if mask & selectors.EVENT_READ:
@@ -87,6 +130,7 @@ class Client():
 
     def __process_response(self, dictionary):
         logging.debug(f"Received response: {dictionary}")
+        self.__fsm.transition(ClientInput(dictionary["message"]))
         self.__processed_count += 1
 
     def __set_read_mode(self):
@@ -103,7 +147,7 @@ if __name__ == "__main__":
     logging.basicConfig(level=logging.DEBUG, format="%(levelname)s: %(filename)s:%(lineno)d: %(message)s")
 
     client = Client(("localhost", 54879))
-    client.connect()
+    client.connect("Player2")
 
     done = False
     while not done:

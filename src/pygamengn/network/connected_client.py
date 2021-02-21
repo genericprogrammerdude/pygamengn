@@ -47,6 +47,7 @@ class ConnectedClient:
             if self.request:
                 if not self.response_created:
                     message = self.__create_response()
+                    logging.debug(f"Sending {message.payload} to {self.address[0]}:{self.address[1]}")
                     self.__writer.set_buffer(message.buffer)
                 if self.__writer.write():
                     logging.debug(f"Sent response to {self.address[0]}:{self.address[1]}")
@@ -79,9 +80,7 @@ class ConnectedClient:
 
         if message == "CONNECT":
             self.__player_name = self.request["name"]
-            print(self.__player_name)
-
-            message = ProtoMessage.init_message({
+            response = ProtoMessage.init_message({
                 "object1": {
                     "game_type": "/Some/gob_type/from/inventory",
                     "pos": [23, 32],
@@ -96,4 +95,31 @@ class ConnectedClient:
                 }
             })
             self.response_created = True
-            return message
+            return response
+
+        elif message == "READY":
+            response = ProtoMessage.start_message()
+            self.response_created = True
+            return response
+
+        elif message == "INPUT":
+            if self.__processed_count < 100:
+                response = ProtoMessage.update_message({
+                    "object1": {
+                        "id": 43,
+                        "pos": [230, 2],
+                        "heading": 5,
+                        "health": 30
+                    },
+                    "Player1": {
+                        "id": 23,
+                        "pos": (120, 2),
+                        "heading": 20,
+                        "health": 98
+                    }
+                })
+            else:
+                response = ProtoMessage.stop_message()
+
+            self.response_created = True
+            return response

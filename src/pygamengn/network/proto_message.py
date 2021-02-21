@@ -43,6 +43,10 @@ class ProtoMessage:
         """Encodes the given content as a JSON object."""
         return json.dumps(content, ensure_ascii=False).encode(content_encoding)
 
+    ###################
+    # Client messages
+    ###################
+
     @classmethod
     def connect_message(cls, player_name):
         """Builds and returns a CONNECT message to send from the Client to the Server."""
@@ -54,11 +58,62 @@ class ProtoMessage:
         return message
 
     @classmethod
+    def ready_message(cls):
+        """Builds and returns a READY message to send from the Client to the Server."""
+        message = ProtoMessage({
+            "message": "READY"
+        })
+        message.build()
+        return message
+
+    @classmethod
+    def input_message(cls, inputs):
+        """Builds and returns a READY message to send from the Client to the Server."""
+        message = ProtoMessage({
+            "message": "INPUT",
+            "inputs": inputs
+        })
+        message.build()
+        return message
+
+    ###################
+    # Server messages
+    ###################
+
+    @classmethod
     def init_message(cls, objects_dict):
-        """Builds and returns a CONNECT message to send from the Client to the Server."""
+        """Builds and returns an INIT message to send from the Server to the Client."""
         message = ProtoMessage({
             "message": "INIT",
             "objects": objects_dict
+        })
+        message.build()
+        return message
+
+    @classmethod
+    def start_message(cls):
+        """Builds and returns a START message to send from the Server to the Client."""
+        message = ProtoMessage({
+            "message": "START"
+        })
+        message.build()
+        return message
+
+    @classmethod
+    def update_message(cls, objects_dict):
+        """Builds and returns an UPDATE message to send from the Server to the Client."""
+        message = ProtoMessage({
+            "message": "UPDATE",
+            "objects": objects_dict
+        })
+        message.build()
+        return message
+
+    @classmethod
+    def stop_message(cls):
+        """Builds and returns a STOP message to send from the Server to the Client."""
+        message = ProtoMessage({
+            "message": "STOP"
         })
         message.build()
         return message
