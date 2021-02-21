@@ -9,9 +9,9 @@ class Server():
     """Multiplayer server."""
 
     def __init__(self, address=("localhost", 54879)):
-        self.address = address
-        self.selector = selectors.DefaultSelector()
-        self.connected_clients = {}
+        self.__address = address
+        self.__selector = selectors.DefaultSelector()
+        self.__connected_clients = {}
 
     def start(self):
         """Starts the server."""
@@ -19,23 +19,23 @@ class Server():
         lsock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         # Avoid bind() exception: OSError: [Errno 48] Address already in use
         lsock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-        lsock.bind(self.address)
-        self.address = lsock.getsockname()
+        lsock.bind(self.__address)
+        self.__address = lsock.getsockname()
         lsock.listen()
-        logging.debug(f"Listening on {self.address[0]}:{self.address[1]}")
+        logging.debug(f"Listening on {self.__address[0]}:{self.__address[1]}")
         lsock.setblocking(False)
-        self.selector.register(lsock, selectors.EVENT_READ, data=None)
+        self.__selector.register(lsock, selectors.EVENT_READ)
 
     def stop(self):
         logging.debug("Stop server")
-        for address, connected_client in self.connected_clients.items():
+        for address, connected_client in self.__connected_clients.items():
             connected_client.close()
             logging.debug(f"Closed connection to {address[0]}:{address[1]}")
-        self.selector.close()
+        self.__selector.close()
 
     def tick(self):
         """Does server work."""
-        events = self.selector.select(timeout=-1)
+        events = self.__selector.select(timeout=-1)
         for key, mask in events:
             if key.data is None:
                 self.__accept_connection(key.fileobj)
@@ -45,16 +45,16 @@ class Server():
                     connected_client.process_events(mask)
                 except (RuntimeError, ConnectionResetError) as e:
                     logging.debug(f"Client disconnected: {e}")
-                    self.connected_clients[connected_client.address].close()
-                    del self.connected_clients[connected_client.address]
+                    self.__connected_clients[connected_client.address].close()
+                    del self.__connected_clients[connected_client.address]
 
     def __accept_connection(self, sock):
         """Accepts a new connection."""
         conn, addr = sock.accept()
         conn.setblocking(False)
         logging.debug(f"Accepted connection from {addr[0]}:{addr[1]}")
-        connected_client = ConnectedClient(conn, addr, self.selector)
-        self.connected_clients[addr] = connected_client
+        connected_client = ConnectedClient(conn, addr, self.__selector)
+        self.__connected_clients[addr] = connected_client
         connected_client.activate()
 
 

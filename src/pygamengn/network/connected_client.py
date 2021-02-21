@@ -10,11 +10,11 @@ class ConnectedClient:
     """Server representation of a connected client."""
 
     def __init__(self, connection_socket, client_address, selector):
-        self.socket = connection_socket
+        self.__socket = connection_socket
         self.address = client_address
-        self.selector = selector
-        self.__reader = ProtoReader(self.socket)
-        self.__writer = ProtoWriter(self.socket)
+        self.__selector = selector
+        self.__reader = ProtoReader(self.__socket)
+        self.__writer = ProtoWriter(self.__socket)
         self.__reset()
         self.__processed_count = 0
 
@@ -25,15 +25,15 @@ class ConnectedClient:
 
     def activate(self):
         """Activates the connection to the client to start receiving data."""
-        self.selector.register(self.socket, selectors.EVENT_READ, data=self)
+        self.__selector.register(self.__socket, selectors.EVENT_READ, data=self)
 
     def __set_read_mode(self):
         """Sets selector to look for read events."""
-        self.selector.modify(self.socket, selectors.EVENT_READ, data=self)
+        self.__selector.modify(self.__socket, selectors.EVENT_READ, data=self)
 
     def __set_write_mode(self):
         """Sets selector to look for write events."""
-        self.selector.modify(self.socket, selectors.EVENT_WRITE, data=self)
+        self.__selector.modify(self.__socket, selectors.EVENT_WRITE, data=self)
 
     def process_events(self, mask):
         """Processes events."""
@@ -57,21 +57,20 @@ class ConnectedClient:
         """Closes the connection to the client."""
         logging.debug(f"Closing connection to {self.address[0]}:{self.address[1]}")
         try:
-            self.selector.unregister(self.socket)
+            self.__selector.unregister(self.__socket)
         except Exception as e:
             logging.error(f"selector.unregister() exception for {self.address}: {repr(e)}")
 
         try:
-            self.socket.close()
+            self.__socket.close()
         except OSError as e:
             logging.error(f"socket.close() exception for {self.address}: {repr(e)}")
         finally:
-            self.socket = None
+            self.__socket = None
 
     def __process_request(self, dictionary):
         self.request = dictionary
         logging.debug(f"Received request {repr(self.request)} from {self.address[0]}:{self.address[1]}")
-        # Set selector to listen for write events, we're done reading.
         self.__set_write_mode()
         self.__processed_count += 1
 

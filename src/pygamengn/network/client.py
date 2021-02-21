@@ -1,3 +1,5 @@
+from enum import Enum, auto
+
 import logging
 import selectors
 import socket
@@ -10,31 +12,37 @@ from proto_writer import ProtoWriter
 class Client():
     """Multiplayer client."""
 
+    class ClientState(Enum):
+        DISCONNECTED = auto()
+        CONNECTED = auto()
+        READY = auto()
+        PLAYING = auto()
+
     def __init__(self, address):
-        self.address = address
-        self.selector = selectors.DefaultSelector()
-        self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        self.socket.setblocking(False)
+        self.__address = address
+        self.__selector = selectors.DefaultSelector()
+        self.__socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self.__socket.setblocking(False)
         self.__proto_message = None
         self.__processed_count = 0
-        self.__reader = ProtoReader(self.socket)
-        self.__writer = ProtoWriter(self.socket)
+        self.__reader = ProtoReader(self.__socket)
+        self.__writer = ProtoWriter(self.__socket)
 
     def connect(self):
         """Connects to the server."""
-        logging.debug("Connecting to {0}:{1}".format(self.address[0], self.address[1]))
-        self.socket.connect_ex(self.address)
+        logging.debug("Connecting to {0}:{1}".format(self.__address[0], self.__address[1]))
+        self.__socket.connect_ex(self.__address)
         self.__proto_message = ProtoMessage.connect_message("Player2")
         self.__proto_message.build()
-        self.selector.register(self.socket, selectors.EVENT_WRITE)
+        self.__selector.register(self.__socket, selectors.EVENT_WRITE)
 
     def tick(self):
         """Does client work."""
-        if not self.selector.get_map():
+        if not self.__selector.get_map():
             logging.error("Client ticking but not connected to server")
             return
 
-        events = self.selector.select(timeout=-1)
+        events = self.__selector.select(timeout=-1)
         for _, mask in events:
             try:
                 self.__process_events(mask)
@@ -46,17 +54,17 @@ class Client():
         """Stops the client."""
         logging.debug("Stop client")
         try:
-            self.selector.unregister(self.socket)
+            self.__selector.unregister(self.__socket)
         except Exception as e:
-            logging.debug(f"selector.unregister() exception for {self.address}: {repr(e)}")
+            logging.debug(f"__selector.unregister() exception for {self.__address}: {repr(e)}")
 
         try:
-            self.socket.close()
+            self.__socket.close()
         except OSError as e:
-            logging.debug(f"socket.close() exception for {self.address}: {repr(e)}")
+            logging.debug(f"__socket.close() exception for {self.__address}: {repr(e)}")
         finally:
-            self.socket = None
-        self.selector.close()
+            self.__socket = None
+        self.__selector.close()
 
     def __process_events(self, mask):
         """Processes events."""
@@ -82,20 +90,17 @@ class Client():
         self.__processed_count += 1
 
     def __set_read_mode(self):
-        """Sets selector to look for read events."""
-        self.selector.modify(self.socket, selectors.EVENT_READ)
+        """Sets __selector to look for read events."""
+        self.__selector.modify(self.__socket, selectors.EVENT_READ)
 
     def __set_write_mode(self):
-        """Sets selector to look for write events."""
-        self.selector.modify(self.socket, selectors.EVENT_WRITE)
+        """Sets __selector to look for write events."""
+        self.__selector.modify(self.__socket, selectors.EVENT_WRITE)
 
 
 if __name__ == "__main__":
     import time
     logging.basicConfig(level=logging.DEBUG, format="%(levelname)s: %(filename)s:%(lineno)d: %(message)s")
-
-    search_strings = ["morpheus", "ring", "\U0001f436"]
-    search_strings_index = 1
 
     client = Client(("localhost", 54879))
     client.connect()
