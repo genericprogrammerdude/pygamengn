@@ -1,6 +1,6 @@
+import io
+import json
 import struct
-
-import message_util
 
 
 class ProtoReader:
@@ -15,8 +15,10 @@ class ProtoReader:
         self.__buffer = b""
         self.__json_header_len = None
         self.__json_header = None
+        self.__object = None
 
     def read(self):
+        """Reads from the socket. Returns True when done reading, False otherwise."""
         self.__read()
 
         if not self.__json_header_len:
@@ -30,12 +32,14 @@ class ProtoReader:
 
             content_len = self.__json_header["content-length"]
             if len(self.__buffer) == content_len:
-                return {
-                    "header": self.__json_header,
-                    "payload": self.__buffer
-                }
+                self.__object = self.__process_message(self.__json_header, self.__buffer)
+                return True
 
-        return None
+        return False
+
+    @property
+    def obj(self):
+        return self.__object
 
     def __read(self):
         try:
@@ -65,7 +69,7 @@ class ProtoReader:
     def __process_json_header(cls, json_header_len, buffer):
         """Reads the JSON header contained in the buffer, assuming the the buffer is json_header_len bytes long."""
         if len(buffer) >= json_header_len:
-            json_header = message_util.json_decode(buffer[:json_header_len], "utf-8")
+            json_header = cls.__json_decode(buffer[:json_header_len], "utf-8")
             buffer = buffer[json_header_len:]
             cls.__validate_json_header(json_header)
             return (json_header, buffer)
@@ -77,3 +81,20 @@ class ProtoReader:
         for required_field in ("byteorder", "content-length", "content-type", "content-encoding"):
             if required_field not in json_header:
                 raise ValueError(f'Missing required header "{required_field}".')
+
+    @classmethod
+    def __process_message(cls, header, payload):
+        """Processes the received message and returns the object contained in it."""
+        obj = None
+        if header["content-type"] == "text/json":
+            encoding = header["content-encoding"]
+            obj = cls.__json_decode(payload, encoding)
+        return obj
+
+    @classmethod
+    def __json_decode(cls, json_bytes, encoding):
+        """Decodes a buffer assuming it contains proper JSON. Returns the Python dictionary that represents the JSON object."""
+        tiow = io.TextIOWrapper(io.BytesIO(json_bytes), encoding=encoding, newline="")
+        obj = json.load(tiow)
+        tiow.close()
+        return obj

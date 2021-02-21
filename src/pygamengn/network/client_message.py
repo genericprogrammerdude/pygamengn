@@ -1,8 +1,6 @@
 import logging
 import selectors
 
-import message_util
-
 from proto_reader import ProtoReader
 from proto_writer import ProtoWriter
 
@@ -23,19 +21,12 @@ class ClientMessage:
         """Sets selector to look for read events."""
         self.selector.modify(self.socket, selectors.EVENT_READ, data=self)
 
-    def _process_response_json_content(self):
-        logging.debug(f"Received response: {self.response['message']}")
-
-    def _process_response_binary_content(self):
-        content = self.response
-        logging.debug(f"Received response: {repr(content)}")
-
     def process_events(self, mask):
         """Processes events."""
         if mask & selectors.EVENT_READ:
-            message = self.__reader.read()
-            if message and not self.response:
-                self.__process_response(**message)
+            done_reading = self.__reader.read()
+            if done_reading:
+                self.__process_response(self.__reader.obj)
                 self.__reader.reset()
 
         if mask & selectors.EVENT_WRITE:
@@ -47,17 +38,6 @@ class ClientMessage:
                 self.__proto_message.reset()
                 self.__set_read_mode()
 
-    def __process_response(self, header, payload):
-        if header["content-type"] == "text/json":
-            encoding = header["content-encoding"]
-            self.response = message_util.json_decode(payload, encoding)
-            self._process_response_json_content()
-        else:
-            # Binary or unknown content-type
-            self.response = payload
-            print(
-                f'received {self.jsonheader["content-type"]} response from',
-                self.address,
-            )
-            self._process_response_binary_content()
+    def __process_response(self, dict):
+        logging.debug(f"Received response: {dict}")
         self.__processed_count += 1

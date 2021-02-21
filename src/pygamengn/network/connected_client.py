@@ -40,9 +40,10 @@ class ConnectedClient:
     def process_events(self, mask):
         """Processes events."""
         if mask & selectors.EVENT_READ:
-            message = self.__reader.read()
-            if message and not self.request:
-                self.__process_request(**message)
+            done_reading = self.__reader.read()
+            if done_reading and not self.request:
+                self.__process_request(self.__reader.obj)
+                self.__reader.reset()
 
         if mask & selectors.EVENT_WRITE:
             if self.request:
@@ -69,16 +70,9 @@ class ConnectedClient:
         finally:
             self.socket = None
 
-    def __process_request(self, header, payload):
-        if header["content-type"] == "text/json":
-            encoding = header["content-encoding"]
-            self.request = message_util.json_decode(payload, encoding)
-            logging.debug(f"Received request {repr(self.request)} from {self.address[0]}:{self.address[1]}")
-        else:
-            # Binary or unknown content-type
-            self.request = payload
-            logging.debug(f"Received {header['content-type']} request from {self.address}")
-
+    def __process_request(self, dict):
+        self.request = dict
+        logging.debug(f"Received request {repr(self.request)} from {self.address[0]}:{self.address[1]}")
         # Set selector to listen for write events, we're done reading.
         self.__set_write_mode()
         self.__processed_count += 1
