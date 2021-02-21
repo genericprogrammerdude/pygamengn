@@ -9,11 +9,11 @@ from proto_writer import ProtoWriter
 
 class ClientMessage:
 
-    def __init__(self, selector, sock, addr, request):
+    def __init__(self, selector, sock, addr, proto_message):
         self.selector = selector
         self.socket = sock
         self.address = addr
-        self.request = request
+        self.proto_message = proto_message
         self.response = None
         self.__processed_count = 0
         self.__reader = ProtoReader(self.socket)
@@ -41,9 +41,9 @@ class ClientMessage:
                 self.__reader.reset()
 
         if mask & selectors.EVENT_WRITE:
-            self.__writer.set_buffer(self.request.buffer)
+            self.__writer.set_buffer(self.proto_message.buffer)
             done_writing = self.__writer.write()
-            logging.debug(f"Sent {self.request.payload}")
+            logging.debug(f"Sent {self.proto_message.payload}")
 
             if done_writing:
                 self.__set_read_mode()

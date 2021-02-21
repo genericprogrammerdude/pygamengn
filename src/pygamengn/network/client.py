@@ -20,13 +20,13 @@ class Client():
         """Connects to the server."""
         logging.debug("Connecting to {0}:{1}".format(self.address[0], self.address[1]))
         self.socket.connect_ex(self.address)
-        request = self.__create_request("search", "morpheus")
-        message = ClientMessage(self.selector, self.socket, self.address, request)
+        proto_message = ProtoMessage("morpheus")
+        proto_message.build()
+        message = ClientMessage(self.selector, self.socket, self.address, proto_message)
         self.selector.register(self.socket, self.events, message)
 
     def send(self, search_string):
         """Sends a message to the server. Assumes that selector and socket are valid and in good state."""
-        request = self.__create_request("search", search_string)
         proto_message = ProtoMessage(search_string)
         proto_message.build()
         message = ClientMessage(self.selector, self.socket, self.address, proto_message)
@@ -62,20 +62,6 @@ class Client():
         finally:
             self.socket = None
         self.selector.close()
-
-    def __create_request(self, action, value):
-        if action == "search":
-            return dict(
-                type="text/json",
-                encoding="utf-8",
-                content=dict(action=action, value=value),
-            )
-        else:
-            return dict(
-                type="binary/custom-client-binary-type",
-                encoding="binary",
-                content=bytes(action + value, encoding="utf-8"),
-            )
 
 
 if __name__ == "__main__":
