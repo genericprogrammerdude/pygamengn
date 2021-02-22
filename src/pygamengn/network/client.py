@@ -7,7 +7,7 @@ import socket
 from proto_message import ProtoMessage
 from proto_reader import ProtoReader
 from proto_writer import ProtoWriter
-from fsm import FiniteStateMachine
+from fsm import FiniteStateMachine, FSMTransition
 
 
 class ClientState(Enum):
@@ -38,25 +38,14 @@ class Client():
         self.__writer = ProtoWriter(self.__socket)
         self.__fsm = FiniteStateMachine(ClientState.DISCONNECTED, {
             ClientState.DISCONNECTED: {
-                ClientInput.INIT: {
-                    "state": ClientState.CONNECTED,
-                    "callback": self.command_init
-                }
+                ClientInput.INIT: FSMTransition(ClientState.CONNECTED, self.command_init)
             },
             ClientState.CONNECTED: {
-                ClientInput.START: {
-                    "state": ClientState.PLAYING
-                }
+                ClientInput.START: FSMTransition(ClientState.PLAYING)
             },
             ClientState.PLAYING: {
-                ClientInput.UPDATE: {
-                    "state": ClientState.PLAYING,
-                    "callback": self.command_update
-                },
-                ClientInput.STOP: {
-                    "state": ClientState.DISCONNECTED,
-                    "callback": self.command_stop
-                }
+                ClientInput.UPDATE: FSMTransition(ClientState.PLAYING, self.command_update),
+                ClientInput.STOP: FSMTransition(ClientState.DISCONNECTED, self.command_stop)
             }
         })
 
@@ -141,7 +130,10 @@ class Client():
 
     def __process_response(self, dictionary):
         logging.debug(f"Received response: {dictionary}")
-        self.__fsm.transition(ClientInput(dictionary["message"]))
+        try:
+            self.__fsm.transition(ClientInput(dictionary["message"]))
+        except KeyError as e:
+            logging.error(f"Bad FSM transition data. {repr(e)}")
         self.__processed_count += 1
 
     def __set_read_mode(self):

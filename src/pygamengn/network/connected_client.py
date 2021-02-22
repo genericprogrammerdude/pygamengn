@@ -40,7 +40,9 @@ class ConnectedClient:
         if mask & selectors.EVENT_READ:
             done_reading = self.__reader.read()
             if done_reading and not self.request:
-                self.__process_request(self.__reader.obj)
+                if not self.__process_request(self.__reader.obj):
+                    # The client sent a DROP request -> shut the connection down
+                    self.close()
                 self.__reader.reset()
 
         if mask & selectors.EVENT_WRITE:
@@ -71,9 +73,12 @@ class ConnectedClient:
 
     def __process_request(self, dictionary):
         self.request = dictionary
-        logging.debug(f"Received request {repr(self.request)} from {self.address[0]}:{self.address[1]}")
-        self.__set_write_mode()
         self.__processed_count += 1
+        logging.debug(f"Received request {repr(self.request)} from {self.address[0]}:{self.address[1]}")
+        if dictionary["message"] == "DROP":
+            return False
+        self.__set_write_mode()
+        return True
 
     def __create_response(self):
         message = self.request.get("message")
@@ -120,6 +125,7 @@ class ConnectedClient:
                 })
             else:
                 response = ProtoMessage.stop_message()
-
             self.response_created = True
             return response
+
+        return None

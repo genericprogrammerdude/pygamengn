@@ -76,6 +76,15 @@ class ProtoMessage:
         message.build()
         return message
 
+    @classmethod
+    def drop_message(cls):
+        """Builds and returns a DROP message to send from the Client to the Server."""
+        message = ProtoMessage({
+            "message": "DROP"
+        })
+        message.build()
+        return message
+
     ###################
     # Server messages
     ###################

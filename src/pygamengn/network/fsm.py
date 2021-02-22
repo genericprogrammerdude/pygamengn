@@ -7,13 +7,19 @@ class FiniteStateMachine:
 
     def transition(self, input_enum_value):
         """Executes a transition using the given input."""
-        transition_entry = self.__transitions[self.__state][input_enum_value]
-        to_state = transition_entry["state"]
-        callback = transition_entry.get("callback")
-        if (callback and callback(self.__state, to_state)) or callback is None:
-            self.__state = to_state
+        t = self.__transitions[self.__state][input_enum_value]
+        if (t.callback and t.callback(self.__state, t.to_state)) or t.callback is None:
+            self.__state = t.to_state
         return self.__state
 
     @property
     def state(self):
         return self.__state
+
+
+class FSMTransition:
+    """Defines a transition for FiniteStateMachine."""
+
+    def __init__(self, to_state, callback=None):
+        self.to_state = to_state
+        self.callback = callback
