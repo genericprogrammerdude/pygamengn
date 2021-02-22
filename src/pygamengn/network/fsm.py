@@ -8,9 +8,10 @@ class FiniteStateMachine:
     def transition(self, input_enum_value):
         """Executes a transition using the given input."""
         transition_entry = self.__transitions[self.__state][input_enum_value]
+        to_state = transition_entry["state"]
         callback = transition_entry.get("callback")
-        if (callback and callback()) or callback is None:
-            self.__state = transition_entry["state"]
+        if (callback and callback(self.__state, to_state)) or callback is None:
+            self.__state = to_state
         return self.__state
 
     @property

@@ -40,23 +40,22 @@ class Client():
             ClientState.DISCONNECTED: {
                 ClientInput.INIT: {
                     "state": ClientState.CONNECTED,
-                    "callback": self.transition_connected
+                    "callback": self.command_init
                 }
             },
             ClientState.CONNECTED: {
                 ClientInput.START: {
-                    "state": ClientState.PLAYING,
-                    "callback": self.transition_playing
+                    "state": ClientState.PLAYING
                 }
             },
             ClientState.PLAYING: {
                 ClientInput.UPDATE: {
                     "state": ClientState.PLAYING,
-                    "callback": self.transition_playing
+                    "callback": self.command_update
                 },
                 ClientInput.STOP: {
                     "state": ClientState.DISCONNECTED,
-                    "callback": self.stop
+                    "callback": self.command_stop
                 }
             }
         })
@@ -98,16 +97,27 @@ class Client():
             self.__socket = None
         self.__selector.close()
 
-    def transition_connected(self):
-        """Executes the transition to the CONNECTED state."""
-        logging.debug("transition_connected()")
+    @property
+    def state(self):
+        """Returns the current state of the client."""
+        return self.__fsm.state
+
+    def command_init(self, from_state, to_state):
+        """Executes the INIT command from the Server. Returns True if the state transition is successful."""
+        logging.debug(f"command_init(): {from_state} -> {to_state}")
         self.__proto_message = ProtoMessage.ready_message()
         return True
 
-    def transition_playing(self):
-        """Executes the transition to the PLAYING state."""
-        logging.debug("transition_playing()")
+    def command_update(self, from_state, to_state):
+        """Executes the START command from the Server. Returns True if the state transition is successful."""
+        logging.debug(f"command_update(): {from_state} -> {to_state}")
         self.__proto_message = ProtoMessage.input_message(["FORWARD", "LEFT", "FIRE"])
+        return True
+
+    def command_stop(self, from_state, to_state):
+        """Executes the STOP command from the Server. Returns True if the state transition is successful."""
+        logging.debug(f"command_stop(): {from_state} -> {to_state}")
+        self.stop()
         return True
 
     def __process_events(self, mask):
@@ -155,6 +165,9 @@ if __name__ == "__main__":
         try:
             client.tick()
             time.sleep(0.02)
+
+            if client.state == ClientState.PLAYING:
+                client.command_update(ClientState.PLAYING, ClientState.PLAYING)
 
         except (AssertionError, KeyboardInterrupt):
             client.stop()

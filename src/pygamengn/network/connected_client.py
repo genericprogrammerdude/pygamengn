@@ -103,7 +103,7 @@ class ConnectedClient:
             return response
 
         elif message == "INPUT":
-            if self.__processed_count < 100:
+            if self.__processed_count < 10:
                 response = ProtoMessage.update_message({
                     "object1": {
                         "id": 43,
