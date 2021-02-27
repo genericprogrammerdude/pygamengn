@@ -9,7 +9,7 @@ sys.path.append("../../../src/pygamengn")
 import pygame
 import pygamengn
 
-from space_shooter_game import SpaceShooterGame
+from space_nerds_mp_game import SpaceNerdsMPGame
 
 
 def main():
@@ -26,7 +26,7 @@ def main():
     pygame.display.set_icon(factory.images["ship"])
     pygame.display.set_caption("Game")
 
-    game = factory.create("SpaceShooterGame", screen=screen)
+    game = factory.create("SpaceNerdsMPGame", screen=screen)
 
     clock = pygame.time.Clock()
 

@@ -1,9 +1,9 @@
 import logging
 import selectors
 
-from proto_message import ProtoMessage
-from proto_reader import ProtoReader
-from proto_writer import ProtoWriter
+from network.proto_message import ProtoMessage
+from network.proto_reader import ProtoReader
+from network.proto_writer import ProtoWriter
 
 
 class ConnectedClient:

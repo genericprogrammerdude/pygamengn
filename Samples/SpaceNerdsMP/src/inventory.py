@@ -132,8 +132,8 @@ assets = {
 }
 
 game_types = {
-    "SpaceShooterGame": {
-        "class_name": "SpaceShooterGame",
+    "SpaceNerdsMPGame": {
+        "class_name": "SpaceNerdsMPGame",
         "kwargs": {
             "asset:render_group": "RenderGroup",
             "game_object:collision_manager": "CollisionManager",
@@ -167,6 +167,7 @@ game_types = {
             "size": [0.5, 0.5],
             "game_object:children": [
                 "StartButton",
+                "MPButton",
                 "ExitButton"
             ],
             "fix_aspect_ratio": False,
@@ -199,7 +200,7 @@ game_types = {
         "StartButton": {
             "base_type": "/MainMenu/MenuButton",
             "kwargs": {
-                "pos": [0.25, 0.2],
+                "pos": [0.25, 0.0625],
                 "game_object:children": [
                     "StartText"
                 ],
@@ -212,10 +213,26 @@ game_types = {
                 }
             }
         },
+        "MPButton": {
+            "base_type": "/MainMenu/MenuButton",
+            "kwargs": {
+                "pos": [0.25, 0.375],
+                "game_object:children": [
+                    "MPText"
+                ],
+                "name": "multiplayer_button"
+            },
+            "MPText": {
+                "base_type": "/MainMenu/MenuButton/MenuButtonText",
+                "kwargs": {
+                    "text": "Multiplayer"
+                }
+            }
+        },
         "ExitButton": {
             "base_type": "/MainMenu/MenuButton",
             "kwargs": {
-                "pos": [0.25, 0.55],
+                "pos": [0.25, 0.6875],
                 "game_object:children": [
                     "ExitText"
                 ],

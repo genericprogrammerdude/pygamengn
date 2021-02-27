@@ -2,7 +2,7 @@ import logging
 import selectors
 import socket
 
-from connected_client import ConnectedClient
+from network.connected_client import ConnectedClient
 
 
 class Server():

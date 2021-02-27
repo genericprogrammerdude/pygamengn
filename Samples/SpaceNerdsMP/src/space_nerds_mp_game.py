@@ -13,7 +13,7 @@ from waypoint import Waypoint
 
 
 class Mode(Enum):
-    """The mode of the SpaceShooterGame defines game behaviour."""
+    """The mode of the SpaceNerdsMPGame defines game behaviour."""
     MAIN_MENU = auto()
     PLAY = auto()
     PAUSE_MENU = auto()
@@ -30,8 +30,8 @@ class InputAction(Enum):
     FIRE = auto()
 
 
-@pygamengn.ClassRegistrar.register("SpaceShooterGame")
-class SpaceShooterGame(pygamengn.Game):
+@pygamengn.ClassRegistrar.register("SpaceNerdsMPGame")
+class SpaceNerdsMPGame(pygamengn.Game):
 
     def __init__(
             self,

@@ -4,10 +4,10 @@ import logging
 import selectors
 import socket
 
-from proto_message import ProtoMessage
-from proto_reader import ProtoReader
-from proto_writer import ProtoWriter
-from fsm import FiniteStateMachine, FSMTransition
+from network.proto_message import ProtoMessage
+from network.proto_reader import ProtoReader
+from network.proto_writer import ProtoWriter
+from network.fsm import FiniteStateMachine, FSMTransition
 
 
 class ClientState(Enum):
