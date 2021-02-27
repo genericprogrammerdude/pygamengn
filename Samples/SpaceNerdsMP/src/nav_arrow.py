@@ -18,11 +18,11 @@ class NavArrow(GameObject):
 
         if self.waypoint and self.parent:
             self.visible = True
-            diff = self.waypoint.pos - self.parent.pos
+            diff = self.waypoint.position - self.parent.position
             dist_to_target = diff.length()
             direction = diff / dist_to_target
 
-            self.set_pos(self.parent.pos + direction * 150)
+            self.position = self.parent.position + direction * 150
 
             _, angle = direction.as_polar()
             self.set_heading(270 - angle)

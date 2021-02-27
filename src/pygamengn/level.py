@@ -18,14 +18,14 @@ class Level(GameObjectBase):
     def create_objects(self, render_group):
         """Creates and initializes the game objects for the level."""
         self.player = self.player_spec.game_type.create()
-        self.player.set_pos(pygame.Vector2(self.player_spec.spawn_pos))
+        self.player.position = pygame.Vector2(self.player_spec.spawn_pos)
         for updatable in self.updatables:
             updatable.set_player(self.player)
 
         for enemy_spec in self.enemy_specs:
             for spawn_pos in enemy_spec.spawn_pos:
                 enemy = enemy_spec.game_type.create()
-                enemy.set_pos(pygame.Vector2(spawn_pos))
+                enemy.position = pygame.Vector2(spawn_pos)
                 enemy.set_target(self.player)
 
         self.render_group = render_group

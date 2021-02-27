@@ -27,7 +27,7 @@ class Turret(GameObject):
 
         if self.target:
             if self.target.alive():
-                fire_dir = self.target.pos - self.pos
+                fire_dir = self.target.position - self.position
                 heading = math.degrees(math.atan2(fire_dir[0], fire_dir[1]) - math.pi)
                 self.set_heading(heading)
 
@@ -46,7 +46,7 @@ class Turret(GameObject):
     def fire(self):
         """Fires a projectile_type object at the target."""
         projectile = self.projectile_type.create()
-        projectile.set_pos(self.pos)
+        projectile.position = self.position
         projectile.set_heading(self.heading)
         projectile.transform()
         if self.parent:

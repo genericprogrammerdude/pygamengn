@@ -23,10 +23,10 @@ class Asteroid(GameObject):
     def update(self, delta):
         spin_delta = (45.0 * delta) / 1000.0 * self.spin_delta_factor
         self.set_heading(self.heading + spin_delta)
-        self.pos = self.pos + self.mover.move(delta)
+        self.position = self.position + self.mover.move(delta)
         super().update(delta)
         for attachment in self.attachments:
-            attachment.game_object.set_pos(self.pos)
+            attachment.game_object.position = self.position
 
     def handle_collision(self, gob, world_pos):
         """Reacts to collision against game object gob."""
@@ -49,7 +49,7 @@ class Asteroid(GameObject):
                     heading = random.uniform(angle, next_angle) % 360
                     angle = next_angle
                     spawn = spawn_type.create(heading=heading)
-                    spawn.set_pos(self.pos)
+                    spawn.position = self.position
                     direction = Transform.rotate(self.mover.direction, heading)
                     spawn.mover.set_direction(direction)
                     spawn.transform()
@@ -94,7 +94,7 @@ class AsteroidSpawner(Updatable):
             asteroid = asteroid_type_spec.create()
             pos, direction = self.get_random_pos_dir(self.render_group.get_world_view_rect())
             asteroid.mover.set_direction(direction)
-            asteroid.set_pos(pos)
+            asteroid.position = pos
             asteroid.transform()
             for attachment in asteroid.attachments:
                 attachment.game_object.set_target(self.player)

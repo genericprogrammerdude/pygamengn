@@ -18,13 +18,13 @@ class Projectile(GameObject):
         return True
 
     def update(self, delta):
-        self.pos, self.heading = self.mover.move(delta, self.pos, self.heading)
+        self.position, self.heading = self.mover.move(delta, self.position, self.heading)
         super().update(delta)
 
     def handle_collision(self, gob, world_pos):
         """Reacts to collision against game object gob."""
         # Set own position to the collision point so the explosion will play there when self dies
-        self.set_pos(world_pos)
+        self.position = world_pos
         instigator = GameObject.get_root_parent(gob)
         self.take_damage(self.health, instigator)
         # Apply damage to the collided sprite

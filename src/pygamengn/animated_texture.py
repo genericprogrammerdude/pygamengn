@@ -39,8 +39,8 @@ class AnimatedTexture(GameObject):
                 self.rect = self.image.get_rect()
 
             self.rect = self.image.get_rect()
-            self.rect.x = self.pos[0] - round(self.image.get_rect().width / 2)
-            self.rect.y = self.pos[1] - round(self.image.get_rect().height / 2)
+            self.rect.x = self.position[0] - round(self.image.get_rect().width / 2)
+            self.rect.y = self.position[1] - round(self.image.get_rect().height / 2)
 
             # Update animation time
             self.animation_time = self.animation_time + delta

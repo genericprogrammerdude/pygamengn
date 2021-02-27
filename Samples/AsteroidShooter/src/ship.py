@@ -35,7 +35,7 @@ class Ship(GameObject):
     def update(self, delta):
         """Updates the ship."""
         # Translate according to velocity
-        self.pos, self.heading = self.mover.move(delta, self.pos, self.heading)
+        self.position, self.heading = self.mover.move(delta, self.position, self.heading)
         # Now do the regular GameObject update
         super().update(delta)
         self.time_since_last_fire += delta
@@ -60,7 +60,7 @@ class Ship(GameObject):
         """Fires a Projectile at the target."""
         if self.time_since_last_fire > self.fire_freq and self.alive():
             projectile = self.projectile_type.create()
-            projectile.set_pos(self.pos)
+            projectile.position = self.position
             projectile.set_heading(self.heading)
             projectile.transform()
             projectile.set_parent(self)
@@ -92,8 +92,8 @@ class Ship(GameObject):
 
     def place_waypoint(self, gob=None):
         angle = numpy.deg2rad(random.randrange(0, 360))
-        pos = self.pos + self.waypoint.distance * pygame.Vector2(numpy.cos(angle), numpy.sin(angle))
-        self.waypoint.set_pos(pos)
+        pos = self.position + self.waypoint.distance * pygame.Vector2(numpy.cos(angle), numpy.sin(angle))
+        self.waypoint.position = pos
         if gob:
             # The presence of a valid gob indicates we're here as a result of a collision
             self.waypoints += 1

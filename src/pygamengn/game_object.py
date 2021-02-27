@@ -3,6 +3,7 @@ import pygame
 from class_registrar import ClassRegistrar
 from game_object_base import GameObjectBase
 import geometry
+from network.replicator import Replicator
 from transform import Transform
 
 
@@ -19,18 +20,18 @@ class GameObject(pygame.sprite.Sprite, GameObjectBase):
                  heading=0,
                  death_effect=None,
                  damage=0,
-                 kill_when_off_screen=False
+                 kill_when_off_screen=False,
+                 is_replicated=False
     ):
         pygame.sprite.Sprite.__init__(self)
         GameObjectBase.__init__(self)
 
-        # Set the image to use for this sprite.
         self.image_asset = image_asset
         self.image = self.image_asset
         self.rect = self.image.get_rect()
         self.scale = scale
         self.heading = heading
-        self.pos = pygame.math.Vector2(0.0, 0.0)
+        self.__pos = pygame.math.Vector2(0.0, 0.0)
         self.dirty_image = True
         self.is_collidable = is_collidable
         if self.is_collidable:
@@ -45,6 +46,11 @@ class GameObject(pygame.sprite.Sprite, GameObjectBase):
         self.death_effect = death_effect
         self.damage = damage
         self.kill_when_off_screen = kill_when_off_screen
+        if is_replicated:
+            self.replicator = Replicator(2703)
+            self.replicator.add_property(self.pos)
+            self.replicator.add_property(self.heading)
+            self.replicator.add_property(self.scale)
 
     def update(self, delta):
         """Updates the game object. Delta time is in ms."""
@@ -52,10 +58,10 @@ class GameObject(pygame.sprite.Sprite, GameObjectBase):
         self.transform()
         for attachment in self.attachments:
             if attachment.parent_transform:
-                t = Transform(self.pos, self.heading)
+                t = Transform(self.__pos, self.heading)
 
                 attachment_pos = t.apply(attachment.offset)
-                attachment.game_object.set_pos(attachment_pos)
+                attachment.game_object.position = attachment_pos
                 attachment.game_object.set_heading(self.heading)
 
     def transform(self):
@@ -71,7 +77,7 @@ class GameObject(pygame.sprite.Sprite, GameObjectBase):
             self.dirty_image = False
 
         # Translate
-        topleft = self.pos - pygame.math.Vector2(self.rect.width / 2.0, self.rect.height / 2.0)
+        topleft = self.__pos - pygame.math.Vector2(self.rect.width / 2.0, self.rect.height / 2.0)
         self.rect.topleft = pygame.Vector2(round(topleft.x), round(topleft.y))
 
     def set_scale(self, scale):
@@ -79,9 +85,14 @@ class GameObject(pygame.sprite.Sprite, GameObjectBase):
         self.dirty_image = self.dirty_image or self.scale != scale
         self.scale = scale
 
-    def set_pos(self, pos):
+    @property
+    def position(self):
+        return self.__pos
+
+    @position.setter
+    def position(self, pos):
         """Sets the position of the sprite in the screen so that the sprite's center is at pos."""
-        self.pos = pos
+        self.__pos = pos
 
     def set_heading(self, heading):
         """Sets the orientation of the game object."""
@@ -120,7 +131,7 @@ class GameObject(pygame.sprite.Sprite, GameObjectBase):
         """Die."""
         if self.alive() and self.death_effect:
             effect = self.death_effect.create()
-            effect.set_pos(self.pos)
+            effect.position = self.position
             effect.play(self.death_effect_callback)
 
         # Kill off attachments

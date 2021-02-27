@@ -22,5 +22,5 @@ class HealthBar(GameObject):
             bg.blit(fg, (0, 0))
             self.image = pygame.transform.rotate(bg, self.heading)
             self.rect = self.image.get_rect()
-            self.pos = self.parent.pos + pygame.Vector2(0.0, self.parent.rect.height * 0.75)
+            self.position = self.parent.position + pygame.Vector2(0.0, self.parent.rect.height * 0.75)
         super().update(delta)
