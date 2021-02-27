@@ -13,7 +13,7 @@ from waypoint import Waypoint
 
 
 class Mode(Enum):
-    """The mode of the SpaceShooterGame defines game behaviour."""
+    """The mode of the AsteroidShooterGame defines game behaviour."""
     MAIN_MENU = auto()
     PLAY = auto()
     PAUSE_MENU = auto()
@@ -21,8 +21,17 @@ class Mode(Enum):
     DEBRIEF = auto()
 
 
-@pygamengn.ClassRegistrar.register("SpaceShooterGame")
-class SpaceShooterGame(pygamengn.Game):
+class InputAction(Enum):
+    """The input actions the game understands."""
+    FORWARD = auto()
+    BACK = auto()
+    LEFT = auto()
+    RIGHT = auto()
+    FIRE = auto()
+
+
+@pygamengn.ClassRegistrar.register("AsteroidShooterGame")
+class AsteroidShooterGame(pygamengn.Game):
 
     def __init__(
             self,
@@ -50,7 +59,6 @@ class SpaceShooterGame(pygamengn.Game):
         self.running = True
         self.mode = Mode.MAIN_MENU
         self.main_menu_ui.set_start_callback(self.start_play)
-        self.main_menu_ui.set_multiplayer_callback(self.multiplayer_play)
         self.main_menu_ui.set_exit_callback(self.exit_game)
         self.pause_menu_ui.set_resume_callback(self.resume_play)
         self.pause_menu_ui.set_exit_callback(self.exit_game)
@@ -123,11 +131,6 @@ class SpaceShooterGame(pygamengn.Game):
         """Prepares the game to start playing."""
         self.mode = Mode.KILLING_ALL
 
-    def multiplayer_play(self):
-        """Prepares the game to start playing."""
-        self.mode = Mode.KILLING_ALL
-        print("Multiplayer game")
-
     def resume_play(self):
         """Resumes PLAY mode from PAUSE_MENU mode."""
         self.mode = Mode.PLAY
@@ -143,6 +146,7 @@ class SpaceShooterGame(pygamengn.Game):
 
     def handle_input(self):
         """Reads input and makes things happen."""
+        input_replica = []
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 self.running = False
@@ -152,6 +156,7 @@ class SpaceShooterGame(pygamengn.Game):
                     self.mode = Mode.PAUSE_MENU
                 if event.key == pygame.K_SPACE and self.player:
                     self.player.fire()
+                    input_replica.append(InputAction.FIRE)
 
         if self.player is None:
             return
@@ -160,12 +165,16 @@ class SpaceShooterGame(pygamengn.Game):
         pressed_keys = pygame.key.get_pressed()
         if pressed_keys[pygame.K_a]:
             self.player.set_heading(self.player.heading + self.player.mover.angular_velocity)
+            input_replica.append(InputAction.LEFT)
         if pressed_keys[pygame.K_d]:
             self.player.set_heading(self.player.heading - self.player.mover.angular_velocity)
+            input_replica.append(InputAction.RIGHT)
         if pressed_keys[pygame.K_w]:
             self.player.set_velocity(self.player.mover.max_velocity)
+            input_replica.append(InputAction.FORWARD)
         if pressed_keys[pygame.K_s]:
             self.player.set_velocity(self.player.mover.velocity * 0.8)
+            input_replica.append(InputAction.BACK)
 
     def handle_player_death(self):
         """Invoked when the player dies."""

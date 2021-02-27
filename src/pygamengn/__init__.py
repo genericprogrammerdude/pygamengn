@@ -3,9 +3,9 @@ from atlas import Atlas
 from class_registrar import ClassRegistrar
 from collision_manager import CollisionManager
 from game import Game, BlitSurface
+from game_object import GameObject
 from game_object_base import GameObjectBase
 from game_object_factory import GameObjectFactory, TypeSpec
-from game_object import GameObject
 from health_bar import HealthBar
 from layer_manager import LayerManager
 from level import Level
@@ -15,6 +15,9 @@ from render_group import RenderGroup
 from sprite_group import SpriteGroup
 from trigger import Trigger
 from updatable import Updatable
+
+from network.client import Client
+from network.server import Server
 
 from UI.font_asset import FontAsset
 from UI.panel import Panel, ColourPanel, TextPanel
