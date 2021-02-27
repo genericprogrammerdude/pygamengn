@@ -35,18 +35,12 @@ class MainMenu(ColourPanel):
             elif event.type == pygame.MOUSEBUTTONUP:
                 if self.start_button.rect.collidepoint(mouse_pos):
                     self.start_callback()
-                elif self.multiplayer_button.rect.collidepoint(mouse_pos):
-                    self.multiplayer_callback()
                 elif self.exit_button.rect.collidepoint(mouse_pos):
                     self.exit_callback()
 
     def set_start_callback(self, start_callback):
         """Sets the function to call when the start button is clicked."""
         self.start_callback = start_callback
-
-    def set_multiplayer_callback(self, multiplayer_callback):
-        """Sets the function to call when the multiplayer button is clicked."""
-        self.multiplayer_callback = multiplayer_callback
 
     def set_exit_callback(self, exit_callback):
         """Sets the function to call when the exit button is clicked."""

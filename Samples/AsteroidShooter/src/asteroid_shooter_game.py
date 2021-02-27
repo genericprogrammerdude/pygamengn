@@ -13,7 +13,7 @@ from waypoint import Waypoint
 
 
 class Mode(Enum):
-    """The mode of the SpaceShooterGame defines game behaviour."""
+    """The mode of the AsteroidShooterGame defines game behaviour."""
     MAIN_MENU = auto()
     PLAY = auto()
     PAUSE_MENU = auto()
@@ -30,8 +30,8 @@ class InputAction(Enum):
     FIRE = auto()
 
 
-@pygamengn.ClassRegistrar.register("SpaceShooterGame")
-class SpaceShooterGame(pygamengn.Game):
+@pygamengn.ClassRegistrar.register("AsteroidShooterGame")
+class AsteroidShooterGame(pygamengn.Game):
 
     def __init__(
             self,
@@ -59,7 +59,6 @@ class SpaceShooterGame(pygamengn.Game):
         self.running = True
         self.mode = Mode.MAIN_MENU
         self.main_menu_ui.set_start_callback(self.start_play)
-        self.main_menu_ui.set_multiplayer_callback(self.multiplayer_play)
         self.main_menu_ui.set_exit_callback(self.exit_game)
         self.pause_menu_ui.set_resume_callback(self.resume_play)
         self.pause_menu_ui.set_exit_callback(self.exit_game)
@@ -131,11 +130,6 @@ class SpaceShooterGame(pygamengn.Game):
     def start_play(self):
         """Prepares the game to start playing."""
         self.mode = Mode.KILLING_ALL
-
-    def multiplayer_play(self):
-        """Prepares the game to start playing."""
-        self.mode = Mode.KILLING_ALL
-        print("Multiplayer game")
 
     def resume_play(self):
         """Resumes PLAY mode from PAUSE_MENU mode."""

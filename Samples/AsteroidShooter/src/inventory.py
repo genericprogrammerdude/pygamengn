@@ -132,8 +132,8 @@ assets = {
 }
 
 game_types = {
-    "SpaceShooterGame": {
-        "class_name": "SpaceShooterGame",
+    "AsteroidShooterGame": {
+        "class_name": "AsteroidShooterGame",
         "kwargs": {
             "asset:render_group": "RenderGroup",
             "game_object:collision_manager": "CollisionManager",
