@@ -135,7 +135,6 @@ class SpaceNerdsMPGame(pygamengn.Game):
     def multiplayer_play(self):
         """Prepares the game to start playing."""
         self.mode = Mode.KILLING_ALL
-        print("Multiplayer game")
 
     def resume_play(self):
         """Resumes PLAY mode from PAUSE_MENU mode."""
