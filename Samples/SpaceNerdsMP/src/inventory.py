@@ -101,6 +101,10 @@ assets = {
             ]
         }
     },
+    "ReplicationManager": {
+        "class_name": "ReplicationManager",
+        "kwargs": {}
+    },
     "explosion_small_atlas": {
         "class_name": "Atlas",
         "kwargs": {
@@ -137,6 +141,7 @@ game_types = {
         "kwargs": {
             "asset:render_group": "RenderGroup",
             "game_object:collision_manager": "CollisionManager",
+            "asset:replication_manager": "ReplicationManager",
             "game_object:main_menu_ui": "/MainMenu",
             "game_object:pause_menu_ui": "/PauseMenu",
             "game_object:debrief_panel": "/DebriefPanel",
@@ -642,6 +647,7 @@ game_types = {
                 "parent_transform": False
             }
         ],
+        "is_replicated": True,
         "PlayerShipMover": {
             "class_name": "MoverVelocity",
             "kwargs": {

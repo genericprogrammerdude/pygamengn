@@ -12,6 +12,7 @@ from level import Level
 from mover import Mover, MoverVelocity, MoverVelDir
 from projectile import Projectile
 from render_group import RenderGroup
+from replication_manager import ReplicationManager
 from sprite_group import SpriteGroup
 from trigger import Trigger
 from updatable import Updatable

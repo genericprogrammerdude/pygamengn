@@ -3,7 +3,6 @@ import pygame
 from class_registrar import ClassRegistrar
 from game_object_base import GameObjectBase
 import geometry
-from network.replicator import Replicator
 from transform import Transform
 
 
@@ -20,8 +19,7 @@ class GameObject(pygame.sprite.Sprite, GameObjectBase):
                  heading=0,
                  death_effect=None,
                  damage=0,
-                 kill_when_off_screen=False,
-                 is_replicated=False
+                 kill_when_off_screen=False
     ):
         pygame.sprite.Sprite.__init__(self)
         GameObjectBase.__init__(self)
@@ -31,7 +29,7 @@ class GameObject(pygame.sprite.Sprite, GameObjectBase):
         self.rect = self.image.get_rect()
         self.scale = scale
         self.heading = heading
-        self.__pos = pygame.math.Vector2(0.0, 0.0)
+        self.position = pygame.math.Vector2(0.0, 0.0)
         self.dirty_image = True
         self.is_collidable = is_collidable
         if self.is_collidable:
@@ -46,11 +44,12 @@ class GameObject(pygame.sprite.Sprite, GameObjectBase):
         self.death_effect = death_effect
         self.damage = damage
         self.kill_when_off_screen = kill_when_off_screen
-        if is_replicated:
-            self.replicator = Replicator(2703)
-            self.replicator.add_property(self.pos)
-            self.replicator.add_property(self.heading)
-            self.replicator.add_property(self.scale)
+
+    def get_replicated_props(self):
+        """Returns a list of properties that this object will replicate from server to connected clients."""
+        return [
+            "position"
+        ]
 
     def update(self, delta):
         """Updates the game object. Delta time is in ms."""

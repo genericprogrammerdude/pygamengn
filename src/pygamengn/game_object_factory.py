@@ -18,6 +18,7 @@ class GameObjectFactory():
 
     def __init__(self, registry, assets_dir, images, sounds, assets, game_types):
         self.layer_manager = None
+        self.replication_manager = None
         self.registry = registry
 
         # Keys that get special treatment
@@ -42,13 +43,18 @@ class GameObjectFactory():
         """Creates a GameObject instance."""
         game_type = self.__get_game_type(name)
 
-#         logging.debug("Creating {0}".format(name))
+        # logging.debug("Creating {0}".format(name))
 
         base_type = game_type.get("base_type")
         if base_type:
             game_type = self.__build_derived_type(self.__get_game_type(base_type), game_type)
 
         gob = self.__create_object(game_type, **kwargs)
+
+        # Set up replication for this object if it wants it
+        is_replicated = game_type.get("is_replicated")
+        if is_replicated:
+            self.replication_manager.add_object(name, gob)
 
         # Add to groups as specified in type spec
         group_names = game_type.get("groups")
@@ -134,11 +140,19 @@ class GameObjectFactory():
 
     def set_layer_manager_asset_name(self, name):
         """Sets the layer manager asset name for the factory to automatically assign layers to GameObjects."""
-        layer_manager_spec = self.assets.get(name)
-        if layer_manager_spec:
-            self.layer_manager = layer_manager_spec
+        layer_manager = self.assets.get(name)
+        if layer_manager:
+            self.layer_manager = layer_manager
         else:
-            logging.warn("LayerManager '{0}' not in inventory assets".format(name))
+            logging.warn(f"LayerManager '{name}' not in inventory assets")
+
+    def set_replication_manager_asset_name(self, name):
+        """Sets the replication manager asset name for the factory to automatically set up replication."""
+        replication_manager = self.assets.get(name)
+        if replication_manager:
+            self.replication_manager = replication_manager
+        else:
+            logging.warn(f"ReplicationManager '{name}' not in inventory assets")
 
     def __assign_asset_list(self, asset_names, asset_list, asset_retriever):
         """
@@ -199,9 +213,9 @@ class TypeSpec:
     """GameObject constructor for objects that create objects at runtime."""
 
     def __init__(self, factory, spec):
-        self.factory = factory
-        self.spec = spec
+        self.__factory = factory
+        self.__spec = spec
 
     def create(self, **kwargs):
         """Creates an instance from the spec."""
-        return self.factory.create(self.spec, **kwargs)
+        return self.__factory.create(self.__spec, **kwargs)

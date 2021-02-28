@@ -2,6 +2,7 @@ import pygame
 
 from class_registrar import ClassRegistrar
 from collision_manager import CollisionManager
+from replication_manager import ReplicationManager
 from game_object_base import GameObjectBase
 from render_group import RenderGroup
 
@@ -10,9 +11,10 @@ from render_group import RenderGroup
 class Game(GameObjectBase):
     """Highest level entity to manage game state."""
 
-    def __init__(self, render_group, collision_manager, screen):
+    def __init__(self, render_group, collision_manager, screen, replication_manager=None):
         self.render_group = render_group
         self.collision_manager = collision_manager
+        self.replication_manager = replication_manager
         self.screen = screen
         self.is_paused = False
         self.blit_surfaces = []
@@ -30,6 +32,9 @@ class Game(GameObjectBase):
         # Do collision detection and notification
         self.collision_manager.do_collisions()
 
+        # Prepare replication data
+#         rep_data = self.replication_manager.get_replication_data()
+
         # Render
         self.screen.fill((50, 50, 50))
         self.render_group.draw(self.screen)
@@ -38,8 +43,6 @@ class Game(GameObjectBase):
         pygame.display.flip()
 
         self.blit_surfaces.clear()
-
-        self.collision_manager.do_collisions()
 
     def set_player(self, player):
         """Tells the updateables which game object is the player."""

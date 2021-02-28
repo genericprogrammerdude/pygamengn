@@ -55,6 +55,7 @@ def create_factory(assets_dir) -> pygamengn.GameObjectFactory:
         game_types
     )
     factory.set_layer_manager_asset_name("LayerManager")
+    factory.set_replication_manager_asset_name("ReplicationManager")
     return factory
 
 
