@@ -39,7 +39,7 @@ class Asteroid(GameObject):
         super().handle_collision(gob, world_pos)
 
     def die(self, instigator):
-        """Die. Plays an explosion if it was given an atlas for  the AnimatedTexture."""
+        """Die. Plays an explosion if it was given an atlas for the AnimatedTexture."""
         if self.alive():
             if self.death_spawn:
                 angle = -30.0
