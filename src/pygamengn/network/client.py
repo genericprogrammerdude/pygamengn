@@ -36,6 +36,8 @@ class Client():
         self.__processed_count = 0
         self.__reader = ProtoReader(self.__socket)
         self.__writer = ProtoWriter(self.__socket)
+        self.__inputs = None
+        self.__game_state = None
         self.__fsm = FiniteStateMachine(ClientState.DISCONNECTED, {
             ClientState.DISCONNECTED: {
                 ClientInput.INIT: FSMTransition(ClientState.CONNECTED, self.command_init)
@@ -86,6 +88,15 @@ class Client():
             self.__socket = None
         self.__selector.close()
 
+    def set_inputs(self, inputs):
+        """Sets the list of input actions collected during a frame. These are sent to the server."""
+        if self.__fsm.state == ClientState.PLAYING:
+            self.__proto_message = ProtoMessage.input_message(inputs)
+
+    def get_game_state(self):
+        """Returns the game state dictionary received from the server."""
+        return self.__game_state
+
     @property
     def state(self):
         """Returns the current state of the client."""
@@ -100,7 +111,7 @@ class Client():
     def command_update(self, from_state, to_state):
         """Executes the START command from the Server. Returns True if the state transition is successful."""
         logging.debug(f"command_update(): {from_state} -> {to_state}")
-        self.__proto_message = ProtoMessage.input_message(["FORWARD", "LEFT", "FIRE"])
+        self.__proto_message = ProtoMessage.input_message(self.__inputs)
         return True
 
     def command_stop(self, from_state, to_state):
@@ -131,6 +142,8 @@ class Client():
     def __process_response(self, dictionary):
         logging.debug(f"Received response: {dictionary}")
         try:
+            self.__game_state = dictionary["objects"]
+            logging.debug(self.__fsm.state)
             self.__fsm.transition(ClientInput(dictionary["message"]))
         except KeyError as e:
             logging.error(f"Bad FSM transition data. {repr(e)}")

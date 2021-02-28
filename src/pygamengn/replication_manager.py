@@ -3,7 +3,9 @@ import logging
 from game_object_base import GameObjectBase
 from class_registrar import ClassRegistrar
 from network.client import Client
+from network.client import ClientState
 from network.server import Server
+from network.replicated_property import ReplicatedProperty
 
 
 @ClassRegistrar.register("ReplicationManager")
@@ -22,16 +24,7 @@ class ReplicationManager(GameObjectBase):
         """Adds a GameObject to be replicated from server to connected clients."""
         self.__replicators[replication_id] = gob
 
-        # DEBUG #
-        logging.debug(f"Added {gob}")
-        logging.debug(self.__replicators)
-        for rep_id, gob in self.__replicators.items():
-            logging.debug(rep_id)
-            for prop in gob.get_replicated_props():
-                logging.debug(prop)
-        # DEBUG #
-
-    def __get_replication_data(self):
+    def __compile_replication_data(self):
         """
         Compiles and returns the dictionary with the data for all the register replicators.
 
@@ -42,17 +35,21 @@ class ReplicationManager(GameObjectBase):
         for rep_id, gob in self.__replicators.items():
             replication_data[rep_id] = {}
             for prop in gob.get_replicated_props():
-                replication_data[rep_id][prop] = getattr(gob, prop)
+                replication_data[rep_id][prop.name] = getattr(gob, prop.getter)
         return replication_data
 
-    def __apply_replication_data(self):
+    def __apply_replication_data(self, game_state):
         """
         Applies the data received by the client to the registered game objects.
 
         The client calls this function at the end of each game update to ensure that all the replicated game objects
         are in sync with their primary replicas existing on the server.
         """
-        pass
+        for replication_id, replication_data in game_state:
+            gob = self.__repicators.get(replication_id)
+            if gob:
+                for prop, value in replication_data:
+                    setattr(gob, prop, value)
 
     def start_replication(self):
         """Starts replication."""
@@ -61,15 +58,28 @@ class ReplicationManager(GameObjectBase):
             # Found a local server running -> connect to it
             self.__client = Client(("localhost", 54879))
             self.__client.connect("Player2")
+            logging.debug("Started client")
         else:
             # No local server running -> run one
             self.__server = Server()
             self.__server.start()
+            logging.debug("Started server")
         # HACK ALERT! #
 
     def update(self, delta):
         if self.__client:
             self.__client.tick()
+            if self.__client.state == ClientState.PLAYING:
+#                 self.__client.command_update(ClientState.PLAYING, ClientState.PLAYING)
+                self.__apply_replication_data(self.__client.get_game_state())
+        elif self.__server:
+            self.__server.propagate_game_state(self.__compile_replication_data())
+            self.__server.tick()
+
+    def propagate_input(self, inputs):
+        """Sets the list of input actions collected by the game in the current frame. These are sent to the server."""
+        if self.__client:
+            self.__client.set_inputs(inputs)
 
     @classmethod
     def __find_local_server(cls):

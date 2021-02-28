@@ -182,6 +182,9 @@ class SpaceNerdsMPGame(pygamengn.Game):
             self.player.set_velocity(self.player.mover.velocity * 0.8)
             input_replica.append(InputAction.BACK)
 
+        if self.replication_manager:
+            self.replication_manager.propagate_input(input_replica)
+
     def handle_player_death(self):
         """Invoked when the player dies."""
         self.mode = Mode.DEBRIEF

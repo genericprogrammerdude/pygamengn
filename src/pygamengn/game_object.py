@@ -3,6 +3,7 @@ import pygame
 from class_registrar import ClassRegistrar
 from game_object_base import GameObjectBase
 import geometry
+from network.replicated_property import ReplicatedProperty
 from transform import Transform
 
 
@@ -48,7 +49,7 @@ class GameObject(pygame.sprite.Sprite, GameObjectBase):
     def get_replicated_props(self):
         """Returns a list of properties that this object will replicate from server to connected clients."""
         return [
-            "position"
+            ReplicatedProperty("position", getter="position_tuple")
         ]
 
     def update(self, delta):
@@ -86,12 +87,18 @@ class GameObject(pygame.sprite.Sprite, GameObjectBase):
 
     @property
     def position(self):
+        """Retrieves the gob's position."""
         return self.__pos
 
     @position.setter
     def position(self, pos):
         """Sets the position of the sprite in the screen so that the sprite's center is at pos."""
-        self.__pos = pos
+        self.__pos = pygame.math.Vector2(pos[0], pos[1])
+
+    @property
+    def position_tuple(self):
+        """Retrieves the gob's position."""
+        return (self.__pos.x, self.__pos.y)
 
     def set_heading(self, heading):
         """Sets the orientation of the game object."""

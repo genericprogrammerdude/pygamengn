@@ -17,6 +17,7 @@ class ConnectedClient:
         self.__writer = ProtoWriter(self.__socket)
         self.__reset()
         self.__processed_count = 0
+        self.__game_state_message = {}
 
     def __reset(self):
         self.request = None
@@ -26,6 +27,10 @@ class ConnectedClient:
     def activate(self):
         """Activates the connection to the client to start receiving data."""
         self.__selector.register(self.__socket, selectors.EVENT_READ, data=self)
+
+    def set_game_state_message(self, game_state_message: ProtoMessage):
+        """Sets the ProtoMessage that represents game state to be propagated to the client."""
+        self.__game_state_message = game_state_message
 
     def __set_read_mode(self):
         """Sets selector to look for read events."""
@@ -108,23 +113,7 @@ class ConnectedClient:
             return response
 
         elif message == "INPUT":
-            if self.__processed_count < 10:
-                response = ProtoMessage.update_message({
-                    "object1": {
-                        "id": 43,
-                        "pos": [230, 2],
-                        "heading": 5,
-                        "health": 30
-                    },
-                    "Player1": {
-                        "id": 23,
-                        "pos": (120, 2),
-                        "heading": 20,
-                        "health": 98
-                    }
-                })
-            else:
-                response = ProtoMessage.stop_message()
+            response = self.__game_state_message
             self.response_created = True
             return response
 

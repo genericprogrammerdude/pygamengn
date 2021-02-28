@@ -3,6 +3,7 @@ import selectors
 import socket
 
 from network.connected_client import ConnectedClient
+from network.proto_message import ProtoMessage
 
 
 class Server():
@@ -47,6 +48,12 @@ class Server():
                     logging.debug(f"Client disconnected: {e}")
                     self.__connected_clients[connected_client.address].close()
                     del self.__connected_clients[connected_client.address]
+
+    def propagate_game_state(self, game_state_dict):
+        """Propagates the dictionary that represents game state to all the connected clients."""
+        message = ProtoMessage.update_message(game_state_dict)
+        for _, client in self.__connected_clients.items():
+            client.set_game_state_message(message)
 
     def __accept_connection(self, sock):
         """Accepts a new connection."""
