@@ -32,8 +32,9 @@ class Game(GameObjectBase):
         # Do collision detection and notification
         self.collision_manager.do_collisions()
 
-        # Prepare replication data
-#         rep_data = self.replication_manager.get_replication_data()
+        # Do data replication as appropriate
+        if self.replication_manager:
+            self.replication_manager.update(delta)
 
         # Render
         self.screen.fill((50, 50, 50))

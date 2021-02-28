@@ -78,26 +78,27 @@ class AsteroidSpawner(Updatable):
         self.total_time = 0
 
     def update(self, delta):
-        self.total_time += delta
-        self.time_to_next_spawn -= delta
+        if False:
+            self.total_time += delta
+            self.time_to_next_spawn -= delta
 
-        if self.time_to_next_spawn <= 0:
-            # Compute time to next spawn using spawn_freq and freq_accel_threshold
-            freq_accelerator = 1
-            if self.freq_accel_threshold and self.total_time > self.freq_accel_threshold:
-                freq_accelerator = (self.total_time // self.freq_accel_threshold) * 1.25
-            spawn_freq = round(self.spawn_freq / freq_accelerator)
-            self.time_to_next_spawn = random.randrange(spawn_freq)
+            if self.time_to_next_spawn <= 0:
+                # Compute time to next spawn using spawn_freq and freq_accel_threshold
+                freq_accelerator = 1
+                if self.freq_accel_threshold and self.total_time > self.freq_accel_threshold:
+                    freq_accelerator = (self.total_time // self.freq_accel_threshold) * 1.25
+                spawn_freq = round(self.spawn_freq / freq_accelerator)
+                self.time_to_next_spawn = random.randrange(spawn_freq)
 
-            # Spawn new asteroid
-            asteroid_type_spec = random.choice(self.asteroid_types)
-            asteroid = asteroid_type_spec.create()
-            pos, direction = self.get_random_pos_dir(self.render_group.get_world_view_rect())
-            asteroid.mover.set_direction(direction)
-            asteroid.position = pos
-            asteroid.transform()
-            for attachment in asteroid.attachments:
-                attachment.game_object.set_target(self.player)
+                # Spawn new asteroid
+                asteroid_type_spec = random.choice(self.asteroid_types)
+                asteroid = asteroid_type_spec.create()
+                pos, direction = self.get_random_pos_dir(self.render_group.get_world_view_rect())
+                asteroid.mover.set_direction(direction)
+                asteroid.position = pos
+                asteroid.transform()
+                for attachment in asteroid.attachments:
+                    attachment.game_object.set_target(self.player)
 
     def get_random_pos_dir(self, world_view_rect):
         # Aim roughly to the center of the screen

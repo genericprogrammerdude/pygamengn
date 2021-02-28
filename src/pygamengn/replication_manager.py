@@ -2,6 +2,8 @@ import logging
 
 from game_object_base import GameObjectBase
 from class_registrar import ClassRegistrar
+from network.client import Client
+from network.server import Server
 
 
 @ClassRegistrar.register("ReplicationManager")
@@ -13,6 +15,8 @@ class ReplicationManager(GameObjectBase):
     def __init__(self):
         super().__init__()
         self.__replicators = {}
+        self.__client = None
+        self.__server = None
 
     def add_object(self, replication_id, gob):
         """Adds a GameObject to be replicated from server to connected clients."""
@@ -27,7 +31,7 @@ class ReplicationManager(GameObjectBase):
                 logging.debug(prop)
         # DEBUG #
 
-    def get_replication_data(self):
+    def __get_replication_data(self):
         """
         Compiles and returns the dictionary with the data for all the register replicators.
 
@@ -41,7 +45,7 @@ class ReplicationManager(GameObjectBase):
                 replication_data[rep_id][prop] = getattr(gob, prop)
         return replication_data
 
-    def apply_replication_data(self):
+    def __apply_replication_data(self):
         """
         Applies the data received by the client to the registered game objects.
 
@@ -49,3 +53,37 @@ class ReplicationManager(GameObjectBase):
         are in sync with their primary replicas existing on the server.
         """
         pass
+
+    def start_replication(self):
+        """Starts replication."""
+        # HACK ALERT! #
+        if self.__find_local_server():
+            # Found a local server running -> connect to it
+            self.__client = Client(("localhost", 54879))
+            self.__client.connect("Player2")
+        else:
+            # No local server running -> run one
+            self.__server = Server()
+            self.__server.start()
+        # HACK ALERT! #
+
+    def update(self, delta):
+        if self.__client:
+            self.__client.tick()
+
+    @classmethod
+    def __find_local_server(cls):
+        """Tries to connect to a local server. Returns True if successful, False otherwise."""
+        client = Client(("localhost", 54879))
+        client.connect("Player2")
+
+        found_server = False
+        try:
+            client.tick()
+            found_server = True
+        except BrokenPipeError:
+            pass
+        finally:
+            client.stop()
+
+        return found_server
