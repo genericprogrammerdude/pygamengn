@@ -13,7 +13,7 @@ from space_nerds_mp_game import SpaceNerdsMPGame
 
 
 def main():
-    logging.basicConfig(level=logging.DEBUG, format="%(levelname)s: %(filename)s:%(lineno)d: %(message)s")
+    logging.basicConfig(level=logging.INFO, format="%(levelname)s: %(filename)s:%(lineno)d: %(message)s")
 
     pygame.init()
 

@@ -48,8 +48,10 @@ class ReplicationManager(GameObjectBase):
         for replication_id, replication_data in game_state.items():
             gob = self.__replicators.get(replication_id)
             if gob:
-                for prop, value in replication_data.items():
-                    setattr(gob, prop, value)
+                for rep_prop in gob.get_replicated_props():
+                    new_value = replication_data.get(rep_prop.name)
+                    if new_value:
+                        setattr(gob, rep_prop.setter, new_value)
 
     def start_replication(self):
         """Starts replication."""
