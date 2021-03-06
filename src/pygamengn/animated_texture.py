@@ -53,7 +53,7 @@ class AnimatedTexture(GameObject):
 
     def play(self, done_callback=None):
         self.is_playing = True
-        self.set_heading(random.randint(0, 360))
+        self.heading = random.randint(0, 360)
         self.atlas_index = random.randint(0, len(self.asset.frames) - 1)
         self.done_callback = done_callback
         if self.sound:

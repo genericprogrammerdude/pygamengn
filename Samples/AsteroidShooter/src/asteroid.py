@@ -22,7 +22,7 @@ class Asteroid(GameObject):
 
     def update(self, delta):
         spin_delta = (45.0 * delta) / 1000.0 * self.spin_delta_factor
-        self.set_heading(self.heading + spin_delta)
+        self.heading = self.heading + spin_delta
         self.position = self.position + self.mover.move(delta)
         super().update(delta)
         for attachment in self.attachments:
@@ -39,7 +39,7 @@ class Asteroid(GameObject):
         super().handle_collision(gob, world_pos)
 
     def die(self, instigator):
-        """Die. Plays an explosion if it was given an atlas for  the AnimatedTexture."""
+        """Die. Plays an explosion if it was given an atlas for the AnimatedTexture."""
         if self.alive():
             if self.death_spawn:
                 angle = -30.0

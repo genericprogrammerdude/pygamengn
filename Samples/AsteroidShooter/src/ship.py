@@ -61,7 +61,7 @@ class Ship(GameObject):
         if self.time_since_last_fire > self.fire_freq and self.alive():
             projectile = self.projectile_type.create()
             projectile.position = self.position
-            projectile.set_heading(self.heading)
+            projectile.heading = self.heading
             projectile.transform()
             projectile.set_parent(self)
             self.time_since_last_fire = 0

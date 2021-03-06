@@ -29,7 +29,7 @@ class GameObject(pygame.sprite.Sprite, GameObjectBase):
         self.image = self.image_asset
         self.rect = self.image.get_rect()
         self.scale = scale
-        self.heading = heading
+        self.__heading = heading
         self.position = pygame.math.Vector2(0.0, 0.0)
         self.dirty_image = True
         self.is_collidable = is_collidable
@@ -49,7 +49,8 @@ class GameObject(pygame.sprite.Sprite, GameObjectBase):
     def get_replicated_props(self):
         """Returns a list of properties that this object will replicate from server to connected clients."""
         return [
-            ReplicatedProperty("position", getter="position_tuple")
+            ReplicatedProperty("position", getter="position_tuple"),
+            ReplicatedProperty("heading")
         ]
 
     def update(self, delta):
@@ -62,7 +63,7 @@ class GameObject(pygame.sprite.Sprite, GameObjectBase):
 
                 attachment_pos = t.apply(attachment.offset)
                 attachment.game_object.position = attachment_pos
-                attachment.game_object.set_heading(self.heading)
+                attachment.game_object.heading = self.heading
 
     def transform(self):
         """Transforms the object based on current heading, scale, and position."""
@@ -100,10 +101,15 @@ class GameObject(pygame.sprite.Sprite, GameObjectBase):
         """Retrieves the gob's position."""
         return (self.__pos.x, self.__pos.y)
 
-    def set_heading(self, heading):
+    @property
+    def heading(self):
+        return self.__heading
+
+    @heading.setter
+    def heading(self, heading):
         """Sets the orientation of the game object."""
-        self.dirty_image = self.dirty_image or self.heading != heading
-        self.heading = geometry.normalize_angle(heading)
+        self.dirty_image = self.dirty_image or self.__heading != heading
+        self.__heading = geometry.normalize_angle(heading)
 
     def set_image(self, image_asset):
         """Sets a new image for the game object."""

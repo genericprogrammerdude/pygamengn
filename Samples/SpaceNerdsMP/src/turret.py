@@ -29,7 +29,7 @@ class Turret(GameObject):
             if self.target.alive():
                 fire_dir = self.target.position - self.position
                 heading = math.degrees(math.atan2(fire_dir[0], fire_dir[1]) - math.pi)
-                self.set_heading(heading)
+                self.heading = heading
 
                 # Increase fire frequency as the turret gets closer to its target
                 distance = fire_dir.length()
@@ -47,7 +47,7 @@ class Turret(GameObject):
         """Fires a projectile_type object at the target."""
         projectile = self.projectile_type.create()
         projectile.position = self.position
-        projectile.set_heading(self.heading)
+        projectile.heading = self.heading
         projectile.transform()
         if self.parent:
             # Set projectile parent the same as the turret's to avoid collisions between projectiles and turret parents

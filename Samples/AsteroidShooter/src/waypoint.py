@@ -18,7 +18,7 @@ class Waypoint(Trigger):
 
     def update(self, delta):
         heading = (self.heading + delta * self.angular_velocity / 1000.0) % 360
-        self.set_heading(heading)
+        self.heading = heading
         super().update(delta)
 
         if self.dirty_number:

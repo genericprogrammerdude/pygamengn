@@ -22,7 +22,7 @@ class Asteroid(GameObject):
 
     def update(self, delta):
         spin_delta = (45.0 * delta) / 1000.0 * self.spin_delta_factor
-        self.set_heading(self.heading + spin_delta)
+        self.heading = self.heading + spin_delta
         self.position = self.position + self.mover.move(delta)
         super().update(delta)
         for attachment in self.attachments:

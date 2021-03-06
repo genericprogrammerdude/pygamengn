@@ -25,7 +25,7 @@ class NavArrow(GameObject):
             self.position = self.parent.position + direction * 150
 
             _, angle = direction.as_polar()
-            self.set_heading(270 - angle)
+            self.heading = 270 - angle
 
             dist_to_target = diff.length()
             if dist_to_target > 1000:

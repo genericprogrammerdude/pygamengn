@@ -170,10 +170,10 @@ class SpaceNerdsMPGame(pygamengn.Game):
         # Handle input for movement
         pressed_keys = pygame.key.get_pressed()
         if pressed_keys[pygame.K_a]:
-            self.player.set_heading(self.player.heading + self.player.mover.angular_velocity)
+            self.player.heading = self.player.heading + self.player.mover.angular_velocity
             input_replica.append(InputAction.LEFT)
         if pressed_keys[pygame.K_d]:
-            self.player.set_heading(self.player.heading - self.player.mover.angular_velocity)
+            self.player.heading = self.player.heading - self.player.mover.angular_velocity
             input_replica.append(InputAction.RIGHT)
         if pressed_keys[pygame.K_w]:
             self.player.set_velocity(self.player.mover.max_velocity)
