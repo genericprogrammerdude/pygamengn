@@ -5,10 +5,10 @@ class FiniteStateMachine:
         self.__state = state
         self.__transitions = transitions
 
-    def transition(self, input_enum_value):
+    def transition(self, input_enum_value, **kwargs):
         """Executes a transition using the given input."""
         t = self.__transitions[self.__state][input_enum_value]
-        if (t.callback and t.callback(self.__state, t.to_state)) or t.callback is None:
+        if (t.callback and t.callback(self.__state, t.to_state, **kwargs)) or t.callback is None:
             self.__state = t.to_state
         return self.__state
 

@@ -45,10 +45,10 @@ class ReplicationManager(GameObjectBase):
         The client calls this function at the end of each game update to ensure that all the replicated game objects
         are in sync with their primary replicas existing on the server.
         """
-        for replication_id, replication_data in game_state:
-            gob = self.__repicators.get(replication_id)
+        for replication_id, replication_data in game_state.items():
+            gob = self.__replicators.get(replication_id)
             if gob:
-                for prop, value in replication_data:
+                for prop, value in replication_data.items():
                     setattr(gob, prop, value)
 
     def start_replication(self):
@@ -70,7 +70,6 @@ class ReplicationManager(GameObjectBase):
         if self.__client:
             self.__client.tick()
             if self.__client.state == ClientState.PLAYING:
-#                 self.__client.command_update(ClientState.PLAYING, ClientState.PLAYING)
                 self.__apply_replication_data(self.__client.get_game_state())
         elif self.__server:
             self.__server.propagate_game_state(self.__compile_replication_data())

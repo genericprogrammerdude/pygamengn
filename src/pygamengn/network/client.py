@@ -37,7 +37,7 @@ class Client():
         self.__reader = ProtoReader(self.__socket)
         self.__writer = ProtoWriter(self.__socket)
         self.__inputs = None
-        self.__game_state = None
+        self.__game_state = {}
         self.__fsm = FiniteStateMachine(ClientState.DISCONNECTED, {
             ClientState.DISCONNECTED: {
                 ClientInput.INIT: FSMTransition(ClientState.CONNECTED, self.command_init)
@@ -102,16 +102,17 @@ class Client():
         """Returns the current state of the client."""
         return self.__fsm.state
 
-    def command_init(self, from_state, to_state):
+    def command_init(self, from_state, to_state, objects):
         """Executes the INIT command from the Server. Returns True if the state transition is successful."""
         logging.debug(f"command_init(): {from_state} -> {to_state}")
         self.__proto_message = ProtoMessage.ready_message()
         return True
 
-    def command_update(self, from_state, to_state):
+    def command_update(self, from_state, to_state, objects):
         """Executes the START command from the Server. Returns True if the state transition is successful."""
         logging.debug(f"command_update(): {from_state} -> {to_state}")
         self.__proto_message = ProtoMessage.input_message(self.__inputs)
+        self.__game_state = objects
         return True
 
     def command_stop(self, from_state, to_state):
@@ -142,9 +143,10 @@ class Client():
     def __process_response(self, dictionary):
         logging.debug(f"Received response: {dictionary}")
         try:
-            self.__game_state = dictionary["objects"]
-            logging.debug(self.__fsm.state)
-            self.__fsm.transition(ClientInput(dictionary["message"]))
+            self.__fsm.transition(
+                ClientInput(dictionary["message"]),
+                **{key: dictionary[key] for key in dictionary if key != "message"}
+            )
         except KeyError as e:
             logging.error(f"Bad FSM transition data. {repr(e)}")
         self.__processed_count += 1
