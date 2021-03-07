@@ -63,20 +63,3 @@ class Server():
         connected_client = ConnectedClient(conn, addr, self.__selector)
         self.__connected_clients[addr] = connected_client
         connected_client.activate()
-
-
-if __name__ == "__main__":
-    import time
-    logging.basicConfig(level=logging.DEBUG, format="%(levelname)s: %(filename)s:%(lineno)d: %(message)s")
-
-    server = Server()
-    server.start()
-
-    done = False
-    while not done:
-        try:
-            server.tick()
-            time.sleep(0.017)
-        except KeyboardInterrupt:
-            server.stop()
-            done = True

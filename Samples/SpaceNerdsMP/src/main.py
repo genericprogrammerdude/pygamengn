@@ -17,25 +17,21 @@ def main():
 
     pygame.init()
 
-    size = (1280, 720)
-    screen = pygame.display.set_mode(size, pygame.DOUBLEBUF | pygame.HWSURFACE | pygame.RESIZABLE)
+    # Create window
+    screen = pygame.display.set_mode((1280, 720), pygame.DOUBLEBUF | pygame.HWSURFACE | pygame.RESIZABLE)
 
     factory = create_factory(os.path.join("..", "..", "Assets"))
 
-    # Create world
+    # Initialize window
     pygame.display.set_icon(factory.images["ship"])
-    pygame.display.set_caption("Game")
+    pygame.display.set_caption("Space Nerds MP")
 
     game = factory.create("SpaceNerdsMPGame", screen=screen)
 
     clock = pygame.time.Clock()
 
-    t = 0
-    send = True
-
     while game.running:
         delta = clock.get_time()
-        t += delta
         game.update(delta)
 
         clock.tick(60)

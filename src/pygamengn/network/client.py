@@ -117,7 +117,7 @@ class Client():
         return True
 
     def command_update(self, from_state, to_state, objects):
-        """Executes the START command from the Server. Returns True if the state transition is successful."""
+        """Executes the UPDATE command from the Server. Returns True if the state transition is successful."""
         logging.debug(f"command_update(): {from_state} -> {to_state}")
         self.__proto_message = ProtoMessage.input_message(self.__inputs)
         self.__game_state = objects
@@ -166,27 +166,3 @@ class Client():
     def __set_write_mode(self):
         """Sets __selector to look for write events."""
         self.__selector.modify(self.__socket, selectors.EVENT_WRITE)
-
-
-if __name__ == "__main__":
-    import time
-    logging.basicConfig(level=logging.DEBUG, format="%(levelname)s: %(filename)s:%(lineno)d: %(message)s")
-
-    client = Client(("localhost", 54879))
-    client.connect("Player2")
-
-    done = False
-    while not done:
-        try:
-            client.tick()
-            time.sleep(0.02)
-
-            if client.state == ClientState.PLAYING:
-                client.command_update(ClientState.PLAYING, ClientState.PLAYING)
-
-        except (AssertionError, KeyboardInterrupt):
-            client.stop()
-            done = True
-
-        except ValueError:
-            done = True
