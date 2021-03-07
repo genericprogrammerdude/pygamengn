@@ -40,19 +40,6 @@ class Ship(GameObject):
             ReplicatedProperty("velocity")
         ]
 
-    # DEBUG #
-    @property
-    def position(self):
-        return super().position
-
-    @position.setter
-    def position(self, pos):
-        """Sets the position of the sprite in the screen so that the sprite's center is at pos."""
-        import logging
-        logging.info(f"Ship.position.setter {self.position} -> {pygame.math.Vector2(pos)} {(pygame.math.Vector2(pos) -  self.position).length()}")
-        super(Ship, self.__class__).position.fset(self, pos)
-    # DEBUG #
-
     def update(self, delta):
         """Updates the ship."""
         # Translate according to velocity
