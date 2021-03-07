@@ -12,6 +12,8 @@ from nav_arrow import NavArrow
 from projectile import Projectile
 from waypoint import Waypoint
 
+from network.replicated_property import ReplicatedProperty
+
 
 @ClassRegistrar.register("Ship")
 class Ship(GameObject):
@@ -31,6 +33,25 @@ class Ship(GameObject):
         self.shot_sound = shot_sound
         self.waypoint.set_enter_callback(self.place_waypoint)
         self.waypoint.visible = False
+
+    def get_replicated_props(self):
+        """Returns a list of properties that this object will replicate from server to connected clients."""
+        return super().get_replicated_props() + [
+            ReplicatedProperty("velocity")
+        ]
+
+    # DEBUG #
+    @property
+    def position(self):
+        return super().position
+
+    @position.setter
+    def position(self, pos):
+        """Sets the position of the sprite in the screen so that the sprite's center is at pos."""
+        import logging
+        logging.info(f"Ship.position.setter {self.position} -> {pygame.math.Vector2(pos)} {(pygame.math.Vector2(pos) -  self.position).length()}")
+        super(Ship, self.__class__).position.fset(self, pos)
+    # DEBUG #
 
     def update(self, delta):
         """Updates the ship."""
@@ -52,7 +73,12 @@ class Ship(GameObject):
         except AttributeError:
             pass
 
-    def set_velocity(self, velocity):
+    @property
+    def velocity(self):
+        return self.mover.velocity
+
+    @velocity.setter
+    def velocity(self, velocity):
         """Sets the ship's velocity."""
         self.mover.set_velocity(velocity)
 

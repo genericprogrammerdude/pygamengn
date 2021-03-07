@@ -3,7 +3,7 @@ import pygame
 from class_registrar import ClassRegistrar
 from game_object_base import GameObjectBase
 import geometry
-from network.replicated_property import ReplicatedProperty, PackerFloat
+from network.replicated_property import ReplicatedProperty
 from transform import Transform
 
 
@@ -49,7 +49,7 @@ class GameObject(pygame.sprite.Sprite, GameObjectBase):
     def get_replicated_props(self):
         """Returns a list of properties that this object will replicate from server to connected clients."""
         return [
-            ReplicatedProperty("position", getter="position_tuple"),
+#             ReplicatedProperty("position", getter="position_tuple"),
             ReplicatedProperty("heading")
         ]
 

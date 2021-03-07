@@ -176,10 +176,10 @@ class SpaceNerdsMPGame(pygamengn.Game):
             self.player.heading = self.player.heading - self.player.mover.angular_velocity
             input_replica.append(InputAction.RIGHT)
         if pressed_keys[pygame.K_w]:
-            self.player.set_velocity(self.player.mover.max_velocity)
+            self.player.velocity = self.player.mover.max_velocity
             input_replica.append(InputAction.FORWARD)
         if pressed_keys[pygame.K_s]:
-            self.player.set_velocity(self.player.mover.velocity * 0.8)
+            self.player.velocity = self.player.mover.velocity * 0.8
             input_replica.append(InputAction.BACK)
 
         if self.replication_manager:
