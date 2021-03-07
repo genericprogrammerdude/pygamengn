@@ -58,6 +58,9 @@ class Client():
         self.__proto_message = ProtoMessage.connect_message(player_name)
         self.__selector.register(self.__socket, selectors.EVENT_WRITE)
 
+    def reset_game_state(self):
+        self.__game_state = {}
+
     def tick(self):
         """Does client work."""
         if not self.__selector.get_map():
