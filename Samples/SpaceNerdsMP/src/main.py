@@ -23,7 +23,7 @@ def main():
     factory = create_factory(os.path.join("..", "..", "Assets"))
 
     # Initialize window
-    pygame.display.set_icon(factory.images["ship"])
+    pygame.display.set_icon(factory.images["ship_blue"])
     pygame.display.set_caption("Space Nerds MP")
 
     game = factory.create("SpaceNerdsMPGame", screen=screen)

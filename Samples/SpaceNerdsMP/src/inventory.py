@@ -1,5 +1,8 @@
 images = {
-    "ship": "SpaceShooterRedux/PNG/playerShip2_blue.png",
+    "ship_blue": "SpaceShooterRedux/PNG/playerShip2_blue.png",
+    "ship_green": "SpaceShooterRedux/PNG/playerShip2_green.png",
+    "ship_orange": "SpaceShooterRedux/PNG/playerShip2_orange.png",
+    "ship_red": "SpaceShooterRedux/PNG/playerShip2_red.png",
     "explosion1": "Explosions/explosion1.png",
     "explosion2": "Explosions/explosion2.png",
     "explosion3": "Explosions/explosion3.png",
@@ -495,7 +498,7 @@ game_types = {
                     "game_object:children": [],
                     "fix_aspect_ratio": True,
                     "name": "spinner",
-                    "image:image_asset": "ship",
+                    "image:image_asset": "ship_blue",
                     "angular_velocity": 30
                 }
             },
@@ -618,7 +621,7 @@ game_types = {
     "PlayerShip": {
         "class_name": "Ship",
         "kwargs": {
-            "image:image_asset": "ship",
+            "image:image_asset": "ship_blue",
             "type_spec:projectile_type": "/PlayerShip/PlayerProjectile",
             "fire_freq": 200,
             "game_object:mover": "PlayerShipMover",
@@ -767,6 +770,24 @@ game_types = {
                     "RenderGroup"
                 ]
             }
+        }
+    },
+    "PlayerShipGreen": {
+        "base_type": "PlayerShip",
+        "kwargs": {
+            "image:image_asset": "ship_green"
+        }
+    },
+    "PlayerShipOrange": {
+        "base_type": "PlayerShip",
+        "kwargs": {
+            "image:image_asset": "ship_orange"
+        }
+    },
+    "PlayerShipRed": {
+        "base_type": "PlayerShip",
+        "kwargs": {
+            "image:image_asset": "ship_red"
         }
     },
     "Explosions": {
