@@ -1,4 +1,5 @@
 import logging
+import struct
 
 from game_object_base import GameObjectBase
 from class_registrar import ClassRegistrar
@@ -34,8 +35,8 @@ class ReplicationManager(GameObjectBase):
         replication_data = {}
         for rep_id, gob in self.__replicators.items():
             replication_data[rep_id] = {}
-            for prop in gob.get_replicated_props():
-                replication_data[rep_id][prop.name] = getattr(gob, prop.getter)
+            for rep_prop in gob.get_replicated_props():
+                replication_data[rep_id][rep_prop.name] = rep_prop.packer.pack(getattr(gob, rep_prop.getter))
         return replication_data
 
     def __apply_replication_data(self, game_state):
@@ -51,7 +52,7 @@ class ReplicationManager(GameObjectBase):
                 for rep_prop in gob.get_replicated_props():
                     new_value = replication_data.get(rep_prop.name)
                     if new_value:
-                        setattr(gob, rep_prop.setter, new_value)
+                        setattr(gob, rep_prop.setter, rep_prop.packer.unpack(new_value))
 
     def start_replication(self):
         """Starts replication."""

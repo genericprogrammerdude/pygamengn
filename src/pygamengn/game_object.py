@@ -3,7 +3,7 @@ import pygame
 from class_registrar import ClassRegistrar
 from game_object_base import GameObjectBase
 import geometry
-from network.replicated_property import ReplicatedProperty
+from network.replicated_property import ReplicatedProperty, PackerFloat
 from transform import Transform
 
 
@@ -29,8 +29,8 @@ class GameObject(pygame.sprite.Sprite, GameObjectBase):
         self.image = self.image_asset
         self.rect = self.image.get_rect()
         self.scale = scale
+        self.__pos = pygame.math.Vector2(0.0, 0.0)
         self.__heading = heading
-        self.position = pygame.math.Vector2(0.0, 0.0)
         self.dirty_image = True
         self.is_collidable = is_collidable
         if self.is_collidable:
@@ -59,7 +59,7 @@ class GameObject(pygame.sprite.Sprite, GameObjectBase):
         self.transform()
         for attachment in self.attachments:
             if attachment.parent_transform:
-                t = Transform(self.__pos, self.heading)
+                t = Transform(self.position, self.heading)
 
                 attachment_pos = t.apply(attachment.offset)
                 attachment.game_object.position = attachment_pos
@@ -78,7 +78,7 @@ class GameObject(pygame.sprite.Sprite, GameObjectBase):
             self.dirty_image = False
 
         # Translate
-        topleft = self.__pos - pygame.math.Vector2(self.rect.width / 2.0, self.rect.height / 2.0)
+        topleft = self.position - pygame.math.Vector2(self.rect.width / 2.0, self.rect.height / 2.0)
         self.rect.topleft = pygame.Vector2(round(topleft.x), round(topleft.y))
 
     def set_scale(self, scale):
