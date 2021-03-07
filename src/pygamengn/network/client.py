@@ -62,10 +62,11 @@ class Client():
         self.__game_state = {}
 
     def tick(self):
-        """Does client work."""
+        """Does client work. Returns True when the connection is alive, False otherwise."""
         if not self.__selector.get_map():
-            logging.error("Client ticking but not connected to server")
-            return
+            logging.error("Client ticking but not connected to server. Stopping client.")
+            self.stop()
+            return False
 
         events = self.__selector.select(timeout=-1)
         for _, mask in events:
@@ -74,6 +75,8 @@ class Client():
             except (RuntimeError, ConnectionRefusedError, ConnectionResetError) as e:
                 logging.debug(f"Client disconnected: {e}")
                 self.stop()
+                return False
+        return True
 
     def stop(self):
         """Stops the client."""
@@ -87,6 +90,8 @@ class Client():
             self.__socket.close()
         except OSError as e:
             logging.debug(f"__socket.close() exception for {self.__address}: {repr(e)}")
+        except AttributeError:
+            pass
         finally:
             self.__socket = None
         self.__selector.close()

@@ -70,11 +70,15 @@ class ReplicationManager(GameObjectBase):
         # HACK ALERT! #
 
     def update(self, delta):
+        """Updates the replication manager."""
         if self.__client:
-            self.__client.tick()
-            if self.__client.state == ClientState.PLAYING:
-                self.__apply_replication_data(self.__client.get_game_state())
-                self.__client.reset_game_state()
+            if self.__client.tick():
+                if self.__client.state == ClientState.PLAYING:
+                    self.__apply_replication_data(self.__client.get_game_state())
+                    self.__client.reset_game_state()
+            else:
+                self.__client = None
+
         elif self.__server:
             self.__server.propagate_game_state(self.__compile_replication_data())
             self.__server.tick()
