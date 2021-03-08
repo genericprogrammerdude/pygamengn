@@ -58,10 +58,11 @@ class ProtoMessage:
         return message
 
     @classmethod
-    def ready_message(cls):
+    def ready_message(cls, player_dict):
         """Builds and returns a READY message to send from the Client to the Server."""
         message = ProtoMessage({
-            "message": "READY"
+            "message": "READY",
+            "player": player_dict
         })
         message.build()
         return message
@@ -90,20 +91,21 @@ class ProtoMessage:
     ###################
 
     @classmethod
-    def init_message(cls, objects_dict):
-        """Builds and returns an INIT message to send from the Server to the Client."""
+    def connection_ok_message(cls, spawn_pos):
+        """Builds and returns an CONNECTION_OK message to send from the Server to the Client."""
         message = ProtoMessage({
-            "message": "INIT",
-            "objects": objects_dict
+            "message": "CONNECTION_OK",
+            "spawn_pos": spawn_pos
         })
         message.build()
         return message
 
     @classmethod
-    def start_message(cls):
+    def start_message(cls, objects_dict):
         """Builds and returns a START message to send from the Server to the Client."""
         message = ProtoMessage({
-            "message": "START"
+            "message": "START",
+            "objects": objects_dict
         })
         message.build()
         return message

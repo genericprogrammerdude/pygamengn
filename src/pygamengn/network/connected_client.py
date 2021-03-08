@@ -9,10 +9,11 @@ from network.proto_writer import ProtoWriter
 class ConnectedClient:
     """Server representation of a connected client."""
 
-    def __init__(self, connection_socket, client_address, selector):
+    def __init__(self, connection_socket, client_address, selector, spawn_pos):
         self.__socket = connection_socket
         self.address = client_address
         self.__selector = selector
+        self.__spawn_pos = spawn_pos
         self.__reader = ProtoReader(self.__socket)
         self.__writer = ProtoWriter(self.__socket)
         self.__reset()
@@ -90,7 +91,12 @@ class ConnectedClient:
 
         if message == "CONNECT":
             self.__player_name = self.request["name"]
-            response = ProtoMessage.init_message({
+            response = ProtoMessage.connection_ok_message(self.__spawn_pos)
+            self.response_created = True
+            return response
+
+        elif message == "READY":
+            response = ProtoMessage.start_message({
                 "object1": {
                     "game_type": "/Some/gob_type/from/inventory",
                     "pos": [23, 32],
@@ -104,11 +110,6 @@ class ConnectedClient:
                     "health": 58
                 }
             })
-            self.response_created = True
-            return response
-
-        elif message == "READY":
-            response = ProtoMessage.start_message()
             self.response_created = True
             return response
 

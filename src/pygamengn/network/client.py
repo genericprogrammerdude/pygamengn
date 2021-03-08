@@ -18,7 +18,7 @@ class ClientState(Enum):
 
 
 class ClientInput(Enum):
-    INIT = "INIT"
+    CONNECTION_OK = "CONNECTION_OK"
     START = "START"
     UPDATE = "UPDATE"
     STOP = "STOP"
@@ -40,7 +40,7 @@ class Client():
         self.__game_state = {}
         self.__fsm = FiniteStateMachine(ClientState.DISCONNECTED, {
             ClientState.DISCONNECTED: {
-                ClientInput.INIT: FSMTransition(ClientState.CONNECTED, self.command_init)
+                ClientInput.CONNECTION_OK: FSMTransition(ClientState.CONNECTED, self.command_connection_ok)
             },
             ClientState.CONNECTED: {
                 ClientInput.START: FSMTransition(ClientState.PLAYING)
@@ -110,10 +110,15 @@ class Client():
         """Returns the current state of the client."""
         return self.__fsm.state
 
-    def command_init(self, from_state, to_state, objects):
+    def command_connection_ok(self, from_state, to_state, spawn_pos):
         """Executes the INIT command from the Server. Returns True if the state transition is successful."""
-        logging.debug(f"command_init(): {from_state} -> {to_state}")
-        self.__proto_message = ProtoMessage.ready_message()
+        logging.debug(f"command_connection_ok(): {from_state} -> {to_state} spawn_pos = {spawn_pos}")
+        self.__proto_message = ProtoMessage.ready_message({
+            "game_type": "/Ship",
+            "pos": spawn_pos,
+            "heading": 0,
+            "health": 58
+        })
         return True
 
     def command_update(self, from_state, to_state, objects):

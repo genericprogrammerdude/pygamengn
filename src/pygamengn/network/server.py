@@ -60,6 +60,6 @@ class Server():
         conn, addr = sock.accept()
         conn.setblocking(False)
         logging.debug(f"Accepted connection from {addr[0]}:{addr[1]}")
-        connected_client = ConnectedClient(conn, addr, self.__selector)
+        connected_client = ConnectedClient(conn, addr, self.__selector, [640, 360])
         self.__connected_clients[addr] = connected_client
         connected_client.activate()
