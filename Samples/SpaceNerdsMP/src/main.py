@@ -1,9 +1,9 @@
 import logging
 import os
-import sys
 
-# The following 3 lines are required only when running directly from a terminal window. VSCode launches don't need this.
+# The following lines are required only when running directly from a terminal window. VSCode launches don't need this.
 if "PYGAME_HIDE_SUPPORT_PROMPT" not in os.environ:
+    import sys
     os.environ["PYGAME_HIDE_SUPPORT_PROMPT"] = "1"
     sys.path.append("../../../src")
 

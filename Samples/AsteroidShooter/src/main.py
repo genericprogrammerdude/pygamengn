@@ -1,9 +1,9 @@
 import logging
 import os
-import sys
 
-# The following 3 lines are required only when running directly from a terminal window. VSCode launches don't need this.
+# The following lines are required only when running directly from a terminal window. VSCode launches don't need this.
 if "PYGAME_HIDE_SUPPORT_PROMPT" not in os.environ:
+    import sys
     os.environ["PYGAME_HIDE_SUPPORT_PROMPT"] = "1"
     sys.path.append("../../../src")
 
@@ -18,13 +18,12 @@ def main():
 
     pygame.init()
 
-    size = (1280, 720)
-    screen = pygame.display.set_mode(size, pygame.DOUBLEBUF | pygame.HWSURFACE | pygame.RESIZABLE)
+    # Create window
+    screen = pygame.display.set_mode((1280, 720), pygame.DOUBLEBUF | pygame.HWSURFACE | pygame.RESIZABLE)
 
-    print(os.getcwd())
     factory = create_factory(os.path.join("..", "..", "Assets"))
 
-    # Create world
+    # Initialize window
     pygame.display.set_icon(factory.images["ship"])
     pygame.display.set_caption("Asteroid Shooter")
 
@@ -32,12 +31,8 @@ def main():
 
     clock = pygame.time.Clock()
 
-    t = 0
-    send = True
-
     while game.running:
         delta = clock.get_time()
-        t += delta
         game.update(delta)
 
         clock.tick(60)
