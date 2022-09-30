@@ -2,11 +2,11 @@ import random
 
 import pygame
 
-from class_registrar import ClassRegistrar
-from game_object import GameObject
-from transform import Transform
+from pygamengn.class_registrar import ClassRegistrar
+from pygamengn.game_object import GameObject
+from pygamengn.transform import Transform
 from turret import Turret
-from updatable import Updatable
+from pygamengn.updatable import Updatable
 
 
 @ClassRegistrar.register("Asteroid")

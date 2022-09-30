@@ -1,9 +1,8 @@
 import pygame
 
-from UI.font_asset import FontAsset
-from UI.panel import ColourPanel
+from pygamengn.UI.panel import ColourPanel
+from pygamengn.class_registrar import ClassRegistrar
 from asteroid import AsteroidSpawner
-from class_registrar import ClassRegistrar
 
 
 @ClassRegistrar.register("MainMenu")

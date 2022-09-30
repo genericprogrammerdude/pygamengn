@@ -1,8 +1,8 @@
 import numpy
 import pygame
 
-from class_registrar import ClassRegistrar
-from game_object_base import GameObjectBase
+from pygamengn.class_registrar import ClassRegistrar
+from pygamengn.game_object_base import GameObjectBase
 
 
 class Mover(GameObjectBase):

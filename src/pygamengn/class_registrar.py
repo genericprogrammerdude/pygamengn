@@ -2,7 +2,7 @@ import logging
 
 from typing import Callable
 
-from game_object_base import GameObjectBase
+from pygamengn.game_object_base import GameObjectBase
 
 
 class ClassRegistrar:

@@ -3,13 +3,14 @@ import random
 import numpy
 import pygame
 
+from pygamengn.class_registrar import ClassRegistrar
+from pygamengn.game_object import GameObject
+
 from asteroid import Asteroid
-from class_registrar import ClassRegistrar
-from game_object import GameObject
-from health_bar import HealthBar
-from mover import MoverVelocity
+# from health_bar import HealthBar
+# from mover import MoverVelocity
 from nav_arrow import NavArrow
-from projectile import Projectile
+# from projectile import Projectile
 from waypoint import Waypoint
 
 

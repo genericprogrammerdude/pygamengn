@@ -1,6 +1,6 @@
 import abc
 
-from game_object_base import GameObjectBase
+from pygamengn.game_object_base import GameObjectBase
 
 
 class Updatable(GameObjectBase):

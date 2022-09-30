@@ -1,8 +1,7 @@
 import pygame
 
-from UI.font_asset import FontAsset
-from UI.panel import ColourPanel
-from class_registrar import ClassRegistrar
+from pygamengn.UI.panel import ColourPanel
+from pygamengn.class_registrar import ClassRegistrar
 
 
 @ClassRegistrar.register("PauseMenu")

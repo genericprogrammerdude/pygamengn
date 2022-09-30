@@ -4,7 +4,7 @@ import os
 
 import pygame
 
-from game_object_base import GameObjectBase
+from pygamengn.game_object_base import GameObjectBase
 
 
 class GameObjectFactory():

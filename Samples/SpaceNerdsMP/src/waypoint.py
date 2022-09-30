@@ -1,7 +1,7 @@
 import random
 
-from class_registrar import ClassRegistrar
-from trigger import Trigger
+from pygamengn.class_registrar import ClassRegistrar
+from pygamengn.trigger import Trigger
 
 
 @ClassRegistrar.register("Waypoint")

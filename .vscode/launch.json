@@ -1,0 +1,30 @@
+{
+    "configurations": [
+        {
+            "name": "AsteroidShooter",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/Samples/AsteroidShooter/src/main.py",
+            "console": "integratedTerminal",
+            "justMyCode": true,
+            "cwd": "${workspaceFolder}/Samples/AsteroidShooter/src",
+            "env": {
+                "PYTHONPATH": "${workspaceFolder}/src",
+                "PYGAME_HIDE_SUPPORT_PROMPT": "1",
+            },
+        },
+        {
+            "name": "SpaceNerdsMP",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/Samples/SpaceNerdsMP/src/main.py",
+            "console": "integratedTerminal",
+            "justMyCode": true,
+            "cwd": "${workspaceFolder}/Samples/SpaceNerdsMP/src",
+            "env": {
+                "PYTHONPATH": "${workspaceFolder}/src",
+                "PYGAME_HIDE_SUPPORT_PROMPT": "1",
+            },
+        },
+    ]
+}

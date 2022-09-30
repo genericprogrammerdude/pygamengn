@@ -2,9 +2,8 @@ from enum import Enum
 
 import pygame
 
-from UI.font_asset import FontAsset
-from UI.ui_base import UIBase
-from class_registrar import ClassRegistrar
+from pygamengn.UI.ui_base import UIBase
+from pygamengn.class_registrar import ClassRegistrar
 
 
 @ClassRegistrar.register("Panel")

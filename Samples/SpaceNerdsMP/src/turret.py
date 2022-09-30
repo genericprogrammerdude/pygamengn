@@ -1,7 +1,7 @@
 import math
 
-from class_registrar import ClassRegistrar
-from game_object import GameObject
+from pygamengn.class_registrar import ClassRegistrar
+from pygamengn.game_object import GameObject
 
 
 @ClassRegistrar.register("Turret")

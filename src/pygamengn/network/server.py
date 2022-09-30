@@ -2,8 +2,8 @@ import logging
 import selectors
 import socket
 
-from network.connected_client import ConnectedClient
-from network.proto_message import ProtoMessage
+from pygamengn.network.connected_client import ConnectedClient
+from pygamengn.network.proto_message import ProtoMessage
 
 
 class Server():

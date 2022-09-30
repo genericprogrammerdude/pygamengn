@@ -1,10 +1,10 @@
 import logging
 
-from game_object_base import GameObjectBase
-from class_registrar import ClassRegistrar
-from network.client import Client
-from network.client import ClientState
-from network.server import Server
+from pygamengn.game_object_base import GameObjectBase
+from pygamengn.class_registrar import ClassRegistrar
+from pygamengn.network.client import Client
+from pygamengn.network.client import ClientState
+from pygamengn.network.server import Server
 
 
 @ClassRegistrar.register("ReplicationManager")

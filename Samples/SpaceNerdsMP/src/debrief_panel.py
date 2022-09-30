@@ -1,8 +1,8 @@
 import pygame
 
-from UI.panel import ColourPanel
-from UI.spinner import Spinner
-from class_registrar import ClassRegistrar
+from pygamengn.UI.panel import ColourPanel
+from pygamengn.UI.spinner import Spinner
+from pygamengn.class_registrar import ClassRegistrar
 
 
 @ClassRegistrar.register("DebriefPanel")

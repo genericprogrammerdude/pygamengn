@@ -1,9 +1,5 @@
-import pygame
-
-from animated_texture import AnimatedTexture
-from class_registrar import ClassRegistrar
-from game_object import GameObject
-from mover import MoverVelocity
+from pygamengn.class_registrar import ClassRegistrar
+from pygamengn.game_object import GameObject
 
 
 @ClassRegistrar.register("Projectile")

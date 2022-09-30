@@ -1,7 +1,7 @@
 import pygame
 
-from UI.panel import Panel
-from class_registrar import ClassRegistrar
+from pygamengn.UI.panel import Panel
+from pygamengn.class_registrar import ClassRegistrar
 
 
 @ClassRegistrar.register("Spinner")

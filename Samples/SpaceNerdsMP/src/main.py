@@ -2,9 +2,10 @@ import logging
 import os
 import sys
 
-os.environ["PYGAME_HIDE_SUPPORT_PROMPT"] = "1"
-sys.path.append("../../../src")
-sys.path.append("../../../src/pygamengn")
+# The following 3 lines are required only when running directly from a terminal window. VSCode launches don't need this.
+if "PYGAME_HIDE_SUPPORT_PROMPT" not in os.environ:
+    os.environ["PYGAME_HIDE_SUPPORT_PROMPT"] = "1"
+    sys.path.append("../../../src")
 
 import pygame
 import pygamengn

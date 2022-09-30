@@ -3,16 +3,17 @@ import random
 import numpy
 import pygame
 
-from asteroid import Asteroid
-from class_registrar import ClassRegistrar
-from game_object import GameObject
-from health_bar import HealthBar
-from mover import MoverVelocity
-from nav_arrow import NavArrow
-from projectile import Projectile
-from waypoint import Waypoint
+from pygamengn.class_registrar import ClassRegistrar
+from pygamengn.game_object import GameObject
+from pygamengn.health_bar import HealthBar
+from pygamengn.mover import MoverVelocity
+from pygamengn.projectile import Projectile
 
-from network.replicated_property import ReplicatedProperty
+from pygamengn.network.replicated_property import ReplicatedProperty
+
+from asteroid import Asteroid
+from nav_arrow import NavArrow
+from waypoint import Waypoint
 
 
 @ClassRegistrar.register("Ship")

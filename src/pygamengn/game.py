@@ -1,10 +1,7 @@
 import pygame
 
-from class_registrar import ClassRegistrar
-from collision_manager import CollisionManager
-from replication_manager import ReplicationManager
-from game_object_base import GameObjectBase
-from render_group import RenderGroup
+from pygamengn.class_registrar import ClassRegistrar
+from pygamengn.game_object_base import GameObjectBase
 
 
 @ClassRegistrar.register("Game")

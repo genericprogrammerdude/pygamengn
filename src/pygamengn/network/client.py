@@ -4,10 +4,10 @@ import logging
 import selectors
 import socket
 
-from network.proto_message import ProtoMessage
-from network.proto_reader import ProtoReader
-from network.proto_writer import ProtoWriter
-from network.fsm import FiniteStateMachine, FSMTransition
+from pygamengn.network.proto_message import ProtoMessage
+from pygamengn.network.proto_reader import ProtoReader
+from pygamengn.network.proto_writer import ProtoWriter
+from pygamengn.network.fsm import FiniteStateMachine, FSMTransition
 
 
 class ClientState(Enum):

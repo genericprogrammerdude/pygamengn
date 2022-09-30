@@ -1,10 +1,10 @@
 import pygame
 
-from class_registrar import ClassRegistrar
-from game_object_base import GameObjectBase
-import geometry
-from network.replicated_property import ReplicatedProperty
-from transform import Transform
+from pygamengn.class_registrar import ClassRegistrar
+from pygamengn.game_object_base import GameObjectBase
+import pygamengn.geometry
+from pygamengn.network.replicated_property import ReplicatedProperty
+from pygamengn.transform import Transform
 
 
 @ClassRegistrar.register("GameObject")
@@ -109,7 +109,7 @@ class GameObject(pygame.sprite.Sprite, GameObjectBase):
     def heading(self, heading):
         """Sets the orientation of the game object."""
         self.dirty_image = self.dirty_image or self.__heading != heading
-        self.__heading = geometry.normalize_angle(heading)
+        self.__heading = pygamengn.geometry.normalize_angle(heading)
 
     def set_image(self, image_asset):
         """Sets a new image for the game object."""
