@@ -2,7 +2,7 @@
     "configurations": [
         {
             "name": "AsteroidShooter",
-            "type": "python",
+            "type": "debugpy",
             "request": "launch",
             "program": "${workspaceFolder}/Samples/AsteroidShooter/src/main.py",
             "console": "integratedTerminal",
@@ -15,7 +15,7 @@
         },
         {
             "name": "SpaceNerdsMP",
-            "type": "python",
+            "type": "debugpy",
             "request": "launch",
             "program": "${workspaceFolder}/Samples/SpaceNerdsMP/src/main.py",
             "console": "integratedTerminal",
