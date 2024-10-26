@@ -26,5 +26,18 @@
                 "PYGAME_HIDE_SUPPORT_PROMPT": "1",
             },
         },
+        {
+            "name": "Slideshow",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/Samples/Slideshow/src/main.py",
+            "console": "integratedTerminal",
+            "justMyCode": true,
+            "cwd": "${workspaceFolder}/Samples/Slideshow/src",
+            "env": {
+                "PYTHONPATH": "${workspaceFolder}/src",
+                "PYGAME_HIDE_SUPPORT_PROMPT": "1",
+            },
+        },
     ]
 }
