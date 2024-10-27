@@ -13,9 +13,10 @@ class RenderGroup(pygame.sprite.LayeredUpdates, GameObjectBase):
             self,
             world_rect=pygame.Rect(0, 0, 0, 0),
             grid_draw=False,
-            grid_color=(100, 100, 100),
+            grid_colour=(100, 100, 100),
             grid_interval=100,
-            background=None
+            background=None,
+            background_colour=(0, 0, 0)
         ):
         super().__init__()
         self.target = None
@@ -23,9 +24,10 @@ class RenderGroup(pygame.sprite.LayeredUpdates, GameObjectBase):
         self.world_rect = world_rect
         self.view_rect = pygame.Rect(0, 0, 0, 0)
         self.grid_draw = grid_draw
-        self.grid_color = grid_color
+        self.grid_colour = grid_colour
         self.grid_interval = grid_interval
         self.background = background
+        self.background_colour = background_colour
 
     def set_target(self, target):
         """Sets the game object to follow."""
@@ -50,7 +52,11 @@ class RenderGroup(pygame.sprite.LayeredUpdates, GameObjectBase):
 
     def draw(self, surface):
         """Draws the sprites in the group on the given surface."""
-        self.__draw_background(surface)
+        if self.background:
+            self.__draw_background(surface)
+        else:
+            surface.fill(self.background_colour)
+
         if self.grid_draw:
             self.__draw_grid(surface)
 
@@ -83,13 +89,13 @@ class RenderGroup(pygame.sprite.LayeredUpdates, GameObjectBase):
         hi_x = int(math.ceil(self.cam.x + self.view_rect.width))
         for x in range(int(low_x - self.cam.x), int(hi_x - self.cam.x), self.grid_interval):
             xcor = self.view_rect.width - x
-            pygame.draw.line(surface, self.grid_color, (xcor, 0), (xcor, self.view_rect.height))
+            pygame.draw.line(surface, self.grid_colour, (xcor, 0), (xcor, self.view_rect.height))
 
         low_y = int(math.floor(self.cam.y / self.grid_interval)) * self.grid_interval
         hi_y = int(math.ceil(self.cam.y + self.view_rect.height))
         for y in range(int(low_y - self.cam.y), int(hi_y - self.cam.y), self.grid_interval):
             ycor = self.view_rect.height - y
-            pygame.draw.line(surface, self.grid_color, (0, ycor), (self.view_rect.width, ycor))
+            pygame.draw.line(surface, self.grid_colour, (0, ycor), (self.view_rect.width, ycor))
 
     def get_world_view_rect(self):
         rv = pygame.Rect(self.view_rect)

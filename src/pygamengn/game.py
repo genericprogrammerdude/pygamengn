@@ -34,7 +34,6 @@ class Game(GameObjectBase):
             self.replication_manager.update(delta)
 
         # Render
-        self.screen.fill((50, 50, 50))
         self.render_group.draw(self.screen)
         for blit_surface in self.blit_surfaces:
             self.screen.blit(blit_surface.surface, blit_surface.topleft)

@@ -1,5 +1,4 @@
 images = {
-    "background": "SpaceShooterRedux/Backgrounds/darkPurple.png",
 }
 
 sounds = {
@@ -9,16 +8,13 @@ assets = {
     "RenderGroup": {
         "class_name": "RenderGroup",
         "kwargs": {
-            "grid_draw": False,
-            "grid_color": [100, 100, 100],
-            "grid_interval": 100,
-            "image:background": "background"
         }
     },
     "LayerManager": {
         "class_name": "LayerManager",
         "kwargs": {
-            "layers": []
+            "layers": [
+            ]
         }
     },
     "fast_hand_font": {
@@ -40,7 +36,8 @@ game_types = {
         "CollisionManager": {
             "class_name": "CollisionManager",
             "kwargs": {
-                "asset:collision_checks": []
+                "asset:collision_checks": [
+                ]
             }
         }
     },
