@@ -41,7 +41,7 @@ game_types = {
         "class_name": "PhotoSpawner",
         "kwargs": {
             "type_spec:photo_type_spec": "Photo",
-            "spawn_freq": 1000,
+            "spawn_freq": 5000,
             "image:images": [
                 "000",
                 "001",

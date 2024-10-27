@@ -16,10 +16,8 @@ class Photo(GameObject):
         self.mover = mover
 
     def update(self, delta):
-        self.position = self.position + self.mover.move(delta)
         super().update(delta)
-        for attachment in self.attachments:
-            attachment.game_object.position = self.position
+        self.position = self.position + self.mover.move(delta)
 
 
 @ClassRegistrar.register("PhotoSpawner")
@@ -30,7 +28,7 @@ class PhotoSpawner(Updatable):
         self.images = images
         self.photo_type_spec = photo_type_spec
         self.spawn_freq = spawn_freq
-        self.time_to_next_spawn = spawn_freq
+        self.time_to_next_spawn = 1
         self.render_group = render_group
         self.total_time = 0
         self.photo_index = 0
