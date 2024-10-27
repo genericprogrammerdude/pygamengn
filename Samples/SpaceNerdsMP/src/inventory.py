@@ -57,7 +57,7 @@ assets = {
         "class_name": "RenderGroup",
         "kwargs": {
             "grid_draw": False,
-            "grid_color": [100, 100, 100],
+            "grid_colour": [100, 100, 100],
             "grid_interval": 100,
             "image:background": "background"
         }
