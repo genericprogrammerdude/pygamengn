@@ -24,8 +24,8 @@ def main():
     factory = create_factory(os.path.join("..", "..", "Assets"))
 
     # Initialize window
-    pygame.display.set_icon(factory.images["ship"])
     pygame.display.set_caption("Slideshow")
+    pygame.mouse.set_visible(False)
 
     game = factory.create("Slideshow", screen=screen)
 

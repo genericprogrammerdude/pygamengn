@@ -4,180 +4,29 @@ import random
 import pygame
 import pygamengn
 
-from main_menu import MainMenu
-from pause_menu import PauseMenu
-from shield import Shield
-from ship import Ship
-from waypoint import Waypoint
-
-
-class Mode(Enum):
-    """The mode of the AsteroidShooterGame defines game behaviour."""
-    MAIN_MENU = auto()
-    PLAY = auto()
-    PAUSE_MENU = auto()
-    KILLING_ALL = auto()
-
-
-class InputAction(Enum):
-    """The input actions the game understands."""
-    FORWARD = auto()
-    BACK = auto()
-    LEFT = auto()
-    RIGHT = auto()
-    FIRE = auto()
-
 
 @pygamengn.ClassRegistrar.register("Slideshow")
 class Slideshow(pygamengn.Game):
 
     def __init__(
             self,
-            main_menu_ui,
-            pause_menu_ui,
-            score_ui,
-            level,
-            asteroid_multiplier,
-            waypoint_multiplier,
             **kwargs
         ):
         super().__init__(**kwargs)
-        self.main_menu_ui = main_menu_ui
-        self.pause_menu_ui = pause_menu_ui
-        self.score_ui = score_ui
-        self.level = level
-        self.asteroid_multiplier = asteroid_multiplier
-        self.waypoint_multiplier = waypoint_multiplier
-        self.time = 0
-        self.score = 0
         self.running = True
-        self.mode = Mode.PLAY
-        self.main_menu_ui.set_start_callback(self.start_play)
-        self.main_menu_ui.set_exit_callback(self.exit_game)
-        self.pause_menu_ui.set_resume_callback(self.resume_play)
-        self.pause_menu_ui.set_exit_callback(self.exit_game)
 
     def update(self, delta):
         """Updates the game."""
 
-        if self.mode == Mode.PLAY:
-            pygame.mouse.set_visible(False)
-            self.update_play(delta)
-
-        elif self.mode == Mode.MAIN_MENU:
-            self.update_ui(delta, self.main_menu_ui)
-
-        elif self.mode == Mode.PAUSE_MENU:
-            self.update_ui(delta, self.pause_menu_ui)
-
-        elif self.mode == Mode.KILLING_ALL:
-            pygame.mouse.set_visible(False)
-            self.update_killing(delta)
+        self.handle_input()
 
         super().update(delta)
 
-    def update_play(self, delta):
-        self.handle_input()
-
-        # Track round time and score
-        if not self.player is None and self.player.alive() and not self.is_paused:
-            self.time += delta
-            self.score = self.player.score
-
-        # Put time and score text together
-        screen_rect = self.screen.get_rect()
-        self.score_ui.children[0].set_text(str(self.score))
-        self.score_ui.update(screen_rect, delta)
-        self.blit_ui(self.score_ui)
-
-        self.level.update(delta)
-
-    def update_ui(self, delta, ui):
-        """Updates the given UI component."""
-        pygame.mouse.set_visible(True)
-        if self.time > 0:
-            self.blit_ui(self.score_ui)
-        ui.update(self.screen.get_rect(), delta)
-        self.blit_ui(ui)
-
-    def update_killing(self, delta):
-        """Updates game states when killing all game objects in the render group before starting play mode."""
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                self.running = False
-
-        self.kill_render_group()
-        if len(self.render_group.sprites()) <= 0:
-            self.mode = Mode.PLAY
-            self.level.create_objects(self.render_group)
-            self.set_player(self.level.player)
-            self.time = 0
-
-    def start_play(self):
-        """Prepares the game to start playing."""
-        self.mode = Mode.KILLING_ALL
-
-    def resume_play(self):
-        """Resumes PLAY mode from PAUSE_MENU mode."""
-        self.mode = Mode.PLAY
-        self.toggle_pause()
-
-    def exit_game(self):
-        """Exits the application."""
-        self.running = False
-
-    def go_to_main_menu(self):
-        """Goes back to the main menu after showing the debrief UI."""
-        self.mode = Mode.MAIN_MENU
-
     def handle_input(self):
         """Reads input and makes things happen."""
-        input_replica = []
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 self.running = False
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
-                    self.toggle_pause()
-                    self.mode = Mode.PAUSE_MENU
-                if event.key == pygame.K_SPACE and self.player:
-                    self.player.fire()
-                    input_replica.append(InputAction.FIRE)
-
-        if self.player is None:
-            return
-
-        # Handle input for movement
-        pressed_keys = pygame.key.get_pressed()
-        if pressed_keys[pygame.K_a]:
-            self.player.heading = self.player.heading + self.player.mover.angular_velocity
-            input_replica.append(InputAction.LEFT)
-        if pressed_keys[pygame.K_d]:
-            self.player.heading = self.player.heading - self.player.mover.angular_velocity
-            input_replica.append(InputAction.RIGHT)
-        if pressed_keys[pygame.K_w]:
-            self.player.set_velocity(self.player.mover.max_velocity)
-            input_replica.append(InputAction.FORWARD)
-        if pressed_keys[pygame.K_s]:
-            self.player.set_velocity(self.player.mover.velocity * 0.8)
-            input_replica.append(InputAction.BACK)
-
-    def handle_player_death(self):
-        """Invoked when the player dies."""
-        self.player = None
-
-    def kill_render_group(self):
-        gobs = self.render_group.sprites()
-        for gob in gobs:
-            gob.take_damage(random.randint(0, 5), None)
-
-    def get_time_string(self):
-        total_sec = self.time // 1000
-        sec = total_sec % 60
-        min = total_sec // 60
-        return "{:02d}:{:02d}".format(min, sec)
-
-    def blit_ui(self, ui):
-        self.add_blit_surface(pygamengn.BlitSurface(ui.image, ui.rect))
-        for child in ui.children:
-            self.blit_ui(child)
+                    self.running = False
