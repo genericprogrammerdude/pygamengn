@@ -149,14 +149,7 @@ game_types = {
         "CollisionManager": {
             "class_name": "CollisionManager",
             "kwargs": {
-                "asset:collision_checks": [
-                    ["PlayerProjectilesGroup", "AsteroidsGroup"],
-                    ["AsteroidsGroup", "PlayerGroup"],
-                    ["AsteroidProjectilesGroup", "AsteroidsGroup"],
-                    ["AsteroidProjectilesGroup", "PlayerGroup"],
-                    ["AsteroidTurretsGroup", "AsteroidsGroup"],
-                    ["TriggersGroup", "PlayerGroup"]
-                ]
+                "asset:collision_checks": []
             }
         }
     },
