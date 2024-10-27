@@ -51,7 +51,7 @@ class Slideshow(pygamengn.Game):
         self.time = 0
         self.score = 0
         self.running = True
-        self.mode = Mode.MAIN_MENU
+        self.mode = Mode.PLAY
         self.main_menu_ui.set_start_callback(self.start_play)
         self.main_menu_ui.set_exit_callback(self.exit_game)
         self.pause_menu_ui.set_resume_callback(self.resume_play)
