@@ -4,7 +4,6 @@ import random
 import pygame
 import pygamengn
 
-from debrief_panel import DebriefPanel
 from main_menu import MainMenu
 from pause_menu import PauseMenu
 from shield import Shield
@@ -18,7 +17,6 @@ class Mode(Enum):
     PLAY = auto()
     PAUSE_MENU = auto()
     KILLING_ALL = auto()
-    DEBRIEF = auto()
 
 
 class InputAction(Enum):
@@ -37,7 +35,6 @@ class Slideshow(pygamengn.Game):
             self,
             main_menu_ui,
             pause_menu_ui,
-            debrief_panel,
             score_ui,
             level,
             asteroid_multiplier,
@@ -47,7 +44,6 @@ class Slideshow(pygamengn.Game):
         super().__init__(**kwargs)
         self.main_menu_ui = main_menu_ui
         self.pause_menu_ui = pause_menu_ui
-        self.debrief_panel = debrief_panel
         self.score_ui = score_ui
         self.level = level
         self.asteroid_multiplier = asteroid_multiplier
@@ -60,7 +56,6 @@ class Slideshow(pygamengn.Game):
         self.main_menu_ui.set_exit_callback(self.exit_game)
         self.pause_menu_ui.set_resume_callback(self.resume_play)
         self.pause_menu_ui.set_exit_callback(self.exit_game)
-        self.debrief_panel.set_continue_callback(self.go_to_main_menu)
 
     def update(self, delta):
         """Updates the game."""
@@ -78,9 +73,6 @@ class Slideshow(pygamengn.Game):
         elif self.mode == Mode.KILLING_ALL:
             pygame.mouse.set_visible(False)
             self.update_killing(delta)
-
-        elif self.mode == Mode.DEBRIEF:
-            self.update_ui(delta, self.debrief_panel)
 
         super().update(delta)
 
@@ -172,15 +164,6 @@ class Slideshow(pygamengn.Game):
 
     def handle_player_death(self):
         """Invoked when the player dies."""
-        self.mode = Mode.DEBRIEF
-        self.debrief_panel.set_score_data(
-            self.score,
-            self.time,
-            self.player.kills,
-            self.player.waypoints,
-            self.asteroid_multiplier,
-            self.waypoint_multiplier
-        )
         self.player = None
 
     def kill_render_group(self):
