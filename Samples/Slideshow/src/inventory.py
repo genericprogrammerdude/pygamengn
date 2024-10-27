@@ -141,7 +141,6 @@ game_types = {
             "game_object:pause_menu_ui": "/PauseMenu",
             "game_object:debrief_panel": "/DebriefPanel",
             "game_object:score_ui": "/ScorePanel",
-            "game_object:time_ui": "/TimePanel",
             "game_object:level": "/Level_02",
             "asteroid_multiplier": 10,
             "waypoint_multiplier": 50
@@ -840,32 +839,6 @@ game_types = {
                 "horz_align": "RIGHT",
                 "vert_align": "CENTRE",
                 "text": "0000"
-            }
-        }
-    },
-    "TimePanel": {
-        "class_name": "ColourPanel",
-        "kwargs": {
-            "pos": [0.88, 0],
-            "size": [0.12, 0.06],
-            "game_object:children": [
-                "TimeText"
-            ],
-            "fix_aspect_ratio": True,
-            "colour": [100, 100, 100, 100]
-        },
-        "TimeText": {
-            "class_name": "TextPanel",
-            "kwargs": {
-                "pos": [0, 0],
-                "size": [1, 1],
-                "game_object:children": [],
-                "fix_aspect_ratio": True,
-                "asset:font_asset": "fast_hand_font",
-                "text_colour": [0, 200, 100],
-                "horz_align": "CENTRE",
-                "vert_align": "CENTRE",
-                "text": "00:00"
             }
         }
     },

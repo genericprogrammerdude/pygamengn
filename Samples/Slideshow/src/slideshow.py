@@ -39,7 +39,6 @@ class Slideshow(pygamengn.Game):
             pause_menu_ui,
             debrief_panel,
             score_ui,
-            time_ui,
             level,
             asteroid_multiplier,
             waypoint_multiplier,
@@ -50,7 +49,6 @@ class Slideshow(pygamengn.Game):
         self.pause_menu_ui = pause_menu_ui
         self.debrief_panel = debrief_panel
         self.score_ui = score_ui
-        self.time_ui = time_ui
         self.level = level
         self.asteroid_multiplier = asteroid_multiplier
         self.waypoint_multiplier = waypoint_multiplier
@@ -97,11 +95,8 @@ class Slideshow(pygamengn.Game):
         # Put time and score text together
         screen_rect = self.screen.get_rect()
         self.score_ui.children[0].set_text(str(self.score))
-        self.time_ui.children[0].set_text(self.get_time_string())
         self.score_ui.update(screen_rect, delta)
-        self.time_ui.update(screen_rect, delta)
         self.blit_ui(self.score_ui)
-        self.blit_ui(self.time_ui)
 
         self.level.update(delta)
 
@@ -110,7 +105,6 @@ class Slideshow(pygamengn.Game):
         pygame.mouse.set_visible(True)
         if self.time > 0:
             self.blit_ui(self.score_ui)
-            self.blit_ui(self.time_ui)
         ui.update(self.screen.get_rect(), delta)
         self.blit_ui(ui)
 
