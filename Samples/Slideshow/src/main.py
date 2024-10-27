@@ -42,7 +42,36 @@ def main():
 
 def create_factory(assets_dir) -> pygamengn.GameObjectFactory:
     """Instantiates GameObjectFactory, the factory that will create all the game objects."""
-    from inventory import images, sounds, assets, game_types
+    try:
+        from inventory import images
+    except ImportError:
+        images = {}
+    try:
+        from inventory import sounds
+    except ImportError:
+        sounds = {}
+    try:
+        from inventory import assets
+    except ImportError:
+        assets = {
+            "RenderGroup": {
+                "class_name": "RenderGroup",
+                "kwargs": {
+                }
+            },
+            "LayerManager": {
+                "class_name": "LayerManager",
+                "kwargs": {
+                    "layers": [
+                    ]
+                }
+            },
+        }
+    try:
+        from inventory import game_types
+    except ImportError:
+        game_types = {}
+
     factory = pygamengn.GameObjectFactory(
         pygamengn.ClassRegistrar.registry,
         assets_dir,
