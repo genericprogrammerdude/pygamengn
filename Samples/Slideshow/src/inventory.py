@@ -21,6 +21,10 @@ assets = {
     }
 }
 
+
+ETA = 25000
+SPAWN_FREQ = ETA / 2.0
+
 DEVELOP_AND_DEBUG = True
 if DEVELOP_AND_DEBUG:
     spawner_images = ["000", "001", "002", "003", "004", "005", "006", "007", "008",]
@@ -47,7 +51,8 @@ game_types = {
         "class_name": "PhotoSpawner",
         "kwargs": {
             "type_spec:photo_type_spec": "Photo",
-            "spawn_freq": 5000,
+            "spawn_freq": SPAWN_FREQ,
+            "photo_time": ETA,
             "image:images": spawner_images,
             "asset:render_group": "RenderGroup",
         }
@@ -57,17 +62,18 @@ game_types = {
         "kwargs": {
             "game_object:mover": "PhotoMover",
             "is_collidable": False,
-            "kill_when_off_screen": True,
+            "scale": 0.5,
+            "alpha": 0.0,
             "visible": False,
+            "kill_when_off_screen": True,
         },
         "groups": [
             "RenderGroup",
         ],
         "PhotoMover": {
-            "class_name": "MoverVelDir",
+            "class_name": "MoverTime",
             "kwargs": {
-                "velocity": 50.0,
-                "direction": [0, 1]
+                "eta": ETA,
             }
         }
     },

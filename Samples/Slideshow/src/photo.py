@@ -1,3 +1,4 @@
+import math
 import random
 
 import pygame
@@ -11,10 +12,13 @@ from pygamengn.updatable import Updatable
 @ClassRegistrar.register("Photo")
 class Photo(GameObject):
 
-    def __init__(self, mover, **kwargs):
+    def __init__(self, mover, ttl, **kwargs):
         super().__init__(**kwargs)
         self.mover = mover
         self.max_scale = 1.0
+        self.min_scale = 0.1
+        self.ttl = ttl
+        self.moving_time = 0
 
         # Get maximum scale so that the photo fits the screen
         screen_size = pygame.display.get_surface().get_rect().size
@@ -22,40 +26,55 @@ class Photo(GameObject):
         scale_height = screen_size[1] / self.rect.height
         if scale_width < scale_height:
             self.max_scale = scale_width
+            self.min_scale = scale_width / 4.0
         else:
             self.max_scale = scale_height
-        self.set_scale(self.max_scale / 2.0)
+            self.min_scale = scale_height / 4.0
+        self.set_scale(self.min_scale)
 
     def update(self, delta):
         if self.visible:
             super().update(delta)
             self.position = self.position + self.mover.move(delta)
 
+            t = self.moving_time * math.pi / self.ttl
+            self.set_alpha(pygame.math.lerp(0, 1, max(0, math.sin(t))))
+            self.set_scale(pygame.math.lerp(self.min_scale, self.max_scale, max(0, math.sin(t))))
+            self.moving_time += delta
+
+    def start_moving(self):
+        self.visible = True
+        self.transform()
+
 
 @ClassRegistrar.register("PhotoSpawner")
 class PhotoSpawner(Updatable):
     """Spawns photos in the right order."""
 
-    def __init__(self, images, photo_type_spec, spawn_freq, render_group):
+    def __init__(self, images, photo_type_spec, spawn_freq, photo_time, render_group):
         self.images = images
         self.photo_type_spec = photo_type_spec
         self.spawn_freq = spawn_freq
+        self.photo_time = photo_time
         self.time_to_next_spawn = 1
         self.render_group = render_group
         self.total_time = 0
         self.photo_index = 0
         self.done = False
+        self.photos = []
         self.skip_indices = [
             111,    # Small resolution (requires scale 2.2) and not a great photo
         ]
 
         screen_size = pygame.display.get_surface().get_rect().size
-        self.photos = []
         photo_index = 0
         for image in self.images:
-            photo = self.photo_type_spec.create(image_asset = image)
+            photo = self.photo_type_spec.create(image_asset = image, ttl = self.photo_time)
+            photo.transform()
+            ## DEBUG ##
             if photo.max_scale > 1.0:
                 print(f"*** Small photo! {photo.max_scale:.1f} {photo_index:03}")
+            ## DEBUG ##
             photo_index += 1
             self.photos.append(photo)
 
@@ -68,12 +87,10 @@ class PhotoSpawner(Updatable):
 
             # Activate new photo
             photo = self.photos[self.photo_index]
-            photo.visible = True
-            # photo = self.photo_type_spec.create(image_asset = self.images[self.photo_index])
-            pos, direction = self.get_random_pos_dir(self.render_group.get_world_view_rect())
-            photo.mover.set_direction(direction)
+            pos, direction = self.get_random_pos_dir(self.render_group.get_world_view_rect(), photo.rect.width)
+            photo.mover.set_ori_dest(pos, pos + direction * 2000)
             photo.position = pos
-            photo.transform()
+            photo.start_moving()
 
             # Increment photo index
             self.photo_index += 1
@@ -83,33 +100,14 @@ class PhotoSpawner(Updatable):
             # If we're out of photos, the Slideshow game will end when the last photo is off the screen
             self.done = self.photo_index >= len(self.images)
 
-    def get_random_pos_dir(self, world_view_rect):
-        # Aim roughly to the center of the screen
+    def get_random_pos_dir(self, world_view_rect, photo_width):
+        # Aim to the center of the screen
         dest = pygame.Vector2(world_view_rect.center)
-        range_x = round(world_view_rect.width / 3)
-        dest.x += random.randint(-range_x, range_x)
-        range_y = round(world_view_rect.height / 3)
-        dest.y += random.randint(-range_y, range_y)
-        origin = self.get_random_point(world_view_rect)
+        origin = pygame.Vector2(0, random.randint(world_view_rect.topleft[1], world_view_rect.bottomleft[1]))
+
+        origin.x -= (photo_width / 2.0 - 1.0)
         direction = (dest - origin).normalize()
         return origin, direction
-
-    def get_random_point(self, world_view_rect):
-        point = ()
-        axis = random.randint(0, 1)
-        if axis == 0:
-            # Select random value along x axis and one of the two values of y for the top and bottom edges of the screen
-            point = pygame.Vector2(
-                random.randint(world_view_rect.topleft[0], world_view_rect.topright[0]),
-                random.choice([world_view_rect.topleft[1], world_view_rect.bottomleft[1]])
-            )
-        else:
-            # Select random value along y axis and one of the two values of x for the left and right edges of the screen
-            point = pygame.Vector2(
-                random.choice([world_view_rect.topleft[0], world_view_rect.topright[0]]),
-                random.randint(world_view_rect.topleft[1], world_view_rect.bottomleft[1])
-            )
-        return point
 
 # Small photos
 # *** Small photo! 1.2 095
