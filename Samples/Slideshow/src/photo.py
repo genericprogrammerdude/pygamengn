@@ -15,6 +15,16 @@ class Photo(GameObject):
         super().__init__(**kwargs)
         self.mover = mover
 
+        # Get maximum scale so that the photo fits the screen
+        screen_size = pygame.display.get_surface().get_rect().size
+        scale_width = screen_size[0] / self.rect.width
+        scale_height = screen_size[1] / self.rect.height
+        if scale_width < scale_height:
+            self.max_scale = scale_width
+        else:
+            self.max_scale = scale_height
+        self.set_scale(self.max_scale / 2.0)
+
     def update(self, delta):
         super().update(delta)
         self.position = self.position + self.mover.move(delta)
