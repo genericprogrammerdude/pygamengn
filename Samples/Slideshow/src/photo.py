@@ -45,6 +45,9 @@ class PhotoSpawner(Updatable):
         self.total_time = 0
         self.photo_index = 0
         self.done = False
+        self.skip_indices = [
+            111,    # Small resolution (requires scale 2.2) and not a great photo
+        ]
 
         screen_size = pygame.display.get_surface().get_rect().size
         self.photos = []
@@ -55,6 +58,58 @@ class PhotoSpawner(Updatable):
                 print(f"*** Small photo! {photo.max_scale:.1f} {photo_index:03}")
             photo_index += 1
             self.photos.append(photo)
+
+    def update(self, delta):
+        self.total_time += delta
+        self.time_to_next_spawn -= delta
+
+        if self.time_to_next_spawn <= 0:
+            self.time_to_next_spawn = self.spawn_freq
+
+            # Activate new photo
+            photo = self.photos[self.photo_index]
+            photo.visible = True
+            # photo = self.photo_type_spec.create(image_asset = self.images[self.photo_index])
+            pos, direction = self.get_random_pos_dir(self.render_group.get_world_view_rect())
+            photo.mover.set_direction(direction)
+            photo.position = pos
+            photo.transform()
+
+            # Increment photo index
+            self.photo_index += 1
+            while self.photo_index in self.skip_indices:
+                self.photo_index += 1
+
+            # If we're out of photos, the Slideshow game will end when the last photo is off the screen
+            self.done = self.photo_index >= len(self.images)
+
+    def get_random_pos_dir(self, world_view_rect):
+        # Aim roughly to the center of the screen
+        dest = pygame.Vector2(world_view_rect.center)
+        range_x = round(world_view_rect.width / 3)
+        dest.x += random.randint(-range_x, range_x)
+        range_y = round(world_view_rect.height / 3)
+        dest.y += random.randint(-range_y, range_y)
+        origin = self.get_random_point(world_view_rect)
+        direction = (dest - origin).normalize()
+        return origin, direction
+
+    def get_random_point(self, world_view_rect):
+        point = ()
+        axis = random.randint(0, 1)
+        if axis == 0:
+            # Select random value along x axis and one of the two values of y for the top and bottom edges of the screen
+            point = pygame.Vector2(
+                random.randint(world_view_rect.topleft[0], world_view_rect.topright[0]),
+                random.choice([world_view_rect.topleft[1], world_view_rect.bottomleft[1]])
+            )
+        else:
+            # Select random value along y axis and one of the two values of x for the left and right edges of the screen
+            point = pygame.Vector2(
+                random.choice([world_view_rect.topleft[0], world_view_rect.topright[0]]),
+                random.randint(world_view_rect.topleft[1], world_view_rect.bottomleft[1])
+            )
+        return point
 
 # Small photos
 # *** Small photo! 1.2 095
@@ -97,56 +152,6 @@ class PhotoSpawner(Updatable):
 # *** Small photo! 1.0 216
 # *** Small photo! 1.7 223
 # *** Small photo! 1.5 226
-
-    def update(self, delta):
-        self.total_time += delta
-        self.time_to_next_spawn -= delta
-
-        if self.time_to_next_spawn <= 0:
-            self.time_to_next_spawn = self.spawn_freq
-
-            # Activate new photo
-            photo = self.photos[self.photo_index]
-            photo.visible = True
-            # photo = self.photo_type_spec.create(image_asset = self.images[self.photo_index])
-            pos, direction = self.get_random_pos_dir(self.render_group.get_world_view_rect())
-            photo.mover.set_direction(direction)
-            photo.position = pos
-            photo.transform()
-
-            # Increment photo index
-            self.photo_index += 1
-
-            # If we're out of photos, the Slideshow game will end when the last photo is off the screen
-            self.done = self.photo_index >= len(self.images)
-
-    def get_random_pos_dir(self, world_view_rect):
-        # Aim roughly to the center of the screen
-        dest = pygame.Vector2(world_view_rect.center)
-        range_x = round(world_view_rect.width / 3)
-        dest.x += random.randint(-range_x, range_x)
-        range_y = round(world_view_rect.height / 3)
-        dest.y += random.randint(-range_y, range_y)
-        origin = self.get_random_point(world_view_rect)
-        direction = (dest - origin).normalize()
-        return origin, direction
-
-    def get_random_point(self, world_view_rect):
-        point = ()
-        axis = random.randint(0, 1)
-        if axis == 0:
-            # Select random value along x axis and one of the two values of y for the top and bottom edges of the screen
-            point = pygame.Vector2(
-                random.randint(world_view_rect.topleft[0], world_view_rect.topright[0]),
-                random.choice([world_view_rect.topleft[1], world_view_rect.bottomleft[1]])
-            )
-        else:
-            # Select random value along y axis and one of the two values of x for the left and right edges of the screen
-            point = pygame.Vector2(
-                random.choice([world_view_rect.topleft[0], world_view_rect.topright[0]]),
-                random.randint(world_view_rect.topleft[1], world_view_rect.bottomleft[1])
-            )
-        return point
 
     def set_player(self, player):
         pass
