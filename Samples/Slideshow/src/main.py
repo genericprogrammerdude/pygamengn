@@ -33,9 +33,11 @@ def main():
 
     while game.running:
         delta = clock.get_time()
+        if delta > 20:
+            print(f"Bad FPS! {delta}")
         game.update(delta)
 
-        clock.tick(60)
+        clock.tick_busy_loop(60)
 
     pygame.quit()
 
