@@ -57,7 +57,6 @@ class PhotoSpawner(Updatable):
             self.photos.append(photo)
 
 # Small photos
-# *** Small photo! 2.7 062
 # *** Small photo! 1.2 095
 # *** Small photo! 1.0 098
 # *** Small photo! 1.1 102
