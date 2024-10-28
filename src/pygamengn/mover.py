@@ -51,3 +51,18 @@ class MoverVelDir(Mover):
     def set_direction(self, direction: pygame.Vector2):
         """Sets direction of movement. direction is a pygame.Vector2."""
         self.direction = direction
+
+
+@ClassRegistrar.register("MoverTime")
+class MoverTime(MoverVelDir):
+    """Time-based mover."""
+
+    def __init__(self, eta: float, origin = pygame.Vector2(0, 0), destination = pygame.Vector2(1, 0)):
+        self.eta = eta / 1000.0
+        diff = pygame.Vector2(destination) - pygame.Vector2(origin)
+        super().__init__(diff.length() / self.eta, diff.normalize())
+
+    def set_ori_dest(self, origin: pygame.Vector2, destination: pygame.Vector2):
+        diff = destination - origin
+        self.set_velocity(diff.length() / self.eta)
+        self.set_direction(diff.normalize())
