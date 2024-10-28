@@ -22,8 +22,8 @@ assets = {
 }
 
 
-ETA = 25000
-SPAWN_FREQ = ETA / 2.0
+ETA = 22500
+SPAWN_FREQ = 3 / 4 * ETA
 
 DEVELOP_AND_DEBUG = True
 if DEVELOP_AND_DEBUG:

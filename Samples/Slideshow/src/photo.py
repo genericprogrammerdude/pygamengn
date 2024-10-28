@@ -35,7 +35,12 @@ class Photo(GameObject):
     def update(self, delta):
         if self.visible:
             super().update(delta)
-            self.position = self.position + self.mover.move(delta)
+            self.position = self.mover.move(delta)
+            if self.mover.is_arrived():
+                # Exit the screen gracefully
+                screen_rect = pygame.display.get_surface().get_rect()
+                dest = pygame.Vector2(screen_rect.width, random.randint(0, screen_rect.height))
+                self.mover.set_ori_dest(self.position, dest)
 
             t = self.moving_time * math.pi / self.ttl
             self.set_alpha(pygame.math.lerp(0, 1, max(0, math.sin(t))))
@@ -71,10 +76,6 @@ class PhotoSpawner(Updatable):
         for image in self.images:
             photo = self.photo_type_spec.create(image_asset = image, ttl = self.photo_time)
             photo.transform()
-            ## DEBUG ##
-            if photo.max_scale > 1.0:
-                print(f"*** Small photo! {photo.max_scale:.1f} {photo_index:03}")
-            ## DEBUG ##
             photo_index += 1
             self.photos.append(photo)
 
@@ -87,8 +88,9 @@ class PhotoSpawner(Updatable):
 
             # Activate new photo
             photo = self.photos[self.photo_index]
-            pos, direction = self.get_random_pos_dir(self.render_group.get_world_view_rect(), photo.rect.width)
-            photo.mover.set_ori_dest(pos, pos + direction * 2000)
+            screen_rect = pygame.display.get_surface().get_rect()
+            pos = pygame.Vector2(0, random.randint(0, screen_rect.height))
+            photo.mover.set_ori_dest(pos, self.render_group.get_world_view_rect().center)
             photo.position = pos
             photo.start_moving()
 
@@ -99,15 +101,6 @@ class PhotoSpawner(Updatable):
 
             # If we're out of photos, the Slideshow game will end when the last photo is off the screen
             self.done = self.photo_index >= len(self.images)
-
-    def get_random_pos_dir(self, world_view_rect, photo_width):
-        # Aim to the center of the screen
-        dest = pygame.Vector2(world_view_rect.center)
-        origin = pygame.Vector2(0, random.randint(world_view_rect.topleft[1], world_view_rect.bottomleft[1]))
-
-        origin.x -= (photo_width / 2.0 - 1.0)
-        direction = (dest - origin).normalize()
-        return origin, direction
 
 # Small photos
 # *** Small photo! 1.2 095
