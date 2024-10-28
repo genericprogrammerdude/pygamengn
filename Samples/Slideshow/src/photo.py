@@ -14,7 +14,6 @@ class Photo(GameObject):
     def __init__(self, mover, **kwargs):
         super().__init__(**kwargs)
         self.mover = mover
-        self.is_active = False
         self.max_scale = 1.0
 
         # Get maximum scale so that the photo fits the screen
