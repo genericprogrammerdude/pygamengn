@@ -19,7 +19,7 @@ class Photo(GameObject):
         self.ttl = ttl
         self.moving_time = 0
         self.easing_in = True
-        self.revolutions = numpy.random.randint(-3, 4)
+        self.revolutions = numpy.random.choice([-4, -3, -2, -1, 1, 2, 3, 4])
 
         # Get maximum scale so that the photo fits the screen
         screen_size = pygame.display.get_surface().get_rect().size
