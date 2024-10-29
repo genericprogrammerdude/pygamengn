@@ -60,19 +60,54 @@ class FocalPointer(pygamengn.Game):
                         self.photo_index -= 1
                         self.show_photo()
                 if event.key == pygame.K_o:
-                    print(self.photo_data)
+                    self.print_photo_inventory()
 
             if event.type == pygame.MOUSEBUTTONUP:
                 if self.active_photo.rect.collidepoint(pygame.mouse.get_pos()):
                     focal_point = self.world_to_normalized(pygame.mouse.get_pos(), self.active_photo.rect)
                     self.photo_data[self.photo_index]["focal_point"] = focal_point
 
+
     def world_to_normalized(self, world_pos: pygame.Vector2, rect: pygame.Rect) -> pygame.Vector2:
         local_pos = world_pos - pygame.Vector2(rect.topleft)
         normalized_pos = pygame.Vector2(local_pos.x / rect.width, local_pos.y / rect.height)
         return normalized_pos
 
+
     def normalized_to_world(self, normalized_pos: pygame.Vector2, rect: pygame.Rect) -> pygame.Vector2:
         local_pos = pygame.Vector2(normalized_pos.x * rect.width, normalized_pos.y * rect.height)
         world_pos = rect.topleft + local_pos
         return world_pos
+
+
+    def print_photo_inventory(self):
+        print('            "photos": [')
+
+        for i in range(len(self.images)):
+            year = 1883
+            month = 2
+            day = 31
+            focal_point = self.photo_data[i]["focal_point"]
+            print("""                {
+                    "class_name": "Photo",
+                    "kwargs": {
+                        "is_collidable": False,
+                        "visible": False,
+                        "kill_when_off_screen": True,
+                        "game_object:mover": "PhotoMover",
+                        "date": "%.4d-%.2d-%.2d",
+                        "focal_point": [%.4f, %.4f],
+                        "ttl": ETA,
+                    },
+                    "groups": [
+                        "RenderGroup",
+                    ],
+                    "PhotoMover": {
+                        "class_name": "MoverTime",
+                        "kwargs": {
+                            "eta": ETA,
+                        }
+                    },
+                },""" % (year, month, day, focal_point.x, focal_point.y))
+
+        print("            ],")
