@@ -39,5 +39,18 @@
                 "PYGAME_HIDE_SUPPORT_PROMPT": "1",
             },
         },
+        {
+            "name": "FocalPointer",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/Samples/FocalPointer/src/main.py",
+            "console": "integratedTerminal",
+            "justMyCode": true,
+            "cwd": "${workspaceFolder}/Samples/FocalPointer/src",
+            "env": {
+                "PYTHONPATH": "${workspaceFolder}/src",
+                "PYGAME_HIDE_SUPPORT_PROMPT": "1",
+            },
+        },
     ]
 }
