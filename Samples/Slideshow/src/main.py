@@ -19,7 +19,8 @@ def main():
     pygame.init()
 
     # Create window
-    screen = pygame.display.set_mode((1920, 1080), pygame.DOUBLEBUF | pygame.HWSURFACE)
+    screen = pygame.display.set_mode((960, 540), pygame.DOUBLEBUF | pygame.HWSURFACE)
+    # screen = pygame.display.set_mode((1920, 1080), pygame.DOUBLEBUF | pygame.HWSURFACE)
 
     factory = create_factory(os.path.join("..", "..", "Assets"))
 
