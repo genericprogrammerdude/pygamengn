@@ -81,33 +81,38 @@ class FocalPointer(pygamengn.Game):
 
 
     def print_photo_inventory(self):
-        print('            "photos": [')
+        print("photo_asset_names = [")
+        for i in range(len(self.images)):
+            print(f"    \"/Photo_{i:03}\",")
+        print("]\n")
 
+        print("photo_metadata_dictionary = {")
         for i in range(len(self.images)):
             year = 1883
             month = 2
             day = 31
             focal_point = self.photo_data[i]["focal_point"]
-            print("""                {
-                    "class_name": "Photo",
-                    "kwargs": {
-                        "is_collidable": False,
-                        "visible": False,
-                        "kill_when_off_screen": True,
-                        "game_object:mover": "PhotoMover",
-                        "date": "%.4d-%.2d-%.2d",
-                        "focal_point": [%.4f, %.4f],
-                        "ttl": ETA,
-                    },
-                    "groups": [
-                        "RenderGroup",
-                    ],
-                    "PhotoMover": {
-                        "class_name": "MoverTime",
-                        "kwargs": {
-                            "eta": ETA,
-                        }
-                    },
-                },""" % (year, month, day, focal_point.x, focal_point.y))
+            print("""    "Photo_%.3d": {
+        "class_name": "Photo",
+        "kwargs": {
+            "image:image_asset": "%.3d",
+            "is_collidable": False,
+            "visible": False,
+            "kill_when_off_screen": True,
+            "game_object:mover": "PhotoMover",
+            "date": "%.4d-%.2d-%.2d",
+            "focal_point": [%.4f, %.4f],
+            "ttl": 22500,
+        },
+        "groups": [
+            "RenderGroup",
+        ],
+        "PhotoMover": {
+            "class_name": "MoverTime",
+            "kwargs": {
+                "eta": 22500,
+            }
+        },
+    },""" % (i, i, year, month, day, focal_point.x, focal_point.y))
 
-        print("            ],")
+        print("}")
