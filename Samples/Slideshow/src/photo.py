@@ -36,6 +36,8 @@ class Photo(GameObject):
         self.set_scale(self.min_scale)
 
     def update(self, delta):
+        super().update(delta)
+
         if self.visible:
             self.position = self.mover.move(delta)
             if self.mover.is_arrived():
@@ -62,8 +64,6 @@ class Photo(GameObject):
 
             self.moving_time += delta
 
-            super().update(delta)
-
     def start_moving(self):
         self.visible = True
         self.transform()
@@ -89,11 +89,6 @@ class PhotoSpawner(Updatable):
 
         screen_size = pygame.display.get_surface().get_rect().size
         photo_index = 0
-        # for image in self.images:
-        #     photo = self.photo_type_spec.create(image_asset = image)
-        #     photo.transform()
-        #     photo_index += 1
-        #     self.photos.append(photo)
 
     def update(self, delta):
         self.total_time += delta
