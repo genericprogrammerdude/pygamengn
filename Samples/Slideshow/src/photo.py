@@ -100,8 +100,8 @@ class PhotoSpawner(Updatable):
             # Activate new photo
             photo = self.photos[self.photo_index]
             screen_rect = pygame.display.get_surface().get_rect()
-            pos = pygame.Vector2(0, random.randint(0, screen_rect.height))
-            photo.mover.set_ori_dest(pos, self.render_group.get_world_view_rect().center)
+            pos = pygame.Vector2(-photo.rect.width / 2.0 + 1, random.randint(0, screen_rect.height))
+            photo.mover.set_ori_dest(pos, screen_rect.center)
             photo.position = pos
             photo.start_moving()
 
