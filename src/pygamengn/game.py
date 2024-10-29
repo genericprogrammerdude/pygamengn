@@ -35,6 +35,7 @@ class Game(GameObjectBase):
 
         # Render
         self.render_group.draw(self.screen)
+        self.direct_draw()
         for blit_surface in self.blit_surfaces:
             self.screen.blit(blit_surface.surface, blit_surface.topleft)
         pygame.display.flip()
@@ -55,6 +56,10 @@ class Game(GameObjectBase):
 
     def handle_player_death(self):
         """Invoked when the player dies."""
+        pass
+
+    def direct_draw(self):
+        """Invoked after drawing render_group to the screen. Implement this for any direct-drawing needs."""
         pass
 
 
