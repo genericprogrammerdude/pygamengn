@@ -1,5 +1,4 @@
 import numpy
-import random
 
 import pygame
 
@@ -20,6 +19,7 @@ class Photo(GameObject):
         self.ttl = ttl
         self.moving_time = 0
         self.easing_in = True
+        self.revolutions = numpy.random.randint(-3, 4)
 
         # Get maximum scale so that the photo fits the screen
         screen_size = pygame.display.get_surface().get_rect().size
@@ -39,7 +39,7 @@ class Photo(GameObject):
             if self.mover.is_arrived():
                 # Exit the screen gracefully
                 screen_rect = pygame.display.get_surface().get_rect()
-                dest = pygame.Vector2(screen_rect.width, random.randint(0, screen_rect.height))
+                dest = pygame.Vector2(screen_rect.width, numpy.random.randint(0, screen_rect.height))
                 self.mover.set_ori_dest(self.position, dest)
 
                 if not self.easing_in:
@@ -53,6 +53,10 @@ class Photo(GameObject):
             factor = (1.0 - numpy.cos(theta)) / 2.0
             self.set_alpha(factor)
             self.set_scale(self.min_scale + factor * (self.max_scale - self.min_scale))
+
+            theta = self.moving_time * (numpy.pi / 2.0) / self.ttl
+            factor = numpy.sin(theta)
+            self.heading = 360.0 * self.revolutions * factor
 
             self.moving_time += delta
 
@@ -100,7 +104,7 @@ class PhotoSpawner(Updatable):
             # Activate new photo
             photo = self.photos[self.photo_index]
             screen_rect = pygame.display.get_surface().get_rect()
-            pos = pygame.Vector2(-photo.rect.width / 2.0 + 1, random.randint(0, screen_rect.height))
+            pos = pygame.Vector2(-photo.rect.width / 2.0 + 1, numpy.random.randint(0, screen_rect.height))
             photo.mover.set_ori_dest(pos, screen_rect.center)
             photo.position = pos
             photo.start_moving()
