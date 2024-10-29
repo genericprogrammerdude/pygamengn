@@ -11,12 +11,14 @@ from pygamengn.updatable import Updatable
 @ClassRegistrar.register("Photo")
 class Photo(GameObject):
 
-    def __init__(self, mover, ttl, **kwargs):
+    def __init__(self, mover, date, focal_point, ttl, **kwargs):
         super().__init__(**kwargs)
         self.mover = mover
+        self.date = date
+        self.focal_point = focal_point
+        self.ttl = ttl
         self.max_scale = 1.0
         self.min_scale = 0.1
-        self.ttl = ttl
         self.moving_time = 0
         self.easing_in = True
         self.revolutions = numpy.random.choice([-4, -3, -2, -1, 1, 2, 3, 4])
@@ -71,9 +73,8 @@ class Photo(GameObject):
 class PhotoSpawner(Updatable):
     """Spawns photos in the right order."""
 
-    def __init__(self, images, photo_type_spec, spawn_freq, photo_time, render_group):
+    def __init__(self, images, spawn_freq, photo_time, render_group, photos):
         self.images = images
-        self.photo_type_spec = photo_type_spec
         self.spawn_freq = spawn_freq
         self.photo_time = photo_time
         self.time_to_next_spawn = 1
@@ -81,18 +82,18 @@ class PhotoSpawner(Updatable):
         self.total_time = 0
         self.photo_index = 0
         self.done = False
-        self.photos = []
+        self.photos = photos
         self.skip_indices = [
             111,    # Small resolution (requires scale 2.2) and not a great photo
         ]
 
         screen_size = pygame.display.get_surface().get_rect().size
         photo_index = 0
-        for image in self.images:
-            photo = self.photo_type_spec.create(image_asset = image)
-            photo.transform()
-            photo_index += 1
-            self.photos.append(photo)
+        # for image in self.images:
+        #     photo = self.photo_type_spec.create(image_asset = image)
+        #     photo.transform()
+        #     photo_index += 1
+        #     self.photos.append(photo)
 
     def update(self, delta):
         self.total_time += delta

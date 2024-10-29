@@ -50,35 +50,18 @@ game_types = {
     "PhotoSpawner": {
         "class_name": "PhotoSpawner",
         "kwargs": {
-            "type_spec:photo_type_spec": "Photo",
             "spawn_freq": SPAWN_FREQ,
             "photo_time": ETA,
             "image:images": spawner_images,
+            "game_object:photos": photo_metadata.photo_asset_names,
             "asset:render_group": "RenderGroup",
         }
     },
-    "Photo": {
-        "class_name": "Photo",
-        "kwargs": {
-            "game_object:mover": "PhotoMover",
-            "is_collidable": False,
-            "scale": 0.5,
-            "alpha": 0.0,
-            "visible": False,
-            "kill_when_off_screen": True,
-            "ttl": ETA,
-        },
-        "groups": [
-            "RenderGroup",
-        ],
-        "PhotoMover": {
-            "class_name": "MoverTime",
-            "kwargs": {
-                "eta": ETA,
-            }
-        }
-    },
 }
+
+import photo_metadata
+game_types.update(photo_metadata.photo_metadata_dictionary)
+
 
 if DEVELOP_AND_DEBUG:
     images = {
