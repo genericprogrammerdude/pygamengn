@@ -66,6 +66,7 @@ game_types = {
             "alpha": 0.0,
             "visible": False,
             "kill_when_off_screen": True,
+            "ttl": ETA,
         },
         "groups": [
             "RenderGroup",

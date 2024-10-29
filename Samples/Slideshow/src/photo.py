@@ -1,4 +1,4 @@
-import math
+import numpy
 import random
 
 import pygame
@@ -19,6 +19,7 @@ class Photo(GameObject):
         self.min_scale = 0.1
         self.ttl = ttl
         self.moving_time = 0
+        self.easing_in = True
 
         # Get maximum scale so that the photo fits the screen
         screen_size = pygame.display.get_surface().get_rect().size
@@ -34,7 +35,6 @@ class Photo(GameObject):
 
     def update(self, delta):
         if self.visible:
-            super().update(delta)
             self.position = self.mover.move(delta)
             if self.mover.is_arrived():
                 # Exit the screen gracefully
@@ -42,10 +42,21 @@ class Photo(GameObject):
                 dest = pygame.Vector2(screen_rect.width, random.randint(0, screen_rect.height))
                 self.mover.set_ori_dest(self.position, dest)
 
-            t = self.moving_time * math.pi / self.ttl
-            self.set_alpha(pygame.math.lerp(0, 1, max(0, math.sin(t))))
-            self.set_scale(pygame.math.lerp(self.min_scale, self.max_scale, max(0, math.sin(t))))
+                if not self.easing_in:
+                    # I should've exited the screen -> make sure I'm off the screen so I get deleted
+                    screen_rect = pygame.display.get_surface().get_rect()
+                    self.position.x = screen_rect.width * 4
+
+                self.easing_in = False
+
+            theta = self.moving_time * numpy.pi / self.ttl
+            factor = (1.0 - numpy.cos(theta)) / 2.0
+            self.set_alpha(factor)
+            self.set_scale(self.min_scale + factor * (self.max_scale - self.min_scale))
+
             self.moving_time += delta
+
+            super().update(delta)
 
     def start_moving(self):
         self.visible = True
@@ -74,7 +85,7 @@ class PhotoSpawner(Updatable):
         screen_size = pygame.display.get_surface().get_rect().size
         photo_index = 0
         for image in self.images:
-            photo = self.photo_type_spec.create(image_asset = image, ttl = self.photo_time)
+            photo = self.photo_type_spec.create(image_asset = image)
             photo.transform()
             photo_index += 1
             self.photos.append(photo)
@@ -83,7 +94,7 @@ class PhotoSpawner(Updatable):
         self.total_time += delta
         self.time_to_next_spawn -= delta
 
-        if self.time_to_next_spawn <= 0:
+        if self.time_to_next_spawn <= 0 and self.photo_index < len(self.photos):
             self.time_to_next_spawn = self.spawn_freq
 
             # Activate new photo
