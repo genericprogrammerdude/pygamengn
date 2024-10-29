@@ -25,7 +25,8 @@ class Slideshow(pygamengn.Game):
         self.photo_spawner.update(delta)
         super().update(delta)
 
-        self.running = not self.photo_spawner.done or len(self.render_group.sprites()) > 0
+        if self.photo_spawner.done and len(self.render_group.sprites()) == 0:
+            self.running = False
 
     def handle_input(self):
         """Reads input and makes things happen."""
