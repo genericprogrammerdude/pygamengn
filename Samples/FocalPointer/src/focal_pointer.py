@@ -1,3 +1,5 @@
+import os
+
 import pygame
 import pygamengn
 
@@ -81,18 +83,28 @@ class FocalPointer(pygamengn.Game):
 
 
     def print_photo_inventory(self):
-        print("photo_asset_names = [")
-        for i in range(len(self.images)):
-            print(f"    \"/Photo_{i:03}\",")
-        print("]\n")
+        fnames = os.listdir("../../Assets/Tete_photos_fixed_names")
+        fnames.sort()
 
-        print("photo_metadata_dictionary = {")
-        for i in range(len(self.images)):
-            year = 1883
-            month = 2
-            day = 31
-            focal_point = self.photo_data[i]["focal_point"]
-            print("""    "Photo_%.3d": {
+        with open("photo_metadata.py", "w", encoding = "utf-8") as f:
+            f.write("photo_asset_names = [\n")
+            for i in range(len(self.images)):
+                f.write(f"    \"/Photo_{i:03}\",\n")
+            f.write("]\n\n")
+
+            f.write("photo_metadata_dictionary = {\n")
+            for i in range(len(self.images)):
+                timestamp = fnames[i][:8]
+                year = fnames[i][0:4]
+                month = fnames[i][4:6]
+                day = fnames[i][6:8]
+                try:
+                    focal_point = self.photo_data[i]["focal_point"]
+                except KeyError:
+                    focal_point = pygame.Vector2(0.5, 0.5)
+                    print(f"**** WARNING! Photo_{i:03} {fnames[i]} has no focal point! Setting it to {focal_point}")
+
+                f.write("""    "Photo_%.3d": {
         "class_name": "Photo",
         "kwargs": {
             "image:image_asset": "%.3d",
@@ -100,7 +112,7 @@ class FocalPointer(pygamengn.Game):
             "visible": False,
             "kill_when_off_screen": True,
             "game_object:mover": "PhotoMover",
-            "date": "%.4d-%.2d-%.2d",
+            "date": "%s-%s-%s",
             "focal_point": [%.4f, %.4f],
             "ttl": 22500,
         },
@@ -113,6 +125,7 @@ class FocalPointer(pygamengn.Game):
                 "eta": 22500,
             }
         },
-    },""" % (i, i, year, month, day, focal_point.x, focal_point.y))
+    },\n""" % (i, i, year, month, day, focal_point.x, focal_point.y)
+            )
 
-        print("}")
+            f.write("}\n")
