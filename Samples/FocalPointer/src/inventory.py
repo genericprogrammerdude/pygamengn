@@ -22,9 +22,6 @@ assets = {
 }
 
 
-ETA = 22500
-SPAWN_FREQ = 3 / 4 * ETA
-
 DEVELOP_AND_DEBUG = True
 if DEVELOP_AND_DEBUG:
     spawner_images = ["000", "001", "002", "003", "004", "005", "006", "007", "008",]
