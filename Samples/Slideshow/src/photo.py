@@ -1,3 +1,5 @@
+from enum import Enum, auto
+
 import numpy
 
 import pygame
@@ -8,19 +10,27 @@ from pygamengn.transform import Transform
 from pygamengn.updatable import Updatable
 
 
+
+class PhotoState(Enum):
+    INACTIVE = auto()
+    FLYING_IN = auto()
+    ON_DISPLAY = auto()
+    FLYING_OUT = auto()
+
+
 @ClassRegistrar.register("Photo")
 class Photo(GameObject):
 
-    def __init__(self, mover, date, focal_point, ttl = 0, **kwargs):
+    def __init__(self, mover, date, focal_point, ttl = 0, state = PhotoState.INACTIVE, **kwargs):
         super().__init__(**kwargs)
         self.mover = mover
         self.date = date
         self.focal_point = focal_point
         self.ttl = ttl
+        self.state = state
         self.max_scale = 1.0
         self.min_scale = 0.1
         self.moving_time = 0
-        self.easing_in = True
         self.revolutions = numpy.random.choice([-4, -3, -2, -1, 1, 2, 3, 4])
 
         # Get maximum scale so that the photo fits the screen
@@ -46,12 +56,12 @@ class Photo(GameObject):
                 dest = pygame.Vector2(screen_rect.width, numpy.random.randint(0, screen_rect.height))
                 self.mover.initialize(self.ttl, self.position, dest)
 
-                if not self.easing_in:
+                if self.state == PhotoState.FLYING_OUT:
                     # I should've exited the screen -> make sure I'm off the screen so I get deleted
                     screen_rect = pygame.display.get_surface().get_rect()
                     self.position.x = screen_rect.width * 4
 
-                self.easing_in = False
+                self.state = PhotoState.ON_DISPLAY
 
             theta = self.moving_time * numpy.pi / self.ttl
             factor = (1.0 - numpy.cos(theta)) / 2.0
@@ -74,16 +84,14 @@ class Photo(GameObject):
 class PhotoSpawner(Updatable):
     """Spawns photos in the right order."""
 
-    def __init__(self, images, spawn_freq, photo_time, render_group, photos):
-        self.images = images
+    def __init__(self, spawn_freq, photo_time, photos):
         self.spawn_freq = spawn_freq
         self.photo_time = photo_time
+        self.photos = photos
         self.time_to_next_spawn = 1
-        self.render_group = render_group
         self.total_time = 0
         self.photo_index = 0
         self.done = False
-        self.photos = photos
         self.skip_indices = [
             111,    # Small resolution (requires scale 2.2) and not a great photo
         ]
@@ -112,7 +120,7 @@ class PhotoSpawner(Updatable):
                 self.photo_index += 1
 
             # If we're out of photos, the Slideshow game will end when the last photo is off the screen
-            self.done = self.photo_index >= len(self.images)
+            self.done = self.photo_index >= len(self.photos)
 
 # Small photos
 # *** Small photo! 1.2 095
