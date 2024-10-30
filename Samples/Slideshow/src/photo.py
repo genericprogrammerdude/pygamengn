@@ -16,7 +16,7 @@ class Photo(GameObject):
         self.mover = mover
         self.date = date
         self.focal_point = focal_point
-        self.ttl = ttl
+        self.ttl = 0
         self.max_scale = 1.0
         self.min_scale = 0.1
         self.moving_time = 0
@@ -44,7 +44,7 @@ class Photo(GameObject):
                 # Exit the screen gracefully
                 screen_rect = pygame.display.get_surface().get_rect()
                 dest = pygame.Vector2(screen_rect.width, numpy.random.randint(0, screen_rect.height))
-                self.mover.set_ori_dest(self.position, dest)
+                self.mover.initialize(self.ttl, self.position, dest)
 
                 if not self.easing_in:
                     # I should've exited the screen -> make sure I'm off the screen so I get deleted
@@ -64,7 +64,8 @@ class Photo(GameObject):
 
             self.moving_time += delta
 
-    def start_moving(self):
+    def start_moving(self, ttl):
+        self.ttl = ttl
         self.visible = True
         self.transform()
 
@@ -101,9 +102,9 @@ class PhotoSpawner(Updatable):
             photo = self.photos[self.photo_index]
             screen_rect = pygame.display.get_surface().get_rect()
             pos = pygame.Vector2(-photo.rect.width / 2.0 + 1, numpy.random.randint(0, screen_rect.height))
-            photo.mover.set_ori_dest(pos, screen_rect.center)
+            photo.mover.initialize(self.photo_time, pos, screen_rect.center)
             photo.position = pos
-            photo.start_moving()
+            photo.start_moving(self.photo_time)
 
             # Increment photo index
             self.photo_index += 1

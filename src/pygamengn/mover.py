@@ -57,12 +57,8 @@ class MoverVelDir(Mover):
 class MoverTime(Mover):
     """Time-based mover."""
 
-    def __init__(self, eta: float, origin = pygame.Vector2(0, 0), destination = pygame.Vector2(1, 0)):
-        self.eta = eta
-        self.origin = origin
-        self.destination = destination
-        self.elapsed_time = 0
-        self.__diff = pygame.Vector2(destination) - pygame.Vector2(origin)
+    def __init__(self, eta = 0, origin = pygame.Vector2(0, 0), destination = pygame.Vector2(1, 0)):
+        self.initialize(eta, origin, destination)
 
     def move(self, delta, *_):
         if self.elapsed_time <= self.eta:
@@ -73,7 +69,8 @@ class MoverTime(Mover):
         else:
             return self.destination
 
-    def set_ori_dest(self, origin: pygame.Vector2, destination: pygame.Vector2):
+    def initialize(self, eta: float, origin: pygame.Vector2, destination: pygame.Vector2):
+        self.eta = eta
         self.origin = origin
         self.destination = destination
         self.elapsed_time = 0
