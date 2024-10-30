@@ -114,7 +114,6 @@ class FocalPointer(pygamengn.Game):
             "game_object:mover": "PhotoMover",
             "date": "%s-%s-%s",
             "focal_point": [%.4f, %.4f],
-            "ttl": 22500,
         },
         "groups": [
             "RenderGroup",
@@ -122,7 +121,6 @@ class FocalPointer(pygamengn.Game):
         "PhotoMover": {
             "class_name": "MoverTime",
             "kwargs": {
-                "eta": 22500,
             }
         },
     },\n""" % (i, i, year, month, day, focal_point.x, focal_point.y)
