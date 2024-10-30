@@ -11,12 +11,12 @@ from pygamengn.updatable import Updatable
 @ClassRegistrar.register("Photo")
 class Photo(GameObject):
 
-    def __init__(self, mover, date, focal_point, ttl, **kwargs):
+    def __init__(self, mover, date, focal_point, ttl = 0, **kwargs):
         super().__init__(**kwargs)
         self.mover = mover
         self.date = date
         self.focal_point = focal_point
-        self.ttl = 0
+        self.ttl = ttl
         self.max_scale = 1.0
         self.min_scale = 0.1
         self.moving_time = 0
