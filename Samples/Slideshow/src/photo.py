@@ -23,6 +23,7 @@ class Photo(GameObject):
 
     def __init__(self, mover, date, focal_point, ttl = 0, state = PhotoState.INACTIVE, **kwargs):
         super().__init__(**kwargs)
+        self.alpha = 0
         self.mover = mover
         self.date = date
         self.focal_point = focal_point
@@ -31,7 +32,8 @@ class Photo(GameObject):
         self.max_scale = 1.0
         self.min_scale = 0.1
         self.moving_time = 0
-        self.revolutions = numpy.random.choice([-4, -3, -2, -1, 1, 2, 3, 4])
+        self.revolutions = numpy.random.randint(4, 10)
+        self.revolutions *= numpy.random.choice([1, -1])
 
         # Get maximum scale so that the photo fits the screen
         screen_size = pygame.display.get_surface().get_rect().size
@@ -45,39 +47,70 @@ class Photo(GameObject):
             self.min_scale = scale_height / 4.0
         self.set_scale(self.min_scale)
 
+
     def update(self, delta):
         super().update(delta)
 
-        if self.visible:
-            self.position = self.mover.move(delta)
-            if self.mover.is_arrived():
-                # Exit the screen gracefully
-                screen_rect = pygame.display.get_surface().get_rect()
-                dest = pygame.Vector2(screen_rect.width, numpy.random.randint(0, screen_rect.height))
-                self.mover.initialize(self.ttl, self.position, dest)
+        if self.state != PhotoState.INACTIVE and self.visible:
+            if self.state == PhotoState.FLYING_IN:
+                self.fly_in(delta)
 
-                if self.state == PhotoState.FLYING_OUT:
-                    # I should've exited the screen -> make sure I'm off the screen so I get deleted
-                    screen_rect = pygame.display.get_surface().get_rect()
-                    self.position.x = screen_rect.width * 4
+            elif self.state == PhotoState.ON_DISPLAY:
+                self.display(delta)
 
-                self.state = PhotoState.ON_DISPLAY
-
-            theta = self.moving_time * numpy.pi / self.ttl
-            factor = (1.0 - numpy.cos(theta)) / 2.0
-            self.set_alpha(factor)
-            self.set_scale(self.min_scale + factor * (self.max_scale - self.min_scale))
-
-            theta = self.moving_time * (numpy.pi / 2.0) / self.ttl
-            factor = numpy.sin(theta)
-            self.heading = 360.0 * self.revolutions * factor
+            elif self.state == PhotoState.FLYING_OUT:
+                self.fly_out(delta)
 
             self.moving_time += delta
+
+
+    def fly_in(self, delta):
+        self.position = self.mover.move(delta)
+        if self.mover.is_arrived():
+            # Set up the mover for displaying the photo
+            screen_rect = pygame.display.get_surface().get_rect()
+            dest = pygame.Vector2(screen_rect.width, numpy.random.randint(0, screen_rect.height))
+            self.mover.initialize(self.ttl, self.position, dest)
+            self.state = PhotoState.ON_DISPLAY
+
+        theta = self.moving_time * numpy.pi / self.ttl
+        factor = (1.0 - numpy.cos(theta)) / 2.0
+        self.set_alpha(factor)
+        self.set_scale(self.min_scale + factor * (self.max_scale - self.min_scale))
+
+        theta = self.moving_time * (numpy.pi / 2.0) / self.ttl
+        factor = numpy.sin(theta)
+        self.heading = 360.0 * self.revolutions * factor
+
+
+    def display(self, delta):
+        self.state = PhotoState.FLYING_OUT
+
+
+    def fly_out(self, delta):
+        self.position = self.mover.move(delta)
+
+        theta = self.moving_time * numpy.pi / self.ttl
+        factor = (1.0 - numpy.cos(theta)) / 2.0
+        self.set_alpha(factor)
+        self.set_scale(self.min_scale + factor * (self.max_scale - self.min_scale))
+
+        theta = self.moving_time * (numpy.pi / 2.0) / self.ttl
+        factor = numpy.sin(theta)
+        self.heading = 360.0 * self.revolutions * factor
+
+        if self.mover.is_arrived():
+            # I should've exited the screen -> make sure I'm off the screen so I get deleted
+            screen_rect = pygame.display.get_surface().get_rect()
+            self.position.x = screen_rect.width * 4
+            self.transform()
+            self.state = PhotoState.INACTIVE
+
 
     def start_moving(self, ttl):
         self.ttl = ttl
         self.visible = True
-        self.transform()
+        self.state = PhotoState.FLYING_IN
 
 
 @ClassRegistrar.register("PhotoSpawner")
@@ -109,10 +142,12 @@ class PhotoSpawner(Updatable):
             # Activate new photo
             photo = self.photos[self.photo_index]
             screen_rect = pygame.display.get_surface().get_rect()
-            pos = pygame.Vector2(-photo.rect.width / 2.0 + 1, numpy.random.randint(0, screen_rect.height))
+            # pos = pygame.Vector2(-photo.rect.width / 2.0 + 1, numpy.random.randint(0, screen_rect.height))
+            pos = pygame.Vector2(0, numpy.random.randint(0, screen_rect.height))
             photo.mover.initialize(self.photo_time, pos, screen_rect.center)
             photo.position = pos
             photo.start_moving(self.photo_time)
+            photo.transform()
 
             # Increment photo index
             self.photo_index += 1

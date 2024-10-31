@@ -28,7 +28,7 @@ import photo_metadata
 import images_dict
 
 if DEVELOP_AND_DEBUG:
-    image_load_count = 3
+    image_load_count = 9
     photo_asset_names = [f"/Photo_{i:03}" for i in range(image_load_count)]
     images = {}
     for i in range(image_load_count):
