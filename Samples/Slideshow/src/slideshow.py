@@ -1,6 +1,3 @@
-from enum import Enum, auto
-import random
-
 import pygame
 import pygamengn
 
