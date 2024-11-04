@@ -1,4 +1,4 @@
-from enum import Enum, auto
+from enum import StrEnum, auto
 
 import numpy
 
@@ -6,34 +6,43 @@ import pygame
 
 from pygamengn.class_registrar import ClassRegistrar
 from pygamengn.game_object import GameObject
-from pygamengn.transform import Transform
-from pygamengn.updatable import Updatable
 
 
 
-class PhotoState(Enum):
-    INACTIVE = auto()
+class State(StrEnum):
     FLYING_IN = auto()
     ON_DISPLAY = auto()
     FLYING_OUT = auto()
+    INACTIVE = auto()
+
+
+class MoveSpec():
+    def __init__(self, normalized_dest, revolutions, duration):
+        self.normalized_dest = normalized_dest
+        self.revolutions = revolutions
+        self.duration = duration
+
+        screen_rect = pygame.display.get_surface().get_rect()
+        self.dest = pygame.Vector2(
+            screen_rect.width * self.normalized_dest[0],
+            screen_rect.height * self.normalized_dest[1]
+        )
 
 
 @ClassRegistrar.register("Photo")
 class Photo(GameObject):
 
-    def __init__(self, mover, date, focal_point, ttl = 0, state = PhotoState.INACTIVE, **kwargs):
+    def __init__(self, mover, date, focal_point, move_specs = None, state = State.INACTIVE, **kwargs):
         super().__init__(**kwargs)
         self.alpha = 0
         self.mover = mover
         self.date = date
         self.focal_point = focal_point
-        self.ttl = ttl
+        self.move_specs = move_specs
         self.state = state
         self.max_scale = 1.0
         self.min_scale = 0.1
         self.moving_time = 0
-        self.revolutions = numpy.random.randint(4, 10)
-        self.revolutions *= numpy.random.choice([1, -1])
 
         # Get maximum scale so that the photo fits the screen
         screen_size = pygame.display.get_surface().get_rect().size
@@ -51,153 +60,91 @@ class Photo(GameObject):
     def update(self, delta):
         super().update(delta)
 
-        if self.state != PhotoState.INACTIVE and self.visible:
-            if self.state == PhotoState.FLYING_IN:
+        if self.state != State.INACTIVE and self.visible:
+            if self.state == State.FLYING_IN:
                 self.fly_in(delta)
 
-            elif self.state == PhotoState.ON_DISPLAY:
+            elif self.state == State.ON_DISPLAY:
                 self.display(delta)
 
-            elif self.state == PhotoState.FLYING_OUT:
+            elif self.state == State.FLYING_OUT:
                 self.fly_out(delta)
 
             self.moving_time += delta
+
+
+    def state_transition(self, to_state):
+        screen_rect = pygame.display.get_surface().get_rect()
+        self.mover.initialize(self.move_specs[to_state].duration, self.position, self.move_specs[to_state].dest)
+        self.state = to_state
+        self.moving_time = 0
 
 
     def fly_in(self, delta):
         self.position = self.mover.move(delta)
         if self.mover.is_arrived():
             # Set up the mover for displaying the photo
-            screen_rect = pygame.display.get_surface().get_rect()
-            dest = pygame.Vector2(screen_rect.width, numpy.random.randint(0, screen_rect.height))
-            self.mover.initialize(self.ttl, self.position, dest)
-            self.state = PhotoState.ON_DISPLAY
+            self.state_transition(State.ON_DISPLAY)
+            self.set_alpha(1.0)
+            self.set_scale(self.max_scale)
+            self.heading = 0
 
-        theta = self.moving_time * numpy.pi / self.ttl
-        factor = (1.0 - numpy.cos(theta)) / 2.0
-        self.set_alpha(factor)
-        self.set_scale(self.min_scale + factor * (self.max_scale - self.min_scale))
+        else:
+            # Animate alpha, scale, and heading
+            theta = self.moving_time * numpy.pi / self.move_specs[State.FLYING_IN].duration
+            factor = (1.0 - numpy.cos(theta)) / 2.0
+            self.set_alpha(factor)
+            self.set_scale(self.min_scale + factor * (self.max_scale - self.min_scale))
 
-        theta = self.moving_time * (numpy.pi / 2.0) / self.ttl
-        factor = numpy.sin(theta)
-        self.heading = 360.0 * self.revolutions * factor
+            theta = self.moving_time * (numpy.pi / 2.0) / self.move_specs[State.FLYING_IN].duration
+            factor = numpy.sin(theta)
+            self.heading = 360.0 * self.move_specs[State.FLYING_IN].revolutions * factor
 
 
     def display(self, delta):
-        self.state = PhotoState.FLYING_OUT
+        self.position = self.mover.move(delta)
+        if self.mover.is_arrived():
+            self.state_transition(State.FLYING_OUT)
 
 
     def fly_out(self, delta):
         self.position = self.mover.move(delta)
 
-        theta = self.moving_time * numpy.pi / self.ttl
+        theta = self.moving_time * numpy.pi / self.move_specs[State.FLYING_OUT].duration
         factor = (1.0 - numpy.cos(theta)) / 2.0
-        self.set_alpha(factor)
-        self.set_scale(self.min_scale + factor * (self.max_scale - self.min_scale))
+        self.set_alpha(1.0 - factor)
+        self.set_scale(self.max_scale - factor * (self.max_scale - self.min_scale))
 
-        theta = self.moving_time * (numpy.pi / 2.0) / self.ttl
+        theta = self.moving_time * (numpy.pi / 2.0) / self.move_specs[State.FLYING_OUT].duration
         factor = numpy.sin(theta)
-        self.heading = 360.0 * self.revolutions * factor
+        self.heading = 360.0 * self.move_specs[State.FLYING_OUT].revolutions * factor
 
         if self.mover.is_arrived():
             # I should've exited the screen -> make sure I'm off the screen so I get deleted
             screen_rect = pygame.display.get_surface().get_rect()
             self.position.x = screen_rect.width * 4
             self.transform()
-            self.state = PhotoState.INACTIVE
+            self.state = State.INACTIVE
 
 
-    def start_moving(self, ttl):
-        self.ttl = ttl
+    def start_moving(self, move_spec):
+        move_specs = {
+            "flying_in": MoveSpec(
+                normalized_dest = (0.25, 0.5),
+                revolutions = numpy.random.randint(4, 10) * numpy.random.choice([1, -1]),
+                duration = 2000,
+            ),
+            "on_display": MoveSpec(
+                normalized_dest = (0.75, 0.5),
+                revolutions = 0,
+                duration = 4000,
+            ),
+            "flying_out": MoveSpec(
+                normalized_dest = (1.0, 0.5),
+                revolutions = numpy.random.randint(4, 10) * numpy.random.choice([1, -1]),
+                duration = 2000,
+            ),
+        }
+        self.move_specs = move_specs
         self.visible = True
-        self.state = PhotoState.FLYING_IN
-
-
-@ClassRegistrar.register("PhotoSpawner")
-class PhotoSpawner(Updatable):
-    """Spawns photos in the right order."""
-
-    def __init__(self, spawn_freq, photo_time, photos):
-        self.spawn_freq = spawn_freq
-        self.photo_time = photo_time
-        self.photos = photos
-        self.time_to_next_spawn = 1
-        self.total_time = 0
-        self.photo_index = 0
-        self.done = False
-        self.skip_indices = [
-            111,    # Small resolution (requires scale 2.2) and not a great photo
-        ]
-
-        screen_size = pygame.display.get_surface().get_rect().size
-        photo_index = 0
-
-    def update(self, delta):
-        self.total_time += delta
-        self.time_to_next_spawn -= delta
-
-        if self.time_to_next_spawn <= 0 and self.photo_index < len(self.photos):
-            self.time_to_next_spawn = self.spawn_freq
-
-            # Activate new photo
-            photo = self.photos[self.photo_index]
-            screen_rect = pygame.display.get_surface().get_rect()
-            # pos = pygame.Vector2(-photo.rect.width / 2.0 + 1, numpy.random.randint(0, screen_rect.height))
-            pos = pygame.Vector2(0, numpy.random.randint(0, screen_rect.height))
-            photo.mover.initialize(self.photo_time, pos, screen_rect.center)
-            photo.position = pos
-            photo.start_moving(self.photo_time)
-            photo.transform()
-
-            # Increment photo index
-            self.photo_index += 1
-            while self.photo_index in self.skip_indices:
-                self.photo_index += 1
-
-            # If we're out of photos, the Slideshow game will end when the last photo is off the screen
-            self.done = self.photo_index >= len(self.photos)
-
-# Small photos
-# *** Small photo! 1.2 095
-# *** Small photo! 1.0 098
-# *** Small photo! 1.1 102
-# *** Small photo! 2.2 111
-# *** Small photo! 1.8 112
-# *** Small photo! 1.2 118
-# *** Small photo! 1.1 122
-# *** Small photo! 1.4 134
-# *** Small photo! 1.6 145
-# *** Small photo! 1.0 168
-# *** Small photo! 1.0 169
-# *** Small photo! 1.4 177
-# *** Small photo! 1.8 178
-# *** Small photo! 1.8 179
-# *** Small photo! 1.8 180
-# *** Small photo! 1.8 181
-# *** Small photo! 1.8 182
-# *** Small photo! 1.8 183
-# *** Small photo! 1.8 184
-# *** Small photo! 1.8 185
-# *** Small photo! 1.8 186
-# *** Small photo! 1.8 187
-# *** Small photo! 1.8 188
-# *** Small photo! 1.3 189
-# *** Small photo! 1.8 190
-# *** Small photo! 1.4 191
-# *** Small photo! 1.8 192
-# *** Small photo! 1.4 193
-# *** Small photo! 1.3 194
-# *** Small photo! 1.4 195
-# *** Small photo! 1.8 196
-# *** Small photo! 1.4 197
-# *** Small photo! 1.4 198
-# *** Small photo! 1.7 199
-# *** Small photo! 1.4 202
-# *** Small photo! 1.5 203
-# *** Small photo! 1.4 204
-# *** Small photo! 1.0 216
-# *** Small photo! 1.7 223
-# *** Small photo! 1.5 226
-
-    def set_player(self, player):
-        pass
+        self.state_transition(State.FLYING_IN)

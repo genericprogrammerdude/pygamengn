@@ -4,7 +4,7 @@ import random
 import pygame
 import pygamengn
 
-from photo import PhotoSpawner
+from photo_spawner import PhotoSpawner
 
 
 @pygamengn.ClassRegistrar.register("Slideshow")
