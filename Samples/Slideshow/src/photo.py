@@ -6,6 +6,7 @@ import pygame
 
 from pygamengn.class_registrar import ClassRegistrar
 from pygamengn.game_object import GameObject
+from pygamengn.interpolator import EaseInInterpolator, EaseOutInterpolator, InterpolationMode
 
 
 
@@ -17,10 +18,11 @@ class State(StrEnum):
 
 
 class MoveSpec():
-    def __init__(self, normalized_dest, revolutions, duration):
+    def __init__(self, normalized_dest, revolutions, duration, move_interpolation_mode):
         self.normalized_dest = normalized_dest
         self.revolutions = revolutions
         self.duration = duration
+        self.move_interpolation_mode = move_interpolation_mode
 
         screen_rect = pygame.display.get_surface().get_rect()
         self.dest = pygame.Vector2(
@@ -37,7 +39,7 @@ class Photo(GameObject):
         self.alpha = 0
         self.mover = mover
         self.date = date
-        self.focal_point = focal_point
+        self.focal_point = pygame.Vector2(focal_point)
         self.move_specs = move_specs
         self.state = state
         self.max_scale = 1.0
@@ -55,6 +57,39 @@ class Photo(GameObject):
             self.max_scale = scale_height
             self.min_scale = scale_height / 4.0
         self.set_scale(self.min_scale)
+
+
+    def start_moving(self, move_spec):
+        screen_rect = pygame.display.get_surface().get_rect()
+        display_dest = pygame.Vector2(0.5, 0.5)
+        if self.max_scale < 1.7:
+            # display_dest.x -= (self.focal_point.x * screen_rect.width / self.image_asset.get_rect().width)
+            display_dest.y += (self.focal_point.y * screen_rect.height / self.image_asset.get_rect().height)
+            print(f"using focal point")
+
+        move_specs = {
+            "flying_in": MoveSpec(
+                normalized_dest = (0.5, 0.5),
+                revolutions = numpy.random.randint(1, 2) * numpy.random.choice([1, -1]),
+                duration = 2000,
+                move_interpolation_mode = InterpolationMode.EASE_OUT,
+            ),
+            "on_display": MoveSpec(
+                normalized_dest = display_dest,
+                revolutions = 0,
+                duration = 8000,
+                move_interpolation_mode = InterpolationMode.EASE_OUT,
+            ),
+            "flying_out": MoveSpec(
+                normalized_dest = (1.0, 0.5),
+                revolutions = numpy.random.randint(1, 2) * numpy.random.choice([1, -1]),
+                duration = 2000,
+                move_interpolation_mode = InterpolationMode.EASE_OUT,
+            ),
+        }
+        self.move_specs = move_specs
+        self.visible = True
+        self.state_transition(State.FLYING_IN)
 
 
     def update(self, delta):
@@ -75,9 +110,16 @@ class Photo(GameObject):
 
     def state_transition(self, to_state):
         screen_rect = pygame.display.get_surface().get_rect()
-        self.mover.initialize(self.move_specs[to_state].duration, self.position, self.move_specs[to_state].dest)
+        self.mover.initialize(
+            self.move_specs[to_state].duration,
+            self.position,
+            self.move_specs[to_state].dest,
+            self.move_specs[to_state].move_interpolation_mode
+        )
         self.state = to_state
         self.moving_time = 0
+        self.ease_in_interp = EaseInInterpolator(self.move_specs[to_state].duration)
+        self.ease_out_interp = EaseOutInterpolator(self.move_specs[to_state].duration)
 
 
     def fly_in(self, delta):
@@ -91,13 +133,11 @@ class Photo(GameObject):
 
         else:
             # Animate alpha, scale, and heading
-            theta = self.moving_time * numpy.pi / self.move_specs[State.FLYING_IN].duration
-            factor = (1.0 - numpy.cos(theta)) / 2.0
+            factor = self.ease_in_interp.get(self.moving_time)
             self.set_alpha(factor)
             self.set_scale(self.min_scale + factor * (self.max_scale - self.min_scale))
 
-            theta = self.moving_time * (numpy.pi / 2.0) / self.move_specs[State.FLYING_IN].duration
-            factor = numpy.sin(theta)
+            factor = self.ease_out_interp.get(self.moving_time)
             self.heading = 360.0 * self.move_specs[State.FLYING_IN].revolutions * factor
 
 
@@ -106,17 +146,17 @@ class Photo(GameObject):
         if self.mover.is_arrived():
             self.state_transition(State.FLYING_OUT)
 
+        factor = self.ease_out_interp.get(self.moving_time)
+        self.set_scale(self.max_scale + factor * (2 * self.max_scale - self.min_scale))
+
 
     def fly_out(self, delta):
         self.position = self.mover.move(delta)
 
-        theta = self.moving_time * numpy.pi / self.move_specs[State.FLYING_OUT].duration
-        factor = (1.0 - numpy.cos(theta)) / 2.0
+        factor = self.ease_in_interp.get(self.moving_time)
         self.set_alpha(1.0 - factor)
         self.set_scale(self.max_scale - factor * (self.max_scale - self.min_scale))
 
-        theta = self.moving_time * (numpy.pi / 2.0) / self.move_specs[State.FLYING_OUT].duration
-        factor = numpy.sin(theta)
         self.heading = 360.0 * self.move_specs[State.FLYING_OUT].revolutions * factor
 
         if self.mover.is_arrived():
@@ -125,26 +165,3 @@ class Photo(GameObject):
             self.position.x = screen_rect.width * 4
             self.transform()
             self.state = State.INACTIVE
-
-
-    def start_moving(self, move_spec):
-        move_specs = {
-            "flying_in": MoveSpec(
-                normalized_dest = (0.25, 0.5),
-                revolutions = numpy.random.randint(4, 10) * numpy.random.choice([1, -1]),
-                duration = 2000,
-            ),
-            "on_display": MoveSpec(
-                normalized_dest = (0.75, 0.5),
-                revolutions = 0,
-                duration = 4000,
-            ),
-            "flying_out": MoveSpec(
-                normalized_dest = (1.0, 0.5),
-                revolutions = numpy.random.randint(4, 10) * numpy.random.choice([1, -1]),
-                duration = 2000,
-            ),
-        }
-        self.move_specs = move_specs
-        self.visible = True
-        self.state_transition(State.FLYING_IN)

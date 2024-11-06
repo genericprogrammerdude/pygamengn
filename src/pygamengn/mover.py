@@ -3,6 +3,7 @@ import pygame
 
 from pygamengn.class_registrar import ClassRegistrar
 from pygamengn.game_object_base import GameObjectBase
+from pygamengn.interpolator import *
 
 
 class Mover(GameObjectBase):
@@ -57,8 +58,14 @@ class MoverVelDir(Mover):
 class MoverTime(Mover):
     """Time-based mover."""
 
-    def __init__(self, eta = 0, origin = pygame.Vector2(0, 0), destination = pygame.Vector2(1, 0)):
-        self.initialize(eta, origin, destination)
+    def __init__(
+        self,
+        eta = 0,
+        origin = pygame.Vector2(0, 0),
+        destination = pygame.Vector2(1, 0),
+        interpolationMode = InterpolationMode.LINEAR
+    ):
+        self.initialize(eta, origin, destination, interpolationMode)
 
     def move(self, delta, *_):
         if self.elapsed_time <= self.eta:
@@ -69,12 +76,28 @@ class MoverTime(Mover):
         else:
             return self.destination
 
-    def initialize(self, eta: float, origin: pygame.Vector2, destination: pygame.Vector2):
+    def initialize(
+        self,
+        eta: float,
+        origin: pygame.Vector2,
+        destination: pygame.Vector2,
+        interpolationMode: InterpolationMode
+    ):
         self.eta = eta
         self.origin = origin
         self.destination = destination
         self.elapsed_time = 0
         self.__diff = pygame.Vector2(destination) - pygame.Vector2(origin)
+        if interpolationMode == InterpolationMode.LINEAR:
+            self.interpolator = LinearInterpolator(eta, origin, destination)
+        elif interpolationMode == InterpolationMode.EASE_IN:
+            self.interpolator = EaseInInterpolator(eta, origin, destination)
+        elif interpolationMode == InterpolationMode.EASE_OUT:
+            self.interpolator = EaseOutInterpolator(eta, origin, destination)
+        elif interpolationMode == InterpolationMode.EASE_ALL:
+            self.interpolator = EaseAllInterpolator(eta, origin, destination)
+        else:
+            raise ValueError(f"Unknown interpolation mode: {interpolationMode}")
 
-    def is_arrived(self):
+    def is_arrived(self) -> bool:
         return self.elapsed_time >= self.eta
