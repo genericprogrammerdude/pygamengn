@@ -57,7 +57,6 @@ game_types = {
         "class_name": "PhotoSpawner",
         "kwargs": {
             "spawn_freq": 10000,
-            "photo_time": 7500,
             "game_object:photos": photo_asset_names,
         }
     },

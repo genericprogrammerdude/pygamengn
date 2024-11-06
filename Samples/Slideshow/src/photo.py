@@ -60,13 +60,15 @@ class Photo(GameObject):
         self.set_scale(self.min_scale)
 
 
-    def start_moving(self, move_spec):
+    def start_moving(self):
         screen_rect = pygame.display.get_surface().get_rect()
         display_dest = pygame.Vector2(0.5, 0.5)
         if self.max_scale < 1.7:
-            # display_dest.x -= (self.focal_point.x * screen_rect.width / self.image_asset.get_rect().width)
-            display_dest.y += (self.focal_point.y * screen_rect.height / self.image_asset.get_rect().height)
-            print(f"using focal point")
+            display_dest.x -= (self.focal_point.x * screen_rect.width / self.image_asset.get_rect().width)
+            display_dest.y -= (self.focal_point.y * screen_rect.height / self.image_asset.get_rect().height)
+            self.display_max_scale = self.max_scale * 3
+        else:
+            self.display_max_scale = self.max_scale
 
         move_specs = {
             "flying_in": MoveSpec(
@@ -78,11 +80,11 @@ class Photo(GameObject):
             "on_display": MoveSpec(
                 normalized_dest = display_dest,
                 revolutions = 0,
-                duration = 8000,
+                duration = 4000,
                 move_interpolation_mode = InterpolationMode.EASE_OUT,
             ),
             "flying_out": MoveSpec(
-                normalized_dest = (1.0, 0.5),
+                normalized_dest = (1.1, numpy.random.random_sample()),
                 revolutions = numpy.random.randint(1, 2) * numpy.random.choice([1, -1]),
                 duration = 2000,
                 move_interpolation_mode = InterpolationMode.EASE_OUT,
@@ -90,6 +92,8 @@ class Photo(GameObject):
         }
         self.move_specs = move_specs
         self.visible = True
+        self.position = pygame.Vector2(0, numpy.random.random_integers(0, screen_rect.height))
+        self.transform()
         self.state_transition(State.FLYING_IN)
 
 
@@ -110,6 +114,7 @@ class Photo(GameObject):
 
 
     def state_transition(self, to_state):
+        print(f"state_transition(): position == {self.position}")
         screen_rect = pygame.display.get_surface().get_rect()
         self.mover = MoverTime(
             self.move_specs[to_state].duration,
@@ -122,6 +127,21 @@ class Photo(GameObject):
         self.ease_in_interp = Interpolator(self.move_specs[to_state].duration, mode = InterpolationMode.EASE_IN)
         self.ease_out_interp = Interpolator(self.move_specs[to_state].duration, mode = InterpolationMode.EASE_OUT)
 
+        if to_state == State.FLYING_OUT:
+            self.scale_interp = Interpolator(
+                duration = self.move_specs[to_state].duration,
+                from_value = self.scale,
+                to_value = 0.01,
+                mode = InterpolationMode.EASE_OUT
+            )
+        elif to_state == State.ON_DISPLAY:
+            self.scale_interp = Interpolator(
+                duration = self.move_specs[to_state].duration,
+                from_value = self.scale,
+                to_value = self.display_max_scale,
+                mode = InterpolationMode.EASE_OUT
+            )
+
 
     def fly_in(self, delta):
         self.position = self.mover.move(delta)
@@ -131,7 +151,6 @@ class Photo(GameObject):
             self.heading = 0
 
         else:
-            # Animate alpha, scale, and heading
             factor = self.ease_in_interp.get(self.moving_time)
             self.set_alpha(factor)
             self.set_scale(self.min_scale + factor * (self.max_scale - self.min_scale))
@@ -146,15 +165,15 @@ class Photo(GameObject):
             self.state_transition(State.FLYING_OUT)
 
         factor = self.ease_out_interp.get(self.moving_time)
-        self.set_scale(self.max_scale + factor * (2 * self.max_scale - self.min_scale))
+        self.set_scale(self.scale_interp.get(self.moving_time))
 
 
     def fly_out(self, delta):
         self.position = self.mover.move(delta)
 
-        factor = self.ease_in_interp.get(self.moving_time)
+        factor = self.ease_out_interp.get(self.moving_time)
         self.set_alpha(1.0 - factor)
-        self.set_scale(self.max_scale - factor * (self.max_scale - self.min_scale))
+        self.set_scale(self.scale_interp.get(self.moving_time))
 
         self.heading = 360.0 * self.move_specs[State.FLYING_OUT].revolutions * factor
 

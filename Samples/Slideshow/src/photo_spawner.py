@@ -13,9 +13,8 @@ from photo import Photo
 class PhotoSpawner(Updatable):
     """Spawns photos in the right order."""
 
-    def __init__(self, spawn_freq, photo_time, photos):
+    def __init__(self, spawn_freq, photos):
         self.spawn_freq = spawn_freq
-        self.photo_time = photo_time
         self.photos = photos
         self.time_to_next_spawn = 1
         self.total_time = 0
@@ -37,7 +36,7 @@ class PhotoSpawner(Updatable):
 
             # Activate new photo
             photo = self.photos[self.photo_index]
-            photo.start_moving(self.photo_time)
+            photo.start_moving()
             photo.transform()
 
             # Increment photo index
