@@ -19,7 +19,14 @@ class State(StrEnum):
 
 
 class MoveSpec():
-    def __init__(self, normalized_dest, revolutions, duration, move_interpolation_mode):
+    def __init__(
+        self,
+        normalized_dest,
+        revolutions,
+        duration,
+        move_interpolation_mode,
+        centre_offset = pygame.Vector2(0, 0)
+    ):
         self.normalized_dest = normalized_dest
         self.revolutions = revolutions
         self.duration = duration
@@ -29,7 +36,7 @@ class MoveSpec():
         self.dest = pygame.Vector2(
             screen_rect.width * self.normalized_dest[0],
             screen_rect.height * self.normalized_dest[1]
-        )
+        ) - centre_offset
 
 
 @ClassRegistrar.register("Photo")
@@ -62,26 +69,32 @@ class Photo(GameObject):
 
     def start_moving(self):
         screen_rect = pygame.display.get_surface().get_rect()
-        display_dest = pygame.Vector2(0.5, 0.5)
         if self.max_scale < 1.7:
-            display_dest.x -= (self.focal_point.x * screen_rect.width / self.image_asset.get_rect().width)
-            display_dest.y -= (self.focal_point.y * screen_rect.height / self.image_asset.get_rect().height)
-            self.display_max_scale = self.max_scale * 3
+            self.display_max_scale = self.max_scale * 2.0
+            r = self.image_asset.get_rect().copy()
+            r = r.scale_by(self.display_max_scale)
+            offset = pygame.Vector2(
+                (self.focal_point.x - 0.5) * r.width,
+                (self.focal_point.y - 0.45) * r.height
+            )
         else:
             self.display_max_scale = self.max_scale
+            offset = pygame.Vector2(0, 0)
 
         move_specs = {
             "flying_in": MoveSpec(
-                normalized_dest = (0.5, 0.5),
+                normalized_dest = pygame.Vector2(0.5, 0.5),
                 revolutions = numpy.random.randint(1, 2) * numpy.random.choice([1, -1]),
                 duration = 2000,
                 move_interpolation_mode = InterpolationMode.EASE_OUT,
             ),
             "on_display": MoveSpec(
-                normalized_dest = display_dest,
+                normalized_dest = pygame.Vector2(0.5, 0.5),
                 revolutions = 0,
-                duration = 4000,
+                duration = 40000,
                 move_interpolation_mode = InterpolationMode.EASE_OUT,
+                centre_offset = offset
+
             ),
             "flying_out": MoveSpec(
                 normalized_dest = (1.1, numpy.random.random_sample()),
@@ -114,7 +127,6 @@ class Photo(GameObject):
 
 
     def state_transition(self, to_state):
-        print(f"state_transition(): position == {self.position}")
         screen_rect = pygame.display.get_surface().get_rect()
         self.mover = MoverTime(
             self.move_specs[to_state].duration,
@@ -156,7 +168,7 @@ class Photo(GameObject):
             self.set_scale(self.min_scale + factor * (self.max_scale - self.min_scale))
 
             factor = self.ease_out_interp.get(self.moving_time)
-            self.heading = 360.0 * self.move_specs[State.FLYING_IN].revolutions * factor
+            # self.heading = 360.0 * self.move_specs[State.FLYING_IN].revolutions * factor
 
 
     def display(self, delta):
@@ -175,7 +187,7 @@ class Photo(GameObject):
         self.set_alpha(1.0 - factor)
         self.set_scale(self.scale_interp.get(self.moving_time))
 
-        self.heading = 360.0 * self.move_specs[State.FLYING_OUT].revolutions * factor
+        # self.heading = 360.0 * self.move_specs[State.FLYING_OUT].revolutions * factor
 
         if self.mover.is_arrived():
             # I should've exited the screen -> make sure I'm off the screen so I get deleted
