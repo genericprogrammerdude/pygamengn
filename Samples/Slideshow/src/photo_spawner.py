@@ -3,6 +3,7 @@ import numpy
 import pygame
 
 from pygamengn.class_registrar import ClassRegistrar
+from pygamengn.interpolator import InterpolationMode
 from pygamengn.updatable import Updatable
 
 from photo import Photo
@@ -37,11 +38,6 @@ class PhotoSpawner(Updatable):
 
             # Activate new photo
             photo = self.photos[self.photo_index]
-            screen_rect = pygame.display.get_surface().get_rect()
-            pos = pygame.Vector2(-photo.rect.width * 0.2, numpy.random.randint(0, screen_rect.height))
-            # pos = pygame.Vector2(0, numpy.random.randint(0, screen_rect.height))
-            photo.mover.initialize(self.photo_time, pos, (screen_rect.width / 3.0, screen_rect.center[1]))
-            photo.position = pos
             photo.start_moving(self.photo_time)
             photo.transform()
 
