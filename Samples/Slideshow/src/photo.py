@@ -7,6 +7,7 @@ import pygame
 from pygamengn.class_registrar import ClassRegistrar
 from pygamengn.game_object import GameObject
 from pygamengn.interpolator import Interpolator, InterpolationMode
+from pygamengn.mover import MoverTime
 
 
 
@@ -110,7 +111,7 @@ class Photo(GameObject):
 
     def state_transition(self, to_state):
         screen_rect = pygame.display.get_surface().get_rect()
-        self.mover.initialize(
+        self.mover = MoverTime(
             self.move_specs[to_state].duration,
             self.position,
             self.move_specs[to_state].dest,
@@ -125,10 +126,8 @@ class Photo(GameObject):
     def fly_in(self, delta):
         self.position = self.mover.move(delta)
         if self.mover.is_arrived():
-            # Set up the mover for displaying the photo
             self.state_transition(State.ON_DISPLAY)
             self.set_alpha(1.0)
-            self.set_scale(self.max_scale)
             self.heading = 0
 
         else:

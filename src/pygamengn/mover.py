@@ -60,30 +60,20 @@ class MoverTime(Mover):
 
     def __init__(
         self,
-        eta = 0,
+        duration = 0,
         origin = pygame.Vector2(0, 0),
         destination = pygame.Vector2(1, 0),
         interpolationMode = InterpolationMode.LINEAR
     ):
-        self.initialize(eta, origin, destination, interpolationMode)
+        self.duration = duration
+        self.origin = origin
+        self.destination = destination
+        self.elapsed_time = 0
+        self.__interpolator = Interpolator(duration, origin, destination, interpolationMode)
 
     def move(self, delta, *_):
         self.elapsed_time += delta
         return self.__interpolator.get(self.elapsed_time)
 
-    def initialize(
-        self,
-        eta: float,
-        origin: pygame.Vector2,
-        destination: pygame.Vector2,
-        interpolationMode: InterpolationMode
-    ):
-        self.eta = eta
-        self.origin = origin
-        self.destination = destination
-        self.elapsed_time = 0
-        self.__diff = pygame.Vector2(destination) - pygame.Vector2(origin)
-        self.__interpolator = Interpolator(eta, origin, destination, interpolationMode)
-
     def is_arrived(self) -> bool:
-        return self.elapsed_time >= self.eta
+        return self.elapsed_time >= self.duration
