@@ -1,6 +1,15 @@
 import abc
 import numpy
 
+from enum import StrEnum, auto
+
+
+class InterpolationMode(StrEnum):
+    EASE_IN = auto()
+    EASE_OUT = auto()
+    EASE_ALL = auto()
+    LINEAR = auto()
+
 
 class Interpolator(abc.ABC):
     """Base class for all supported time-based interpolation types."""
