@@ -59,13 +59,3 @@ class Interpolator:
     def __linear(self, t: int) -> float:
         """Linear interpolator. It uses f(x) = x in the range [0.0, 1.0] as its function."""
         return (t / self.__duration)
-
-
-a = 10
-b = -10
-el = Interpolator(10, a, b, InterpolationMode.LINEAR)
-ei = Interpolator(10, a, b, InterpolationMode.EASE_IN)
-eo = Interpolator(10, a, b, InterpolationMode.EASE_OUT)
-ea = Interpolator(10, a, b, InterpolationMode.EASE_ALL)
-for i in range(10 + 1):
-    print(f"{el.get(i):8.2f} {ei.get(i):8.2f} {eo.get(i):8.2f} {ea.get(i):8.2f}")
