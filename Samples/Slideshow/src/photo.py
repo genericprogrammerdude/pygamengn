@@ -6,7 +6,7 @@ import pygame
 
 from pygamengn.class_registrar import ClassRegistrar
 from pygamengn.game_object import GameObject
-from pygamengn.interpolator import EaseInInterpolator, EaseOutInterpolator, InterpolationMode
+from pygamengn.interpolator import Interpolator, InterpolationMode
 
 
 
@@ -118,8 +118,8 @@ class Photo(GameObject):
         )
         self.state = to_state
         self.moving_time = 0
-        self.ease_in_interp = EaseInInterpolator(self.move_specs[to_state].duration)
-        self.ease_out_interp = EaseOutInterpolator(self.move_specs[to_state].duration)
+        self.ease_in_interp = Interpolator(self.move_specs[to_state].duration, mode = InterpolationMode.EASE_IN)
+        self.ease_out_interp = Interpolator(self.move_specs[to_state].duration, mode = InterpolationMode.EASE_OUT)
 
 
     def fly_in(self, delta):

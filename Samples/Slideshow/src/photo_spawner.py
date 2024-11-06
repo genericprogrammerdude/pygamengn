@@ -3,7 +3,6 @@ import numpy
 import pygame
 
 from pygamengn.class_registrar import ClassRegistrar
-from pygamengn.interpolator import InterpolationMode
 from pygamengn.updatable import Updatable
 
 from photo import Photo

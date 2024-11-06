@@ -1,4 +1,3 @@
-import abc
 import numpy
 
 from enum import StrEnum, auto
@@ -11,60 +10,62 @@ class InterpolationMode(StrEnum):
     LINEAR = auto()
 
 
-class Interpolator(abc.ABC):
+class Interpolator:
     """Base class for all supported time-based interpolation types."""
 
-    def __init__(self, duration: int, from_value = 0.0, to_value = 1.0):
-        self._duration = duration
+    def __init__(
+        self,
+        duration: int,
+        from_value = 0.0,
+        to_value = 1.0,
+        mode: InterpolationMode = InterpolationMode.LINEAR
+    ):
+        self.__duration = duration
         self.__from_value = from_value
         self.__to_value = to_value
+        self.__diff = self.__to_value - self.__from_value
 
+        if mode == InterpolationMode.LINEAR:
+            self.__func = self.__linear
+        elif mode == InterpolationMode.EASE_IN:
+            self.__func = self.__ease_in
+        elif mode == InterpolationMode.EASE_OUT:
+            self.__func = self.__ease_out
+        elif mode == InterpolationMode.EASE_ALL:
+            self.__func = self.__ease_all
+        else:
+            raise ValueError(f"Unknown interpolation mode: {mode}")
 
     def get(self, t: int):
         if t < 0:
             return self.__from_value
-        elif t > self._duration:
+        elif t > self.__duration:
             return self.__to_value
         else:
-            return self.__from_value + self._func(t) * (self.__to_value - self.__from_value)
+            return self.__from_value + self.__func(t) * self.__diff
+
+    def __ease_in(self, t: float) -> float:
+        """Interpolator that eases in. It uses f(x) = x^2 in the range [0.0, 1.0] as its function."""
+        return (t / self.__duration) ** 2
+
+    def __ease_out(self, t: int) -> float:
+        """Interpolator that eases out. It uses f(x) = -(x - 1)^2 + 1 in the range [0.0, 1.0] as its function."""
+        return -(((t / self.__duration) - 1.0) ** 2) + 1
+
+    def __ease_all(self, t: int) -> float:
+        """Interpolator that eases in and out. It uses f(x) = (1 - cos(x*Pi)) / 2 in the range [0.0, 1.0] as its function."""
+        return (1.0 - numpy.cos((t / self.__duration) * numpy.pi)) / 2.0
+
+    def __linear(self, t: int) -> float:
+        """Linear interpolator. It uses f(x) = x in the range [0.0, 1.0] as its function."""
+        return (t / self.__duration)
 
 
-    def _normalize(self, t: int):
-        return (value - self.__from_value) / (self.__to_value - self.__from_value)
-
-
-    @abc.abstractmethod
-    def _func(self, t: int):
-        pass
-
-
-
-class EaseInInterpolator(Interpolator):
-    """Interpolator that eases in. It uses f(x) = x^2 in the range [0.0, 1.0] as its function."""
-
-    def _func(self, t: float) -> float:
-        return (t / self._duration) ** 2
-
-
-
-class EaseOutInterpolator(Interpolator):
-    """Interpolator that eases in. It uses f(x) = -(x - 1)^2 + 1 in the range [0.0, 1.0] as its function."""
-
-    def _func(self, t: int) -> float:
-        return -(((t / self._duration) - 1.0) ** 2) + 1
-
-
-
-class EaseAllInterpolator(Interpolator):
-    """Interpolator that eases in and out. It uses f(x) = (1 - cos(x*Pi)) / 2 in the range [0.0, 1.0] as its function."""
-
-    def _func(self, t: int) -> float:
-        return (1.0 - numpy.cos((t / self._duration) * numpy.pi)) / 2.0
-
-
-
-class LinearInterpolator(Interpolator):
-    """Linear interpolator. It uses f(x) = x in the range [0.0, 1.0] as its function."""
-
-    def _func(self, t: int) -> float:
-        return (t / self._duration)
+a = 10
+b = -10
+el = Interpolator(10, a, b, InterpolationMode.LINEAR)
+ei = Interpolator(10, a, b, InterpolationMode.EASE_IN)
+eo = Interpolator(10, a, b, InterpolationMode.EASE_OUT)
+ea = Interpolator(10, a, b, InterpolationMode.EASE_ALL)
+for i in range(10 + 1):
+    print(f"{el.get(i):8.2f} {ei.get(i):8.2f} {eo.get(i):8.2f} {ea.get(i):8.2f}")

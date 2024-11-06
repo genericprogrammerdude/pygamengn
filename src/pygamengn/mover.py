@@ -68,13 +68,8 @@ class MoverTime(Mover):
         self.initialize(eta, origin, destination, interpolationMode)
 
     def move(self, delta, *_):
-        if self.elapsed_time <= self.eta:
-            self.elapsed_time += delta
-            theta = self.elapsed_time * numpy.pi / self.eta
-            factor = (1.0 - numpy.cos(theta)) / 2.0
-            return self.origin + self.__diff * factor
-        else:
-            return self.destination
+        self.elapsed_time += delta
+        return self.__interpolator.get(self.elapsed_time)
 
     def initialize(
         self,
@@ -88,16 +83,7 @@ class MoverTime(Mover):
         self.destination = destination
         self.elapsed_time = 0
         self.__diff = pygame.Vector2(destination) - pygame.Vector2(origin)
-        if interpolationMode == InterpolationMode.LINEAR:
-            self.interpolator = LinearInterpolator(eta, origin, destination)
-        elif interpolationMode == InterpolationMode.EASE_IN:
-            self.interpolator = EaseInInterpolator(eta, origin, destination)
-        elif interpolationMode == InterpolationMode.EASE_OUT:
-            self.interpolator = EaseOutInterpolator(eta, origin, destination)
-        elif interpolationMode == InterpolationMode.EASE_ALL:
-            self.interpolator = EaseAllInterpolator(eta, origin, destination)
-        else:
-            raise ValueError(f"Unknown interpolation mode: {interpolationMode}")
+        self.__interpolator = Interpolator(eta, origin, destination, interpolationMode)
 
     def is_arrived(self) -> bool:
         return self.elapsed_time >= self.eta
