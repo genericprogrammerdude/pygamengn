@@ -1,5 +1,6 @@
 from abc import abstractmethod
 
+import logging
 import pygame
 
 from pygamengn.class_registrar import ClassRegistrar
@@ -21,6 +22,7 @@ class UIBase(GameObjectBase):
         self.rect = None
         self.image = None
         self.aspect_ratio = None
+        self.__bind_children()
 
     def update(self, parent_rect, delta):
         """Updates the UI component and its children."""
@@ -68,14 +70,18 @@ class UIBase(GameObjectBase):
 
         return components
 
-    def bind_children(self, parent=None):
+    def __bind_children(self, parent=None):
         """Binds children to class members to make them accessible."""
         if not parent:
             parent = self
         for child in self.children:
-            child.bind_children(parent)
+            child.__bind_children(parent)
             if child.name:
-                setattr(parent, child.name, child)
+                try:
+                    a = getattr(parent, child.name)
+                    logging.warn(f"{child.name} attr is already assigned with {child}. Not assigning it {a}")
+                except AttributeError:
+                    setattr(parent, child.name, child)
 
     @abstractmethod
     def resize(self):
