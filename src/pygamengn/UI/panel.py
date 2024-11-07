@@ -25,9 +25,10 @@ class Panel(UIBase):
 class ColourPanel(UIBase):
     """Basic UI panel that is a solid colour and has no image."""
 
-    def __init__(self, colour, hover_colour=None, **kwargs):
+    def __init__(self, colour, hover_colour=None, border_radius=0, **kwargs):
         super().__init__(**kwargs)
         self.colour = tuple(colour)
+        self.border_radius = border_radius
         if hover_colour:
             self.hover_colour = tuple(hover_colour)
         else:
@@ -36,7 +37,15 @@ class ColourPanel(UIBase):
     def resize(self):
         """Resizes the image to match the panel's size with its parent's rect."""
         self.image = pygame.Surface(self.rect.size, pygame.HWSURFACE | pygame.SRCALPHA)
-        self.image.fill(self.colour)
+        if self.border_radius == 0:
+            self.image.fill(self.colour)
+        else:
+            pygame.draw.rect(
+                surface = self.image,
+                color = self.colour,
+                rect = pygame.Rect(0, 0, self.rect.width, self.rect.height),
+                border_radius = round(min(self.rect.width, self.rect.height) * self.border_radius)
+            )
 
     def propagate_mouse_pos(self, pos):
         """Notifies the component that the mouse is hovering over it."""
@@ -66,7 +75,7 @@ class TextPanel(UIBase):
         CENTRE = "CENTRE"
         RIGHT = "RIGHT"
 
-    def __init__(self, font_asset, text_colour, horz_align, vert_align, text, **kwargs):
+    def __init__(self, font_asset, text_colour, horz_align, vert_align, text=" ", **kwargs):
         super().__init__(**kwargs)
         self.font_asset = font_asset
         self.text_colour = text_colour
