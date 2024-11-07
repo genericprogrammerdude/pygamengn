@@ -20,12 +20,16 @@ class PhotoSpawner(Updatable):
         self.total_time = 0
         self.photo_index = 0
         self.done = False
+        self.year_text_panel = None
         self.skip_indices = [
             111,    # Small resolution (requires scale 2.2) and not a great photo
         ]
 
         screen_size = pygame.display.get_surface().get_rect().size
         photo_index = 0
+
+    def set_year_text_panel(self, year_text_panel):
+        self.year_text_panel = year_text_panel
 
     def update(self, delta):
         self.total_time += delta
@@ -38,6 +42,7 @@ class PhotoSpawner(Updatable):
             photo = self.photos[self.photo_index]
             photo.start_moving()
             photo.transform()
+            self.year_text_panel.set_text(photo.date[:4])
 
             # Increment photo index
             self.photo_index += 1
