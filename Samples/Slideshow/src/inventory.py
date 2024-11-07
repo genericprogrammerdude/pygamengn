@@ -29,7 +29,7 @@ import images_dict
 
 if DEVELOP_AND_DEBUG:
     image_load_count = 9
-    image_index_start = 9
+    image_index_start = 86
     photo_asset_names = [f"/Photo_{i + image_index_start:03}" for i in range(image_load_count)]
     images = {}
     for i in range(image_load_count):
@@ -57,8 +57,12 @@ game_types = {
     "PhotoSpawner": {
         "class_name": "PhotoSpawner",
         "kwargs": {
-            "spawn_freq": 10000,
             "game_object:photos": photo_asset_names,
+            "durations": {
+                "flying_in": 2000,
+                "on_display": 4000,
+                "flying_out": 2000,
+            }
         }
     },
     "YearPanel": {

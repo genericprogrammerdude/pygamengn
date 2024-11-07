@@ -18,11 +18,11 @@ class Slideshow(pygamengn.Game):
         self.year_ui = year_ui
         self.photo_spawner = photo_spawner
         self.photo_spawner.set_year_text_panel(year_ui.year_text)
+        self.photo_spawner.move_to_next_photo()
 
     def update(self, delta):
         """Updates the game."""
         self.handle_input()
-        self.photo_spawner.update(delta)
         self.year_ui.update(self.screen.get_rect(), delta)
         self.blit_ui(self.year_ui)
         super().update(delta)

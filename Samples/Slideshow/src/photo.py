@@ -53,6 +53,7 @@ class Photo(GameObject):
         self.max_scale = 1.0
         self.min_scale = 0.1
         self.moving_time = 0
+        self.done_callback = None
 
         # Get maximum scale so that the photo fits the screen
         screen_size = pygame.display.get_surface().get_rect().size
@@ -67,7 +68,7 @@ class Photo(GameObject):
         self.set_scale(self.min_scale)
 
 
-    def start_moving(self):
+    def start_moving(self, durations, done_callback):
         screen_rect = pygame.display.get_surface().get_rect()
         if self.max_scale < 1.7:
             self.display_max_scale = self.max_scale * 2.0
@@ -85,13 +86,13 @@ class Photo(GameObject):
             "flying_in": MoveSpec(
                 normalized_dest = pygame.Vector2(0.5, 0.5),
                 revolutions = numpy.random.randint(1, 2) * numpy.random.choice([1, -1]),
-                duration = 2000,
+                duration = durations["flying_in"],
                 move_interpolation_mode = InterpolationMode.EASE_OUT,
             ),
             "on_display": MoveSpec(
                 normalized_dest = pygame.Vector2(0.5, 0.5),
                 revolutions = 0,
-                duration = 40000,
+                duration = durations["on_display"],
                 move_interpolation_mode = InterpolationMode.EASE_OUT,
                 centre_offset = offset
 
@@ -99,12 +100,13 @@ class Photo(GameObject):
             "flying_out": MoveSpec(
                 normalized_dest = (1.1, numpy.random.random_sample()),
                 revolutions = numpy.random.randint(1, 2) * numpy.random.choice([1, -1]),
-                duration = 2000,
+                duration = durations["flying_out"],
                 move_interpolation_mode = InterpolationMode.EASE_OUT,
             ),
         }
         self.move_specs = move_specs
         self.visible = True
+        self.done_callback = done_callback
         self.position = pygame.Vector2(0, numpy.random.random_integers(0, screen_rect.height))
         self.transform()
         self.state_transition(State.FLYING_IN)
@@ -175,6 +177,7 @@ class Photo(GameObject):
         self.position = self.mover.move(delta)
         if self.mover.is_arrived():
             self.state_transition(State.FLYING_OUT)
+            self.done_callback()
 
         factor = self.ease_out_interp.get(self.moving_time)
         self.set_scale(self.scale_interp.get(self.moving_time))

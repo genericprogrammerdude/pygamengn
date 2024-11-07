@@ -3,54 +3,43 @@ import numpy
 import pygame
 
 from pygamengn.class_registrar import ClassRegistrar
-from pygamengn.updatable import Updatable
+from pygamengn.game_object_base import GameObjectBase
 
 from photo import Photo
 
 
 
 @ClassRegistrar.register("PhotoSpawner")
-class PhotoSpawner(Updatable):
+class PhotoSpawner(GameObjectBase):
     """Spawns photos in the right order."""
 
-    def __init__(self, spawn_freq, photos):
-        self.spawn_freq = spawn_freq
+    def __init__(self, photos, durations):
         self.photos = photos
-        self.time_to_next_spawn = 1
-        self.total_time = 0
-        self.photo_index = 0
+        self.durations = durations
+        self.photo_index = -1
         self.done = False
         self.year_text_panel = None
         self.skip_indices = [
             111,    # Small resolution (requires scale 2.2) and not a great photo
         ]
 
-        screen_size = pygame.display.get_surface().get_rect().size
-        photo_index = 0
-
     def set_year_text_panel(self, year_text_panel):
         self.year_text_panel = year_text_panel
 
-    def update(self, delta):
-        self.total_time += delta
-        self.time_to_next_spawn -= delta
+    def move_to_next_photo(self):
+        self.photo_index += 1
+        while self.photo_index in self.skip_indices:
+            self.photo_index += 1
 
-        if self.time_to_next_spawn <= 0 and self.photo_index < len(self.photos):
-            self.time_to_next_spawn = self.spawn_freq
-
-            # Activate new photo
+        if self.photo_index < len(self.photos):
             photo = self.photos[self.photo_index]
-            photo.start_moving()
+            photo.start_moving(self.durations, self.move_to_next_photo)
             photo.transform()
             self.year_text_panel.set_text(photo.date[:4])
 
-            # Increment photo index
-            self.photo_index += 1
-            while self.photo_index in self.skip_indices:
-                self.photo_index += 1
+        # If we're out of photos, the Slideshow game will end when the last photo is off the screen
+        self.done = self.photo_index >= len(self.photos)
 
-            # If we're out of photos, the Slideshow game will end when the last photo is off the screen
-            self.done = self.photo_index >= len(self.photos)
 
 # Small photos
 # *** Small photo! 1.2 095
