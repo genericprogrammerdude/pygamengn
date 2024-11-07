@@ -497,7 +497,6 @@ game_types = {
                     "size": [0.1, 1],
                     "game_object:children": [],
                     "fix_aspect_ratio": True,
-                    "name": "spinner",
                     "image:image_asset": "ship_blue",
                     "angular_velocity": 30
                 }
@@ -562,7 +561,6 @@ game_types = {
                 "size": [0.8, 0.1],
                 "game_object:children": [],
                 "fix_aspect_ratio": False,
-                "name": "asteroid_row_panel",
                 "colour": [150, 150, 150, 100]
             },
             "Spinner": {
@@ -572,7 +570,6 @@ game_types = {
                     "size": [0.1, 1],
                     "game_object:children": [],
                     "fix_aspect_ratio": True,
-                    "name": "spinner"
                 }
             },
             "Count": {

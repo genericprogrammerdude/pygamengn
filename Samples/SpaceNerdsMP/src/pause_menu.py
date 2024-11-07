@@ -11,7 +11,6 @@ class PauseMenu(ColourPanel):
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self.bind_children()
         self.resume_callback = None
         self.exit_callback = None
 

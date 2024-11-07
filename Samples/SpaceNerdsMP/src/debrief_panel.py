@@ -11,7 +11,6 @@ class DebriefPanel(ColourPanel):
 
     def __init__(self, asteroid_spawner, **kwargs):
         super().__init__(**kwargs)
-        self.bind_children()
         self.asteroid_spawner = asteroid_spawner
         self.continue_callback = None
         self.score = 0
