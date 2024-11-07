@@ -199,8 +199,3 @@ class AsteroidShooterGame(pygamengn.Game):
         sec = total_sec % 60
         min = total_sec // 60
         return "{:02d}:{:02d}".format(min, sec)
-
-    def blit_ui(self, ui):
-        self.add_blit_surface(pygamengn.BlitSurface(ui.image, ui.rect))
-        for child in ui.children:
-            self.blit_ui(child)

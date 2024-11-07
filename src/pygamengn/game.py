@@ -62,6 +62,11 @@ class Game(GameObjectBase):
         """Invoked after drawing render_group to the screen. Implement this for any direct-drawing needs."""
         pass
 
+    def blit_ui(self, ui):
+        self.add_blit_surface(BlitSurface(ui.image, ui.rect))
+        for child in ui.children:
+            self.blit_ui(child)
+
 
 class BlitSurface:
     """Specification for a surface that will be blitted while rendering."""
