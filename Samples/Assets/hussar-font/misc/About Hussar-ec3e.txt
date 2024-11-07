@@ -1,0 +1,33 @@
+About The Naming of Oblique weights:
+
+The Numbers are used to denote how angular an oblique or opposite oblique (Leftalic Oblique) is.
+
+The only variant to have all seven angles is Hussar Bold, all other variants have at least one angle of oblique, and some have Opposite Oblique (Leftalic).
+
+Oblique One is Least Angled, Two is more Angled, and so on. The Most angled version is Hussar Bold Wodka, which has been named such for a while, and I did not want to change it's name for this.
+
+List of Oblique styles:
+
+Oblique One (Shallow Oblique)
+
+Oblique Two (Semi-Shallow Oblique)
+
+Oblique Three (Oblique)
+
+Oblique Four (Extra Oblique)
+
+Oblique Five (Super Oblique)
+
+Oblique Six (Ultra Oblique)
+
+Oblique Seven/Wodka (Ultimate Oblique)
+
+Opposite Obliques use the same system.
+
+Info for some of the other weights:
+
+Wodka is Polish for Vodka (Indicating the font is drunk)
+
+The Reversed weights are for both a mirrored effect and for reverse printing onto stuff.
+
+The Simple Ghost weights were made because certain characters in the main fonts do not work properly when attempts were made to make outlined versions of them.

@@ -1,0 +1,30 @@
+Hussar OpenType feature list:
+
+Type these letter combinations to get these ligature characters:
+
+ffj: f f j
+
+fft: f f t
+
+fj: f j
+
+ft: f t
+
+99: 9 9
+
+Polandball: p o l a n
+
+Polandball 2: p o l a n 2
+
+BWAHH: b w a h h
+
+Cannot Into Space Fonts Logo: c a n n o t i n t o s p a c e
+
+Anarchy Symbol: a n a r c h y
+
+90s Anarchy Symbol: 9 0 s a n a r c h y
+
+Christian Anarchy Symbol: a l p h a o m e g a
+
+DISCLAIMER:
+The above political symbols are in this font only for stylistic purposes, I do not endorse or support any political parties or movements with this font.
