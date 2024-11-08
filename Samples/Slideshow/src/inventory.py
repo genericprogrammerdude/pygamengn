@@ -75,7 +75,7 @@ game_types = {
             ],
             "fix_aspect_ratio": True,
             "colour": [100, 100, 100, 150],
-            "border_radius": 0.3,
+            "corner_radius": 0.3,
         },
         "YearText": {
             "class_name": "TextPanel",
