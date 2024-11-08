@@ -29,6 +29,7 @@ class ColourPanel(UIBase):
         super().__init__(**kwargs)
         self.colour = tuple(colour)
         self.corner_radius = corner_radius
+        self.__mouse_is_hovering = False
         if hover_colour:
             self.hover_colour = tuple(hover_colour)
         else:
@@ -36,7 +37,7 @@ class ColourPanel(UIBase):
 
     def resize(self):
         """Resizes the image to match the panel's size with its parent's rect."""
-        self.image = pygame.Surface(self.rect.size, pygame.HWSURFACE | pygame.SRCALPHA)
+        self.image = pygame.Surface(self.rect.size, pygame.SRCALPHA)
         self.__build_image(self.colour)
 
     def propagate_mouse_pos(self, pos):
@@ -45,11 +46,13 @@ class ColourPanel(UIBase):
         if self.colour != self.hover_colour:
             if self.rect.collidepoint(pos):
                 components.append(self)
-                if self.image.get_at((0, 0)) != self.hover_colour:
+                if not self.__mouse_is_hovering and self.hover_colour != self.colour:
                     self.__build_image(self.hover_colour)
+                    self.__mouse_is_hovering = True
             else:
-                if self.image.get_at((0, 0)) != self.colour:
+                if self.__mouse_is_hovering and self.hover_colour != self.colour:
                     self.__build_image(self.colour)
+                    self.__mouse_is_hovering = False
         return components
 
     def __build_image(self, colour):
