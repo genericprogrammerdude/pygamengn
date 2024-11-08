@@ -30,10 +30,12 @@ class UIBase(GameObjectBase):
 
     def update(self, parent_rect, delta):
         """Updates the UI component and its children."""
-        if parent_rect != self.parent_rect or self.is_dirty():
+        if self.is_dirty():
             self._resize_to_parent(parent_rect)
-            self.parent_rect = parent_rect
+
+        if self._needs_redraw(parent_rect):
             self.resize()
+            self._is_dirty = False
 
         for child in self.children:
             child.update(self.rect, delta)
@@ -55,6 +57,9 @@ class UIBase(GameObjectBase):
         self.__fade_out_interp = Interpolator(duration = duration, from_value = 255, to_value = 0)
         self.__fade_out_time = 0
 
+    def _needs_redraw(self, parent_rect: pygame.rect) -> bool:
+        return not self.image or not self.parent_rect or parent_rect.size != self.parent_rect.size
+
     def _resize_to_parent(self, parent_rect):
         """Resizes the component's rect to match size with its parent's rect."""
         width = parent_rect.width * self.size[0]
@@ -70,6 +75,7 @@ class UIBase(GameObjectBase):
                 height = width / self.aspect_ratio
         pos = parent_rect.topleft + pygame.Vector2(parent_rect.width * self.pos[0], parent_rect.height * self.pos[1])
         self.rect = pygame.Rect(pos.x, pos.y, width, height)
+        self.parent_rect = parent_rect
         self._is_dirty = False
 
     def is_dirty(self):
