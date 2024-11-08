@@ -16,7 +16,7 @@ assets = {
         "class_name": "FontAsset",
         "kwargs": {
             "font:fname": "mechanical-font/MechanicalBold-oOmA.otf",
-            "size": 80
+            "size": 72
         }
     },
 }
@@ -29,7 +29,7 @@ import images_dict
 
 if DEVELOP_AND_DEBUG:
     image_load_count = 4
-    image_index_start = 220
+    image_index_start = 101
     photo_asset_names = [f"/Photo_{i + image_index_start:03}" for i in range(image_load_count)]
     images = {}
     for i in range(image_load_count):
