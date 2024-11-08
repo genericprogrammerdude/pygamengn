@@ -5,6 +5,7 @@ import pygame
 
 from pygamengn.class_registrar import ClassRegistrar
 from pygamengn.game_object_base import GameObjectBase
+from pygamengn.interpolator import Interpolator
 
 
 @ClassRegistrar.register("UIBase")
@@ -24,6 +25,8 @@ class UIBase(GameObjectBase):
         self.aspect_ratio = None
         self._is_dirty = True
         self.__bind_children()
+        self.__fade_out_interp = None
+        self.__fade_out_time = 0
 
     def update(self, parent_rect, delta):
         """Updates the UI component and its children."""
@@ -35,10 +38,22 @@ class UIBase(GameObjectBase):
         for child in self.children:
             child.update(self.rect, delta)
 
+        if self.__fade_out_interp and self.image:
+            interp_value = self.__fade_out_interp.get(self.__fade_out_time)
+            self.__fade_out_time += delta
+            self.image.set_alpha(interp_value)
+            for child in self.children:
+                if child.image:
+                    child.image.set_alpha(interp_value)
+
     def set_position(self, new_normalized_pos: pygame.Vector2):
         if self.pos != new_normalized_pos:
             self._is_dirty = True
             self.pos = new_normalized_pos
+
+    def fade_out(self, duration: int):
+        self.__fade_out_interp = Interpolator(duration = duration, from_value = 255, to_value = 0)
+        self.__fade_out_time = 0
 
     def _resize_to_parent(self, parent_rect):
         """Resizes the component's rect to match size with its parent's rect."""
