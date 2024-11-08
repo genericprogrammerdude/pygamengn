@@ -39,3 +39,9 @@ class Slideshow(pygamengn.Game):
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
                     self.running = False
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_RIGHT:
+                    self.photo_spawner.move_to_next_photo()
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_LEFT:
+                    self.photo_spawner.move_to_prev_photo()

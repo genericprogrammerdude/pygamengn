@@ -6,7 +6,7 @@ from pygamengn.class_registrar import ClassRegistrar
 from pygamengn.interpolator import Interpolator
 from pygamengn.updatable import Updatable
 
-from photo import Photo
+from photo import Photo, State
 
 
 
@@ -20,6 +20,7 @@ class PhotoSpawner(Updatable):
         self.total_time = 0
         self.photo_index = -1
         self.done = False
+        self.photo = None
         self.year_panel = None
         self.interpolator = None
         self.skip_indices = [
@@ -45,17 +46,27 @@ class PhotoSpawner(Updatable):
         self.photo_index += 1
         while self.photo_index in self.skip_indices:
             self.photo_index += 1
-
-        if self.photo_index < len(self.photos):
-            photo = self.photos[self.photo_index]
-            photo.start_moving(self.durations, self.move_to_next_photo)
-            photo.transform()
-            self.year_panel.year_text.set_text(photo.date[:4])
+        self.__show_new_photo()
 
         # If we're out of photos, the Slideshow game will end when the last photo is off the screen
         self.done = self.photo_index >= len(self.photos)
         if self.done:
             self.year_panel.fade_out(1500)
+
+    def move_to_prev_photo(self):
+        self.photo_index -= 1
+        while self.photo_index in self.skip_indices:
+            self.photo_index -= 1
+        self.__show_new_photo()
+
+    def __show_new_photo(self):
+        if self.photo_index < len(self.photos) and self.photo_index >= 0:
+            if self.photo and self.photo.state != State.FLYING_OUT:
+                self.photo.state_transition(State.FLYING_OUT)
+            self.photo = self.photos[self.photo_index]
+            self.photo.start_moving(self.durations, self.move_to_next_photo)
+            self.photo.transform()
+            self.year_panel.year_text.set_text(self.photo.date[:4])
 
 
 # Small photos
