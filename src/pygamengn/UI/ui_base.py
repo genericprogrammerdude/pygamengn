@@ -13,8 +13,8 @@ class UIBase(GameObjectBase):
 
     def __init__(self, pos, size, children, fix_aspect_ratio, name="", **kwargs):
         super().__init__(**kwargs)
-        self.pos = pos
-        self.size = size
+        self.pos = pygame.Vector2(pos)
+        self.size = pygame.Vector2(size)
         self.children = children
         self.fix_aspect_ratio = fix_aspect_ratio
         self.name = name
@@ -22,19 +22,25 @@ class UIBase(GameObjectBase):
         self.rect = None
         self.image = None
         self.aspect_ratio = None
+        self._is_dirty = True
         self.__bind_children()
 
     def update(self, parent_rect, delta):
         """Updates the UI component and its children."""
         if parent_rect != self.parent_rect or self.is_dirty():
-            self.resize_to_parent(parent_rect)
+            self._resize_to_parent(parent_rect)
             self.parent_rect = parent_rect
             self.resize()
 
         for child in self.children:
             child.update(self.rect, delta)
 
-    def resize_to_parent(self, parent_rect):
+    def set_position(self, new_normalized_pos: pygame.Vector2):
+        if self.pos != new_normalized_pos:
+            self._is_dirty = True
+            self.pos = new_normalized_pos
+
+    def _resize_to_parent(self, parent_rect):
         """Resizes the component's rect to match size with its parent's rect."""
         width = parent_rect.width * self.size[0]
         height = parent_rect.height * self.size[1]
@@ -47,15 +53,15 @@ class UIBase(GameObjectBase):
             elif height * self.aspect_ratio > width:
                 # Width is the limiting factor
                 height = width / self.aspect_ratio
-        size = (round(width), round(height))
         pos = parent_rect.topleft + pygame.Vector2(parent_rect.width * self.pos[0], parent_rect.height * self.pos[1])
-        self.rect = pygame.Rect(pos.x, pos.y, size[0], size[1])
+        self.rect = pygame.Rect(pos.x, pos.y, width, height)
+        self._is_dirty = False
 
     def is_dirty(self):
         """
         Returns whether the component needs to be resized. Returning True guarantees the component will be re-drawn.
         """
-        return False
+        return self._is_dirty
 
     def propagate_mouse_pos(self, pos):
         """Tells the component and its children the position of the mouse pointer in screen coordinates."""

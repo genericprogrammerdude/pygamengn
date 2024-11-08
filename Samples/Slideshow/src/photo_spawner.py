@@ -3,28 +3,43 @@ import numpy
 import pygame
 
 from pygamengn.class_registrar import ClassRegistrar
-from pygamengn.game_object_base import GameObjectBase
+from pygamengn.interpolator import Interpolator
+from pygamengn.updatable import Updatable
 
 from photo import Photo
 
 
 
 @ClassRegistrar.register("PhotoSpawner")
-class PhotoSpawner(GameObjectBase):
+class PhotoSpawner(Updatable):
     """Spawns photos in the right order."""
 
     def __init__(self, photos, durations):
         self.photos = photos
         self.durations = durations
+        self.total_time = 0
         self.photo_index = -1
         self.done = False
-        self.year_text_panel = None
+        self.year_panel = None
+        self.interpolator = None
         self.skip_indices = [
             111,    # Small resolution (requires scale 2.2) and not a great photo
         ]
 
-    def set_year_text_panel(self, year_text_panel):
-        self.year_text_panel = year_text_panel
+    def update(self, delta):
+        self.year_panel.set_position(pygame.Vector2(self.interpolator.get(self.total_time), self.year_panel.pos.y))
+        self.total_time += delta
+
+    def set_year_panel(self, year_panel):
+        self.year_panel = year_panel
+        self.interpolator = Interpolator(
+            duration = (
+                (self.durations["on_display"] + self.durations["flying_in"]) * len(self.photos) +
+                self.durations["flying_out"]
+            ),
+            from_value = 0,
+            to_value = 1.0 - self.year_panel.size[1]
+        )
 
     def move_to_next_photo(self):
         self.photo_index += 1
@@ -35,7 +50,7 @@ class PhotoSpawner(GameObjectBase):
             photo = self.photos[self.photo_index]
             photo.start_moving(self.durations, self.move_to_next_photo)
             photo.transform()
-            self.year_text_panel.set_text(photo.date[:4])
+            self.year_panel.year_text.set_text(photo.date[:4])
 
         # If we're out of photos, the Slideshow game will end when the last photo is off the screen
         self.done = self.photo_index >= len(self.photos)

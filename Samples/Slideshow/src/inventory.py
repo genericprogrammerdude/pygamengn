@@ -28,8 +28,8 @@ import photo_metadata
 import images_dict
 
 if DEVELOP_AND_DEBUG:
-    image_load_count = 9
-    image_index_start = 86
+    image_load_count = 4
+    image_index_start = 220
     photo_asset_names = [f"/Photo_{i + image_index_start:03}" for i in range(image_load_count)]
     images = {}
     for i in range(image_load_count):
@@ -45,7 +45,7 @@ game_types = {
             "asset:render_group": "RenderGroup",
             "game_object:collision_manager": "CollisionManager",
             "game_object:photo_spawner": "/PhotoSpawner",
-            "game_object:year_ui": "/YearPanel",
+            "game_object:year_panel": "/YearPanel",
         },
         "CollisionManager": {
             "class_name": "CollisionManager",
