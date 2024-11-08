@@ -30,6 +30,7 @@ class ColourPanel(UIBase):
         self.colour = tuple(colour)
         self.corner_radius = corner_radius
         self.__mouse_is_hovering = False
+        self.__needs_redraw = True
         if hover_colour:
             self.hover_colour = tuple(hover_colour)
         else:
@@ -38,7 +39,7 @@ class ColourPanel(UIBase):
     def resize(self):
         """Resizes the image to match the panel's size with its parent's rect."""
         self.image = pygame.Surface(self.rect.size, pygame.SRCALPHA)
-        self.__build_image(self.colour)
+        self.__build_image(self.hover_colour if self.__mouse_is_hovering else self.colour)
 
     def propagate_mouse_pos(self, pos) -> bool:
         """Notifies the component that the mouse is hovering over it."""
@@ -47,13 +48,16 @@ class ColourPanel(UIBase):
             if self.rect.collidepoint(pos):
                 capture_hover = True
                 if not self.__mouse_is_hovering and self.hover_colour != self.colour:
-                    self.__build_image(self.hover_colour)
+                    self.__needs_redraw = True
                     self.__mouse_is_hovering = True
             else:
                 if self.__mouse_is_hovering and self.hover_colour != self.colour:
-                    self.__build_image(self.colour)
+                    self.__needs_redraw = True
                     self.__mouse_is_hovering = False
         return capture_hover
+
+    def _needs_redraw(self, parent_rect: pygame.rect) -> bool:
+        return self.__needs_redraw
 
     def __build_image(self, colour):
         if self.corner_radius == 0:
@@ -65,6 +69,7 @@ class ColourPanel(UIBase):
                 rect = pygame.Rect(0, 0, self.rect.width, self.rect.height),
                 border_radius = round(min(self.rect.width, self.rect.height) * self.corner_radius)
             )
+        self.__needs_redraw = False
 
 
 @ClassRegistrar.register("TextPanel")
@@ -88,41 +93,39 @@ class TextPanel(UIBase):
         self.horz_align = TextPanel.HorzAlign(horz_align)
         self.vert_align = TextPanel.VertAlign(vert_align)
         self.text = text
-        self.text_is_dirty = True
+        self.__text_is_dirty = True
 
     def set_text(self, text):
-        self.text_is_dirty = (self.text != text)
-        self.text = text
-
-    def is_dirty(self):
-        return self.text_is_dirty
+        if self.text != text:
+            self.text = text
+            self.__text_is_dirty = True
 
     def resize(self):
         """TextPanel ignores its parent rect and renders to the font size."""
-        self.image = self.font_asset.font.render(self.text, True, self.text_colour)
-        image_size = self.image.get_rect().size
-        if image_size[0] != self.parent_rect.size[0] or image_size[1] != self.parent_rect.size[1]:
-            size = self.scale_to_fit(self.image.get_rect().size, self.parent_rect.size)
-            self.image = pygame.transform.scale(self.image, size)
-        self.text_is_dirty = False
-        self.align()
+        if self.__text_is_dirty:
+            self.image = self.font_asset.font.render(self.text, True, self.text_colour)
+            self.__align()
+            self.__text_is_dirty = False
 
-    def align(self):
+    def _needs_redraw(self, parent_rect: pygame.rect) -> bool:
+        return self.__text_is_dirty
+
+    def __align(self):
         """Aligns the text image."""
         # Horizontal alignment
         if self.horz_align == TextPanel.HorzAlign.LEFT:
             pass  # This is what UIBase does by default
         elif self.horz_align == TextPanel.HorzAlign.CENTRE:
-            self.rect.x = self.rect.x + (self.rect.width - self.image.get_rect().width) / 2
+            self.rect.x = self.parent_rect.x + (self.parent_rect.width - self.image.get_rect().width) / 2
         elif self.horz_align == TextPanel.HorzAlign.RIGHT:
-            self.rect.x = self.rect.x + self.rect.width - self.image.get_rect().width
+            self.rect.x = self.parent_rect.x + self.parent_rect.width - self.image.get_rect().width
         # Vertical alignment
         if self.vert_align == TextPanel.VertAlign.TOP:
             pass  # This is what UIBase does by default
         elif self.vert_align == TextPanel.VertAlign.CENTRE:
-            self.rect.y = self.rect.y + (self.rect.height - self.image.get_rect().height) / 2
+            self.rect.y = self.parent_rect.y + (self.parent_rect.height - self.image.get_rect().height) / 2
         elif self.vert_align == TextPanel.VertAlign.BOTTOM:
-            self.rect.y = self.rect.y + self.rect.height - self.image.get_rect().height
+            self.rect.y = self.parent_rect.y + self.rect.parent_height - self.image.get_rect().height
 
     @classmethod
     def scale_to_fit(cls, size, max_size):
