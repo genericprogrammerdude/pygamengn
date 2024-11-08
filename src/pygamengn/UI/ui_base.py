@@ -78,18 +78,17 @@ class UIBase(GameObjectBase):
         """
         return self._is_dirty
 
-    def propagate_mouse_pos(self, pos):
+    def propagate_mouse_pos(self, pos) -> bool:
         """Tells the component and its children the position of the mouse pointer in screen coordinates."""
-        components = []
+        capture_hover = False
         for child in self.children:
-            components += child.propagate_mouse_pos(pos)
+            capture_hover = capture_hover or child.propagate_mouse_pos(pos)
 
-        if len(components) > 0:
+        if capture_hover:
             pygame.mouse.set_system_cursor(pygame.SYSTEM_CURSOR_HAND)
         else:
             pygame.mouse.set_system_cursor(pygame.SYSTEM_CURSOR_ARROW)
-
-        return components
+        return capture_hover
 
     def __bind_children(self, parent=None):
         """Binds children to class members to make them accessible."""

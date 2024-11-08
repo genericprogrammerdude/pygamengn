@@ -169,6 +169,7 @@ game_types = {
                 "StartButton",
                 "ExitButton",
             ],
+            "name": "main_menu",
             "fix_aspect_ratio": False,
             "colour": [100, 100, 100, 128],
             "corner_radius": 0.05,

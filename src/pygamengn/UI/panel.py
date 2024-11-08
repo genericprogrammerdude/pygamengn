@@ -40,12 +40,12 @@ class ColourPanel(UIBase):
         self.image = pygame.Surface(self.rect.size, pygame.SRCALPHA)
         self.__build_image(self.colour)
 
-    def propagate_mouse_pos(self, pos):
+    def propagate_mouse_pos(self, pos) -> bool:
         """Notifies the component that the mouse is hovering over it."""
-        components = super().propagate_mouse_pos(pos)
+        capture_hover = super().propagate_mouse_pos(pos)
         if self.colour != self.hover_colour:
             if self.rect.collidepoint(pos):
-                components.append(self)
+                capture_hover = True
                 if not self.__mouse_is_hovering and self.hover_colour != self.colour:
                     self.__build_image(self.hover_colour)
                     self.__mouse_is_hovering = True
@@ -53,7 +53,7 @@ class ColourPanel(UIBase):
                 if self.__mouse_is_hovering and self.hover_colour != self.colour:
                     self.__build_image(self.colour)
                     self.__mouse_is_hovering = False
-        return components
+        return capture_hover
 
     def __build_image(self, colour):
         if self.corner_radius == 0:
