@@ -28,14 +28,14 @@ class UIBase(GameObjectBase):
         self.__fade_out_interp = None
         self.__fade_out_time = 0
 
-    def update(self, parent_rect, delta):
+    def update(self, parent_rect: pygame.rect, delta: int):
         """Updates the UI component and its children."""
         if self.is_dirty():
             self._resize_to_parent(parent_rect)
+            self._is_dirty = False
 
         if self._needs_redraw(parent_rect):
             self.resize()
-            self._is_dirty = False
 
         for child in self.children:
             child.update(self.rect, delta)
@@ -52,6 +52,8 @@ class UIBase(GameObjectBase):
         if self.pos != new_normalized_pos:
             self._is_dirty = True
             self.pos = new_normalized_pos
+            for child in self.children:
+                child._is_dirty = True
 
     def fade_out(self, duration: int):
         self.__fade_out_interp = Interpolator(duration = duration, from_value = 255, to_value = 0)

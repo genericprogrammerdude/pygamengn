@@ -1,9 +1,10 @@
 from enum import Enum
 
+import logging
 import pygame
 
-from pygamengn.UI.ui_base import UIBase
 from pygamengn.class_registrar import ClassRegistrar
+from pygamengn.UI.ui_base import UIBase
 
 
 @ClassRegistrar.register("Panel")
@@ -40,6 +41,7 @@ class ColourPanel(UIBase):
         """Resizes the image to match the panel's size with its parent's rect."""
         self.image = pygame.Surface(self.rect.size, pygame.SRCALPHA)
         self.__build_image(self.hover_colour if self.__mouse_is_hovering else self.colour)
+        logging.info(f"{self.name}.resize() generated new image")
 
     def propagate_mouse_pos(self, pos) -> bool:
         """Notifies the component that the mouse is hovering over it."""
@@ -106,6 +108,11 @@ class TextPanel(UIBase):
             self.image = self.font_asset.font.render(self.text, True, self.text_colour)
             self.__align()
             self.__text_is_dirty = False
+            logging.info(f"{self.name}.resize() generated new image")
+
+    def update(self, parent_rect: pygame.rect, delta: int):
+        super().update(parent_rect, delta)
+        self.__align()
 
     def _needs_redraw(self, parent_rect: pygame.rect) -> bool:
         return self.__text_is_dirty
@@ -117,31 +124,16 @@ class TextPanel(UIBase):
             pass  # This is what UIBase does by default
         elif self.horz_align == TextPanel.HorzAlign.CENTRE:
             self.rect.x = self.parent_rect.x + (self.parent_rect.width - self.image.get_rect().width) / 2
+            self.rect.x += self.parent_rect.width * self.pos.x
         elif self.horz_align == TextPanel.HorzAlign.RIGHT:
             self.rect.x = self.parent_rect.x + self.parent_rect.width - self.image.get_rect().width
+            self.rect.x += self.parent_rect.width * self.pos.x
         # Vertical alignment
         if self.vert_align == TextPanel.VertAlign.TOP:
             pass  # This is what UIBase does by default
         elif self.vert_align == TextPanel.VertAlign.CENTRE:
             self.rect.y = self.parent_rect.y + (self.parent_rect.height - self.image.get_rect().height) / 2
+            self.rect.y += self.parent_rect.width * self.pos.y
         elif self.vert_align == TextPanel.VertAlign.BOTTOM:
-            self.rect.y = self.parent_rect.y + self.rect.parent_height - self.image.get_rect().height
-
-    @classmethod
-    def scale_to_fit(cls, size, max_size):
-        """Scales a rectangle size down to fit max_size maintaining the original aspect ratio."""
-        width = size[0]
-        height = size[1]
-        scale_x = max_size[0] / width
-        scale_y = max_size[1] / height
-
-        if scale_x < 1 or scale_y < 1:
-            aspect_ratio = width / height
-            if scale_x < scale_y:
-                width = max_size[0]
-                height = width / aspect_ratio
-            else:
-                height = max_size[1]
-                width = height * aspect_ratio
-
-        return (round(width), round(height))
+            self.rect.y = self.parent_rect.y + self.parent_rect.height - self.image.get_rect().height
+            self.rect.y += self.parent_rect.width * self.pos.y

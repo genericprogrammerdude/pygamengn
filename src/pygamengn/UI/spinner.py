@@ -28,6 +28,10 @@ class Spinner(Panel):
         spin_delta = (self.angular_velocity * delta) / 1000.0
         self.angle = (self.angle + spin_delta) % 360
 
-    def is_dirty(self):
+    def is_dirty(self) -> bool:
         """This component is always dirty because it's spinning."""
+        return True
+
+    def _needs_redraw(self, parent_rect: pygame.rect) -> bool:
+        """This component always needs redrawing because it's spinning."""
         return True
