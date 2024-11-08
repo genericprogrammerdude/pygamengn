@@ -167,10 +167,11 @@ game_types = {
             "size": [0.5, 0.5],
             "game_object:children": [
                 "StartButton",
-                "ExitButton"
+                "ExitButton",
             ],
             "fix_aspect_ratio": False,
             "colour": [100, 100, 100, 128],
+            "corner_radius": 0.05,
             "game_object:asteroid_spawner": "AsteroidSpawner"
         },
         "MenuButton": {
@@ -180,7 +181,8 @@ game_types = {
                 "game_object:children": [],
                 "fix_aspect_ratio": False,
                 "colour": [200, 200, 200, 100],
-                "hover_colour": [100, 210, 100, 100]
+                "hover_colour": [100, 210, 100, 100],
+                "corner_radius": 0.15,
             },
             "MenuButtonText": {
                 "class_name": "TextPanel",
@@ -252,6 +254,7 @@ game_types = {
                 "ExitButton"
             ],
             "fix_aspect_ratio": False,
+            "corner_radius": 0.05,
             "colour": [100, 100, 100, 128]
         },
         "ResumeButton": {
@@ -299,6 +302,7 @@ game_types = {
                 "FinalScorePanel"
             ],
             "fix_aspect_ratio": False,
+            "corner_radius": 0.05,
             "colour": [100, 100, 100, 128],
             "game_object:asteroid_spawner": "/MainMenu/AsteroidSpawner"
         },
@@ -312,6 +316,7 @@ game_types = {
                 ],
                 "fix_aspect_ratio": False,
                 "name": "continue_button",
+                "corner_radius": 0.15,
                 "colour": [200, 200, 200, 100],
                 "hover_colour": [100, 210, 100, 100]
             },
@@ -462,6 +467,7 @@ game_types = {
                     "TotalTitlePanel",
                     "TotalScorePanel"
                 ],
+                "corner_radius": 0.15,
                 "fix_aspect_ratio": False,
                 "colour": [150, 150, 150, 100]
             },
@@ -485,6 +491,7 @@ game_types = {
                         "TotalTitleText"
                     ],
                     "fix_aspect_ratio": False,
+                    "corner_radius": 0.15,
                     "colour": [0, 0, 0, 0]
                 },
                 "TotalTitleText": {
@@ -511,6 +518,7 @@ game_types = {
                         "TotalText"
                     ],
                     "fix_aspect_ratio": False,
+                    "corner_radius": 0.15,
                     "colour": [0, 0, 0, 0]
                 },
                 "TotalText": {
@@ -536,6 +544,7 @@ game_types = {
                 "size": [0.8, 0.1],
                 "game_object:children": [],
                 "fix_aspect_ratio": False,
+                "corner_radius": 0.15,
                 "colour": [150, 150, 150, 100]
             },
             "Spinner": {
@@ -553,6 +562,7 @@ game_types = {
                     "pos": [0.1, 0],
                     "size": [0.3, 1],
                     "fix_aspect_ratio": False,
+                    "corner_radius": 0.15,
                     "colour": [0, 0, 0, 0]
                 }
             },
@@ -562,6 +572,7 @@ game_types = {
                     "pos": [0.4, 0],
                     "size": [0.3, 1],
                     "fix_aspect_ratio": False,
+                    "corner_radius": 0.15,
                     "colour": [0, 0, 0, 0]
                 }
             },
@@ -571,6 +582,7 @@ game_types = {
                     "pos": [0.7, 0],
                     "size": [0.3, 1],
                     "fix_aspect_ratio": False,
+                    "corner_radius": 0.15,
                     "colour": [0, 0, 0, 0]
                 }
             },
@@ -830,6 +842,7 @@ game_types = {
                 "ScoreText"
             ],
             "fix_aspect_ratio": True,
+            "corner_radius": 0.3,
             "colour": [100, 100, 100, 100]
         },
         "ScoreText": {
@@ -856,6 +869,7 @@ game_types = {
                 "TimeText"
             ],
             "fix_aspect_ratio": True,
+            "corner_radius": 0.3,
             "colour": [100, 100, 100, 100]
         },
         "TimeText": {

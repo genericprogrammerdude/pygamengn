@@ -25,10 +25,10 @@ class Panel(UIBase):
 class ColourPanel(UIBase):
     """Basic UI panel that is a solid colour and has no image."""
 
-    def __init__(self, colour, hover_colour=None, border_radius=0, **kwargs):
+    def __init__(self, colour, hover_colour=None, corner_radius=0, **kwargs):
         super().__init__(**kwargs)
         self.colour = tuple(colour)
-        self.border_radius = border_radius
+        self.corner_radius = corner_radius
         if hover_colour:
             self.hover_colour = tuple(hover_colour)
         else:
@@ -37,15 +37,7 @@ class ColourPanel(UIBase):
     def resize(self):
         """Resizes the image to match the panel's size with its parent's rect."""
         self.image = pygame.Surface(self.rect.size, pygame.HWSURFACE | pygame.SRCALPHA)
-        if self.border_radius == 0:
-            self.image.fill(self.colour)
-        else:
-            pygame.draw.rect(
-                surface = self.image,
-                color = self.colour,
-                rect = pygame.Rect(0, 0, self.rect.width, self.rect.height),
-                border_radius = round(min(self.rect.width, self.rect.height) * self.border_radius)
-            )
+        self.__build_image(self.colour)
 
     def propagate_mouse_pos(self, pos):
         """Notifies the component that the mouse is hovering over it."""
@@ -54,11 +46,22 @@ class ColourPanel(UIBase):
             if self.rect.collidepoint(pos):
                 components.append(self)
                 if self.image.get_at((0, 0)) != self.hover_colour:
-                    self.image.fill(self.hover_colour)
+                    self.__build_image(self.hover_colour)
             else:
                 if self.image.get_at((0, 0)) != self.colour:
-                    self.image.fill(self.colour)
+                    self.__build_image(self.colour)
         return components
+
+    def __build_image(self, colour):
+        if self.corner_radius == 0:
+            self.image.fill(colour)
+        else:
+            pygame.draw.rect(
+                surface = self.image,
+                color = colour,
+                rect = pygame.Rect(0, 0, self.rect.width, self.rect.height),
+                border_radius = round(min(self.rect.width, self.rect.height) * self.corner_radius)
+            )
 
 
 @ClassRegistrar.register("TextPanel")
