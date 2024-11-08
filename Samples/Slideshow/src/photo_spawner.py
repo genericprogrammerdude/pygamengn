@@ -54,6 +54,8 @@ class PhotoSpawner(Updatable):
 
         # If we're out of photos, the Slideshow game will end when the last photo is off the screen
         self.done = self.photo_index >= len(self.photos)
+        if self.done:
+            self.year_panel.fade_out(1500)
 
 
 # Small photos
