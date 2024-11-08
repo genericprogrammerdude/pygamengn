@@ -68,7 +68,7 @@ game_types = {
     "YearPanel": {
         "class_name": "ColourPanel",
         "kwargs": {
-            "pos": [0.5, 0.85],
+            "pos": [0, 0.85],
             "size": [0.11, 0.07],
             "game_object:children": [
                 "YearText"
@@ -76,11 +76,12 @@ game_types = {
             "fix_aspect_ratio": True,
             "colour": [100, 100, 100, 150],
             "corner_radius": 0.3,
+            "name": "year_panel",
         },
         "YearText": {
             "class_name": "TextPanel",
             "kwargs": {
-                "pos": [0, 0.08],
+                "pos": [0, 0.03],
                 "size": [1, 1],
                 "game_object:children": [],
                 "fix_aspect_ratio": True,
