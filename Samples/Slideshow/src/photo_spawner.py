@@ -34,6 +34,7 @@ class PhotoSpawner(Updatable):
         self.total_time += delta
         if self.photo_index >= len(self.photos) or self.photo_index < 0:
             self.done = self.photo.state == State.INACTIVE
+        self.info_panel.photo_scale_text.set_text(f"Scale: {self.photo.scale:.2f}")
 
     def set_year_panel(self, year_panel):
         self.year_panel = year_panel

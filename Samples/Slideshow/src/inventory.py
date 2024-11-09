@@ -113,11 +113,12 @@ game_types = {
         "class_name": "ColourPanel",
         "kwargs": {
             "pos": [0, 0],
-            "size": [0.2, 0.1],
+            "size": [0.2, 0.13],
             "game_object:children": [
                 "PhotoNameText",
                 "PhotoDateText",
                 "PhotoFocalPointText",
+                "PhotoScaleText",
             ],
             "fix_aspect_ratio": True,
             "colour": [100, 100, 100, 150],
@@ -134,7 +135,7 @@ game_types = {
         "PhotoDateText": {
             "base_type": "/PhotoInfoPanel/PhotoInfoText",
             "kwargs": {
-                "pos": [0.02, 0.35],
+                "pos": [0.02, 0.27],
                 "name": "photo_date_text",
                 "text": "Date:",
             },
@@ -142,15 +143,23 @@ game_types = {
         "PhotoFocalPointText": {
             "base_type": "/PhotoInfoPanel/PhotoInfoText",
             "kwargs": {
-                "pos": [0.02, 0.68],
+                "pos": [0.02, 0.52],
                 "name": "photo_focal_point_text",
                 "text": "Focal point:",
+            },
+        },
+        "PhotoScaleText": {
+            "base_type": "/PhotoInfoPanel/PhotoInfoText",
+            "kwargs": {
+                "pos": [0.02, 0.77],
+                "name": "photo_scale_text",
+                "text": "Scale:",
             },
         },
         "PhotoInfoText": {
             "class_name": "TextPanel",
             "kwargs": {
-                "size": [0.3, 0.3],
+                "size": [1, 0.25],
                 "game_object:children": [],
                 "fix_aspect_ratio": True,
                 "asset:font_asset": "info_font",
