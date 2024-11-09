@@ -7,6 +7,7 @@ from pygamengn.interpolator import Interpolator
 from pygamengn.updatable import Updatable
 
 from photo import Photo, State
+from inventory import image_index_start
 
 
 
@@ -22,6 +23,7 @@ class PhotoSpawner(Updatable):
         self.done = False
         self.photo = None
         self.year_panel = None
+        self.info_panel = None
         self.interpolator = None
         self.skip_indices = [
             111,    # Small resolution (requires scale 2.2) and not a great photo
@@ -43,6 +45,9 @@ class PhotoSpawner(Updatable):
             from_value = 0,
             to_value = 1.0 - self.year_panel.size[1]
         )
+
+    def set_info_panel(self, info_panel):
+        self.info_panel = info_panel
 
     def move_to_next_photo(self):
         self.photo_index += 1
@@ -68,6 +73,11 @@ class PhotoSpawner(Updatable):
             self.photo.start_moving(self.durations, self.move_to_next_photo)
             self.photo.transform()
             self.year_panel.year_text.set_text(self.photo.date[:4])
+            self.info_panel.photo_name_text.set_text(f"Name: Photo_{self.photo_index + image_index_start:03}")
+            self.info_panel.photo_date_text.set_text(f"Date: {self.photo.date}")
+            self.info_panel.photo_focal_point_text.set_text(
+                f"Focal point: ({self.photo.focal_point.x:.2f}, {self.photo.focal_point.y:.2f})"
+            )
 
 
 # Small photos

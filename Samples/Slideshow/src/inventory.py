@@ -45,6 +45,7 @@ else:
     photo_asset_names = photo_metadata.photo_asset_names
     images = images_dict.images
     image_load_count = len(images)
+    image_index_start = 0
 
 flying_in_time = 2000
 on_display_time = 4000
@@ -134,7 +135,7 @@ game_types = {
             "base_type": "/PhotoInfoPanel/PhotoInfoText",
             "kwargs": {
                 "pos": [0.02, 0.35],
-                "name": "photo_name_text",
+                "name": "photo_date_text",
                 "text": "Date:",
             },
         },
