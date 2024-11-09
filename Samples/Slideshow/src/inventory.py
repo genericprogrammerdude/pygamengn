@@ -28,7 +28,7 @@ import photo_metadata
 import images_dict
 
 if DEVELOP_AND_DEBUG:
-    image_load_count = 4
+    image_load_count = 2
     image_index_start = 101
     photo_asset_names = [f"/Photo_{i + image_index_start:03}" for i in range(image_load_count)]
     images = {}
@@ -37,6 +37,11 @@ if DEVELOP_AND_DEBUG:
 else:
     photo_asset_names = photo_metadata.photo_asset_names
     images = images_dict.images
+    image_load_count = len(images)
+
+flying_in_time = 2000
+on_display_time = 4000
+flying_out_time = 2000
 
 game_types = {
     "Slideshow": {
@@ -59,9 +64,9 @@ game_types = {
         "kwargs": {
             "game_object:photos": photo_asset_names,
             "durations": {
-                "flying_in": 2000,
-                "on_display": 4000,
-                "flying_out": 2000,
+                "flying_in": flying_in_time,
+                "on_display": on_display_time,
+                "flying_out": flying_out_time,
             }
         }
     },
