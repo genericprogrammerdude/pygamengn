@@ -32,7 +32,7 @@ def main():
 
     game = factory.create("Slideshow", screen=screen)
 
-    capture_video = True
+    capture_video = False
 
     if not capture_video:
         clock = pygame.time.Clock()
@@ -69,11 +69,12 @@ def main():
 
         clip = moviepy.editor.VideoClip(frame_maker.make_frame, duration = duration)
         clip.write_videofile(
-            "mama.mp4",
+            "mama.avi",
             fps = fps,
             codec = "mpeg4",
+            bitrate = "6000k",
             audio = False,
-            preset = "ultrafast",
+            preset = "placebo",
             threads = 8,
         )
         clip.close()
