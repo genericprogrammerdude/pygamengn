@@ -2296,7 +2296,7 @@ photo_metadata_dictionary = {
             "kill_when_off_screen": False,
             "game_object:mover": "PhotoMover",
             "date": "1990-08-01",
-            "focal_point": [0.5286, 0.4759],
+            "focal_point": [0.54, 0.38],
         },
         "groups": [
             "RenderGroup",
