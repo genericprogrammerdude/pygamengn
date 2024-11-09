@@ -92,9 +92,11 @@ game_types = {
                 "fix_aspect_ratio": True,
                 "asset:font_asset": "mechanical_font",
                 "text_colour": [255, 211, 0],
+                "name": "year_text",
                 "horz_align": "CENTRE",
                 "vert_align": "CENTRE",
-                "name": "year_text",
+                "shadow": True,
+                "shadow_colour": [50, 40, 0],
             }
         }
     },

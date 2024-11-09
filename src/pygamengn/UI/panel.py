@@ -88,12 +88,24 @@ class TextPanel(UIBase):
         CENTRE = "CENTRE"
         RIGHT = "RIGHT"
 
-    def __init__(self, font_asset, text_colour, horz_align, vert_align, text=" ", **kwargs):
+    def __init__(
+        self,
+        font_asset,
+        text_colour,
+        horz_align = "LEFT",
+        vert_align = "TOP",
+        shadow = False,
+        shadow_colour = (0, 0, 0),
+        text=" ",
+        **kwargs
+    ):
         super().__init__(**kwargs)
         self.font_asset = font_asset
         self.text_colour = text_colour
         self.horz_align = TextPanel.HorzAlign(horz_align)
         self.vert_align = TextPanel.VertAlign(vert_align)
+        self.shadow = shadow
+        self.shadow_colour = shadow_colour
         self.text = text
         self.__text_is_dirty = True
 
@@ -105,7 +117,14 @@ class TextPanel(UIBase):
     def resize(self):
         """TextPanel ignores its parent rect and renders to the font size."""
         if self.__text_is_dirty:
-            self.image = self.font_asset.font.render(self.text, True, self.text_colour)
+            if self.shadow:
+                shadow_surf = self.font_asset.font.render(self.text, True, self.shadow_colour)
+                front_surf = self.font_asset.font.render(self.text, True, self.text_colour)
+                dest = -0.06 * shadow_surf.get_rect().height
+                shadow_surf.blit(front_surf, (dest, dest))
+                self.image = shadow_surf
+            else:
+                self.image = self.font_asset.font.render(self.text, True, self.text_colour)
             self.__align()
             self.__text_is_dirty = False
             logging.info(f"{self.name}.resize() generated new image")
