@@ -19,6 +19,13 @@ assets = {
             "size": 72
         }
     },
+    "info_font": {
+        "class_name": "FontAsset",
+        "kwargs": {
+            "font:fname": "mechanical-font/Mechanical-g5Y5.otf",
+            "size": 24
+        }
+    },
 }
 
 
@@ -51,6 +58,7 @@ game_types = {
             "game_object:collision_manager": "CollisionManager",
             "game_object:photo_spawner": "/PhotoSpawner",
             "game_object:year_panel": "/YearPanel",
+            "game_object:photo_info_panel": "/PhotoInfoPanel",
         },
         "CollisionManager": {
             "class_name": "CollisionManager",
@@ -97,8 +105,57 @@ game_types = {
                 "vert_align": "CENTRE",
                 "shadow": True,
                 "shadow_colour": [50, 40, 0],
-            }
-        }
+            },
+        },
+    },
+    "PhotoInfoPanel": {
+        "class_name": "ColourPanel",
+        "kwargs": {
+            "pos": [0, 0],
+            "size": [0.2, 0.1],
+            "game_object:children": [
+                "PhotoNameText",
+                "PhotoDateText",
+                "PhotoFocalPointText",
+            ],
+            "fix_aspect_ratio": True,
+            "colour": [100, 100, 100, 150],
+            "name": "photo_info_panel",
+        },
+        "PhotoNameText": {
+            "base_type": "/PhotoInfoPanel/PhotoInfoText",
+            "kwargs": {
+                "pos": [0.02, 0.02],
+                "name": "photo_name_text",
+                "text": "Name:",
+            },
+        },
+        "PhotoDateText": {
+            "base_type": "/PhotoInfoPanel/PhotoInfoText",
+            "kwargs": {
+                "pos": [0.02, 0.35],
+                "name": "photo_name_text",
+                "text": "Date:",
+            },
+        },
+        "PhotoFocalPointText": {
+            "base_type": "/PhotoInfoPanel/PhotoInfoText",
+            "kwargs": {
+                "pos": [0.02, 0.68],
+                "name": "photo_focal_point_text",
+                "text": "Focal point:",
+            },
+        },
+        "PhotoInfoText": {
+            "class_name": "TextPanel",
+            "kwargs": {
+                "size": [0.3, 0.3],
+                "game_object:children": [],
+                "fix_aspect_ratio": True,
+                "asset:font_asset": "info_font",
+                "text_colour": [255, 211, 0],
+            },
+        },
     },
 }
 

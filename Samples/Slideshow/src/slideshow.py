@@ -11,11 +11,13 @@ class Slideshow(pygamengn.Game):
             self,
             photo_spawner,
             year_panel,
+            photo_info_panel,
             **kwargs
         ):
         super().__init__(**kwargs)
         self.running = True
         self.year_panel = year_panel
+        self.photo_info_panel = photo_info_panel
         self.photo_spawner = photo_spawner
         self.photo_spawner.set_year_panel(year_panel)
         self.photo_spawner.move_to_next_photo()
@@ -24,8 +26,10 @@ class Slideshow(pygamengn.Game):
         """Updates the game."""
         self.handle_input()
         self.year_panel.update(self.screen.get_rect(), delta)
+        self.photo_info_panel.update(self.screen.get_rect(), delta)
         self.photo_spawner.update(delta)
         self.blit_ui(self.year_panel)
+        self.blit_ui(self.photo_info_panel)
         super().update(delta)
 
         if self.photo_spawner.done:
