@@ -28,7 +28,7 @@ class Slideshow(pygamengn.Game):
         self.blit_ui(self.year_panel)
         super().update(delta)
 
-        if self.photo_spawner.done and len(self.render_group.sprites()) == 0:
+        if self.photo_spawner.done:
             self.running = False
 
     def handle_input(self):

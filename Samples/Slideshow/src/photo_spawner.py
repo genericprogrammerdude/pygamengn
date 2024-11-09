@@ -30,6 +30,8 @@ class PhotoSpawner(Updatable):
     def update(self, delta):
         self.year_panel.set_position(pygame.Vector2(self.interpolator.get(self.total_time), self.year_panel.pos.y))
         self.total_time += delta
+        if self.photo_index >= len(self.photos) or self.photo_index < 0:
+            self.done = self.photo.state == State.INACTIVE
 
     def set_year_panel(self, year_panel):
         self.year_panel = year_panel
@@ -49,8 +51,7 @@ class PhotoSpawner(Updatable):
         self.__show_new_photo()
 
         # If we're out of photos, the Slideshow game will end when the last photo is off the screen
-        self.done = self.photo_index >= len(self.photos)
-        if self.done:
+        if self.photo_index >= len(self.photos):
             self.year_panel.fade_out(1500)
 
     def move_to_prev_photo(self):
