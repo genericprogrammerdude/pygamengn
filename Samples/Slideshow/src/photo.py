@@ -42,12 +42,22 @@ class MoveSpec():
 @ClassRegistrar.register("Photo")
 class Photo(GameObject):
 
-    def __init__(self, mover, date, focal_point, move_specs = None, state = State.INACTIVE, **kwargs):
+    def __init__(
+        self,
+        mover,
+        date,
+        focal_point,
+        manual_max_scale = 3.0,
+        move_specs = None,
+        state = State.INACTIVE,
+        **kwargs
+    ):
         super().__init__(**kwargs)
         self.alpha = 0
         self.mover = mover
         self.date = date
         self.focal_point = pygame.Vector2(focal_point)
+        self.manual_max_scale = manual_max_scale
         self.move_specs = move_specs
         self.state = state
         self.max_scale = 1.0
@@ -70,8 +80,8 @@ class Photo(GameObject):
 
     def start_moving(self, durations, done_callback):
         screen_rect = pygame.display.get_surface().get_rect()
-        if self.max_scale < 1.7:
-            self.display_max_scale = self.max_scale * 2.0
+        if self.max_scale < 1.3:
+            self.display_max_scale = min(self.max_scale * 2.0, self.manual_max_scale)
             r = self.image_asset.get_rect().copy()
             r = r.scale_by(self.display_max_scale)
             offset = pygame.Vector2(
