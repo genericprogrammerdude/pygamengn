@@ -21,7 +21,7 @@ class Slideshow(pygamengn.Game):
         self.bar_panel = bar_panel
         self.photo_info_panel = photo_info_panel
         self.photo_spawner = photo_spawner
-        self.photo_spawner.set_year_panel(year_panel)
+        self.photo_spawner.set_year_panel(year_panel, bar_panel)
         self.photo_spawner.set_info_panel(photo_info_panel)
         self.photo_spawner.move_to_next_photo()
         self.show_photo_info = False

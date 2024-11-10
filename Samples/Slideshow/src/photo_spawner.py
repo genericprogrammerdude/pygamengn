@@ -23,6 +23,7 @@ class PhotoSpawner(Updatable):
         self.done = False
         self.photo = None
         self.year_panel = None
+        self.bar_panel = None
         self.info_panel = None
         self.interpolator = None
         self.skip_indices = [
@@ -36,8 +37,9 @@ class PhotoSpawner(Updatable):
             self.done = self.photo.state == State.INACTIVE
         self.info_panel.photo_scale_text.set_text(f"Scale: {self.photo.scale:.2f}")
 
-    def set_year_panel(self, year_panel):
+    def set_year_panel(self, year_panel, bar_panel):
         self.year_panel = year_panel
+        self.bar_panel = bar_panel
         self.interpolator = Interpolator(
             duration = (
                 (self.durations["on_display"] + self.durations["flying_in"]) * len(self.photos) +
@@ -59,6 +61,7 @@ class PhotoSpawner(Updatable):
         # If we're out of photos, the Slideshow game will end when the last photo is off the screen
         if self.photo_index >= len(self.photos):
             self.year_panel.fade_out(1500)
+            self.bar_panel.fade_out(1500)
 
     def move_to_prev_photo(self):
         self.photo_index -= 1
