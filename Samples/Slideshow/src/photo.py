@@ -47,7 +47,7 @@ class Photo(GameObject):
         mover,
         date,
         focal_point,
-        max_scale_override = 3.0,
+        max_scale_override = 2.0,
         move_specs = None,
         state = State.INACTIVE,
         **kwargs
