@@ -2297,7 +2297,7 @@ photo_metadata_dictionary = {
             "game_object:mover": "PhotoMover",
             "date": "1990-08-01",
             "focal_point": [0.54, 0.38],
-            "manual_max_scale": 2.0,
+            "max_scale_override": 2.0,
         },
         "groups": [
             "RenderGroup",

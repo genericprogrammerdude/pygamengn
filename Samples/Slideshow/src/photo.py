@@ -47,7 +47,7 @@ class Photo(GameObject):
         mover,
         date,
         focal_point,
-        manual_max_scale = 3.0,
+        max_scale_override = 3.0,
         move_specs = None,
         state = State.INACTIVE,
         **kwargs
@@ -57,7 +57,7 @@ class Photo(GameObject):
         self.mover = mover
         self.date = date
         self.focal_point = pygame.Vector2(focal_point)
-        self.manual_max_scale = manual_max_scale
+        self.max_scale_override = max_scale_override
         self.move_specs = move_specs
         self.state = state
         self.max_scale = 1.0
@@ -81,7 +81,7 @@ class Photo(GameObject):
     def start_moving(self, durations, done_callback):
         screen_rect = pygame.display.get_surface().get_rect()
         if self.max_scale < 1.3:
-            self.display_max_scale = min(self.max_scale * 2.0, self.manual_max_scale)
+            self.display_max_scale = min(self.max_scale * 2.0, self.max_scale_override)
             r = self.image_asset.get_rect().copy()
             r = r.scale_by(self.display_max_scale)
             offset = pygame.Vector2(
