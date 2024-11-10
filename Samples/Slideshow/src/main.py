@@ -1,3 +1,4 @@
+import cProfile
 import logging
 import os
 
@@ -39,7 +40,7 @@ def main():
         while game.running:
             delta = clock.get_time()
             game.update(delta)
-            clock.tick_busy_loop(60)
+            clock.tick(30)
 
     else:
         import moviepy.editor
@@ -127,4 +128,4 @@ def create_factory(assets_dir) -> pygamengn.GameObjectFactory:
 
 
 if __name__ == "__main__":
-    main()
+    cProfile.run("main()", sort = "cumtime")
