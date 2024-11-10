@@ -35,8 +35,8 @@ import photo_metadata
 import images_dict
 
 if DEVELOP_AND_DEBUG:
-    image_load_count = 2
-    image_index_start = 221
+    image_load_count = 10
+    image_index_start = 20
     photo_asset_names = [f"/Photo_{i + image_index_start:03}" for i in range(image_load_count)]
     images = {}
     for i in range(image_load_count):
@@ -47,9 +47,9 @@ else:
     image_load_count = len(images)
     image_index_start = 0
 
-flying_in_time = 2000
+flying_in_time = 500
 on_display_time = 4000
-flying_out_time = 2000
+flying_out_time = 500
 
 game_types = {
     "Slideshow": {
