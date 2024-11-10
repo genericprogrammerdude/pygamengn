@@ -4,6 +4,7 @@ import logging
 import pygame
 
 from pygamengn.class_registrar import ClassRegistrar
+from pygamengn.game_object_base import GameObjectBase
 from pygamengn.UI.ui_base import UIBase
 
 
@@ -26,34 +27,48 @@ class Panel(UIBase):
 class ColourPanel(UIBase):
     """Basic UI panel that is a solid colour and has no image."""
 
-    def __init__(self, colour, hover_colour=None, corner_radius=0, **kwargs):
+    @ClassRegistrar.register("CornerRadii")
+    class CornerRadii(GameObjectBase):
+        def __init__(self, top_left: float = 0, top_right: float = 0, bottom_right: float = 0, bottom_left: float = 0):
+            self.top_left = top_left
+            self.top_right = top_right
+            self.bottom_right = bottom_right
+            self.bottom_left = bottom_left
+
+    def __init__(
+        self,
+        colour,
+        hover_colour = None,
+        corner_radii = None,
+        **kwargs
+    ):
         super().__init__(**kwargs)
-        self.colour = tuple(colour)
-        self.corner_radius = corner_radius
+        self.__colour = tuple(colour)
+        self.__corner_radii = corner_radii
         self.__mouse_is_hovering = False
         self.__needs_redraw = True
         if hover_colour:
             self.hover_colour = tuple(hover_colour)
         else:
-            self.hover_colour = self.colour
+            self.hover_colour = self.__colour
 
     def resize(self):
         """Resizes the image to match the panel's size with its parent's rect."""
         self.image = pygame.Surface(self.rect.size, pygame.SRCALPHA)
-        self.__build_image(self.hover_colour if self.__mouse_is_hovering else self.colour)
+        self.__build_image(self.hover_colour if self.__mouse_is_hovering else self.__colour)
         logging.info(f"{self.name}.resize() generated new image")
 
     def propagate_mouse_pos(self, pos) -> bool:
         """Notifies the component that the mouse is hovering over it."""
         capture_hover = super().propagate_mouse_pos(pos)
-        if self.colour != self.hover_colour:
+        if self.__colour != self.hover_colour:
             if self.rect.collidepoint(pos):
                 capture_hover = True
-                if not self.__mouse_is_hovering and self.hover_colour != self.colour:
+                if not self.__mouse_is_hovering and self.hover_colour != self.__colour:
                     self.__needs_redraw = True
                     self.__mouse_is_hovering = True
             else:
-                if self.__mouse_is_hovering and self.hover_colour != self.colour:
+                if self.__mouse_is_hovering and self.hover_colour != self.__colour:
                     self.__needs_redraw = True
                     self.__mouse_is_hovering = False
         return capture_hover
@@ -62,14 +77,18 @@ class ColourPanel(UIBase):
         return self.__needs_redraw
 
     def __build_image(self, colour):
-        if self.corner_radius == 0:
+        if not self.__corner_radii:
             self.image.fill(colour)
         else:
+            min_dimension = min(self.rect.width, self.rect.height)
             pygame.draw.rect(
                 surface = self.image,
                 color = colour,
                 rect = pygame.Rect(0, 0, self.rect.width, self.rect.height),
-                border_radius = round(min(self.rect.width, self.rect.height) * self.corner_radius)
+                border_top_left_radius = round(min_dimension * self.__corner_radii.top_left),
+                border_top_right_radius = round(min_dimension * self.__corner_radii.top_right),
+                border_bottom_right_radius = round(min_dimension * self.__corner_radii.bottom_right),
+                border_bottom_left_radius = round(min_dimension * self.__corner_radii.bottom_left)
             )
         self.__needs_redraw = False
 

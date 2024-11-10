@@ -36,7 +36,7 @@ import images_dict
 
 if DEVELOP_AND_DEBUG:
     image_load_count = 2
-    image_index_start = 101
+    image_index_start = 221
     photo_asset_names = [f"/Photo_{i + image_index_start:03}" for i in range(image_load_count)]
     images = {}
     for i in range(image_load_count):
@@ -83,20 +83,29 @@ game_types = {
     "YearPanel": {
         "class_name": "ColourPanel",
         "kwargs": {
-            "pos": [0, 0.85],
-            "size": [0.11, 0.07],
+            "pos": [0, 0.87],
+            "size": [0.11, 0.05],
             "game_object:children": [
                 "YearText",
             ],
             "fix_aspect_ratio": True,
             "colour": [100, 100, 100, 150],
-            "corner_radius": 0.45,
+            "game_object:corner_radii": "corner_radii",
             "name": "year_panel",
+        },
+        "corner_radii": {
+            "class_name": "CornerRadii",
+            "kwargs": {
+                "top_left": 1,
+                "top_right": 1,
+                "bottom_right": 0,
+                "bottom_left": 0,
+            },
         },
         "YearText": {
             "class_name": "TextPanel",
             "kwargs": {
-                "pos": [0, 0.03],
+                "pos": [0.02, 0.1],
                 "size": [1, 1],
                 "game_object:children": [],
                 "fix_aspect_ratio": True,
@@ -113,8 +122,8 @@ game_types = {
     "BarPanel": {
         "class_name": "ColourPanel",
         "kwargs": {
-            "pos": [0, 0.875],
-            "size": [1, 0.02],
+            "pos": [0, 0.92],
+            "size": [1, 0.015],
             "game_object:children": [],
             "fix_aspect_ratio": True,
             "colour": [100, 100, 100, 150],
