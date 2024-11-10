@@ -26,9 +26,7 @@ class PhotoSpawner(Updatable):
         self.bar_panel = None
         self.info_panel = None
         self.interpolator = None
-        self.skip_indices = [
-            111,    # Small resolution (requires scale 2.2) and not a great photo
-        ]
+        self.skip_indices = []
 
     def update(self, delta):
         self.year_panel.set_position(pygame.Vector2(self.interpolator.get(self.total_time), self.year_panel.pos.y))
@@ -46,7 +44,7 @@ class PhotoSpawner(Updatable):
                 self.durations["flying_out"]
             ),
             from_value = 0,
-            to_value = 1.0 - self.year_panel.size[1]
+            to_value = 1.0 - self.year_panel.size[0]
         )
 
     def set_info_panel(self, info_panel):
