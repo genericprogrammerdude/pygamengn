@@ -20,7 +20,7 @@ class PhotoSpawner(Updatable):
         self.durations = durations
         self.total_time = 0
         self.photo_index = -1
-        self.__show_info_panel = False
+        self.__show_info_panel = True
         self.done = False
         self.photo = None
         self.year_panel = None
@@ -97,6 +97,7 @@ class PhotoSpawner(Updatable):
         self.info_panel.photo_focal_point_text.set_text(
             f"Focal point: ({self.photo.focal_point.x:.2f}, {self.photo.focal_point.y:.2f})"
         )
+        self.info_panel.photo_scale_text.set_text(f"Scale: {self.photo.scale:.2f}")
 
     def set_player(self, player):
         pass
