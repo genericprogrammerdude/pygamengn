@@ -24,13 +24,12 @@ class Slideshow(pygamengn.Game):
         self.photo_spawner.set_year_panel(year_panel, bar_panel)
         self.photo_spawner.set_info_panel(photo_info_panel)
         self.photo_spawner.move_to_next_photo()
-        self.show_photo_info = False
         self.is_paused = False
 
     def update(self, delta):
         """Updates the game."""
         self.handle_input()
-        if self.show_photo_info:
+        if self.photo_spawner.show_info_panel:
             self.photo_info_panel.update(self.screen.get_rect(), delta)
             self.blit_ui(self.photo_info_panel)
 
@@ -64,7 +63,7 @@ class Slideshow(pygamengn.Game):
                     self.photo_spawner.move_to_prev_photo()
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_i:
-                    self.show_photo_info = not self.show_photo_info
+                    self.photo_spawner.show_info_panel = not self.photo_spawner.show_info_panel
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_SPACE:
                     self.is_paused = not self.is_paused

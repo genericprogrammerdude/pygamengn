@@ -20,6 +20,7 @@ class PhotoSpawner(Updatable):
         self.durations = durations
         self.total_time = 0
         self.photo_index = -1
+        self.__show_info_panel = False
         self.done = False
         self.photo = None
         self.year_panel = None
@@ -33,7 +34,8 @@ class PhotoSpawner(Updatable):
         self.total_time += delta
         if self.photo_index >= len(self.photos) or self.photo_index < 0:
             self.done = self.photo.state == State.INACTIVE
-        self.info_panel.photo_scale_text.set_text(f"Scale: {self.photo.scale:.2f}")
+        if self.__show_info_panel:
+            self.info_panel.photo_scale_text.set_text(f"Scale: {self.photo.scale:.2f}")
 
     def set_year_panel(self, year_panel, bar_panel):
         self.year_panel = year_panel
@@ -75,54 +77,25 @@ class PhotoSpawner(Updatable):
             self.photo.start_moving(self.durations, self.move_to_next_photo)
             self.photo.transform()
             self.year_panel.year_text.set_text(self.photo.date[:4])
-            self.info_panel.photo_name_text.set_text(f"Name: Photo_{self.photo_index + image_index_start:03}")
-            self.info_panel.photo_date_text.set_text(f"Date: {self.photo.date}")
-            self.info_panel.photo_focal_point_text.set_text(
-                f"Focal point: ({self.photo.focal_point.x:.2f}, {self.photo.focal_point.y:.2f})"
-            )
+            if self.__show_info_panel:
+                self.__set_info_panel_data()
 
+    @property
+    def show_info_panel(self) -> bool:
+        return self.__show_info_panel
 
-# Small photos
-# *** Small photo! 1.2 095
-# *** Small photo! 1.0 098
-# *** Small photo! 1.1 102
-# *** Small photo! 2.2 111
-# *** Small photo! 1.8 112
-# *** Small photo! 1.2 118
-# *** Small photo! 1.1 122
-# *** Small photo! 1.4 134
-# *** Small photo! 1.6 145
-# *** Small photo! 1.0 168
-# *** Small photo! 1.0 169
-# *** Small photo! 1.4 177
-# *** Small photo! 1.8 178
-# *** Small photo! 1.8 179
-# *** Small photo! 1.8 180
-# *** Small photo! 1.8 181
-# *** Small photo! 1.8 182
-# *** Small photo! 1.8 183
-# *** Small photo! 1.8 184
-# *** Small photo! 1.8 185
-# *** Small photo! 1.8 186
-# *** Small photo! 1.8 187
-# *** Small photo! 1.8 188
-# *** Small photo! 1.3 189
-# *** Small photo! 1.8 190
-# *** Small photo! 1.4 191
-# *** Small photo! 1.8 192
-# *** Small photo! 1.4 193
-# *** Small photo! 1.3 194
-# *** Small photo! 1.4 195
-# *** Small photo! 1.8 196
-# *** Small photo! 1.4 197
-# *** Small photo! 1.4 198
-# *** Small photo! 1.7 199
-# *** Small photo! 1.4 202
-# *** Small photo! 1.5 203
-# *** Small photo! 1.4 204
-# *** Small photo! 1.0 216
-# *** Small photo! 1.7 223
-# *** Small photo! 1.5 226
+    @show_info_panel.setter
+    def show_info_panel(self, show: bool):
+        self.__show_info_panel = show
+        if show:
+            self.__set_info_panel_data()
+
+    def __set_info_panel_data(self):
+        self.info_panel.photo_name_text.set_text(f"Name: Photo_{self.photo_index + image_index_start:03}")
+        self.info_panel.photo_date_text.set_text(f"Date: {self.photo.date}")
+        self.info_panel.photo_focal_point_text.set_text(
+            f"Focal point: ({self.photo.focal_point.x:.2f}, {self.photo.focal_point.y:.2f})"
+        )
 
     def set_player(self, player):
         pass
