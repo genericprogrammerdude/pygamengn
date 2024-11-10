@@ -7,6 +7,9 @@ from pygamengn.class_registrar import ClassRegistrar
 from pygamengn.game_object_base import GameObjectBase
 from pygamengn.interpolator import Interpolator
 
+# This class does too much. It should be a base class that just takes care of administrative issues (e.g., children),
+# and updates to the geometry. I should be able to instantiate it in inventory as an non-rendering UI container for a
+# bunch of children.
 
 @ClassRegistrar.register("UIBase")
 class UIBase(GameObjectBase):
