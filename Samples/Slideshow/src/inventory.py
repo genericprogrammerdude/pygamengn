@@ -59,6 +59,7 @@ game_types = {
             "game_object:collision_manager": "CollisionManager",
             "game_object:photo_spawner": "/PhotoSpawner",
             "game_object:year_panel": "/YearPanel",
+            "game_object:bar_panel": "/BarPanel",
             "game_object:photo_info_panel": "/PhotoInfoPanel",
         },
         "CollisionManager": {
@@ -85,11 +86,11 @@ game_types = {
             "pos": [0, 0.85],
             "size": [0.11, 0.07],
             "game_object:children": [
-                "YearText"
+                "YearText",
             ],
             "fix_aspect_ratio": True,
             "colour": [100, 100, 100, 150],
-            "corner_radius": 0.3,
+            "corner_radius": 0.45,
             "name": "year_panel",
         },
         "YearText": {
@@ -107,6 +108,17 @@ game_types = {
                 "shadow": True,
                 "shadow_colour": [50, 40, 0],
             },
+        },
+    },
+    "BarPanel": {
+        "class_name": "ColourPanel",
+        "kwargs": {
+            "pos": [0, 0.875],
+            "size": [1, 0.02],
+            "game_object:children": [],
+            "fix_aspect_ratio": True,
+            "colour": [100, 100, 100, 150],
+            "name": "bar_panel",
         },
     },
     "PhotoInfoPanel": {
