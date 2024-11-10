@@ -79,6 +79,7 @@ class PhotoSpawner(Updatable):
             self.year_panel.year_text.set_text(self.photo.date[:4])
             if self.__show_info_panel:
                 self.__set_info_panel_data()
+            self.total_time = self.photo_index * (self.durations["on_display"] + self.durations["flying_in"])
 
     @property
     def show_info_panel(self) -> bool:
