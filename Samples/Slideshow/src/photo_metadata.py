@@ -4582,7 +4582,8 @@ photo_metadata_dictionary = {
             "kill_when_off_screen": False,
             "game_object:mover": "PhotoMover",
             "date": "2017-07-15",
-            "focal_point": [0.5353, 0.2657],
+            "focal_point": [0.52, 0.42],
+            "max_scale_override": 0.38,
         },
         "groups": [
             "RenderGroup",
@@ -4602,7 +4603,8 @@ photo_metadata_dictionary = {
             "kill_when_off_screen": False,
             "game_object:mover": "PhotoMover",
             "date": "2017-07-15",
-            "focal_point": [0.4985, 0.3930],
+            "focal_point": [0.4985, 0.43],
+            "max_scale_override": 0.38,
         },
         "groups": [
             "RenderGroup",
@@ -4623,6 +4625,7 @@ photo_metadata_dictionary = {
             "game_object:mover": "PhotoMover",
             "date": "2017-07-15",
             "focal_point": [0.5182, 0.3522],
+            "max_scale_override": 0.45,
         },
         "groups": [
             "RenderGroup",
@@ -4642,7 +4645,8 @@ photo_metadata_dictionary = {
             "kill_when_off_screen": False,
             "game_object:mover": "PhotoMover",
             "date": "2017-07-16",
-            "focal_point": [0.5312, 0.3204],
+            "focal_point": [0.48, 0.37],
+            "max_scale_override": 0.45,
         },
         "groups": [
             "RenderGroup",
@@ -4663,6 +4667,7 @@ photo_metadata_dictionary = {
             "game_object:mover": "PhotoMover",
             "date": "2017-07-16",
             "focal_point": [0.4799, 0.4300],
+            "max_scale_override": 0.45,
         },
         "groups": [
             "RenderGroup",
@@ -4683,6 +4688,7 @@ photo_metadata_dictionary = {
             "game_object:mover": "PhotoMover",
             "date": "2017-07-16",
             "focal_point": [0.5108, 0.4986],
+            "max_scale_override": 0.48,
         },
         "groups": [
             "RenderGroup",
@@ -4702,7 +4708,8 @@ photo_metadata_dictionary = {
             "kill_when_off_screen": False,
             "game_object:mover": "PhotoMover",
             "date": "2017-07-16",
-            "focal_point": [0.5417, 0.3772],
+            "focal_point": [0.52, 0.3772],
+            "max_scale_override": 1.3,
         },
         "groups": [
             "RenderGroup",
@@ -4722,7 +4729,8 @@ photo_metadata_dictionary = {
             "kill_when_off_screen": False,
             "game_object:mover": "PhotoMover",
             "date": "2017-07-18",
-            "focal_point": [0.4763, 0.2335],
+            "focal_point": [0.45, 0.4],
+            "max_scale_override": 0.52,
         },
         "groups": [
             "RenderGroup",
@@ -4742,7 +4750,8 @@ photo_metadata_dictionary = {
             "kill_when_off_screen": False,
             "game_object:mover": "PhotoMover",
             "date": "2017-08-27",
-            "focal_point": [0.4607, 0.2864],
+            "focal_point": [0.4607, 0.4],
+            "max_scale_override": 0.55,
         },
         "groups": [
             "RenderGroup",
@@ -4762,7 +4771,8 @@ photo_metadata_dictionary = {
             "kill_when_off_screen": False,
             "game_object:mover": "PhotoMover",
             "date": "2017-08-27",
-            "focal_point": [0.5576, 0.1603],
+            "focal_point": [0.52, 0.35],
+            "max_scale_override": 0.52,
         },
         "groups": [
             "RenderGroup",
