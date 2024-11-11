@@ -195,13 +195,13 @@ class Photo(GameObject):
 
     def display(self, delta):
         self.position = self.mover.move(delta)
+        self.set_alpha(self.ease_out_interp.get(self.moving_time))
         if self.move_on_display:
             if self.mover.is_arrived():
                 self.state_transition(State.FLYING_OUT)
                 self.done_callback()
         else:
             self.on_display_duration -= delta
-            self.set_alpha(self.ease_out_interp.get(self.moving_time))
             if self.on_display_duration <= 0:
                 self.state_transition(State.FLYING_OUT)
                 self.done_callback()
