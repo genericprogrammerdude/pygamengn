@@ -70,7 +70,7 @@ def main():
 
         clip = moviepy.editor.VideoClip(frame_maker.make_frame, duration = duration)
         clip.write_videofile(
-            "mama.avi",
+            "mama.mp4",
             fps = fps,
             codec = "mpeg4",
             bitrate = "6000k",
@@ -128,4 +128,5 @@ def create_factory(assets_dir) -> pygamengn.GameObjectFactory:
 
 
 if __name__ == "__main__":
-    cProfile.run("main()", sort = "cumtime")
+    main()
+    # cProfile.run("main()", sort = "cumtime")
