@@ -20,7 +20,7 @@ class PhotoSpawner(Updatable):
         self.durations = durations
         self.total_time = 0
         self.photo_index = -1
-        self.__show_info_panel = True
+        self.__show_info_panel = False
         self.done = False
         self.photo = None
         self.year_panel = None
