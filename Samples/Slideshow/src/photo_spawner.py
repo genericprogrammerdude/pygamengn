@@ -27,7 +27,9 @@ class PhotoSpawner(Updatable):
         self.bar_panel = None
         self.info_panel = None
         self.interpolator = None
-        self.skip_indices = []
+        self.skip_indices = [
+            111,
+        ]
 
     def update(self, delta):
         self.year_panel.set_position(pygame.Vector2(self.interpolator.get(self.total_time), self.year_panel.pos.y))
@@ -54,7 +56,7 @@ class PhotoSpawner(Updatable):
 
     def move_to_next_photo(self):
         self.photo_index += 1
-        while self.photo_index in self.skip_indices:
+        while self.photo_index + image_index_start in self.skip_indices:
             self.photo_index += 1
         self.__show_new_photo()
 
@@ -65,7 +67,7 @@ class PhotoSpawner(Updatable):
 
     def move_to_prev_photo(self):
         self.photo_index -= 1
-        while self.photo_index in self.skip_indices:
+        while self.photo_index + image_index_start in self.skip_indices:
             self.photo_index -= 1
         self.__show_new_photo()
 
