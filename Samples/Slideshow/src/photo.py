@@ -64,6 +64,8 @@ class Photo(GameObject):
         self.min_scale = 0.1
         self.moving_time = 0
         self.done_callback = None
+        self.move_on_display = True
+        self.on_display_duration = 0
 
         # Get maximum scale so that the photo fits the screen
         screen_size = pygame.display.get_surface().get_rect().size
@@ -76,6 +78,22 @@ class Photo(GameObject):
             self.max_scale = scale_height
             self.min_scale = scale_height / 2.0
         self.set_scale(self.min_scale)
+
+
+    def update(self, delta):
+        super().update(delta)
+
+        if self.state != State.INACTIVE and self.visible:
+            if self.state == State.FLYING_IN:
+                self.fly_in(delta)
+
+            elif self.state == State.ON_DISPLAY:
+                self.display(delta)
+
+            elif self.state == State.FLYING_OUT:
+                self.fly_out(delta)
+
+            self.moving_time += delta
 
 
     def start_moving(self, durations, done_callback):
@@ -120,23 +138,9 @@ class Photo(GameObject):
         self.done_callback = done_callback
         self.position = pygame.Vector2(0, numpy.random.random_integers(0, screen_rect.height))
         self.transform()
+        self.move_on_display = self.focal_point.y < 0.38 or numpy.random.choice([True, False])
+        self.on_display_duration = self.move_specs[State.ON_DISPLAY].duration
         self.state_transition(State.FLYING_IN)
-
-
-    def update(self, delta):
-        super().update(delta)
-
-        if self.state != State.INACTIVE and self.visible:
-            if self.state == State.FLYING_IN:
-                self.fly_in(delta)
-
-            elif self.state == State.ON_DISPLAY:
-                self.display(delta)
-
-            elif self.state == State.FLYING_OUT:
-                self.fly_out(delta)
-
-            self.moving_time += delta
 
 
     def state_transition(self, to_state):
@@ -163,8 +167,8 @@ class Photo(GameObject):
         elif to_state == State.FLYING_IN:
             self.scale_interp = Interpolator(
                 duration = self.move_specs[State.FLYING_IN].duration + self.move_specs[State.ON_DISPLAY].duration,
-                from_value = self.min_scale,
-                to_value = self.display_max_scale,
+                from_value = self.min_scale if self.move_on_display else self.display_max_scale,
+                to_value = self.display_max_scale if self.move_on_display else self.max_scale,
                 mode = InterpolationMode.EASE_OUT
             )
 
@@ -181,10 +185,16 @@ class Photo(GameObject):
 
 
     def display(self, delta):
-        self.position = self.mover.move(delta)
-        if self.mover.is_arrived():
-            self.state_transition(State.FLYING_OUT)
-            self.done_callback()
+        if self.move_on_display:
+            self.position = self.mover.move(delta)
+            if self.mover.is_arrived():
+                self.state_transition(State.FLYING_OUT)
+                self.done_callback()
+        else:
+            self.on_display_duration -= delta
+            if self.on_display_duration <= 0:
+                self.state_transition(State.FLYING_OUT)
+                self.done_callback()
 
         self.set_scale(self.scale_interp.get(self.moving_time))
 
