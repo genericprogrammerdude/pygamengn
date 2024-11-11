@@ -3976,7 +3976,6 @@ photo_metadata_dictionary = {
             "game_object:mover": "PhotoMover",
             "date": "2012-08-19",
             "focal_point": [0.5365, 0.3485],
-            # "max_scale_override": 1.1,
         },
         "groups": [
             "RenderGroup",
@@ -3996,7 +3995,7 @@ photo_metadata_dictionary = {
             "kill_when_off_screen": False,
             "game_object:mover": "PhotoMover",
             "date": "2012-08-25",
-            "focal_point": [0.4573, 0.4208],
+            "focal_point": [0.5, 0.4208],
         },
         "groups": [
             "RenderGroup",
@@ -4016,7 +4015,7 @@ photo_metadata_dictionary = {
             "kill_when_off_screen": False,
             "game_object:mover": "PhotoMover",
             "date": "2012-12-27",
-            "focal_point": [0.4632, 0.3491],
+            "focal_point": [0.5, 0.3491],
         },
         "groups": [
             "RenderGroup",
@@ -4076,7 +4075,7 @@ photo_metadata_dictionary = {
             "kill_when_off_screen": False,
             "game_object:mover": "PhotoMover",
             "date": "2013-02-07",
-            "focal_point": [0.5817, 0.3253],
+            "focal_point": [0.5, 0.3253],
         },
         "groups": [
             "RenderGroup",
@@ -4096,7 +4095,7 @@ photo_metadata_dictionary = {
             "kill_when_off_screen": False,
             "game_object:mover": "PhotoMover",
             "date": "2013-06-06",
-            "focal_point": [0.5083, 0.2630],
+            "focal_point": [0.5, 0.2630],
         },
         "groups": [
             "RenderGroup",
@@ -4116,7 +4115,7 @@ photo_metadata_dictionary = {
             "kill_when_off_screen": False,
             "game_object:mover": "PhotoMover",
             "date": "2013-06-21",
-            "focal_point": [0.4194, 0.2852],
+            "focal_point": [0.5, 0.2852],
         },
         "groups": [
             "RenderGroup",
@@ -4156,7 +4155,7 @@ photo_metadata_dictionary = {
             "kill_when_off_screen": False,
             "game_object:mover": "PhotoMover",
             "date": "2013-07-22",
-            "focal_point": [0.5661, 0.2178],
+            "focal_point": [0.5, 0.2178],
         },
         "groups": [
             "RenderGroup",
