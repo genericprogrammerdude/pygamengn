@@ -62,6 +62,10 @@ def main():
                 return rv
 
         fps = 30
+        # LOOK HERE!!!!!!!!!!!!!! Don't forget to subtract len(PhotoSpawner.skip_indices) if the skip indices
+        # are in the set of images to display
+        image_count = inventory.image_load_count - 1 # Don't forget to subtract len(PhotoSpawner.skip_indices)!!!!!
+        # END LOOK HERE!!!!!!!!!!
         duration = (
             inventory.image_load_count * (inventory.on_display_time + inventory.flying_in_time) / 1000 +
             inventory.flying_out_time / 1000
@@ -73,7 +77,7 @@ def main():
             "mama.mp4",
             fps = fps,
             codec = "mpeg4",
-            bitrate = "6000k",
+            bitrate = "4000k",
             audio = False,
             preset = "placebo",
             threads = 8,
