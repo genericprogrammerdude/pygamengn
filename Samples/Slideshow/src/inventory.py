@@ -36,7 +36,7 @@ import images_dict
 
 if DEVELOP_AND_DEBUG:
     image_load_count = 10
-    image_index_start = 80
+    image_index_start = 100
     photo_asset_names = [f"/Photo_{i + image_index_start:03}" for i in range(image_load_count)]
     images = {}
     for i in range(image_load_count):
@@ -47,9 +47,9 @@ else:
     image_load_count = len(images)
     image_index_start = 0
 
-flying_in_time = 3000
-on_display_time = 45000
-flying_out_time = 2000
+flying_in_time = 200
+on_display_time = 10000
+flying_out_time = 200
 
 game_types = {
     "Slideshow": {
