@@ -29,6 +29,7 @@ class PhotoSpawner(Updatable):
         self.interpolator = None
         self.skip_indices = [
             111,
+            146,
         ]
 
     def update(self, delta):
