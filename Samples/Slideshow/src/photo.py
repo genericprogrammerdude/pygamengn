@@ -110,7 +110,7 @@ class Photo(GameObject):
             ),
             "flying_out": MoveSpec(
                 normalized_dest = (1.1, numpy.random.random_sample()),
-                revolutions = 0,
+                revolutions = 0, # numpy.random.random() * 2 * numpy.random.choice([1, -1]),
                 duration = durations["flying_out"],
                 move_interpolation_mode = InterpolationMode.EASE_OUT,
             ),
@@ -195,6 +195,7 @@ class Photo(GameObject):
         factor = self.ease_out_interp.get(self.moving_time)
         self.set_alpha(1.0 - factor)
         self.set_scale(self.scale_interp.get(self.moving_time))
+        self.heading = 360.0 * self.move_specs[State.FLYING_OUT].revolutions * factor
 
         if self.mover.is_arrived():
             # I should've exited the screen -> make sure I'm off the screen so I get deleted
