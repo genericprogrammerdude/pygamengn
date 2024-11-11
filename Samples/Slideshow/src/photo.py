@@ -71,10 +71,10 @@ class Photo(GameObject):
         scale_height = screen_size[1] / self.rect.height
         if scale_width < scale_height:
             self.max_scale = scale_width
-            self.min_scale = scale_width / 4.0
+            self.min_scale = scale_width / 2.0
         else:
             self.max_scale = scale_height
-            self.min_scale = scale_height / 4.0
+            self.min_scale = scale_height / 2.0
         self.set_scale(self.min_scale)
 
 
@@ -95,9 +95,10 @@ class Photo(GameObject):
         move_specs = {
             "flying_in": MoveSpec(
                 normalized_dest = pygame.Vector2(0.5, 0.5),
-                revolutions = numpy.random.randint(1, 2) * numpy.random.choice([1, -1]),
+                revolutions = 0,
                 duration = durations["flying_in"],
                 move_interpolation_mode = InterpolationMode.EASE_OUT,
+                # centre_offset = offset
             ),
             "on_display": MoveSpec(
                 normalized_dest = pygame.Vector2(0.5, 0.5),
@@ -109,7 +110,7 @@ class Photo(GameObject):
             ),
             "flying_out": MoveSpec(
                 normalized_dest = (1.1, numpy.random.random_sample()),
-                revolutions = numpy.random.randint(1, 2) * numpy.random.choice([1, -1]),
+                revolutions = 0,
                 duration = durations["flying_out"],
                 move_interpolation_mode = InterpolationMode.EASE_OUT,
             ),
@@ -147,7 +148,8 @@ class Photo(GameObject):
             self.move_specs[to_state].move_interpolation_mode
         )
         self.state = to_state
-        self.moving_time = 0
+        if to_state == State.FLYING_IN or to_state == State.FLYING_OUT:
+            self.moving_time = 0
         self.ease_in_interp = Interpolator(self.move_specs[to_state].duration, mode = InterpolationMode.EASE_IN)
         self.ease_out_interp = Interpolator(self.move_specs[to_state].duration, mode = InterpolationMode.EASE_OUT)
 
@@ -155,13 +157,13 @@ class Photo(GameObject):
             self.scale_interp = Interpolator(
                 duration = self.move_specs[to_state].duration,
                 from_value = self.scale,
-                to_value = 0.01,
+                to_value = 0.001,
                 mode = InterpolationMode.EASE_OUT
             )
-        elif to_state == State.ON_DISPLAY:
+        elif to_state == State.FLYING_IN:
             self.scale_interp = Interpolator(
-                duration = self.move_specs[to_state].duration,
-                from_value = self.scale,
+                duration = self.move_specs[State.FLYING_IN].duration + self.move_specs[State.ON_DISPLAY].duration,
+                from_value = self.min_scale,
                 to_value = self.display_max_scale,
                 mode = InterpolationMode.EASE_OUT
             )
@@ -172,15 +174,10 @@ class Photo(GameObject):
         if self.mover.is_arrived():
             self.state_transition(State.ON_DISPLAY)
             self.set_alpha(1.0)
-            self.heading = 0
-
         else:
             factor = self.ease_in_interp.get(self.moving_time)
             self.set_alpha(factor)
-            self.set_scale(self.min_scale + factor * (self.max_scale - self.min_scale))
-
-            factor = self.ease_out_interp.get(self.moving_time)
-            # self.heading = 360.0 * self.move_specs[State.FLYING_IN].revolutions * factor
+            self.set_scale(self.scale_interp.get(self.moving_time))
 
 
     def display(self, delta):
@@ -189,7 +186,6 @@ class Photo(GameObject):
             self.state_transition(State.FLYING_OUT)
             self.done_callback()
 
-        factor = self.ease_out_interp.get(self.moving_time)
         self.set_scale(self.scale_interp.get(self.moving_time))
 
 
@@ -199,8 +195,6 @@ class Photo(GameObject):
         factor = self.ease_out_interp.get(self.moving_time)
         self.set_alpha(1.0 - factor)
         self.set_scale(self.scale_interp.get(self.moving_time))
-
-        # self.heading = 360.0 * self.move_specs[State.FLYING_OUT].revolutions * factor
 
         if self.mover.is_arrived():
             # I should've exited the screen -> make sure I'm off the screen so I get deleted
