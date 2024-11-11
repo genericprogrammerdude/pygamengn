@@ -97,6 +97,7 @@ class Photo(GameObject):
 
 
     def start_moving(self, durations, done_callback):
+        # This function is a hot mess; it should be cleaned up. But hey, it works in its own brittle way...
         screen_rect = pygame.display.get_surface().get_rect()
         if self.max_scale < 1.3:
             self.display_max_scale = min(self.max_scale * 2.0, self.max_scale_override)
@@ -110,20 +111,22 @@ class Photo(GameObject):
             self.display_max_scale = self.max_scale
             offset = pygame.Vector2(0, 0)
 
+        self.move_on_display = numpy.random.choice([True, False])
+
         move_specs = {
             "flying_in": MoveSpec(
                 normalized_dest = pygame.Vector2(0.5, 0.5),
                 revolutions = 0,
                 duration = durations["flying_in"],
                 move_interpolation_mode = InterpolationMode.EASE_OUT,
-                # centre_offset = offset
+                centre_offset = pygame.Vector2(0, 0) if self.move_on_display else offset
             ),
             "on_display": MoveSpec(
                 normalized_dest = pygame.Vector2(0.5, 0.5),
                 revolutions = 0,
                 duration = durations["on_display"],
                 move_interpolation_mode = InterpolationMode.EASE_OUT,
-                centre_offset = offset
+                centre_offset = offset if self.move_on_display else pygame.Vector2(0, 0)
 
             ),
             "flying_out": MoveSpec(
@@ -138,12 +141,12 @@ class Photo(GameObject):
         self.done_callback = done_callback
         self.position = pygame.Vector2(0, numpy.random.random_integers(0, screen_rect.height))
         self.transform()
-        self.move_on_display = self.focal_point.y < 0.38 or numpy.random.choice([True, False])
         self.on_display_duration = self.move_specs[State.ON_DISPLAY].duration
         self.state_transition(State.FLYING_IN)
 
 
     def state_transition(self, to_state):
+        # This function is a hot mess; it should be cleaned up. But hey, it works in its own brittle way...
         screen_rect = pygame.display.get_surface().get_rect()
         self.mover = MoverTime(
             self.move_specs[to_state].duration,
@@ -171,13 +174,19 @@ class Photo(GameObject):
                 to_value = self.display_max_scale if self.move_on_display else self.max_scale,
                 mode = InterpolationMode.EASE_OUT
             )
+            if not self.move_on_display:
+                self.mover.duration = 1
+        elif to_state == State.ON_DISPLAY:
+            self.ease_out_interp = Interpolator(
+                duration = self.move_specs[State.FLYING_IN].duration,
+                mode = InterpolationMode.EASE_IN
+            )
 
 
     def fly_in(self, delta):
         self.position = self.mover.move(delta)
         if self.mover.is_arrived():
             self.state_transition(State.ON_DISPLAY)
-            self.set_alpha(1.0)
         else:
             factor = self.ease_in_interp.get(self.moving_time)
             self.set_alpha(factor)
@@ -185,8 +194,8 @@ class Photo(GameObject):
 
 
     def display(self, delta):
+        self.position = self.mover.move(delta)
         if self.move_on_display:
-            self.position = self.mover.move(delta)
             if self.mover.is_arrived():
                 self.state_transition(State.FLYING_OUT)
                 self.done_callback()
@@ -195,6 +204,7 @@ class Photo(GameObject):
             if self.on_display_duration <= 0:
                 self.state_transition(State.FLYING_OUT)
                 self.done_callback()
+            self.set_alpha(self.ease_out_interp.get(self.moving_time))
 
         self.set_scale(self.scale_interp.get(self.moving_time))
 
