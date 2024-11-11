@@ -1895,7 +1895,8 @@ photo_metadata_dictionary = {
             "kill_when_off_screen": False,
             "game_object:mover": "PhotoMover",
             "date": "1974-04-01",
-            "focal_point": [0.4530, 0.4954],
+            "focal_point": [0.51, 0.42],
+            "max_scale_override": 0.55,
         },
         "groups": [
             "RenderGroup",
@@ -1915,7 +1916,8 @@ photo_metadata_dictionary = {
             "kill_when_off_screen": False,
             "game_object:mover": "PhotoMover",
             "date": "1974-04-01",
-            "focal_point": [0.5305, 0.4269],
+            "focal_point": [0.52, 0.4269],
+            "max_scale_override": 0.53,
         },
         "groups": [
             "RenderGroup",
@@ -1935,7 +1937,8 @@ photo_metadata_dictionary = {
             "kill_when_off_screen": False,
             "game_object:mover": "PhotoMover",
             "date": "1977-02-01",
-            "focal_point": [0.5020, 0.4731],
+            "focal_point": [0.5020, 0.45],
+            "max_scale_override": 0.55,
         },
         "groups": [
             "RenderGroup",
@@ -1956,6 +1959,7 @@ photo_metadata_dictionary = {
             "game_object:mover": "PhotoMover",
             "date": "1977-02-01",
             "focal_point": [0.5021, 0.3509],
+            "max_scale_override": 0.55,
         },
         "groups": [
             "RenderGroup",
@@ -1975,7 +1979,8 @@ photo_metadata_dictionary = {
             "kill_when_off_screen": False,
             "game_object:mover": "PhotoMover",
             "date": "1977-02-01",
-            "focal_point": [0.4852, 0.4963],
+            "focal_point": [0.45, 0.6],
+            "max_scale_override": 0.55,
         },
         "groups": [
             "RenderGroup",
@@ -1995,7 +2000,8 @@ photo_metadata_dictionary = {
             "kill_when_off_screen": False,
             "game_object:mover": "PhotoMover",
             "date": "1977-02-01",
-            "focal_point": [0.4402, 0.4356],
+            "focal_point": [0.5, 0.35],
+            "max_scale_override": 0.55,
         },
         "groups": [
             "RenderGroup",
@@ -2015,7 +2021,8 @@ photo_metadata_dictionary = {
             "kill_when_off_screen": False,
             "game_object:mover": "PhotoMover",
             "date": "1977-02-01",
-            "focal_point": [0.4101, 0.3944],
+            "focal_point": [0.5, 0.4],
+            "max_scale_override": 0.5,
         },
         "groups": [
             "RenderGroup",
