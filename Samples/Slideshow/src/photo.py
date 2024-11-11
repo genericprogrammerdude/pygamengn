@@ -201,10 +201,10 @@ class Photo(GameObject):
                 self.done_callback()
         else:
             self.on_display_duration -= delta
+            self.set_alpha(self.ease_out_interp.get(self.moving_time))
             if self.on_display_duration <= 0:
                 self.state_transition(State.FLYING_OUT)
                 self.done_callback()
-            self.set_alpha(self.ease_out_interp.get(self.moving_time))
 
         self.set_scale(self.scale_interp.get(self.moving_time))
 
