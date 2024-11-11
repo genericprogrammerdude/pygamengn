@@ -5209,6 +5209,7 @@ photo_metadata_dictionary = {
             "game_object:mover": "PhotoMover",
             "date": "2021-09-06",
             "focal_point": [0.5714, 0.3957],
+            "max_scale_override": 1.0,
         },
         "groups": [
             "RenderGroup",
@@ -5228,7 +5229,8 @@ photo_metadata_dictionary = {
             "kill_when_off_screen": False,
             "game_object:mover": "PhotoMover",
             "date": "2022-05-09",
-            "focal_point": [0.5104, 0.3306],
+            "focal_point": [0.5104, 0.4],
+            "max_scale_override": 0.65,
         },
         "groups": [
             "RenderGroup",
@@ -5248,7 +5250,8 @@ photo_metadata_dictionary = {
             "kill_when_off_screen": False,
             "game_object:mover": "PhotoMover",
             "date": "2023-03-06",
-            "focal_point": [0.5121, 0.2667],
+            "focal_point": [0.5121, 0.3],
+            "max_scale_override": 0.6,
         },
         "groups": [
             "RenderGroup",
@@ -5268,7 +5271,8 @@ photo_metadata_dictionary = {
             "kill_when_off_screen": False,
             "game_object:mover": "PhotoMover",
             "date": "2023-05-06",
-            "focal_point": [0.4688, 0.2898],
+            "focal_point": [0.49, 0.38],
+            "max_scale_override": 0.56,
         },
         "groups": [
             "RenderGroup",
@@ -5288,7 +5292,8 @@ photo_metadata_dictionary = {
             "kill_when_off_screen": False,
             "game_object:mover": "PhotoMover",
             "date": "2024-08-01",
-            "focal_point": [0.5531, 0.4426],
+            "focal_point": [0.5531, 0.55],
+            "max_scale_override": 0.8,
         },
         "groups": [
             "RenderGroup",
