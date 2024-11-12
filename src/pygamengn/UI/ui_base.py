@@ -23,7 +23,6 @@ class UIBase(GameObjectBase):
 
     def __init__(self, pos, size, children, fix_aspect_ratio, name="", **kwargs):
         super().__init__(**kwargs)
-        self.__normalized_pos = pygame.Vector2(pos)
         self.__size = pygame.Vector2(size)
         self.__children = children
         self.__fix_aspect_ratio = fix_aspect_ratio
@@ -33,6 +32,7 @@ class UIBase(GameObjectBase):
 
         self.__bind_children()
 
+        self._normalized_pos = pygame.Vector2(pos)
         self._parent_rect = None
         self._rect = None
 
@@ -57,11 +57,6 @@ class UIBase(GameObjectBase):
     @property
     def rect(self) -> pygame.rect:
         return self._rect
-
-
-    @property
-    def normalized_pos(self) -> pygame.Vector2:
-        return self.__normalized_pos
 
 
     # @normalized_pos.setter
@@ -91,7 +86,7 @@ class UIBase(GameObjectBase):
                 # Width is the limiting factor
                 height = width / self.__aspect_ratio
         pos = parent_rect.topleft + pygame.Vector2(
-            parent_rect.width * self.__normalized_pos.x, parent_rect.height * self.__normalized_pos.y
+            parent_rect.width * self._normalized_pos.x, parent_rect.height * self._normalized_pos.y
         )
         self._rect = pygame.Rect(pos.x, pos.y, width, height)
         self._parent_rect = parent_rect

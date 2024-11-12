@@ -193,16 +193,16 @@ class TextPanel(UIBase):
             pass  # This is what UIBase does by default
         elif self.horz_align == TextPanel.HorzAlign.CENTRE:
             self._rect.x = self._parent_rect.x + (self._parent_rect.width - self.__image.get_rect().width) / 2
-            self._rect.x += self._parent_rect.width * self.normalized_pos.x
+            self._rect.x += self._parent_rect.width * self._normalized_pos.x
         elif self.horz_align == TextPanel.HorzAlign.RIGHT:
             self._rect.x = self._parent_rect.x + self._parent_rect.width - self.__image.get_rect().width
-            self._rect.x += self._parent_rect.width * self.normalized_pos.x
+            self._rect.x += self._parent_rect.width * self._normalized_pos.x
         # Vertical alignment
         if self.vert_align == TextPanel.VertAlign.TOP:
             pass  # This is what UIBase does by default
         elif self.vert_align == TextPanel.VertAlign.CENTRE:
             self._rect.y = self._parent_rect.y + (self._parent_rect.height - self.__image.get_rect().height) / 2
-            self._rect.y += self._parent_rect.width * self.normalized_pos.y
+            self._rect.y += self._parent_rect.width * self._normalized_pos.y
         elif self.vert_align == TextPanel.VertAlign.BOTTOM:
             self._rect.y = self._parent_rect.y + self._parent_rect.height - self.__image.get_rect().height
-            self._rect.y += self._parent_rect.width * self.normalized_pos.y
+            self._rect.y += self._parent_rect.width * self._normalized_pos.y
