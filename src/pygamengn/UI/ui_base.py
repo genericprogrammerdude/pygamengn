@@ -54,6 +54,8 @@ class UIBase(GameObjectBase):
         return self.__children
 
 
+    ### ACHTUNG!
+    ### This is temporary! It should not be needed!
     @property
     def rect(self) -> pygame.rect:
         return self._rect

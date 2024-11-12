@@ -3,13 +3,46 @@ from enum import Enum
 import logging
 import pygame
 
+from abc import abstractmethod
+
 from pygamengn.class_registrar import ClassRegistrar
 from pygamengn.game_object_base import GameObjectBase
 from pygamengn.UI.ui_base import UIBase
 
 
+
 @ClassRegistrar.register("Panel")
 class Panel(UIBase):
+    """Basic UI panel that keeps an image with its visual contents."""
+
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self._image = None
+        self._needs_redraw = True
+
+
+    def update(self, parent_rect: pygame.rect, delta: int):
+        super().update(parent_rect, delta)
+        if self._needs_redraw:
+            self._draw()
+            self._needs_redraw = False
+
+
+    ### ACHTUNG!
+    ### This is temporary! It should not be needed!
+    @property
+    def image(self):
+        return self._image
+
+
+    @abstractmethod
+    def _draw(self):
+        pass
+
+
+
+@ClassRegistrar.register("TexturePanel")
+class TexturePanel(UIBase):
     """Basic UI panel that shows an image."""
 
     def __init__(self, image_asset, **kwargs):
@@ -23,8 +56,9 @@ class Panel(UIBase):
         self.image = pygame.transform.scale(self.image_asset, self._rect.size)
 
 
+
 @ClassRegistrar.register("ColourPanel")
-class ColourPanel(UIBase):
+class ColourPanel(Panel):
     """Basic UI panel that is a solid colour and has no image."""
 
     @ClassRegistrar.register("CornerRadii")
@@ -49,55 +83,21 @@ class ColourPanel(UIBase):
         self.__corner_radii = corner_radii
         self.__corner_radius = corner_radius
         self.__mouse_is_hovering = False
-        self.__needs_redraw = True
-        self.__image = None
 
 
-    ### ACHTUNG!
-    ### This is temporary! It should not be needed!
-    @property
-    def image(self):
-        return self.__image
-
-
-    def update(self, parent_rect: pygame.rect, delta: int):
-        super().update(parent_rect, delta)
-        if self.__needs_redraw:
-            self.__draw()
-
-
-    def __draw(self):
+    def _draw(self):
         """Resizes the image to match the panel's size with its parent's rect."""
-        self.__image = pygame.Surface(self._rect.size, pygame.SRCALPHA)
-        self.__build_image(self.__hover_colour if self.__mouse_is_hovering else self.__colour)
-        logging.info(f"{self.name}: ColourPanel.__draw() generated new image")
-
-
-    def propagate_mouse_pos(self, pos) -> bool:
-        """Notifies the component that the mouse is hovering over it."""
-        capture_hover = super().propagate_mouse_pos(pos)
-        if not capture_hover and self.__colour != self.__hover_colour:
-            if self._rect.collidepoint(pos):
-                capture_hover = True
-                if not self.__mouse_is_hovering:
-                    self.__needs_redraw = True
-                    self.__mouse_is_hovering = True
-            else:
-                if self.__mouse_is_hovering:
-                    self.__needs_redraw = True
-                    self.__mouse_is_hovering = False
-        return capture_hover
-
-
-    def __build_image(self, colour):
+        logging.info(f"{self.name}: ColourPanel._draw() generated new image")
+        self._image = pygame.Surface(self._rect.size, pygame.SRCALPHA)
         if not self.__corner_radii and not self.__corner_radius:
-            self.__image.fill(colour)
+            self._image.fill(colour)
         else:
+            colour = self.__hover_colour if self.__mouse_is_hovering else self.__colour
             min_dimension = min(self._rect.width, self._rect.height)
             # corner_radii takes precedence over corner_radius
             if self.__corner_radii:
                 pygame.draw.rect(
-                    surface = self.__image,
+                    surface = self._image,
                     color = colour,
                     rect = pygame.Rect(0, 0, self._rect.width, self._rect.height),
                     border_top_left_radius = round(min_dimension * self.__corner_radii.top_left),
@@ -107,16 +107,32 @@ class ColourPanel(UIBase):
                 )
             else:
                 pygame.draw.rect(
-                    surface = self.__image,
+                    surface = self._image,
                     color = colour,
                     rect = pygame.Rect(0, 0, self._rect.width, self._rect.height),
                     border_radius = round(min_dimension * self.__corner_radius)
                 )
-        self.__needs_redraw = False
+
+
+    def propagate_mouse_pos(self, pos) -> bool:
+        """Notifies the component that the mouse is hovering over it."""
+        capture_hover = super().propagate_mouse_pos(pos)
+        if not capture_hover and self.__colour != self.__hover_colour:
+            if self._rect.collidepoint(pos):
+                capture_hover = True
+                if not self.__mouse_is_hovering:
+                    self._needs_redraw = True
+                    self.__mouse_is_hovering = True
+            else:
+                if self.__mouse_is_hovering:
+                    self._needs_redraw = True
+                    self.__mouse_is_hovering = False
+        return capture_hover
+
 
 
 @ClassRegistrar.register("TextPanel")
-class TextPanel(UIBase):
+class TextPanel(Panel):
     """Panel that sets its size to the size of the text in it. This panel ignores the parent rect."""
 
     class VertAlign(Enum):
@@ -147,37 +163,21 @@ class TextPanel(UIBase):
         self.__vert_align = TextPanel.VertAlign(vert_align)
         self.__shadow = shadow
         self.__shadow_colour = shadow_colour
-        self.__image = None
         self.__text = text
-        self.__text_is_dirty = True
 
 
-    ### ACHTUNG!
-    ### This is temporary! It should not be needed!
-    @property
-    def image(self) -> pygame.Surface:
-        return self.__image
-
-
-    def update(self, parent_rect: pygame.rect, delta: int):
-        super().update(parent_rect, delta)
-        if self.__text_is_dirty:
-            self.__draw()
-
-
-    def __draw(self):
+    def _draw(self):
         """TextPanel ignores its parent rect and renders to the font size."""
+        logging.info(f"{self.name}: TextPanel._draw() generated new image")
         if self.__shadow:
             shadow_surf = self.__font_asset.font.render(self.__text, True, self.__shadow_colour)
             front_surf = self.__font_asset.font.render(self.__text, True, self.__text_colour)
             dest = -0.06 * shadow_surf.get_rect().height
             shadow_surf.blit(front_surf, (dest, dest))
-            self.__image = shadow_surf
+            self._image = shadow_surf
         else:
-            self.__image = self.__font_asset.font.render(self.__text, True, self.__text_colour)
+            self._image = self.__font_asset.font.render(self.__text, True, self.__text_colour)
         self.__align()
-        self.__text_is_dirty = False
-        logging.info(f"{self.name}: TextPanel.__draw() generated new image")
 
 
     def __align(self):
@@ -186,17 +186,17 @@ class TextPanel(UIBase):
         if self.__horz_align == TextPanel.HorzAlign.LEFT:
             pass  # This is what UIBase does by default
         elif self.__horz_align == TextPanel.HorzAlign.CENTRE:
-            self._rect.x = self._parent_rect.x + (self._parent_rect.width - self.__image.get_rect().width) / 2
+            self._rect.x = self._parent_rect.x + (self._parent_rect.width - self._image.get_rect().width) / 2
             self._rect.x += self._parent_rect.width * self._normalized_pos.x
         elif self.__horz_align == TextPanel.HorzAlign.RIGHT:
-            self._rect.x = self._parent_rect.x + self._parent_rect.width - self.__image.get_rect().width
+            self._rect.x = self._parent_rect.x + self._parent_rect.width - self._image.get_rect().width
             self._rect.x += self._parent_rect.width * self._normalized_pos.x
         # Vertical alignment
         if self.__vert_align == TextPanel.VertAlign.TOP:
             pass  # This is what UIBase does by default
         elif self.__vert_align == TextPanel.VertAlign.CENTRE:
-            self._rect.y = self._parent_rect.y + (self._parent_rect.height - self.__image.get_rect().height) / 2
+            self._rect.y = self._parent_rect.y + (self._parent_rect.height - self._image.get_rect().height) / 2
             self._rect.y += self._parent_rect.width * self._normalized_pos.y
         elif self.__vert_align == TextPanel.VertAlign.BOTTOM:
-            self._rect.y = self._parent_rect.y + self._parent_rect.height - self.__image.get_rect().height
+            self._rect.y = self._parent_rect.y + self._parent_rect.height - self._image.get_rect().height
             self._rect.y += self._parent_rect.width * self._normalized_pos.y
