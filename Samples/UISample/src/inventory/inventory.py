@@ -81,6 +81,8 @@ game_types = {
                     "fix_aspect_ratio": True,
                     "asset:font_asset": "fast_hand_font",
                     "text_colour": [0, 200, 100],
+                    "shadow_colour": [0, 20, 10],
+                    "shadow": True,
                     "horz_align": "CENTRE",
                     "vert_align": "CENTRE"
                 }
