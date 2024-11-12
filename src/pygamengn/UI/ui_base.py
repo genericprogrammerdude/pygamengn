@@ -1,99 +1,117 @@
-from abc import abstractmethod
-
 import logging
 import pygame
 
 from pygamengn.class_registrar import ClassRegistrar
 from pygamengn.game_object_base import GameObjectBase
-from pygamengn.interpolator import Interpolator
 
-# This class does too much. It should be a base class that just takes care of administrative issues (e.g., children),
-# and updates to the geometry. I should be able to instantiate it in inventory as an non-rendering UI container for a
-# bunch of children.
+
 
 @ClassRegistrar.register("UIBase")
 class UIBase(GameObjectBase):
-    """Base class for UI components."""
+    """
+    Base class for UI components.
+
+    This class takes care of administrative and basic geometric issues. Its functionality is limited to the following
+    topics by design:
+        1. Keep its own geometry updated to the geometry of its parent rectangle.
+        2. Manage addition and removal of children.
+        3. Keep children's geometry updated to any changes to its own geometry.
+
+    In addition, this class must always be instantiable as a parent container of other UI components that need to be
+    kept together under a single parent.
+    """
 
     def __init__(self, pos, size, children, fix_aspect_ratio, name="", **kwargs):
         super().__init__(**kwargs)
-        self.pos = pygame.Vector2(pos)
-        self.size = pygame.Vector2(size)
-        self.children = children
-        self.fix_aspect_ratio = fix_aspect_ratio
-        self.name = name
-        self.parent_rect = None
-        self.rect = None
-        self.image = None
-        self.aspect_ratio = None
-        self._is_dirty = True
+        self.__normalized_pos = pygame.Vector2(pos)
+        self.__size = pygame.Vector2(size)
+        self.__children = children
+        self.__fix_aspect_ratio = fix_aspect_ratio
+        self.__name = name
+        self.__aspect_ratio = None
+        self.__is_dirty = True
+
         self.__bind_children()
-        self.__fade_out_interp = None
-        self.__fade_out_time = 0
+
+        self._parent_rect = None
+        self._rect = None
+
 
     def update(self, parent_rect: pygame.rect, delta: int):
         """Updates the UI component and its children."""
-        if self.is_dirty():
-            self._resize_to_parent(parent_rect)
-            self._is_dirty = False
+        if self.__is_dirty or parent_rect.size != self._parent_rect.size:
+            self.__resize_to_parent(parent_rect)
+            self.__is_dirty = False
 
-        if self._needs_redraw(parent_rect):
-            self.resize()
+        for child in self.__children:
+            child.update(self._rect, delta)
 
-        for child in self.children:
-            child.update(self.rect, delta)
 
-        if self.__fade_out_interp and self.image:
-            interp_value = self.__fade_out_interp.get(self.__fade_out_time)
-            self.__fade_out_time += delta
-            self.image.set_alpha(interp_value)
-            for child in self.children:
-                if child.image:
-                    child.image.set_alpha(interp_value)
+    ### ACHTUNG!
+    ### This is temporary! It should not be needed!
+    @property
+    def children(self) -> list:
+        return self.__children
 
-    def set_position(self, new_normalized_pos: pygame.Vector2):
-        if self.pos != new_normalized_pos:
-            self._is_dirty = True
-            self.pos = new_normalized_pos
-            for child in self.children:
-                child._is_dirty = True
 
-    def fade_out(self, duration: int):
-        self.__fade_out_interp = Interpolator(duration = duration, from_value = 255, to_value = 0)
-        self.__fade_out_time = 0
+    @property
+    def rect(self) -> pygame.rect:
+        return self._rect
 
-    def _needs_redraw(self, parent_rect: pygame.rect) -> bool:
-        return not self.image or not self.parent_rect or parent_rect.size != self.parent_rect.size
 
-    def _resize_to_parent(self, parent_rect):
+    @property
+    def normalized_pos(self) -> pygame.Vector2:
+        return self.__normalized_pos
+
+
+    # @normalized_pos.setter
+    # def normalized_pos(self, normalized_pos: pygame.Vector2):
+    #     """Sets the normalized position of the UI base. Both dimensions are must be in the range [0, 1]."""
+    #     if normalized_pos.x < 0 or normalized_pos.x > 1 or normalized_pos.y < 0 or normalized_pos.y:
+    #         raise ValueError("Both dimensions of a normalized position must be in the range [0, 1]")
+
+    #     if self.__normalized_pos != normalized_pos:
+    #         self.__is_dirty = True
+    #         self.__normalized_pos = normalized_pos
+    #         for child in self.__children:
+    #             child.__is_dirty = True
+
+
+    def __resize_to_parent(self, parent_rect):
         """Resizes the component's rect to match size with its parent's rect."""
-        width = parent_rect.width * self.size[0]
-        height = parent_rect.height * self.size[1]
-        if self.fix_aspect_ratio:
-            if self.aspect_ratio is None:
-                self.aspect_ratio = width / height
-            if width / self.aspect_ratio > height:
+        width = parent_rect.width * self.__size.x
+        height = parent_rect.height * self.__size.y
+        if self.__fix_aspect_ratio:
+            if self.__aspect_ratio is None:
+                self.__aspect_ratio = width / height
+            if width / self.__aspect_ratio > height:
                 # Height is the limiting factor
-                width = self.aspect_ratio * height
-            elif height * self.aspect_ratio > width:
+                width = self.__aspect_ratio * height
+            elif height * self.__aspect_ratio > width:
                 # Width is the limiting factor
-                height = width / self.aspect_ratio
-        pos = parent_rect.topleft + pygame.Vector2(parent_rect.width * self.pos[0], parent_rect.height * self.pos[1])
-        self.rect = pygame.Rect(pos.x, pos.y, width, height)
-        self.parent_rect = parent_rect
-        self._is_dirty = False
+                height = width / self.__aspect_ratio
+        pos = parent_rect.topleft + pygame.Vector2(
+            parent_rect.width * self.__normalized_pos.x, parent_rect.height * self.__normalized_pos.y
+        )
+        self._rect = pygame.Rect(pos.x, pos.y, width, height)
+        self._parent_rect = parent_rect
+        self.__is_dirty = False
 
-    def is_dirty(self):
-        """
-        Returns whether the component needs to be resized. Returning True guarantees the component will be re-drawn.
-        """
-        return self._is_dirty
 
     def propagate_mouse_pos(self, pos) -> bool:
-        """Tells the component and its children the position of the mouse pointer in screen coordinates."""
+        """
+        Tells the component and its children the position of the mouse pointer in screen coordinates.
+
+        Returns
+        -------
+        bool
+            Whether there was a component in the tree that did something with the information.
+        """
+        i = 0
         capture_hover = False
-        for child in self.children:
-            capture_hover = capture_hover or child.propagate_mouse_pos(pos)
+        while not capture_hover and i < len(self.__children):
+            capture_hover = self.__children[i].propagate_mouse_pos(pos)
+            i += 1
 
         if capture_hover:
             pygame.mouse.set_system_cursor(pygame.SYSTEM_CURSOR_HAND)
@@ -101,11 +119,12 @@ class UIBase(GameObjectBase):
             pygame.mouse.set_system_cursor(pygame.SYSTEM_CURSOR_ARROW)
         return capture_hover
 
+
     def __bind_children(self, parent=None):
         """Binds children to class members to make them accessible."""
         if not parent:
             parent = self
-        for child in self.children:
+        for child in self.__children:
             child.__bind_children(parent)
             if child.name:
                 try:
@@ -114,7 +133,7 @@ class UIBase(GameObjectBase):
                 except AttributeError:
                     setattr(parent, child.name, child)
 
-    @abstractmethod
-    def resize(self):
-        """Called when the component resized its own rect to match its parent's rect."""
-        pass
+
+    @property
+    def name(self):
+        return self.__name
