@@ -67,7 +67,7 @@ def main():
         image_count = inventory.image_load_count - 2 # Don't forget to subtract len(PhotoSpawner.skip_indices)!!!!!
         # END LOOK HERE!!!!!!!!!!
         duration = (
-            inventory.image_load_count * (inventory.on_display_time + inventory.flying_in_time) / 1000 +
+            image_count * (inventory.on_display_time + inventory.flying_in_time) / 1000 +
             inventory.flying_out_time / 1000
         )
         frame_maker = FrameMaker(fps = fps)
