@@ -141,14 +141,14 @@ class TextPanel(UIBase):
         **kwargs
     ):
         super().__init__(**kwargs)
-        self.font_asset = font_asset
-        self.text_colour = text_colour
-        self.horz_align = TextPanel.HorzAlign(horz_align)
-        self.vert_align = TextPanel.VertAlign(vert_align)
-        self.shadow = shadow
-        self.shadow_colour = shadow_colour
+        self.__font_asset = font_asset
+        self.__text_colour = text_colour
+        self.__horz_align = TextPanel.HorzAlign(horz_align)
+        self.__vert_align = TextPanel.VertAlign(vert_align)
+        self.__shadow = shadow
+        self.__shadow_colour = shadow_colour
         self.__image = None
-        self.text = text
+        self.__text = text
         self.__text_is_dirty = True
 
 
@@ -159,50 +159,44 @@ class TextPanel(UIBase):
         return self.__image
 
 
-    def set_text(self, text):
-        if self.text != text:
-            self.text = text
-            self.__text_is_dirty = True
-
-
-    def __draw(self):
-        """TextPanel ignores its parent rect and renders to the font size."""
-        if self.shadow:
-            shadow_surf = self.font_asset.font.render(self.text, True, self.shadow_colour)
-            front_surf = self.font_asset.font.render(self.text, True, self.text_colour)
-            dest = -0.06 * shadow_surf.get_rect().height
-            shadow_surf.blit(front_surf, (dest, dest))
-            self.__image = shadow_surf
-        else:
-            self.__image = self.font_asset.font.render(self.text, True, self.text_colour)
-        self.__align()
-        self.__text_is_dirty = False
-        logging.info(f"{self.name}: TextPanel.__draw() generated new image")
-
-
     def update(self, parent_rect: pygame.rect, delta: int):
         super().update(parent_rect, delta)
         if self.__text_is_dirty:
             self.__draw()
 
 
+    def __draw(self):
+        """TextPanel ignores its parent rect and renders to the font size."""
+        if self.__shadow:
+            shadow_surf = self.__font_asset.font.render(self.__text, True, self.__shadow_colour)
+            front_surf = self.__font_asset.font.render(self.__text, True, self.__text_colour)
+            dest = -0.06 * shadow_surf.get_rect().height
+            shadow_surf.blit(front_surf, (dest, dest))
+            self.__image = shadow_surf
+        else:
+            self.__image = self.__font_asset.font.render(self.__text, True, self.__text_colour)
+        self.__align()
+        self.__text_is_dirty = False
+        logging.info(f"{self.name}: TextPanel.__draw() generated new image")
+
+
     def __align(self):
         """Aligns the text image."""
         # Horizontal alignment
-        if self.horz_align == TextPanel.HorzAlign.LEFT:
+        if self.__horz_align == TextPanel.HorzAlign.LEFT:
             pass  # This is what UIBase does by default
-        elif self.horz_align == TextPanel.HorzAlign.CENTRE:
+        elif self.__horz_align == TextPanel.HorzAlign.CENTRE:
             self._rect.x = self._parent_rect.x + (self._parent_rect.width - self.__image.get_rect().width) / 2
             self._rect.x += self._parent_rect.width * self._normalized_pos.x
-        elif self.horz_align == TextPanel.HorzAlign.RIGHT:
+        elif self.__horz_align == TextPanel.HorzAlign.RIGHT:
             self._rect.x = self._parent_rect.x + self._parent_rect.width - self.__image.get_rect().width
             self._rect.x += self._parent_rect.width * self._normalized_pos.x
         # Vertical alignment
-        if self.vert_align == TextPanel.VertAlign.TOP:
+        if self.__vert_align == TextPanel.VertAlign.TOP:
             pass  # This is what UIBase does by default
-        elif self.vert_align == TextPanel.VertAlign.CENTRE:
+        elif self.__vert_align == TextPanel.VertAlign.CENTRE:
             self._rect.y = self._parent_rect.y + (self._parent_rect.height - self.__image.get_rect().height) / 2
             self._rect.y += self._parent_rect.width * self._normalized_pos.y
-        elif self.vert_align == TextPanel.VertAlign.BOTTOM:
+        elif self.__vert_align == TextPanel.VertAlign.BOTTOM:
             self._rect.y = self._parent_rect.y + self._parent_rect.height - self.__image.get_rect().height
             self._rect.y += self._parent_rect.width * self._normalized_pos.y
