@@ -40,11 +40,13 @@ class ColourPanel(UIBase):
         colour,
         hover_colour = None,
         corner_radii = None,
+        corner_radius = None,
         **kwargs
     ):
         super().__init__(**kwargs)
         self.__colour = tuple(colour)
         self.__corner_radii = corner_radii
+        self.__corner_radius = corner_radius
         self.__mouse_is_hovering = False
         self.__needs_redraw = True
         if hover_colour:
@@ -77,19 +79,28 @@ class ColourPanel(UIBase):
         return self.__needs_redraw
 
     def __build_image(self, colour):
-        if not self.__corner_radii:
+        if not self.__corner_radii and not self.__corner_radius:
             self.image.fill(colour)
         else:
             min_dimension = min(self.rect.width, self.rect.height)
-            pygame.draw.rect(
-                surface = self.image,
-                color = colour,
-                rect = pygame.Rect(0, 0, self.rect.width, self.rect.height),
-                border_top_left_radius = round(min_dimension * self.__corner_radii.top_left),
-                border_top_right_radius = round(min_dimension * self.__corner_radii.top_right),
-                border_bottom_right_radius = round(min_dimension * self.__corner_radii.bottom_right),
-                border_bottom_left_radius = round(min_dimension * self.__corner_radii.bottom_left)
-            )
+            # corner_radii takes precedence over corner_radius
+            if self.__corner_radii:
+                pygame.draw.rect(
+                    surface = self.image,
+                    color = colour,
+                    rect = pygame.Rect(0, 0, self.rect.width, self.rect.height),
+                    border_top_left_radius = round(min_dimension * self.__corner_radii.top_left),
+                    border_top_right_radius = round(min_dimension * self.__corner_radii.top_right),
+                    border_bottom_right_radius = round(min_dimension * self.__corner_radii.bottom_right),
+                    border_bottom_left_radius = round(min_dimension * self.__corner_radii.bottom_left)
+                )
+            else:
+                pygame.draw.rect(
+                    surface = self.image,
+                    color = colour,
+                    rect = pygame.Rect(0, 0, self.rect.width, self.rect.height),
+                    border_radius = round(min_dimension * self.__corner_radius)
+                )
         self.__needs_redraw = False
 
 
