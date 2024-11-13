@@ -50,37 +50,9 @@ class UIBase(GameObjectBase):
 
 
     @abstractmethod
-    def draw(self, image: pygame.Surface = None):
+    def draw(self, image: pygame.Surface = None, force: bool = False):
         for child in self.__children:
-            child.draw(image)
-
-
-    ### ACHTUNG!
-    ### This is temporary! It should not be needed!
-    @property
-    def children(self) -> list:
-        return self.__children
-
-
-    ### ACHTUNG!
-    ### This is temporary! It should not be needed!
-    @property
-    def rect(self) -> pygame.rect:
-        return self._rect
-
-
-    @property
-    def parent_rect(self) -> pygame.rect:
-        return self._parent_rect
-
-
-    # @parent_rect.setter
-    # def parent_rect(self, pygame.rect):
-    #     if parent_rect.size != self._parent_rect.size:
-    #         # If my parent_rect changed, I need to resize and so do my children
-    #         self.__resize_to_parent(parent_rect)
-    #         for child in self.__children:
-    #             child.__resize_to_parent(self._parent_rect)
+            child.draw(image, force)
 
 
     def __resize_to_parent(self, parent_rect):
@@ -100,33 +72,6 @@ class UIBase(GameObjectBase):
         # self._rect is always in parent coordinates, NOT screen coordinates
         self._rect = pygame.Rect(pos.x, pos.y, width, height)
         self._parent_rect = parent_rect
-
-
-    # def propagate_mouse_pos(self, pos: pygame.Vector2) -> bool:
-    #     """
-    #     Tells the component and its children the position of the mouse pointer in screen coordinates.
-
-    #     Parameters
-    #     ----------
-    #     pos
-    #         Mouse position in screen coordinates.
-
-    #     Returns
-    #     -------
-    #     bool
-    #         Whether there was a component in the tree that did something with the information.
-    #     """
-    #     i = 0
-    #     capture_hover = False
-    #     while not capture_hover and i < len(self.__children):
-    #         capture_hover = self.__children[i].propagate_mouse_pos(pos - pygame.Vector2(self._parent_rect.topleft))
-    #         i += 1
-
-    #     if capture_hover:
-    #         pygame.mouse.set_system_cursor(pygame.SYSTEM_CURSOR_HAND)
-    #     else:
-    #         pygame.mouse.set_system_cursor(pygame.SYSTEM_CURSOR_ARROW)
-    #     return capture_hover
 
 
     def process_mouse_event(self, pos: pygame.Vector2, event_type: int) -> bool:
@@ -176,15 +121,6 @@ class UIBase(GameObjectBase):
                     logging.warn(f"{child.name} attr is already assigned with {child}. Not assigning it {a}")
                 except AttributeError:
                     setattr(parent, child.name, child)
-
-
-    def _is_mouse_event(self, event_type: int) -> bool:
-        return (
-            event_type == pygame.MOUSEBUTTONDOWN or
-            event_type == pygame.MOUSEBUTTONUP or
-            event_type == pygame.MOUSEMOTION or
-            event_type == pygame.MOUSEWHEEL
-        )
 
 
     @property

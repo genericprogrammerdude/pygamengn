@@ -21,11 +21,17 @@ class Panel(UIBase):
         self._needs_redraw = True
 
 
-    def draw(self, image: pygame.Surface = None):
-        if self._needs_redraw:
+    def draw(self, image: pygame.Surface = None, force: bool = False):
+        needed_redraw = self._needs_redraw
+        if self._needs_redraw or force:
             self._draw(image)
             self._needs_redraw = False
-            super().draw(self._image)
+        super().draw(self._image, force or needed_redraw)
+
+
+    @abstractmethod
+    def _draw(self, image: pygame.Surface):
+        pass
 
 
     ### ACHTUNG!
@@ -35,9 +41,11 @@ class Panel(UIBase):
         return self._image
 
 
-    @abstractmethod
-    def _draw(self, image: pygame.Surface):
-        pass
+    ### ACHTUNG!
+    ### This is temporary! It should not be needed!
+    @property
+    def rect(self) -> pygame.rect:
+        return self._rect
 
 
 
@@ -174,6 +182,8 @@ class TextPanel(Panel):
 
         if image:
             image.blit(self._image, (self._rect.x, self._rect.y))
+        else:
+            image = self._image
 
 
     def __align(self):
