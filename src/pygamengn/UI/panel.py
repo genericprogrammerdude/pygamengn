@@ -21,11 +21,11 @@ class Panel(UIBase):
         self._needs_redraw = True
 
 
-    def update(self, parent_rect: pygame.rect, delta: int):
-        super().update(parent_rect, delta)
+    def draw(self, image: pygame.Surface = None):
         if self._needs_redraw:
-            self._draw()
+            self._draw(image)
             self._needs_redraw = False
+            super().draw(self._image)
 
 
     ### ACHTUNG!
@@ -36,24 +36,8 @@ class Panel(UIBase):
 
 
     @abstractmethod
-    def _draw(self):
+    def _draw(self, image: pygame.Surface):
         pass
-
-
-
-@ClassRegistrar.register("TexturePanel")
-class TexturePanel(UIBase):
-    """Basic UI panel that shows an image."""
-
-    def __init__(self, image_asset, **kwargs):
-        super().__init__(**kwargs)
-        self.image_asset = image_asset
-        rect = image_asset.get_rect()
-        self.aspect_ratio = rect.width / rect.height
-
-    def resize(self):
-        """Resizes the image to match the panel's size with its parent's rect."""
-        self.image = pygame.transform.scale(self.image_asset, self._rect.size)
 
 
 
@@ -85,21 +69,26 @@ class ColourPanel(Panel):
         self.__mouse_is_hovering = False
 
 
-    def _draw(self):
+    def _draw(self, image: pygame.Surface):
         """Resizes the image to match the panel's size with its parent's rect."""
         logging.info(f"{self.name}: ColourPanel._draw() generated new image")
-        self._image = pygame.Surface(self._rect.size, pygame.SRCALPHA)
+
+        if image:
+            self._image = image
+        else:
+            self._image = pygame.Surface(self._rect.size, pygame.SRCALPHA)
+
+        colour = self.__hover_colour if self.__mouse_is_hovering else self.__colour
         if not self.__corner_radii and not self.__corner_radius:
             self._image.fill(colour)
         else:
-            colour = self.__hover_colour if self.__mouse_is_hovering else self.__colour
             min_dimension = min(self._rect.width, self._rect.height)
             # corner_radii takes precedence over corner_radius
             if self.__corner_radii:
                 pygame.draw.rect(
                     surface = self._image,
                     color = colour,
-                    rect = pygame.Rect(0, 0, self._rect.width, self._rect.height),
+                    rect = self._rect, # pygame.Rect(0, 0, self._rect.width, self._rect.height),
                     border_top_left_radius = round(min_dimension * self.__corner_radii.top_left),
                     border_top_right_radius = round(min_dimension * self.__corner_radii.top_right),
                     border_bottom_right_radius = round(min_dimension * self.__corner_radii.bottom_right),
@@ -109,25 +98,29 @@ class ColourPanel(Panel):
                 pygame.draw.rect(
                     surface = self._image,
                     color = colour,
-                    rect = pygame.Rect(0, 0, self._rect.width, self._rect.height),
+                    rect = self._rect, # pygame.Rect(0, 0, self._rect.width, self._rect.height),
                     border_radius = round(min_dimension * self.__corner_radius)
                 )
 
 
-    def propagate_mouse_pos(self, pos) -> bool:
-        """Notifies the component that the mouse is hovering over it."""
-        capture_hover = super().propagate_mouse_pos(pos)
-        if not capture_hover and self.__colour != self.__hover_colour:
-            if self._rect.collidepoint(pos):
-                capture_hover = True
+    def process_mouse_event(self, pos: pygame.Vector2, event_type: int) -> bool:
+        capture_event = super().process_mouse_event(pos, event_type)
+
+        if event_type == pygame.MOUSEMOTION and self.__colour != self.__hover_colour:
+            # Special handling of MOUSEMOTION event to honour self.__hover_colour
+            local_pos = pos - pygame.Vector2(self._parent_rect.topleft)
+            if self._rect.collidepoint(local_pos):
                 if not self.__mouse_is_hovering:
                     self._needs_redraw = True
                     self.__mouse_is_hovering = True
+                    logging.info(f"{self.name}.{self.__mouse_is_hovering} needs redraw")
             else:
                 if self.__mouse_is_hovering:
                     self._needs_redraw = True
                     self.__mouse_is_hovering = False
-        return capture_hover
+                    logging.info(f"{self.name}.{self.__mouse_is_hovering} needs redraw")
+
+        return capture_event
 
 
 
@@ -166,7 +159,7 @@ class TextPanel(Panel):
         self.__text = text
 
 
-    def _draw(self):
+    def _draw(self, image: pygame.Surface):
         """TextPanel ignores its parent rect and renders to the font size."""
         logging.info(f"{self.name}: TextPanel._draw() generated new image")
         if self.__shadow:
@@ -178,6 +171,9 @@ class TextPanel(Panel):
         else:
             self._image = self.__font_asset.font.render(self.__text, True, self.__text_colour)
         self.__align()
+
+        if image:
+            image.blit(self._image, (self._rect.x, self._rect.y))
 
 
     def __align(self):
@@ -200,3 +196,19 @@ class TextPanel(Panel):
         elif self.__vert_align == TextPanel.VertAlign.BOTTOM:
             self._rect.y = self._parent_rect.y + self._parent_rect.height - self._image.get_rect().height
             self._rect.y += self._parent_rect.width * self._normalized_pos.y
+
+
+
+@ClassRegistrar.register("TexturePanel")
+class TexturePanel(UIBase):
+    """Basic UI panel that shows an image."""
+
+    def __init__(self, image_asset, **kwargs):
+        super().__init__(**kwargs)
+        self.image_asset = image_asset
+        rect = image_asset.get_rect()
+        self.aspect_ratio = rect.width / rect.height
+
+    def resize(self):
+        """Resizes the image to match the panel's size with its parent's rect."""
+        self.image = pygame.transform.scale(self.image_asset, self._rect.size)

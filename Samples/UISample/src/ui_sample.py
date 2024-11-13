@@ -51,6 +51,7 @@ class UISample(pygamengn.Game):
         """Updates the given UI component."""
         pygame.mouse.set_visible(True)
         ui.update(self.screen.get_rect(), delta)
+        ui.draw()
         self.blit_ui(ui)
 
     def exit_game(self):

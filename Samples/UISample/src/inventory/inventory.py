@@ -30,6 +30,9 @@ assets = {
     },
 }
 
+
+from pygame import MOUSEBUTTONDOWN, MOUSEMOTION
+
 game_types = {
     "UISample": {
         "class_name": "UISample",
@@ -60,7 +63,7 @@ game_types = {
             "name": "main_menu",
             "fix_aspect_ratio": False,
             "colour": [100, 100, 100, 128],
-            "corner_radius": 0.05,
+            # "corner_radius": 0.05,
         },
         "MenuButton": {
             "class_name": "ColourPanel",
@@ -71,6 +74,7 @@ game_types = {
                 "colour": [200, 200, 200, 100],
                 "hover_colour": [100, 210, 100, 100],
                 "corner_radius": 0.15,
+                "wanted_mouse_events": [MOUSEBUTTONDOWN, MOUSEMOTION],
             },
             "MenuButtonText": {
                 "class_name": "TextPanel",
@@ -102,6 +106,7 @@ game_types = {
                 "kwargs": {
                     "text": "Start",
                     "name": "start_button_text",
+                    "shadow": True,
                 },
             },
         },

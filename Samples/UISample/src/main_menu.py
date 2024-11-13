@@ -20,17 +20,16 @@ class MainMenu(ColourPanel):
 
     def handle_input(self):
         """Reads and handles input."""
-        mouse_pos = pygame.mouse.get_pos()
-        self.propagate_mouse_pos(mouse_pos)
-
         for event in pygame.event.get():
             if event.type == pygame.QUIT or (event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE):
                 self.exit_callback()
-            if event.type == pygame.MOUSEBUTTONUP:
-                if self.start_button.rect.collidepoint(mouse_pos):
-                    self.start_callback()
-                elif self.exit_button.rect.collidepoint(mouse_pos):
+            elif event.type == pygame.MOUSEBUTTONDOWN:
+                if self.start_button.process_mouse_event(event.pos, event.type):
+                    print(f"start_callback()")
+                elif self.exit_button.process_mouse_event(event.pos, event.type):
                     self.exit_callback()
+            elif event.type == pygame.MOUSEMOTION:
+                self.process_mouse_event(event.pos, event.type)
 
     def set_start_callback(self, start_callback):
         """Sets the function to call when the start button is clicked."""

@@ -64,8 +64,6 @@ class Game(GameObjectBase):
 
     def blit_ui(self, ui):
         self.add_blit_surface(BlitSurface(ui.image, ui.rect))
-        for child in ui.children:
-            self.blit_ui(child)
 
 
 class BlitSurface:
