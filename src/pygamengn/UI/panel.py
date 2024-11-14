@@ -3,7 +3,7 @@ from enum import Enum
 import logging
 import pygame
 
-from abc import abstractmethod
+from abc import ABCMeta, abstractmethod
 
 from pygamengn.class_registrar import ClassRegistrar
 from pygamengn.game_object_base import GameObjectBase
@@ -11,8 +11,9 @@ from pygamengn.UI.ui_base import UIBase
 
 
 
+
 @ClassRegistrar.register("Panel")
-class Panel(UIBase):
+class Panel(UIBase, metaclass = ABCMeta):
     """Basic UI panel that keeps an image with its visual contents."""
 
     def __init__(self, **kwargs):
@@ -20,37 +21,20 @@ class Panel(UIBase):
         self._image = None
         self._needs_redraw = True
 
+    def update(self, parent_rect: pygame.rect, delta: int) -> bool:
+        rv = super().update(parent_rect, delta) or self._needs_redraw
+        self._needs_redraw = False
 
-    def draw(self, image: pygame.Surface = None, force: bool = False):
-        needed_redraw = self._needs_redraw
-        if self._needs_redraw or force:
-            self._draw(image)
-            self._needs_redraw = False
-        super().draw(self._image, force or needed_redraw)
-
-
+    @property
     @abstractmethod
-    def _draw(self, image: pygame.Surface):
-        pass
-
-
-    ### ACHTUNG!
-    ### This is temporary! It should not be needed!
-    @property
-    def image(self):
+    def _blit_surface(self) -> pygame.Surface:
+        """Returns the image that the UI component wants to blit to the screen."""
         return self._image
-
-
-    ### ACHTUNG!
-    ### This is temporary! It should not be needed!
-    @property
-    def rect(self) -> pygame.rect:
-        return self._rect
 
 
 
 @ClassRegistrar.register("ColourPanel")
-class ColourPanel(Panel):
+class ColourPanel(Panel, metaclass = ABCMeta):
     """Basic UI panel that is a solid colour and has no image."""
 
     @ClassRegistrar.register("CornerRadii")
@@ -75,18 +59,27 @@ class ColourPanel(Panel):
         self.__corner_radii = corner_radii
         self.__corner_radius = corner_radius
         self.__mouse_is_hovering = False
+        self._hover_image = None
 
 
-    def _draw(self, image: pygame.Surface):
-        """Resizes the image to match the panel's size with its parent's rect."""
+    @property
+    def _blit_surface(self) -> pygame.Surface:
+        """Returns the image that the UI component wants to blit to the screen."""
+        logging.info(f"{__class__}.__mouse_is_hovering == {self.__mouse_is_hovering}")
+        return self._hover_image if self.__mouse_is_hovering else super()._blit_surface
+
+
+    def _draw(self):
         logging.info(f"{self.name}: ColourPanel._draw() generated new image")
 
-        if image:
-            self._image = image
-        else:
-            self._image = pygame.Surface(self._rect.size, pygame.SRCALPHA)
+        if not self._image:
+            self._image = self.__draw_colour_image(self.__colour)
+        if not self._hover_image:
+            self._hover_image = self.__draw_colour_image(self.__hover_colour)
 
-        colour = self.__hover_colour if self.__mouse_is_hovering else self.__colour
+
+    def __draw_colour_image(self, colour: tuple[int]) -> pygame.Surface:
+        image = pygame.Surface(self._rect.size, pygame.SRCALPHA)
         if not self.__corner_radii and not self.__corner_radius:
             self._image.fill(colour)
         else:
@@ -94,9 +87,9 @@ class ColourPanel(Panel):
             # corner_radii takes precedence over corner_radius
             if self.__corner_radii:
                 pygame.draw.rect(
-                    surface = self._image,
+                    surface = image,
                     color = colour,
-                    rect = self._rect, # pygame.Rect(0, 0, self._rect.width, self._rect.height),
+                    rect = pygame.Rect(0, 0, self._rect.width, self._rect.height),
                     border_top_left_radius = round(min_dimension * self.__corner_radii.top_left),
                     border_top_right_radius = round(min_dimension * self.__corner_radii.top_right),
                     border_bottom_right_radius = round(min_dimension * self.__corner_radii.bottom_right),
@@ -104,11 +97,12 @@ class ColourPanel(Panel):
                 )
             else:
                 pygame.draw.rect(
-                    surface = self._image,
+                    surface = image,
                     color = colour,
-                    rect = self._rect, # pygame.Rect(0, 0, self._rect.width, self._rect.height),
+                    rect = pygame.Rect(0, 0, self._rect.width, self._rect.height),
                     border_radius = round(min_dimension * self.__corner_radius)
                 )
+        return image
 
 
     def process_mouse_event(self, pos: pygame.Vector2, event_type: int) -> bool:
@@ -133,7 +127,7 @@ class ColourPanel(Panel):
 
 
 @ClassRegistrar.register("TextPanel")
-class TextPanel(Panel):
+class TextPanel(Panel, metaclass = ABCMeta):
     """Panel that sets its size to the size of the text in it. This panel ignores the parent rect."""
 
     class VertAlign(Enum):
@@ -167,7 +161,7 @@ class TextPanel(Panel):
         self.__text = text
 
 
-    def _draw(self, image: pygame.Surface):
+    def _draw(self):
         """TextPanel ignores its parent rect and renders to the font size."""
         logging.info(f"{self.name}: TextPanel._draw() generated new image")
         if self.__shadow:
@@ -179,11 +173,6 @@ class TextPanel(Panel):
         else:
             self._image = self.__font_asset.font.render(self.__text, True, self.__text_colour)
         self.__align()
-
-        if image:
-            image.blit(self._image, (self._rect.x, self._rect.y))
-        else:
-            image = self._image
 
 
     def __align(self):
@@ -210,15 +199,12 @@ class TextPanel(Panel):
 
 
 @ClassRegistrar.register("TexturePanel")
-class TexturePanel(UIBase):
+class TexturePanel(UIBase, metaclass = ABCMeta):
     """Basic UI panel that shows an image."""
 
     def __init__(self, image_asset, **kwargs):
         super().__init__(**kwargs)
-        self.image_asset = image_asset
+        self.__image_asset = image_asset
         rect = image_asset.get_rect()
-        self.aspect_ratio = rect.width / rect.height
-
-    def resize(self):
-        """Resizes the image to match the panel's size with its parent's rect."""
-        self.image = pygame.transform.scale(self.image_asset, self._rect.size)
+        self.__aspect_ratio = rect.width / rect.height
+        raise NotImplementedError

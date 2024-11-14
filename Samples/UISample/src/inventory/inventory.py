@@ -63,7 +63,18 @@ game_types = {
             "name": "main_menu",
             "fix_aspect_ratio": False,
             "colour": [100, 100, 100, 128],
-            # "corner_radius": 0.05,
+            "corner_radius": 0.1,
+            # "game_object:corner_radii": "corner_radii",
+            "is_ui_root": True,
+        },
+        "corner_radii": {
+            "class_name": "CornerRadii",
+            "kwargs": {
+                "top_left": 0.125,
+                "top_right": 0.25,
+                "bottom_right": 0.375,
+                "bottom_left": 0.5,
+            },
         },
         "MenuButton": {
             "class_name": "ColourPanel",
@@ -97,7 +108,7 @@ game_types = {
             "kwargs": {
                 "pos": [0.25, 0.2],
                 "game_object:children": [
-                    "StartText",
+                    # "StartText",
                 ],
                 "name": "start_button",
             },
@@ -106,7 +117,6 @@ game_types = {
                 "kwargs": {
                     "text": "Start",
                     "name": "start_button_text",
-                    "shadow": True,
                 },
             },
         },
@@ -115,7 +125,7 @@ game_types = {
             "kwargs": {
                 "pos": [0.25, 0.55],
                 "game_object:children": [
-                    "ExitText",
+                    # "ExitText",
                 ],
                 "name": "exit_button",
             },
