@@ -1,5 +1,6 @@
 import pygame
 
+from pygamengn.blit_surface import BlitSurface
 from pygamengn.class_registrar import ClassRegistrar
 from pygamengn.game_object_base import GameObjectBase
 
@@ -63,13 +64,4 @@ class Game(GameObjectBase):
         pass
 
     def blit_ui(self, ui):
-        self.add_blit_surface(BlitSurface(ui.image, ui.rect))
-
-
-class BlitSurface:
-    """Specification for a surface that will be blitted while rendering."""
-
-    def __init__(self, surface, topleft):
-        """topleft is in screen coordinates."""
-        self.surface = surface
-        self.topleft = topleft
+        self.add_blit_surface(ui.root_blit_surface)
