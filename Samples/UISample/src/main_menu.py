@@ -15,8 +15,8 @@ class MainMenu(ColourPanel):
 
     def update(self, parent_rect, delta):
         """Updates the main menu."""
-        super().update(parent_rect, delta)
         self.handle_input()
+        super().update(parent_rect, delta)
 
     def handle_input(self):
         """Reads and handles input."""
