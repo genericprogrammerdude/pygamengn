@@ -90,7 +90,6 @@ class UIBase(GameObjectBase):
         topleft = pygame.Vector2(self._rect.topleft) + parent_pos
         if bs:
             draw_rect = screen_image.blit(bs, topleft, special_flags = pygame.BLEND_ALPHA_SDL2)
-            logging.info(f"{self.__name}: {draw_rect.topleft} {draw_rect.size}")
         for child in self.__children:
             child.__build_blit_image(screen_image, topleft)
 
@@ -128,7 +127,6 @@ class UIBase(GameObjectBase):
         # self._rect is always in parent coordinates, NOT screen coordinates
         self._rect = pygame.Rect(pos.x, pos.y, width, height)
         self._parent_rect = parent_rect
-        # logging.info(f"{self.name}: _rect{self._rect}, _parent_rect{self._parent_rect}")
 
 
     def process_mouse_event(self, pos: pygame.Vector2, event_type: int) -> bool:
