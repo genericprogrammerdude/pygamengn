@@ -20,13 +20,20 @@ class Panel(UIBase):
         self._needs_redraw = True
 
     def update(self, parent_rect: pygame.rect, delta: int) -> bool:
-        rv = super().update(parent_rect, delta) or self._needs_redraw
+        return super().update(parent_rect, delta) or self._needs_redraw
+
+    def _draw(self):
+        logging.debug(f"{self.name} produced new _image")
         self._needs_redraw = False
-        return rv
+
+    def _parent_rect_changed(self):
+        self._image = None
 
     @property
     def _blit_surface(self) -> pygame.Surface:
         """Returns the image that the UI component wants to blit to the screen."""
+        if not self._image:
+            self._draw()
         return self._image
 
 
@@ -63,11 +70,11 @@ class ColourPanel(Panel):
     @property
     def _blit_surface(self) -> pygame.Surface:
         """Returns the image that the UI component wants to blit to the screen."""
-        return self._hover_image if self.__mouse_is_hovering else self._image
+        return self._hover_image if self.__mouse_is_hovering else super()._blit_surface
 
 
     def _draw(self):
-        logging.info(f"{self.name} produced new _image and _hover_image")
+        super()._draw()
         self._image = self.__draw_colour_image(self.__colour)
         self._hover_image = self.__draw_colour_image(self.__hover_colour)
 
@@ -155,6 +162,7 @@ class TextPanel(Panel):
 
     def _draw(self):
         """TextPanel ignores its parent rect and renders to the font size."""
+        super()._draw()
         if self.__shadow:
             shadow_surf = self.__font_asset.font.render(self.__text, True, self.__shadow_colour)
             front_surf = self.__font_asset.font.render(self.__text, True, self.__text_colour)
@@ -172,20 +180,38 @@ class TextPanel(Panel):
         if self.__horz_align == TextPanel.HorzAlign.LEFT:
             pass  # This is what UIBase does by default
         elif self.__horz_align == TextPanel.HorzAlign.CENTRE:
-            self._rect.x = self._parent_rect.x + (self._parent_rect.width - self._image.get_rect().width) / 2
+            self._rect.x = (self._parent_rect.width - self._image.get_rect().width) / 2
             self._rect.x += self._parent_rect.width * self._normalized_pos.x
         elif self.__horz_align == TextPanel.HorzAlign.RIGHT:
-            self._rect.x = self._parent_rect.x + self._parent_rect.width - self._image.get_rect().width
+            self._rect.x = self._parent_rect.width - self._image.get_rect().width
             self._rect.x += self._parent_rect.width * self._normalized_pos.x
         # Vertical alignment
         if self.__vert_align == TextPanel.VertAlign.TOP:
             pass  # This is what UIBase does by default
         elif self.__vert_align == TextPanel.VertAlign.CENTRE:
-            self._rect.y = self._parent_rect.y + (self._parent_rect.height - self._image.get_rect().height) / 2
+            self._rect.y = (self._parent_rect.height - self._image.get_rect().height) / 2
             self._rect.y += self._parent_rect.width * self._normalized_pos.y
         elif self.__vert_align == TextPanel.VertAlign.BOTTOM:
-            self._rect.y = self._parent_rect.y + self._parent_rect.height - self._image.get_rect().height
+            self._rect.y = self._parent_rect.height - self._image.get_rect().height
             self._rect.y += self._parent_rect.width * self._normalized_pos.y
+
+
+    def _parent_rect_changed(self):
+        """The parent rect changed, but TextPanel doesn't need to redraw because it ignores its parent's size."""
+        if self._image:
+            self.__align()
+
+    @property
+    def text(self) -> str:
+        return self.__text
+
+
+    @text.setter
+    def text(self, text: str):
+        if self.__text != text:
+            self.__text = text
+            self._needs_redraw = True
+            self._image = None
 
 
 

@@ -90,16 +90,12 @@ game_types = {
             "MenuButtonText": {
                 "class_name": "TextPanel",
                 "kwargs": {
-                    "pos": [0, 0],
-                    "size": [1, 1],
-                    "game_object:children": [],
-                    "fix_aspect_ratio": True,
                     "asset:font_asset": "fast_hand_font",
                     "text_colour": [0, 200, 100],
                     "shadow_colour": [0, 20, 10],
-                    "shadow": True,
                     "horz_align": "CENTRE",
-                    "vert_align": "CENTRE"
+                    "vert_align": "CENTRE",
+                    "shadow": True,
                 }
             }
         },
@@ -108,7 +104,7 @@ game_types = {
             "kwargs": {
                 "pos": [0.25, 0.2],
                 "game_object:children": [
-                    # "StartText",
+                    "StartText",
                 ],
                 "name": "start_button",
             },
@@ -125,7 +121,7 @@ game_types = {
             "kwargs": {
                 "pos": [0.25, 0.55],
                 "game_object:children": [
-                    # "ExitText",
+                    "ExitText",
                 ],
                 "name": "exit_button",
             },

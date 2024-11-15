@@ -29,10 +29,10 @@ class UIBase(GameObjectBase):
 
     def __init__(
         self,
-        pos,
-        size,
-        children,
-        fix_aspect_ratio,
+        pos = [0, 0],
+        size = [1, 1],
+        children = [],
+        fix_aspect_ratio = False,
         is_ui_root = False,
         name="",
         wanted_mouse_events = list[int],
@@ -72,8 +72,7 @@ class UIBase(GameObjectBase):
         dirty = False
         if not self._parent_rect or parent_rect.size != self._parent_rect.size:
             # If my parent_rect changed, I need to resize and so do my children
-            self.__resize_to_parent(parent_rect)
-            self._draw()
+            self._resize_to_parent(parent_rect)
             dirty = True
 
         for child in self.__children:
@@ -115,7 +114,7 @@ class UIBase(GameObjectBase):
             return None
 
 
-    def __resize_to_parent(self, parent_rect: pygame.rect):
+    def _resize_to_parent(self, parent_rect: pygame.rect):
         """Resizes the component's rect to match size with its parent's rect."""
         width = parent_rect.width * self.__size.x
         height = parent_rect.height * self.__size.y
@@ -132,6 +131,7 @@ class UIBase(GameObjectBase):
         # self._rect is always in parent coordinates, NOT screen coordinates
         self._rect = pygame.Rect(pos.x, pos.y, width, height)
         self._parent_rect = parent_rect
+        self._parent_rect_changed()
 
 
     def process_mouse_event(self, pos: pygame.Vector2, event_type: int) -> bool:
@@ -195,6 +195,14 @@ class UIBase(GameObjectBase):
     @abstractmethod
     def _blit_surface(self) -> pygame.Surface:
         """Returns the image that the UI component wants to blit to the screen."""
+        pass
+
+
+    @abstractmethod
+    def _parent_rect_changed(self):
+        """
+        Informs the UIBase that its parent rect has changed.
+        """
         pass
 
 

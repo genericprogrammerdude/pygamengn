@@ -25,7 +25,8 @@ class MainMenu(ColourPanel):
                 self.exit_callback()
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 if self.start_button.process_mouse_event(event.pos, event.type):
-                    print(f"start_callback()")
+                    self.exit_button_text.text = "Click me to exit!"
+                    print(f"clicked on start_button")
                 elif self.exit_button.process_mouse_event(event.pos, event.type):
                     self.exit_callback()
             elif event.type == pygame.MOUSEMOTION:
