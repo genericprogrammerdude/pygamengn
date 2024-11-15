@@ -67,10 +67,9 @@ class ColourPanel(Panel):
 
 
     def _draw(self):
-        if not self._image:
-            self._image = self.__draw_colour_image(self.__colour)
-        if not self._hover_image:
-            self._hover_image = self.__draw_colour_image(self.__hover_colour)
+        logging.info(f"{self.name} produced new _image and _hover_image")
+        self._image = self.__draw_colour_image(self.__colour)
+        self._hover_image = self.__draw_colour_image(self.__hover_colour)
 
 
     def __draw_colour_image(self, colour: tuple[int]) -> pygame.Surface:
@@ -120,7 +119,7 @@ class ColourPanel(Panel):
 
 
 @ClassRegistrar.register("TextPanel")
-class TextPanel(Panel, metaclass = ABCMeta):
+class TextPanel(Panel):
     """Panel that sets its size to the size of the text in it. This panel ignores the parent rect."""
 
     class VertAlign(Enum):
@@ -191,7 +190,7 @@ class TextPanel(Panel, metaclass = ABCMeta):
 
 
 @ClassRegistrar.register("TexturePanel")
-class TexturePanel(UIBase, metaclass = ABCMeta):
+class TexturePanel(UIBase):
     """Basic UI panel that shows an image."""
 
     def __init__(self, image_asset, **kwargs):
