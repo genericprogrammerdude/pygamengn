@@ -15,13 +15,15 @@ class UIBase(GameObjectBase):
     Base class for UI components.
 
     This class takes care of administrative and basic geometric issues. Its functionality is limited to the following
-    topics by design:
+    topics:
         1. Keep its own geometry updated to the geometry of its parent rectangle.
         2. Manage addition and removal of children.
         3. Keep children's geometry updated to any changes to its own geometry.
+        4. Handle drawing of entire UI tree, from root to leaves.
+        5. Handle mouse events.
 
     In addition, this class must always be instantiable as a parent container of other UI components that need to be
-    kept together under a single parent.
+    kept together under a single parent, especially when the parent doesn't need to draw to the screen.
     """
 
 
@@ -58,6 +60,9 @@ class UIBase(GameObjectBase):
     def update(self, parent_rect: pygame.rect, delta: int) -> bool:
         """
         Updates the UI component and its children.
+
+        If any component in the tree returns True, the entire tree will be re-blitted. Similarly, the _draw() method
+        is invoked for any component whose parent rectangle size has changed.
 
         Returns
         -------
@@ -110,7 +115,7 @@ class UIBase(GameObjectBase):
             return None
 
 
-    def __resize_to_parent(self, parent_rect):
+    def __resize_to_parent(self, parent_rect: pygame.rect):
         """Resizes the component's rect to match size with its parent's rect."""
         width = parent_rect.width * self.__size.x
         height = parent_rect.height * self.__size.y
