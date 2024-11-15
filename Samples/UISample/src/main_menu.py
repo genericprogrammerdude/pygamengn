@@ -1,11 +1,11 @@
 import pygame
 
-from pygamengn.UI.panel import ColourPanel
+from pygamengn.UI.root import Root
 from pygamengn.class_registrar import ClassRegistrar
 
 
 @ClassRegistrar.register("MainMenu")
-class MainMenu(ColourPanel):
+class MainMenu(Root):
     """Main menu UI."""
 
     def __init__(self, **kwargs):
@@ -30,7 +30,7 @@ class MainMenu(ColourPanel):
                 elif self.exit_button.process_mouse_event(event.pos, event.type):
                     self.exit_callback()
             elif event.type == pygame.MOUSEMOTION:
-                self.process_mouse_event(event.pos, event.type)
+                self._component.process_mouse_event(event.pos, event.type)
 
     def set_start_callback(self, start_callback):
         """Sets the function to call when the start button is clicked."""

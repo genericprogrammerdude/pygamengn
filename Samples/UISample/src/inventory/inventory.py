@@ -54,82 +54,88 @@ game_types = {
     "MainMenu": {
         "class_name": "MainMenu",
         "kwargs": {
-            "pos": [0.25, 0.25],
-            "size": [0.5, 0.5],
-            "game_object:children": [
-                "StartButton",
-                "ExitButton",
-            ],
-            "name": "main_menu",
-            "fix_aspect_ratio": False,
-            "colour": [100, 100, 100, 128],
-            "corner_radius": 0.1,
-            # "game_object:corner_radii": "corner_radii",
-            "is_ui_root": True,
+            "game_object:component": "Background",
         },
-        "corner_radii": {
-            "class_name": "CornerRadii",
-            "kwargs": {
-                "top_left": 0.125,
-                "top_right": 0.25,
-                "bottom_right": 0.375,
-                "bottom_left": 0.5,
-            },
-        },
-        "MenuButton": {
+        "Background": {
             "class_name": "ColourPanel",
             "kwargs": {
-                "size": [0.5, 0.25],
-                "game_object:children": [],
-                "fix_aspect_ratio": False,
-                "colour": [200, 200, 200, 100],
-                "hover_colour": [100, 210, 100, 100],
-                "corner_radius": 0.15,
-                "wanted_mouse_events": [MOUSEBUTTONDOWN, MOUSEMOTION],
-            },
-            "MenuButtonText": {
-                "class_name": "TextPanel",
-                "kwargs": {
-                    "asset:font_asset": "fast_hand_font",
-                    "text_colour": [0, 200, 100],
-                    "shadow_colour": [0, 20, 10],
-                    "horz_align": "CENTRE",
-                    "vert_align": "CENTRE",
-                    "shadow": True,
-                }
-            }
-        },
-        "StartButton": {
-            "base_type": "/MainMenu/MenuButton",
-            "kwargs": {
-                "pos": [0.25, 0.2],
+                "pos": [0.25, 0.25],
+                "size": [0.5, 0.5],
                 "game_object:children": [
-                    "StartText",
+                    "StartButton",
+                    "ExitButton",
                 ],
-                "name": "start_button",
+                "name": "main_menu",
+                "fix_aspect_ratio": False,
+                "colour": [100, 100, 100, 128],
+                "corner_radius": 0.1,
+                "game_object:corner_radii": "corner_radii",
             },
-            "StartText": {
-                "base_type": "/MainMenu/MenuButton/MenuButtonText",
+            "corner_radii": {
+                "class_name": "CornerRadii",
                 "kwargs": {
-                    "text": "Start",
-                    "name": "start_button_text",
+                    "top_left": 0.125,
+                    "top_right": 0.25,
+                    "bottom_right": 0.375,
+                    "bottom_left": 0.5,
                 },
             },
-        },
-        "ExitButton": {
-            "base_type": "/MainMenu/MenuButton",
-            "kwargs": {
-                "pos": [0.25, 0.55],
-                "game_object:children": [
-                    "ExitText",
-                ],
-                "name": "exit_button",
-            },
-            "ExitText": {
-                "base_type": "/MainMenu/MenuButton/MenuButtonText",
+            "MenuButton": {
+                "class_name": "ColourPanel",
                 "kwargs": {
-                    "text": "Exit",
-                    "name": "exit_button_text",
+                    "size": [0.5, 0.25],
+                    "game_object:children": [],
+                    "fix_aspect_ratio": False,
+                    "colour": [200, 200, 200, 100],
+                    "hover_colour": [100, 210, 100, 100],
+                    "corner_radius": 0.15,
+                    "game_object:corner_radii": "/MainMenu/Background/corner_radii",
+                    "wanted_mouse_events": [MOUSEBUTTONDOWN, MOUSEMOTION],
+                },
+                "MenuButtonText": {
+                    "class_name": "TextPanel",
+                    "kwargs": {
+                        "asset:font_asset": "fast_hand_font",
+                        "text_colour": [0, 200, 100],
+                        "shadow_colour": [0, 20, 10],
+                        "horz_align": "CENTRE",
+                        "vert_align": "CENTRE",
+                        "shadow": True,
+                    }
+                }
+            },
+            "StartButton": {
+                "base_type": "/MainMenu/Background/MenuButton",
+                "kwargs": {
+                    "pos": [0.25, 0.2],
+                    "game_object:children": [
+                        "StartText",
+                    ],
+                    "name": "start_button",
+                },
+                "StartText": {
+                    "base_type": "/MainMenu/Background/MenuButton/MenuButtonText",
+                    "kwargs": {
+                        "text": "Start",
+                        "name": "start_button_text",
+                    },
+                },
+            },
+            "ExitButton": {
+                "base_type": "/MainMenu/Background/MenuButton",
+                "kwargs": {
+                    "pos": [0.25, 0.55],
+                    "game_object:children": [
+                        "ExitText",
+                    ],
+                    "name": "exit_button",
+                },
+                "ExitText": {
+                    "base_type": "/MainMenu/Background/MenuButton/MenuButtonText",
+                    "kwargs": {
+                        "text": "Exit",
+                        "name": "exit_button_text",
+                    },
                 },
             },
         },

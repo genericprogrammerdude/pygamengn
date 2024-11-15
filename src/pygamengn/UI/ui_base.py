@@ -1,3 +1,4 @@
+from __future__ import annotations  # This enables UIBase methods to take a UIBase instance as parameter (as of Python 3.13)
 from abc import abstractmethod
 
 import logging
@@ -33,7 +34,6 @@ class UIBase(GameObjectBase):
         size = [1, 1],
         children = [],
         fix_aspect_ratio = False,
-        is_ui_root = False,
         name="",
         wanted_mouse_events = list[int],
         **kwargs
@@ -42,16 +42,9 @@ class UIBase(GameObjectBase):
         self.__size = pygame.Vector2(size)
         self.__children = children
         self.__fix_aspect_ratio = fix_aspect_ratio
-        self.__is_ui_root = is_ui_root
         self.__name = name
         self.__wanted_mouse_events = wanted_mouse_events
         self.__aspect_ratio = None
-
-        if self.__is_ui_root:
-            self.__bind_children()
-            self.__root_blit_image = None
-            self.__root_is_dirty = True
-
         self._normalized_pos = pygame.Vector2(pos)
         self._parent_rect = None
         self._rect = None
@@ -61,8 +54,7 @@ class UIBase(GameObjectBase):
         """
         Updates the UI component and its children.
 
-        If any component in the tree returns True, the entire tree will be re-blitted. Similarly, the _draw() method
-        is invoked for any component whose parent rectangle size has changed.
+        If any component in the tree returns True, the entire tree will be re-blitted.
 
         Returns
         -------
@@ -71,21 +63,16 @@ class UIBase(GameObjectBase):
         """
         dirty = False
         if not self._parent_rect or parent_rect.size != self._parent_rect.size:
-            # If my parent_rect changed, I need to resize and so do my children
             self._resize_to_parent(parent_rect)
             dirty = True
 
         for child in self.__children:
             dirty = child.update(self._rect, delta) or dirty
 
-        # Now that everyone has had a chance to update, the root UI needs to produce an image
-        if self.__is_ui_root:
-            self.__root_is_dirty = dirty
-
         return dirty
 
 
-    def __build_blit_image(self, screen_image: pygame.Surface, parent_pos: pygame.Vector2):
+    def build_blit_image(self, screen_image: pygame.Surface, parent_pos: pygame.Vector2):
         """
         Recursively builds the image to be blit to the screen. This image will have the images for all the components
         in the UI tree.
@@ -95,23 +82,7 @@ class UIBase(GameObjectBase):
         if bs:
             draw_rect = screen_image.blit(bs, topleft, special_flags = pygame.BLEND_ALPHA_SDL2)
         for child in self.__children:
-            child.__build_blit_image(screen_image, topleft)
-
-
-    @property
-    def root_blit_surface(self) -> BlitSurface:
-        """Returns the root image onto the destination surface. This only works for the root UI."""
-        if self.__is_ui_root:
-            if self.__root_is_dirty:
-                self.__root_blit_image = pygame.Surface(self._rect.size, pygame.SRCALPHA)
-                self.__build_blit_image(self.__root_blit_image, -pygame.Vector2(self._rect.topleft))
-                self.__root_is_dirty = False
-            return BlitSurface(surface = self.__root_blit_image, topleft = self._rect.topleft)
-        else:
-            logging.warn(
-                f"Calling UIBase.blit_root_surface() on a UIBase instance that is not UI root ({self.__name}.__is_ui_root == False)"
-            )
-            return None
+            child.build_blit_image(screen_image, topleft)
 
 
     def _resize_to_parent(self, parent_rect: pygame.rect):
@@ -172,45 +143,22 @@ class UIBase(GameObjectBase):
         return capture_event
 
 
-    def __bind_children(self, parent=None):
-        """Binds children to class members to make them accessible."""
-        if not parent:
-            parent = self
-        for child in self.__children:
-            child.__bind_children(parent)
-            if child.name:
-                try:
-                    a = getattr(parent, child.name)
-                    logging.warn(f"{child.name} attr is already assigned with {child}. Not assigning it {a}")
-                except AttributeError:
-                    setattr(parent, child.name, child)
-
-
     @property
-    def name(self):
+    def name(self) -> str:
         return self.__name
 
 
     @property
-    @abstractmethod
-    def _blit_surface(self) -> pygame.Surface:
-        """Returns the image that the UI component wants to blit to the screen."""
-        pass
+    def rect(self) -> pygame.rect:
+        return self._rect
 
 
-    @abstractmethod
+    def __iter__(self):
+        return iter(self.__children)
+
+
     def _parent_rect_changed(self):
         """
         Informs the UIBase that its parent rect has changed.
-        """
-        pass
-
-
-    @abstractmethod
-    def _draw(self):
-        """
-        Draws the image that represents this UIBase. Each UIBase subclass is responsible for deciding whether it needs
-        to produce a new image or use a previously existing one.
-        The UI root will call this method if the component returns True from its update().
         """
         pass
