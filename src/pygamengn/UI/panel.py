@@ -3,8 +3,6 @@ from enum import Enum
 import logging
 import pygame
 
-from abc import ABCMeta, abstractmethod
-
 from pygamengn.class_registrar import ClassRegistrar
 from pygamengn.game_object_base import GameObjectBase
 from pygamengn.UI.ui_base import UIBase
@@ -13,7 +11,7 @@ from pygamengn.UI.ui_base import UIBase
 
 
 @ClassRegistrar.register("Panel")
-class Panel(UIBase, metaclass = ABCMeta):
+class Panel(UIBase):
     """Basic UI panel that keeps an image with its visual contents."""
 
     def __init__(self, **kwargs):
@@ -24,9 +22,9 @@ class Panel(UIBase, metaclass = ABCMeta):
     def update(self, parent_rect: pygame.rect, delta: int) -> bool:
         rv = super().update(parent_rect, delta) or self._needs_redraw
         self._needs_redraw = False
+        return rv
 
     @property
-    @abstractmethod
     def _blit_surface(self) -> pygame.Surface:
         """Returns the image that the UI component wants to blit to the screen."""
         return self._image
@@ -34,7 +32,7 @@ class Panel(UIBase, metaclass = ABCMeta):
 
 
 @ClassRegistrar.register("ColourPanel")
-class ColourPanel(Panel, metaclass = ABCMeta):
+class ColourPanel(Panel):
     """Basic UI panel that is a solid colour and has no image."""
 
     @ClassRegistrar.register("CornerRadii")
@@ -65,13 +63,10 @@ class ColourPanel(Panel, metaclass = ABCMeta):
     @property
     def _blit_surface(self) -> pygame.Surface:
         """Returns the image that the UI component wants to blit to the screen."""
-        logging.info(f"{__class__}.__mouse_is_hovering == {self.__mouse_is_hovering}")
-        return self._hover_image if self.__mouse_is_hovering else super()._blit_surface
+        return self._hover_image if self.__mouse_is_hovering else self._image
 
 
     def _draw(self):
-        logging.info(f"{self.name}: ColourPanel._draw() generated new image")
-
         if not self._image:
             self._image = self.__draw_colour_image(self.__colour)
         if not self._hover_image:
@@ -115,12 +110,10 @@ class ColourPanel(Panel, metaclass = ABCMeta):
                 if not self.__mouse_is_hovering:
                     self._needs_redraw = True
                     self.__mouse_is_hovering = True
-                    logging.info(f"{self.name}.{self.__mouse_is_hovering} needs redraw")
             else:
                 if self.__mouse_is_hovering:
                     self._needs_redraw = True
                     self.__mouse_is_hovering = False
-                    logging.info(f"{self.name}.{self.__mouse_is_hovering} needs redraw")
 
         return capture_event
 
@@ -163,7 +156,6 @@ class TextPanel(Panel, metaclass = ABCMeta):
 
     def _draw(self):
         """TextPanel ignores its parent rect and renders to the font size."""
-        logging.info(f"{self.name}: TextPanel._draw() generated new image")
         if self.__shadow:
             shadow_surf = self.__font_asset.font.render(self.__text, True, self.__shadow_colour)
             front_surf = self.__font_asset.font.render(self.__text, True, self.__text_colour)

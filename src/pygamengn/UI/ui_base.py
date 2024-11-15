@@ -1,4 +1,4 @@
-from abc import ABCMeta, abstractmethod
+from abc import abstractmethod
 
 import logging
 import pygame
@@ -10,7 +10,7 @@ from pygamengn.game_object_base import GameObjectBase
 
 
 @ClassRegistrar.register("UIBase")
-class UIBase(GameObjectBase, metaclass = ABCMeta):
+class UIBase(GameObjectBase):
     """
     Base class for UI components.
 
@@ -90,7 +90,7 @@ class UIBase(GameObjectBase, metaclass = ABCMeta):
         topleft = pygame.Vector2(self._rect.topleft) + parent_pos
         if bs:
             draw_rect = screen_image.blit(bs, topleft, special_flags = pygame.BLEND_ALPHA_SDL2)
-            print(f"{self.__name}: {draw_rect.topleft} {draw_rect.size}")
+            logging.info(f"{self.__name}: {draw_rect.topleft} {draw_rect.size}")
         for child in self.__children:
             child.__build_blit_image(screen_image, topleft)
 
@@ -128,7 +128,7 @@ class UIBase(GameObjectBase, metaclass = ABCMeta):
         # self._rect is always in parent coordinates, NOT screen coordinates
         self._rect = pygame.Rect(pos.x, pos.y, width, height)
         self._parent_rect = parent_rect
-        print(f"{self.__name}: _rect{self._rect}, _parent_rect{self._parent_rect}")
+        # logging.info(f"{self.name}: _rect{self._rect}, _parent_rect{self._parent_rect}")
 
 
     def process_mouse_event(self, pos: pygame.Vector2, event_type: int) -> bool:
