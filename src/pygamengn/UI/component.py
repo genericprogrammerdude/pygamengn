@@ -1,3 +1,5 @@
+from abc import abstractmethod
+
 import logging
 import pygame
 
@@ -65,6 +67,8 @@ class Component(GameObjectBase):
         for child in self.__children:
             dirty = child.update(self._rect, delta) or dirty
 
+        if dirty:
+            logging.debug(f"{self.name} returning dirty from update()")
         return dirty
 
 
@@ -147,6 +151,13 @@ class Component(GameObjectBase):
     @property
     def rect(self) -> pygame.rect:
         return self._rect
+
+
+    @property
+    @abstractmethod
+    def _blit_surface(self) -> pygame.Surface:
+        """Returns the image that the UI component wants to blit to the screen."""
+        pass
 
 
     def __iter__(self):

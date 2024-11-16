@@ -64,6 +64,7 @@ game_types = {
                 "game_object:children": [
                     "StartButton",
                     "ExitButton",
+                    "Spinner",
                 ],
                 "name": "main_menu",
                 "fix_aspect_ratio": False,
@@ -137,6 +138,17 @@ game_types = {
                         "name": "exit_button_text",
                     },
                 },
+            },
+            "Spinner": {
+                "class_name": "TexturePanel",
+                "kwargs": {
+                    "pos": [0.05, 0.1],
+                    "size": [0.15, 0.15],
+                    "fix_aspect_ratio": True,
+                    "image:image_asset": "ship",
+                    "name": "spinner",
+                    # "angular_velocity": -40,
+                }
             },
         },
     },

@@ -9,7 +9,6 @@ from pygamengn.UI.component import Component
 
 
 
-
 @ClassRegistrar.register("Panel")
 class Panel(Component):
     """Basic UI panel that keeps an image with its visual contents."""
@@ -20,6 +19,8 @@ class Panel(Component):
         self._needs_redraw = True
 
     def update(self, parent_rect: pygame.rect, delta: int) -> bool:
+        if self._needs_redraw:
+            logging.debug(f"{self.name} needs redraw")
         return super().update(parent_rect, delta) or self._needs_redraw
 
     def _draw(self):
@@ -70,6 +71,7 @@ class ColourPanel(Panel):
     @property
     def _blit_surface(self) -> pygame.Surface:
         """Returns the image that the UI component wants to blit to the screen."""
+        self._needs_redraw = False
         return self._hover_image if self.__mouse_is_hovering else super()._blit_surface
 
 
@@ -196,11 +198,6 @@ class TextPanel(Panel):
             self._rect.y += self._parent_rect.width * self._normalized_pos.y
 
 
-    def _parent_rect_changed(self):
-        """The parent rect changed, but TextPanel doesn't need to redraw because it ignores its parent's size."""
-        if self._image:
-            self.__align()
-
     @property
     def text(self) -> str:
         return self.__text
@@ -216,12 +213,13 @@ class TextPanel(Panel):
 
 
 @ClassRegistrar.register("TexturePanel")
-class TexturePanel(Component):
+class TexturePanel(Panel):
     """Basic UI panel that shows an image."""
 
     def __init__(self, image_asset, **kwargs):
         super().__init__(**kwargs)
-        self.__image_asset = image_asset
-        rect = image_asset.get_rect()
-        self.__aspect_ratio = rect.width / rect.height
-        raise NotImplementedError
+        self._image_asset = image_asset
+
+    def _draw(self):
+        super()._draw()
+        self._image = pygame.transform.smoothscale(self._image_asset, self.rect.size)
