@@ -35,6 +35,7 @@ class Panel(Component):
         """Returns the image that the UI component wants to blit to the screen."""
         if not self._image:
             self._draw()
+        self._needs_redraw = False
         return self._image
 
 
@@ -71,8 +72,8 @@ class ColourPanel(Panel):
     @property
     def _blit_surface(self) -> pygame.Surface:
         """Returns the image that the UI component wants to blit to the screen."""
-        self._needs_redraw = False
-        return self._hover_image if self.__mouse_is_hovering else super()._blit_surface
+        super()._blit_surface
+        return self._hover_image if self.__mouse_is_hovering else self._image
 
 
     def _draw(self):
@@ -209,6 +210,14 @@ class TextPanel(Panel):
             self.__text = text
             self._needs_redraw = True
             self._image = None
+
+
+    def _parent_rect_changed(self):
+        # Ignore the call because TextPanel draws to the font size, not the parent rect size. But aligning is required.
+        if not self._image:
+            self._draw()
+        self.__align()
+
 
 
 
