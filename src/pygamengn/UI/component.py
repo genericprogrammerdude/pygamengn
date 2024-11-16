@@ -74,8 +74,7 @@ class Component(GameObjectBase):
 
     def build_blit_image(self, screen_image: pygame.Surface, parent_pos: pygame.Vector2):
         """
-        Recursively builds the image to be blit to the screen. This image will have the images for all the components
-        in the UI tree.
+        Recursively blit each component in the tree to the given surface (presumably the screen, but not necessarily).
         """
         bs = self._blit_surface
         topleft = pygame.Vector2(self._rect.topleft) + parent_pos
