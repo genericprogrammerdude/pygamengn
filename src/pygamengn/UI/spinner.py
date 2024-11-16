@@ -11,7 +11,7 @@ from pygamengn.class_registrar import ClassRegistrar
 class Spinner(TexturePanel):
     """UI component that spins its texture image at an angular velocity expressed in degrees per second."""
 
-    def __init__(self, angular_velocity = 1, **kwargs):
+    def __init__(self, angular_velocity = 0, **kwargs):
         super().__init__(**kwargs)
         self.__angular_velocity = angular_velocity
         self.__angle = 0
@@ -33,7 +33,7 @@ class Spinner(TexturePanel):
         self._resize_to_parent(self._parent_rect)
         self._rect.x -= ((image_rect.width - self._rect.width) / 2)
         self._rect.y -= ((image_rect.height - self._rect.height) / 2)
-        return self._image
+        return super()._blit_surface
 
     def _parent_rect_changed(self):
         # Need to override this because Panel deletes self._image and Spinner recomputes its self._rect every frame.
