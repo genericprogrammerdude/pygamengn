@@ -5,13 +5,13 @@ import pygame
 
 from pygamengn.class_registrar import ClassRegistrar
 from pygamengn.game_object_base import GameObjectBase
-from pygamengn.UI.ui_base import UIBase
+from pygamengn.UI.component import Component
 
 
 
 
 @ClassRegistrar.register("Panel")
-class Panel(UIBase):
+class Panel(Component):
     """Basic UI panel that keeps an image with its visual contents."""
 
     def __init__(self, **kwargs):
@@ -178,7 +178,7 @@ class TextPanel(Panel):
         """Aligns the text image."""
         # Horizontal alignment
         if self.__horz_align == TextPanel.HorzAlign.LEFT:
-            pass  # This is what UIBase does by default
+            pass  # This is what Component does by default
         elif self.__horz_align == TextPanel.HorzAlign.CENTRE:
             self._rect.x = (self._parent_rect.width - self._image.get_rect().width) / 2
             self._rect.x += self._parent_rect.width * self._normalized_pos.x
@@ -187,7 +187,7 @@ class TextPanel(Panel):
             self._rect.x += self._parent_rect.width * self._normalized_pos.x
         # Vertical alignment
         if self.__vert_align == TextPanel.VertAlign.TOP:
-            pass  # This is what UIBase does by default
+            pass  # This is what Component does by default
         elif self.__vert_align == TextPanel.VertAlign.CENTRE:
             self._rect.y = (self._parent_rect.height - self._image.get_rect().height) / 2
             self._rect.y += self._parent_rect.width * self._normalized_pos.y
@@ -216,7 +216,7 @@ class TextPanel(Panel):
 
 
 @ClassRegistrar.register("TexturePanel")
-class TexturePanel(UIBase):
+class TexturePanel(Component):
     """Basic UI panel that shows an image."""
 
     def __init__(self, image_asset, **kwargs):

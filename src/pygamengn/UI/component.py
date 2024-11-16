@@ -1,17 +1,13 @@
-from __future__ import annotations  # This enables UIBase methods to take a UIBase instance as parameter (as of Python 3.13)
-from abc import abstractmethod
-
 import logging
 import pygame
 
-from pygamengn.blit_surface import BlitSurface
 from pygamengn.class_registrar import ClassRegistrar
 from pygamengn.game_object_base import GameObjectBase
 
 
 
-@ClassRegistrar.register("UIBase")
-class UIBase(GameObjectBase):
+@ClassRegistrar.register("Component")
+class Component(GameObjectBase):
     """
     Base class for UI components.
 
@@ -159,6 +155,6 @@ class UIBase(GameObjectBase):
 
     def _parent_rect_changed(self):
         """
-        Informs the UIBase that its parent rect has changed.
+        Informs the component that its parent rect has changed.
         """
         pass

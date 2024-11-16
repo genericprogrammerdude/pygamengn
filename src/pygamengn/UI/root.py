@@ -4,7 +4,7 @@ import pygame
 from pygamengn.blit_surface import BlitSurface
 from pygamengn.class_registrar import ClassRegistrar
 from pygamengn.game_object_base import GameObjectBase
-from pygamengn.UI.ui_base import UIBase
+from pygamengn.UI.component import Component
 
 
 
@@ -15,7 +15,7 @@ class Root(GameObjectBase):
     Every UI screen with UI components should inherit from Root.
     """
 
-    def __init__(self, component: UIBase, **kwargs):
+    def __init__(self, component: Component, **kwargs):
         super().__init__(**kwargs)
         self._component = component
         self._bind_children()
