@@ -32,34 +32,11 @@ class UISample(pygamengn.Game):
         self.running = True
         self.mode = Mode.MAIN_MENU
         self.main_menu_ui.set_exit_callback(self.exit_game)
-
-    def update(self, delta):
-        """Updates the game."""
-
-        if self.mode == Mode.MAIN_MENU:
-            self.update_ui(delta, self.main_menu_ui)
-
-        elif self.mode == Mode.PAUSE_MENU:
-            self.update_ui(delta, self.pause_menu_ui)
-
-        elif self.mode == Mode.DEBRIEF:
-            self.update_ui(delta, self.debrief_panel)
-
-        super().update(delta)
-
-    def update_ui(self, delta, ui):
-        """Updates the given UI component."""
-        pygame.mouse.set_visible(True)
-        ui.update(self.screen.get_rect(), delta)
-        self.blit_ui(ui)
+        self.show_ui(self.main_menu_ui, 500)
 
     def exit_game(self):
         """Exits the application."""
         self.running = False
-
-    def go_to_main_menu(self):
-        """Goes back to the main menu after showing the debrief UI."""
-        self.mode = Mode.MAIN_MENU
 
     def handle_input(self):
         """Reads input and makes things happen."""
