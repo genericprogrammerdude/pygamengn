@@ -47,10 +47,11 @@ class Component(GameObjectBase):
         self.__aspect_ratio = None
         self._normalized_pos = pygame.Vector2(pos)
         self._parent_rect = None
+        self._parent_rect_changed = False
         self._rect = None
 
 
-    def update(self, parent_rect: pygame.rect, delta: int) -> bool:
+    def update(self, delta: int) -> bool:
         """
         Updates the UI component and its children.
 
@@ -62,13 +63,8 @@ class Component(GameObjectBase):
             Whether there is a component in the tree that wants to redraw itself.
         """
         dirty = False
-        if not self._parent_rect or parent_rect.size != self._parent_rect.size:
-            self._resize_to_parent(parent_rect)
-            dirty = True
-
         for child in self.__children:
-            dirty = child.update(self._rect, delta) or dirty
-
+            dirty = child.update(delta) or dirty
         if dirty:
             logging.debug(f"{self.name} returning dirty from update()")
         return dirty
@@ -110,10 +106,15 @@ class Component(GameObjectBase):
         return bss
 
 
-    def _resize_to_parent(self, parent_rect: pygame.rect):
-        """Resizes the component's rect to match size with its parent's rect."""
+    def resize_to_parent(self, parent_rect: pygame.rect):
+        """
+        Resizes the component's rect to match size with its parent's rect.
+
+        _rect is always in parent coordinates, NOT screen coordinates.
+        """
         width = parent_rect.width * self.__size.x
         height = parent_rect.height * self.__size.y
+
         if self.__fix_aspect_ratio:
             if self.__aspect_ratio is None:
                 self.__aspect_ratio = width / height
@@ -123,11 +124,14 @@ class Component(GameObjectBase):
             elif height * self.__aspect_ratio > width:
                 # Width is the limiting factor
                 height = width / self.__aspect_ratio
+
         pos = pygame.Vector2(parent_rect.width * self._normalized_pos.x, parent_rect.height * self._normalized_pos.y)
-        # self._rect is always in parent coordinates, NOT screen coordinates
         self._rect = pygame.Rect(pos.x, pos.y, width, height)
         self._parent_rect = parent_rect
-        self._parent_rect_changed()
+        self._parent_rect_changed = True
+
+        for child in self.__children:
+            child.resize_to_parent(self._rect)
 
 
     def process_mouse_event(self, pos: pygame.Vector2, event_type: int) -> bool:
@@ -192,10 +196,3 @@ class Component(GameObjectBase):
 
     def __iter__(self):
         return iter(self.__children)
-
-
-    def _parent_rect_changed(self):
-        """
-        Informs the component that its parent rect has changed.
-        """
-        pass

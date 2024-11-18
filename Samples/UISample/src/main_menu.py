@@ -14,10 +14,10 @@ class MainMenu(Root):
         self.exit_callback = None
         self.count = 0
 
-    def update(self, parent_rect, delta) -> bool:
+    def update(self, delta) -> bool:
         """Updates the main menu."""
         self.handle_input()
-        keep_updating = super().update(parent_rect, delta)
+        keep_updating = super().update(delta)
         if not keep_updating:
             print(f"MainMenu is done but let's keep going")
             self.fade_in(500)
@@ -40,6 +40,8 @@ class MainMenu(Root):
                     self.exit_callback()
             elif event.type == pygame.MOUSEMOTION:
                 self._component.process_mouse_event(event.pos, event.type)
+            elif event.type == pygame.VIDEORESIZE:
+                self._component.resize_to_parent(pygame.Rect(0, 0, event.w, event.h))
 
     def set_start_callback(self, start_callback):
         """Sets the function to call when the start button is clicked."""

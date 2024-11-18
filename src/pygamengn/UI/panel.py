@@ -1,3 +1,4 @@
+from abc import abstractmethod
 from enum import Enum
 
 import logging
@@ -15,28 +16,41 @@ class Panel(Component):
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self._image = None
-        self._needs_redraw = True
+        self._surface = None
+        self._surface_changed = True
 
-    def update(self, parent_rect: pygame.rect, delta: int) -> bool:
-        if self._needs_redraw:
-            logging.debug(f"{self.name} needs redraw")
-        return super().update(parent_rect, delta) or self._needs_redraw
+    def update(self, delta: int) -> bool:
+        needs_redraw = self._needs_redraw
+        needs_reblit = self._needs_reblit
+        self._reset_reblit_flags()
+        if needs_redraw:
+            self._draw_surface()
+            self._reset_redraw_flags()
+            logging.debug(f"{self.name} drew a new image")
+        return super().update(delta) or needs_redraw or needs_reblit
 
-    def _draw(self):
-        logging.debug(f"{self.name} produced new _image")
-        self._needs_redraw = False
-
-    def _parent_rect_changed(self):
-        self._image = None
+    @abstractmethod
+    def _draw_surface(self):
+        pass
 
     @property
     def _blit_surface(self) -> pygame.Surface:
         """Returns the image that the UI component wants to blit to the screen."""
-        if not self._image:
-            self._draw()
-        self._needs_redraw = False
-        return self._image
+        return self._surface
+
+    @property
+    def _needs_redraw(self) -> bool:
+        return self._parent_rect_changed
+
+    def _reset_redraw_flags(self):
+        self._parent_rect_changed = False
+
+    @property
+    def _needs_reblit(self) -> bool:
+        return False
+
+    def _reset_reblit_flags(self):
+        pass
 
 
 
@@ -66,32 +80,33 @@ class ColourPanel(Panel):
         self.__corner_radii = corner_radii
         self.__corner_radius = corner_radius
         self.__mouse_is_hovering = False
-        self._hover_image = None
+        self.__mouse_is_hovering_changed = False
+        self.__hover_surface = None
 
 
     @property
     def _blit_surface(self) -> pygame.Surface:
-        """Returns the image that the UI component wants to blit to the screen."""
+        """Returns the surface that the UI component wants to blit to the screen."""
         super()._blit_surface
-        return self._hover_image if self.__mouse_is_hovering else self._image
+        return self.__hover_surface if self.__mouse_is_hovering else self._surface
 
 
-    def _draw(self):
-        super()._draw()
-        self._image = self.__draw_colour_image(self.__colour)
-        self._hover_image = self.__draw_colour_image(self.__hover_colour)
+    def _draw_surface(self):
+        super()._draw_surface()
+        self._surface = self.__draw_colour_surface(self.__colour)
+        self.__hover_surface = self.__draw_colour_surface(self.__hover_colour)
 
 
-    def __draw_colour_image(self, colour: tuple[int]) -> pygame.Surface:
-        image = pygame.Surface(self._rect.size, pygame.SRCALPHA)
+    def __draw_colour_surface(self, colour: tuple[int]) -> pygame.Surface:
+        surface = pygame.Surface(self._rect.size, pygame.SRCALPHA)
         if not self.__corner_radii and not self.__corner_radius:
-            image.fill(colour)
+            surface.fill(colour)
         else:
             min_dimension = min(self._rect.width, self._rect.height)
             # corner_radii takes precedence over corner_radius
             if self.__corner_radii:
                 pygame.draw.rect(
-                    surface = image,
+                    surface = surface,
                     color = colour,
                     rect = pygame.Rect(0, 0, self._rect.width, self._rect.height),
                     border_top_left_radius = round(min_dimension * self.__corner_radii.top_left),
@@ -101,12 +116,12 @@ class ColourPanel(Panel):
                 )
             else:
                 pygame.draw.rect(
-                    surface = image,
+                    surface = surface,
                     color = colour,
                     rect = pygame.Rect(0, 0, self._rect.width, self._rect.height),
                     border_radius = round(min_dimension * self.__corner_radius)
                 )
-        return image
+        return surface
 
 
     def process_mouse_event(self, pos: pygame.Vector2, event_type: int) -> bool:
@@ -117,14 +132,23 @@ class ColourPanel(Panel):
             local_pos = pos - pygame.Vector2(self._parent_rect.topleft)
             if self._rect.collidepoint(local_pos):
                 if not self.__mouse_is_hovering:
-                    self._needs_redraw = True
                     self.__mouse_is_hovering = True
+                    self.__mouse_is_hovering_changed = True
             else:
                 if self.__mouse_is_hovering:
-                    self._needs_redraw = True
                     self.__mouse_is_hovering = False
+                    self.__mouse_is_hovering_changed = True
 
         return capture_event
+
+
+    @property
+    def _needs_reblit(self) -> bool:
+        return self.__mouse_is_hovering_changed
+
+
+    def _reset_reblit_flags(self):
+        self.__mouse_is_hovering_changed = False
 
 
 
@@ -161,41 +185,42 @@ class TextPanel(Panel):
         self.__shadow = shadow
         self.__shadow_colour = shadow_colour
         self.__text = text
+        self.__text_changed = False
 
 
-    def _draw(self):
+    def _draw_surface(self):
         """TextPanel ignores its parent rect and renders to the font size."""
-        super()._draw()
+        super()._draw_surface()
         if self.__shadow:
             shadow_surf = self.__font_asset.font.render(self.__text, True, self.__shadow_colour)
             front_surf = self.__font_asset.font.render(self.__text, True, self.__text_colour)
             dest = -0.06 * shadow_surf.get_rect().height
             shadow_surf.blit(front_surf, (dest, dest))
-            self._image = shadow_surf
+            self._surface = shadow_surf
         else:
-            self._image = self.__font_asset.font.render(self.__text, True, self.__text_colour)
+            self._surface = self.__font_asset.font.render(self.__text, True, self.__text_colour)
         self.__align()
 
 
     def __align(self):
-        """Aligns the text image."""
+        """Aligns the text surface."""
         # Horizontal alignment
         if self.__horz_align == TextPanel.HorzAlign.LEFT:
             pass  # This is what Component does by default
         elif self.__horz_align == TextPanel.HorzAlign.CENTRE:
-            self._rect.x = (self._parent_rect.width - self._image.get_rect().width) / 2
+            self._rect.x = (self._parent_rect.width - self._surface.get_rect().width) / 2
             self._rect.x += self._parent_rect.width * self._normalized_pos.x
         elif self.__horz_align == TextPanel.HorzAlign.RIGHT:
-            self._rect.x = self._parent_rect.width - self._image.get_rect().width
+            self._rect.x = self._parent_rect.width - self._surface.get_rect().width
             self._rect.x += self._parent_rect.width * self._normalized_pos.x
         # Vertical alignment
         if self.__vert_align == TextPanel.VertAlign.TOP:
             pass  # This is what Component does by default
         elif self.__vert_align == TextPanel.VertAlign.CENTRE:
-            self._rect.y = (self._parent_rect.height - self._image.get_rect().height) / 2
+            self._rect.y = (self._parent_rect.height - self._surface.get_rect().height) / 2
             self._rect.y += self._parent_rect.width * self._normalized_pos.y
         elif self.__vert_align == TextPanel.VertAlign.BOTTOM:
-            self._rect.y = self._parent_rect.height - self._image.get_rect().height
+            self._rect.y = self._parent_rect.height - self._surface.get_rect().height
             self._rect.y += self._parent_rect.width * self._normalized_pos.y
 
 
@@ -208,16 +233,17 @@ class TextPanel(Panel):
     def text(self, text: str):
         if self.__text != text:
             self.__text = text
-            self._needs_redraw = True
-            self._image = None
+            self.__text_changed = True
 
 
-    def _parent_rect_changed(self):
-        # Ignore the call because TextPanel draws to the font size, not the parent rect size. But aligning is required.
-        if not self._image:
-            self._draw()
-        self.__align()
+    @property
+    def _needs_redraw(self) -> bool:
+        return super()._needs_redraw or self.__text_changed
 
+
+    def _reset_redraw_flags(self):
+        super()._reset_redraw_flags()
+        self.__text_changed = False
 
 
 
@@ -229,6 +255,6 @@ class TexturePanel(Panel):
         super().__init__(**kwargs)
         self._image_asset = image_asset
 
-    def _draw(self):
-        super()._draw()
-        self._image = pygame.transform.smoothscale(self._image_asset, self.rect.size)
+    def _draw_surface(self):
+        super()._draw_surface()
+        self._surface = pygame.transform.smoothscale(self._image_asset, self.rect.size)

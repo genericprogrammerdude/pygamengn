@@ -25,14 +25,18 @@ class Root(GameObjectBase):
         self._fade_duration = 0
 
 
-    def update(self, parent_rect: pygame.rect, delta: int) -> bool:
+    def set_parent_rect(self, rect: pygame.Rect):
+        self._component.resize_to_parent(rect)
+
+
+    def update(self, delta: int) -> bool:
         """
         Updates the UI component and its children.
 
         Returns a bool indicating whether the UI wants to continue participating in Game's update loop.
         """
         keep_updating = True
-        self._is_dirty = self._component.update(parent_rect, delta)
+        self._is_dirty = self._component.update(delta)
         if self._fade_interp:
             if self._fade_interp.duration > self._fade_duration:
                 self._fade_duration += delta
@@ -75,7 +79,6 @@ class Root(GameObjectBase):
                 )
 
 
-
     def fade_in(self, duration: int):
         self._fade(0, 255, duration)
 
@@ -91,6 +94,7 @@ class Root(GameObjectBase):
             from_alpha = self._fade_interp.get(self._fade_duration)
         self._fade_interp = Interpolator(duration, from_alpha, to_alpha)
         self._fade_duration = 0
+
 
     def _bind_children(self):
         """Binds component and its children to data members of this Root; only Components that have a name are bound."""

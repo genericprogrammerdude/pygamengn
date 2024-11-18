@@ -39,7 +39,7 @@ class Game(GameObjectBase):
         # Update any active UI screens
         i = 0
         while i < len(self._uis):
-            if not self._uis[i].update(self.screen.get_rect(), delta):
+            if not self._uis[i].update(delta):
                 self._uis.pop(i)
             else:
                 i += 1
@@ -84,6 +84,7 @@ class Game(GameObjectBase):
         """
         if ui not in self._uis:
             self._uis.append(ui)
+        ui.set_parent_rect(self.screen.get_rect())
         ui.fade_in(fade_in_ms)
 
     def hide_ui(self, ui: Root, fade_out_ms: int):
