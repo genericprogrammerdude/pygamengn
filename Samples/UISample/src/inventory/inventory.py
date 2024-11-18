@@ -162,11 +162,26 @@ game_types = {
                 },
             },
             "StaticShipPanel": {
-                "class_name": "TexturePanel",
+                "class_name": "ColourPanel",
                 "kwargs": {
-                    "size": [0.15, 0.2],
-                    "image:image_asset": "ship",
-                    "fix_aspect_ratio": True,
+                    "vert_align": "CENTRE",
+                    "pos": [0.05, -0.02],
+                    "size": [0.15, 0.4],
+                    "colour": [200, 20, 200, 100],
+                    "game_object:children": [
+                        "ShipPanel",
+                    ]
+                },
+                "ShipPanel": {
+                    "class_name": "TexturePanel",
+                    "kwargs": {
+                        "vert_align": "CENTRE",
+                        "horz_align": "CENTRE",
+                        "size": [0.45, 0.2],
+                        "image:image_asset": "ship",
+                        "fix_aspect_ratio": True,
+                        "wanted_mouse_events": [MOUSEMOTION],
+                    },
                 },
             },
         },
