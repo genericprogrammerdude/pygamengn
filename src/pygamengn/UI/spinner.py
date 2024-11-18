@@ -17,12 +17,11 @@ class Spinner(TexturePanel):
         self.__angular_velocity = angular_velocity
         self.__angle = 0
 
-    def update(self, parent_rect: pygame.rect, delta: int, animators: list[Component]) -> bool:
+    def update(self, parent_rect: pygame.rect, delta: int) -> bool:
         """Updates the UI component and its children."""
-        rv = super().update(parent_rect, delta, animators)
         spin_delta = (self.__angular_velocity * delta) / 1000
         self.__angle = (self.__angle + spin_delta) % 360
-        animators.append(self)
+        rv = super().update(parent_rect, delta)
         return False
 
     @property
@@ -40,3 +39,7 @@ class Spinner(TexturePanel):
     def _parent_rect_changed(self):
         # Need to override this because Panel deletes self._image and Spinner recomputes its self._rect every frame.
         pass
+
+    @property
+    def _is_static(self) -> bool:
+        return False

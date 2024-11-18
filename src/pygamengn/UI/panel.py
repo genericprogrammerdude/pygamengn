@@ -18,10 +18,10 @@ class Panel(Component):
         self._image = None
         self._needs_redraw = True
 
-    def update(self, parent_rect: pygame.rect, delta: int, animators: list[Component]) -> bool:
+    def update(self, parent_rect: pygame.rect, delta: int) -> bool:
         if self._needs_redraw:
             logging.debug(f"{self.name} needs redraw")
-        return super().update(parent_rect, delta, animators) or self._needs_redraw
+        return super().update(parent_rect, delta) or self._needs_redraw
 
     def _draw(self):
         logging.debug(f"{self.name} produced new _image")

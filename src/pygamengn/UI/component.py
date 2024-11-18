@@ -4,6 +4,7 @@ from abc import abstractmethod
 import logging
 import pygame
 
+from pygamengn.blit_surface import BlitSurface
 from pygamengn.class_registrar import ClassRegistrar
 from pygamengn.game_object_base import GameObjectBase
 
@@ -49,7 +50,7 @@ class Component(GameObjectBase):
         self._rect = None
 
 
-    def update(self, parent_rect: pygame.rect, delta: int, animators: list[Component]) -> bool:
+    def update(self, parent_rect: pygame.rect, delta: int) -> bool:
         """
         Updates the UI component and its children.
 
@@ -66,30 +67,47 @@ class Component(GameObjectBase):
             dirty = True
 
         for child in self.__children:
-            dirty = child.update(self._rect, delta, animators) or dirty
+            dirty = child.update(self._rect, delta) or dirty
 
         if dirty:
             logging.debug(f"{self.name} returning dirty from update()")
         return dirty
 
 
-    def build_blit_image(
-        self,
-        screen_image: pygame.Surface,
-        parent_pos: pygame.Vector2,
-        exceptions: list[Component],
-        blit_exceptions: bool
-    ):
+    def build_static_blit_surface(self, dest: pygame.Surface, parent_pos: pygame.Vector2):
         """
-        Recursively blit each component in the tree to the given surface (presumably the screen, but not necessarily).
+        Recursively blit each static component in the tree to the given surface.
         """
+        # _blit_surface can change a component's self._rect (e.g., Spinner), so we need to call _blit_surface on every
+        # component as we walk the tree in order to compute each component's screen position. This is bad design;
+        # as a property, _blit_surface shouldn't change state.
         bs = self._blit_surface
         topleft = pygame.Vector2(self._rect.topleft) + parent_pos
-        if bs:
-            if (blit_exceptions and self in exceptions) or (not blit_exceptions and self not in exceptions):
-                screen_image.blit(bs, topleft, special_flags = pygame.BLEND_ALPHA_SDL2)
+        if self._is_static:
+            dest.blit(bs, topleft, special_flags = pygame.BLEND_ALPHA_SDL2)
         for child in self.__children:
-            child.build_blit_image(screen_image, topleft, exceptions, blit_exceptions)
+            child.build_static_blit_surface(dest, topleft)
+
+
+    def get_dynamic_blit_surfaces(self, parent_pos: pygame.Vector2 = pygame.Vector2()) -> list[BlitSurface]:
+        """
+        Walks the UI tree computing screen coordinates for each component and building a list of dynamic component
+        blit surfaces and screen coordinates.
+
+        A static component is one that doesn't need to change its blit surface on every frame. A dynamic component
+        is one that needs its blit surface updated every frame.
+        """
+        bss = []
+        # _blit_surface can change a component's self._rect (e.g., Spinner), so we need to call _blit_surface on every
+        # component as we walk the tree in order to compute each component's screen position. This is bad design;
+        # as a property, _blit_surface shouldn't change state.
+        bs = self._blit_surface
+        topleft = pygame.Vector2(self._rect.topleft) + parent_pos
+        if not self._is_static:
+            bss.append(BlitSurface(bs, topleft))
+        for child in self.__children:
+            bss.extend(child.get_dynamic_blit_surfaces(topleft))
+        return bss
 
 
     def _resize_to_parent(self, parent_rect: pygame.rect):
@@ -148,6 +166,11 @@ class Component(GameObjectBase):
                 pygame.mouse.set_system_cursor(pygame.SYSTEM_CURSOR_ARROW)
 
         return capture_event
+
+
+    @property
+    def _is_static(self) -> bool:
+        return True
 
 
     @property

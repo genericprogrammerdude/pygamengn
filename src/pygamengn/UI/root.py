@@ -19,11 +19,10 @@ class Root(GameObjectBase):
         super().__init__(**kwargs)
         self._component = component
         self._bind_children()
-        self._root_blit_image = None
+        self._static_blit_surface = None
         self._is_dirty = True
         self._fade_interp = None
         self._fade_duration = 0
-        self._animators = []
 
 
     def update(self, parent_rect: pygame.rect, delta: int) -> bool:
@@ -33,8 +32,7 @@ class Root(GameObjectBase):
         Returns a bool indicating whether the UI wants to continue participating in Game's update loop.
         """
         keep_updating = True
-        self._animators.clear()
-        self._is_dirty = self._component.update(parent_rect, delta, self._animators)
+        self._is_dirty = self._component.update(parent_rect, delta)
         if self._fade_interp:
             if self._fade_interp.duration > self._fade_duration:
                 self._fade_duration += delta
@@ -49,29 +47,32 @@ class Root(GameObjectBase):
     def blit_to_surface(self, surface: pygame.Surface):
         """Blits the root image that represents this entire UI tree to the given surface."""
         if self._is_dirty:
-            self._root_blit_image = pygame.Surface(self._component.rect.size, pygame.SRCALPHA)
-            self._component.build_blit_image(
-                self._root_blit_image,
-                -pygame.Vector2(self._component.rect.topleft),
-                self._animators,
-                False
+            self._static_blit_surface = pygame.Surface(self._component.rect.size, pygame.SRCALPHA)
+            self._component.build_static_blit_surface(
+                self._static_blit_surface,
+                -pygame.Vector2(self._component.rect.topleft)
             )
 
         if self._fade_interp:
-            self._root_blit_image.set_alpha(self._fade_interp.get(self._fade_duration))
+            self._static_blit_surface.set_alpha(self._fade_interp.get(self._fade_duration))
 
         surface.blit(
-            source = self._root_blit_image,
+            source = self._static_blit_surface,
             dest = self._component.rect.topleft,
             special_flags = pygame.BLEND_ALPHA_SDL2
         )
 
-        self._component.build_blit_image(
-            surface,
-            pygame.Vector2(),
-            self._animators,
-            True
-        )
+        dynamic_bss = self._component.get_dynamic_blit_surfaces()
+        if len(dynamic_bss) > 0:
+            for bs in dynamic_bss:
+                if self._fade_interp:
+                    bs.surface.set_alpha(self._fade_interp.get(self._fade_duration))
+                surface.blit(
+                    source = bs.surface,
+                    dest = bs.topleft,
+                    special_flags = pygame.BLEND_ALPHA_SDL2
+                )
+
 
 
     def fade_in(self, duration: int):
