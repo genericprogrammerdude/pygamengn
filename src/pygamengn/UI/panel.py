@@ -14,8 +14,24 @@ from pygamengn.UI.component import Component
 class Panel(Component):
     """Basic UI panel that keeps an image with its visual contents."""
 
-    def __init__(self, **kwargs):
+    class VertAlign(Enum):
+        TOP = "TOP"
+        CENTRE = "CENTRE"
+        BOTTOM = "BOTTOM"
+
+    class HorzAlign(Enum):
+        LEFT = "LEFT"
+        CENTRE = "CENTRE"
+        RIGHT = "RIGHT"
+
+    def __init__(self,
+        horz_align = HorzAlign.LEFT,
+        vert_align = VertAlign.TOP,
+        **kwargs
+    ):
         super().__init__(**kwargs)
+        self._horz_align = Panel.HorzAlign(horz_align)
+        self._vert_align = Panel.VertAlign(vert_align)
         self._surface = None
         self._surface_changed = True
 
@@ -25,6 +41,7 @@ class Panel(Component):
         self._reset_reblit_flags()
         if needs_redraw:
             self._draw_surface()
+            self._align()
             self._reset_redraw_flags()
         return super().update(delta) or needs_redraw or needs_reblit
 
@@ -35,6 +52,32 @@ class Panel(Component):
     @abstractmethod
     def _draw_surface(self):
         pass
+
+    def _align(self):
+        """
+        Aligns the panel's surface.
+
+        When an alignment different than TOP and LEFT is set, _normalized_pos is used to adjust the actual position
+        of the component within its parent rectangle starting from the alignment point.
+        """
+        # Horizontal alignment
+        if self._horz_align == Panel.HorzAlign.LEFT:
+            pass
+        elif self._horz_align == Panel.HorzAlign.CENTRE:
+            self._rect.x = (self._parent_rect.width - self._surface.get_rect().width) / 2
+            self._rect.x += self._parent_rect.width * self._normalized_pos.x
+        elif self._horz_align == Panel.HorzAlign.RIGHT:
+            self._rect.x = self._parent_rect.width - self._surface.get_rect().width
+            self._rect.x += self._parent_rect.width * self._normalized_pos.x
+        # Vertical alignment
+        if self._vert_align == Panel.VertAlign.TOP:
+            pass
+        elif self._vert_align == Panel.VertAlign.CENTRE:
+            self._rect.y = (self._parent_rect.height - self._surface.get_rect().height) / 2
+            self._rect.y += self._parent_rect.width * self._normalized_pos.y
+        elif self._vert_align == Panel.VertAlign.BOTTOM:
+            self._rect.y = self._parent_rect.height - self._surface.get_rect().height
+            self._rect.y += self._parent_rect.width * self._normalized_pos.y
 
     @property
     def _blit_surface(self) -> pygame.Surface:
@@ -159,22 +202,10 @@ class ColourPanel(Panel):
 class TextPanel(Panel):
     """Panel that sets its size to the size of the text in it. This panel ignores the parent rect."""
 
-    class VertAlign(Enum):
-        TOP = "TOP"
-        CENTRE = "CENTRE"
-        BOTTOM = "BOTTOM"
-
-    class HorzAlign(Enum):
-        LEFT = "LEFT"
-        CENTRE = "CENTRE"
-        RIGHT = "RIGHT"
-
     def __init__(
         self,
         font_asset,
         text_colour,
-        horz_align = "LEFT",
-        vert_align = "TOP",
         shadow = False,
         shadow_colour = (0, 0, 0),
         text=" ",
@@ -183,8 +214,6 @@ class TextPanel(Panel):
         super().__init__(**kwargs)
         self.__font_asset = font_asset
         self.__text_colour = text_colour
-        self.__horz_align = TextPanel.HorzAlign(horz_align)
-        self.__vert_align = TextPanel.VertAlign(vert_align)
         self.__shadow = shadow
         self.__shadow_colour = shadow_colour
         self.__text = text
@@ -202,29 +231,7 @@ class TextPanel(Panel):
             self._surface = shadow_surf
         else:
             self._surface = self.__font_asset.font.render(self.__text, True, self.__text_colour)
-        self.__align()
-
-
-    def __align(self):
-        """Aligns the text surface."""
-        # Horizontal alignment
-        if self.__horz_align == TextPanel.HorzAlign.LEFT:
-            pass  # This is what Component does by default
-        elif self.__horz_align == TextPanel.HorzAlign.CENTRE:
-            self._rect.x = (self._parent_rect.width - self._surface.get_rect().width) / 2
-            self._rect.x += self._parent_rect.width * self._normalized_pos.x
-        elif self.__horz_align == TextPanel.HorzAlign.RIGHT:
-            self._rect.x = self._parent_rect.width - self._surface.get_rect().width
-            self._rect.x += self._parent_rect.width * self._normalized_pos.x
-        # Vertical alignment
-        if self.__vert_align == TextPanel.VertAlign.TOP:
-            pass  # This is what Component does by default
-        elif self.__vert_align == TextPanel.VertAlign.CENTRE:
-            self._rect.y = (self._parent_rect.height - self._surface.get_rect().height) / 2
-            self._rect.y += self._parent_rect.width * self._normalized_pos.y
-        elif self.__vert_align == TextPanel.VertAlign.BOTTOM:
-            self._rect.y = self._parent_rect.height - self._surface.get_rect().height
-            self._rect.y += self._parent_rect.width * self._normalized_pos.y
+        self._align()
 
 
     @property

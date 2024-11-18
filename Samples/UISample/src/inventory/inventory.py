@@ -59,7 +59,8 @@ game_types = {
         "Background": {
             "class_name": "ColourPanel",
             "kwargs": {
-                "pos": [0.25, 0.25],
+                "horz_align": "CENTRE",
+                "vert_align": "CENTRE",
                 "size": [0.5, 0.5],
                 "game_object:children": [
                     "StartButton",
@@ -67,7 +68,6 @@ game_types = {
                     "SpinnerPanel",
                 ],
                 "name": "main_menu",
-                "fix_aspect_ratio": False,
                 "colour": [100, 100, 100, 128],
                 "corner_radius": 0.1,
                 "game_object:corner_radii": "corner_radii",
@@ -86,7 +86,6 @@ game_types = {
                 "kwargs": {
                     "size": [0.5, 0.25],
                     "game_object:children": [],
-                    "fix_aspect_ratio": False,
                     "colour": [200, 200, 200, 100],
                     "hover_colour": [100, 210, 100, 100],
                     "corner_radius": 0.15,
@@ -152,9 +151,9 @@ game_types = {
                 "Spinner": {
                     "class_name": "Spinner",
                     "kwargs": {
-                        "pos": [0, 0],
+                        "vert_align": "CENTRE",
+                        "horz_align": "CENTRE",
                         "size": [0.8, 0.8],
-                        "fix_aspect_ratio": True,
                         "image:image_asset": "ship",
                         "name": "spinner",
                         "angular_velocity": 40,
