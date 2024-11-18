@@ -66,6 +66,7 @@ game_types = {
                     "StartButton",
                     "ExitButton",
                     "SpinnerPanel",
+                    "StaticShipPanel",
                 ],
                 "name": "main_menu",
                 "colour": [100, 100, 100, 128],
@@ -158,6 +159,14 @@ game_types = {
                         "name": "spinner",
                         "angular_velocity": 40,
                     },
+                },
+            },
+            "StaticShipPanel": {
+                "class_name": "TexturePanel",
+                "kwargs": {
+                    "size": [0.15, 0.2],
+                    "image:image_asset": "ship",
+                    "fix_aspect_ratio": True,
                 },
             },
         },
