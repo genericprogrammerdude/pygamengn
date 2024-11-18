@@ -54,7 +54,8 @@ class Root(GameObjectBase):
             )
 
         if self._fade_interp:
-            self._static_blit_surface.set_alpha(self._fade_interp.get(self._fade_duration))
+            alpha = self._fade_interp.get(self._fade_duration)
+            self._static_blit_surface.set_alpha(alpha)
 
         surface.blit(
             source = self._static_blit_surface,
@@ -66,7 +67,7 @@ class Root(GameObjectBase):
         if len(dynamic_bss) > 0:
             for bs in dynamic_bss:
                 if self._fade_interp:
-                    bs.surface.set_alpha(self._fade_interp.get(self._fade_duration))
+                    bs.surface.set_alpha(alpha)
                 surface.blit(
                     source = bs.surface,
                     dest = bs.topleft,
