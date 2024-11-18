@@ -47,7 +47,6 @@ class Component(GameObjectBase):
         self.__aspect_ratio = None
         self._normalized_pos = pygame.Vector2(pos)
         self._parent_rect = None
-        self._parent_rect_changed = False
         self._rect = None
 
 
@@ -65,8 +64,6 @@ class Component(GameObjectBase):
         dirty = False
         for child in self.__children:
             dirty = child.update(delta) or dirty
-        if dirty:
-            logging.debug(f"{self.name} returning dirty from update()")
         return dirty
 
 
@@ -79,7 +76,7 @@ class Component(GameObjectBase):
         # as a property, _blit_surface shouldn't change state.
         bs = self._blit_surface
         topleft = pygame.Vector2(self._rect.topleft) + parent_pos
-        if self._is_static:
+        if not self._is_dynamic:
             dest.blit(bs, topleft, special_flags = pygame.BLEND_ALPHA_SDL2)
         for child in self.__children:
             child.build_static_blit_surface(dest, topleft)
@@ -99,7 +96,7 @@ class Component(GameObjectBase):
         # as a property, _blit_surface shouldn't change state.
         bs = self._blit_surface
         topleft = pygame.Vector2(self._rect.topleft) + parent_pos
-        if not self._is_static:
+        if self._is_dynamic:
             bss.append(BlitSurface(bs, topleft))
         for child in self.__children:
             bss.extend(child.get_dynamic_blit_surfaces(topleft))
@@ -128,7 +125,6 @@ class Component(GameObjectBase):
         pos = pygame.Vector2(parent_rect.width * self._normalized_pos.x, parent_rect.height * self._normalized_pos.y)
         self._rect = pygame.Rect(pos.x, pos.y, width, height)
         self._parent_rect = parent_rect
-        self._parent_rect_changed = True
 
         for child in self.__children:
             child.resize_to_parent(self._rect)
@@ -173,8 +169,16 @@ class Component(GameObjectBase):
 
 
     @property
-    def _is_static(self) -> bool:
-        return True
+    def _is_dynamic(self) -> bool:
+        """
+        Returns whether the component is dynamic, meaning that it needs to redraw and reblit on every frame.
+
+        Most components are considered dynamic and will update their surface infrequently and due to factors like
+        window resizes. Some components will redraw and reblit on every update (e.g., if they're running some kind of
+        animation). Those components are considered dynamic and are blitted to the root surface (typically the screen)
+        separately from the static components (see Root.blit_to_surface()).
+        """
+        return False
 
 
     @property

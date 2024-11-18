@@ -26,8 +26,11 @@ class Panel(Component):
         if needs_redraw:
             self._draw_surface()
             self._reset_redraw_flags()
-            logging.debug(f"{self.name} drew a new image")
         return super().update(delta) or needs_redraw or needs_reblit
+
+    def resize_to_parent(self, parent_rect: pygame.rect):
+        super().resize_to_parent(parent_rect)
+        self._parent_rect_changed = True
 
     @abstractmethod
     def _draw_surface(self):

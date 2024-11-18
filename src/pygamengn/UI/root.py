@@ -51,6 +51,7 @@ class Root(GameObjectBase):
     def blit_to_surface(self, surface: pygame.Surface):
         """Blits the root image that represents this entire UI tree to the given surface."""
         if self._is_dirty:
+            logging.debug(f"{self._component.name} is reblitting its root surface to the screen")
             self._static_blit_surface = pygame.Surface(self._component.rect.size, pygame.SRCALPHA)
             self._component.build_static_blit_surface(
                 self._static_blit_surface,
