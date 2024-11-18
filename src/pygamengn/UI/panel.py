@@ -18,10 +18,10 @@ class Panel(Component):
         self._image = None
         self._needs_redraw = True
 
-    def update(self, parent_rect: pygame.rect, delta: int) -> bool:
+    def update(self, parent_rect: pygame.rect, delta: int, animators: list[Component]) -> bool:
         if self._needs_redraw:
             logging.debug(f"{self.name} needs redraw")
-        return super().update(parent_rect, delta) or self._needs_redraw
+        return super().update(parent_rect, delta, animators) or self._needs_redraw
 
     def _draw(self):
         logging.debug(f"{self.name} produced new _image")
@@ -85,7 +85,7 @@ class ColourPanel(Panel):
     def __draw_colour_image(self, colour: tuple[int]) -> pygame.Surface:
         image = pygame.Surface(self._rect.size, pygame.SRCALPHA)
         if not self.__corner_radii and not self.__corner_radius:
-            self._image.fill(colour)
+            image.fill(colour)
         else:
             min_dimension = min(self._rect.width, self._rect.height)
             # corner_radii takes precedence over corner_radius

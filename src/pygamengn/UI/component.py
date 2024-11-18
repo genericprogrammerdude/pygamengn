@@ -1,3 +1,4 @@
+from __future__ import annotations
 from abc import abstractmethod
 
 import logging
@@ -48,7 +49,7 @@ class Component(GameObjectBase):
         self._rect = None
 
 
-    def update(self, parent_rect: pygame.rect, delta: int) -> bool:
+    def update(self, parent_rect: pygame.rect, delta: int, animators: list[Component]) -> bool:
         """
         Updates the UI component and its children.
 
@@ -65,23 +66,29 @@ class Component(GameObjectBase):
             dirty = True
 
         for child in self.__children:
-            dirty = child.update(self._rect, delta) or dirty
+            dirty = child.update(self._rect, delta, animators) or dirty
 
         if dirty:
             logging.debug(f"{self.name} returning dirty from update()")
         return dirty
 
 
-    def build_blit_image(self, screen_image: pygame.Surface, parent_pos: pygame.Vector2):
+    def build_blit_image(
+        self,
+        screen_image: pygame.Surface,
+        parent_pos: pygame.Vector2,
+        exceptions: list[Component]
+    ):
         """
         Recursively blit each component in the tree to the given surface (presumably the screen, but not necessarily).
         """
-        bs = self._blit_surface
-        topleft = pygame.Vector2(self._rect.topleft) + parent_pos
-        if bs:
-            draw_rect = screen_image.blit(bs, topleft, special_flags = pygame.BLEND_ALPHA_SDL2)
-        for child in self.__children:
-            child.build_blit_image(screen_image, topleft)
+        if not self in exceptions:
+            bs = self._blit_surface
+            topleft = pygame.Vector2(self._rect.topleft) + parent_pos
+            if bs:
+                draw_rect = screen_image.blit(bs, topleft, special_flags = pygame.BLEND_ALPHA_SDL2)
+            for child in self.__children:
+                child.build_blit_image(screen_image, topleft, exceptions)
 
 
     def _resize_to_parent(self, parent_rect: pygame.rect):

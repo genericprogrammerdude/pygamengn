@@ -2,6 +2,7 @@ import logging
 
 import pygame
 
+from pygamengn.UI.component import Component
 from pygamengn.UI.panel import TexturePanel
 from pygamengn.class_registrar import ClassRegistrar
 
@@ -16,12 +17,13 @@ class Spinner(TexturePanel):
         self.__angular_velocity = angular_velocity
         self.__angle = 0
 
-    def update(self, parent_rect, delta) -> bool:
+    def update(self, parent_rect: pygame.rect, delta: int, animators: list[Component]) -> bool:
         """Updates the UI component and its children."""
-        rv = super().update(parent_rect, delta)
+        rv = super().update(parent_rect, delta, animators)
         spin_delta = (self.__angular_velocity * delta) / 1000
         self.__angle = (self.__angle + spin_delta) % 360
-        return rv
+        animators.append(self)
+        return False
 
     @property
     def _blit_surface(self) -> pygame.Surface:

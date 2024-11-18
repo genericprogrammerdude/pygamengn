@@ -64,7 +64,7 @@ game_types = {
                 "game_object:children": [
                     "StartButton",
                     "ExitButton",
-                    "Spinner",
+                    "SpinnerPanel/Spinner",
                 ],
                 "name": "main_menu",
                 "fix_aspect_ratio": False,
@@ -139,16 +139,27 @@ game_types = {
                     },
                 },
             },
-            "Spinner": {
-                "class_name": "Spinner",
+            "SpinnerPanel": {
+                "class_name": "ColourPanel",
                 "kwargs": {
-                    "pos": [0.05, 0.1],
-                    "size": [0.15, 0.15],
-                    "fix_aspect_ratio": True,
-                    "image:image_asset": "ship",
-                    "name": "spinner",
-                    "angular_velocity": 40,
-                }
+                    "pos": [0.6, 0.5],
+                    "size": [0.4, 0.3],
+                    "colour": [240, 200, 200, 100],
+                    "game_object:children": [
+                        "Spinner",
+                    ]
+                },
+                "Spinner": {
+                    "class_name": "Spinner",
+                    "kwargs": {
+                        "pos": [0.05, 0.1],
+                        "size": [0.15, 0.15],
+                        "fix_aspect_ratio": True,
+                        "image:image_asset": "ship",
+                        "name": "spinner",
+                        "angular_velocity": 40,
+                    },
+                },
             },
         },
     },
