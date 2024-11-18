@@ -77,18 +77,19 @@ class Component(GameObjectBase):
         self,
         screen_image: pygame.Surface,
         parent_pos: pygame.Vector2,
-        exceptions: list[Component]
+        exceptions: list[Component],
+        blit_exceptions: bool
     ):
         """
         Recursively blit each component in the tree to the given surface (presumably the screen, but not necessarily).
         """
-        if not self in exceptions:
-            bs = self._blit_surface
-            topleft = pygame.Vector2(self._rect.topleft) + parent_pos
-            if bs:
-                draw_rect = screen_image.blit(bs, topleft, special_flags = pygame.BLEND_ALPHA_SDL2)
-            for child in self.__children:
-                child.build_blit_image(screen_image, topleft, exceptions)
+        bs = self._blit_surface
+        topleft = pygame.Vector2(self._rect.topleft) + parent_pos
+        if bs:
+            if (blit_exceptions and self in exceptions) or (not blit_exceptions and self not in exceptions):
+                screen_image.blit(bs, topleft, special_flags = pygame.BLEND_ALPHA_SDL2)
+        for child in self.__children:
+            child.build_blit_image(screen_image, topleft, exceptions, blit_exceptions)
 
 
     def _resize_to_parent(self, parent_rect: pygame.rect):

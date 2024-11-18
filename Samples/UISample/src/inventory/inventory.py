@@ -64,7 +64,7 @@ game_types = {
                 "game_object:children": [
                     "StartButton",
                     "ExitButton",
-                    "SpinnerPanel/Spinner",
+                    "SpinnerPanel",
                 ],
                 "name": "main_menu",
                 "fix_aspect_ratio": False,
@@ -142,8 +142,8 @@ game_types = {
             "SpinnerPanel": {
                 "class_name": "ColourPanel",
                 "kwargs": {
-                    "pos": [0.6, 0.5],
-                    "size": [0.4, 0.3],
+                    "pos": [0.8, 0.4],
+                    "size": [0.15, 0.2],
                     "colour": [240, 200, 200, 100],
                     "game_object:children": [
                         "Spinner",
@@ -152,8 +152,8 @@ game_types = {
                 "Spinner": {
                     "class_name": "Spinner",
                     "kwargs": {
-                        "pos": [0.05, 0.1],
-                        "size": [0.15, 0.15],
+                        "pos": [0, 0],
+                        "size": [0.8, 0.8],
                         "fix_aspect_ratio": True,
                         "image:image_asset": "ship",
                         "name": "spinner",

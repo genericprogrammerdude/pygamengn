@@ -53,7 +53,8 @@ class Root(GameObjectBase):
             self._component.build_blit_image(
                 self._root_blit_image,
                 -pygame.Vector2(self._component.rect.topleft),
-                self._animators
+                self._animators,
+                False
             )
 
         if self._fade_interp:
@@ -65,8 +66,12 @@ class Root(GameObjectBase):
             special_flags = pygame.BLEND_ALPHA_SDL2
         )
 
-        for component in self._animators:
-            component.build_blit_image(surface, pygame.Vector2(self._component.rect.topleft), [])
+        self._component.build_blit_image(
+            surface,
+            pygame.Vector2(),
+            self._animators,
+            True
+        )
 
 
     def fade_in(self, duration: int):
