@@ -15,7 +15,7 @@ class MainMenu(Root):
         self.start_callback = None
         self.exit_callback = None
 
-    def update(self, delta):
+    def update(self, delta: int) -> bool:
         """Updates the main menu."""
         self.asteroid_spawner.update(delta)
         self.handle_input()
