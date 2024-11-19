@@ -63,10 +63,10 @@ class AsteroidShooterGame(pygamengn.Game):
         self.main_menu_ui.set_exit_callback(self.exit_game)
         self.toggle_ui(self.main_menu_ui, self.ui_fade_duration)
 
-        # self.pause_menu_ui.set_resume_callback(self.resume_play)
-        # self.pause_menu_ui.set_exit_callback(self.exit_game)
+        self.pause_menu_ui.set_resume_callback(self.resume_play)
+        self.pause_menu_ui.set_exit_callback(self.exit_game)
 
-        # self.debrief_panel.set_continue_callback(self.go_to_main_menu)
+        self.debrief_panel.set_continue_callback(self.go_to_main_menu)
 
     def update(self, delta):
         """Updates the game."""
@@ -76,10 +76,10 @@ class AsteroidShooterGame(pygamengn.Game):
             self.update_play(delta)
 
         elif self.mode == Mode.MAIN_MENU:
-            pass
+            pygame.mouse.set_visible(True)
 
         elif self.mode == Mode.PAUSE_MENU:
-            self.update_ui(delta, self.pause_menu_ui)
+            pygame.mouse.set_visible(True)
 
         elif self.mode == Mode.KILLING_ALL:
             pygame.mouse.set_visible(False)
