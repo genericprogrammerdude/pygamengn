@@ -143,9 +143,6 @@ class Component(GameObjectBase):
         bool
             Whether there was a component in the tree that did something with the information.
         """
-        if not self._parent_rect:
-            return False
-
         capture_event = False
         local_pos = pos - pygame.Vector2(self._parent_rect.topleft)
         for child in self.__children:

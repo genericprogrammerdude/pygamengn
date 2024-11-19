@@ -14,7 +14,7 @@ from asteroid_shooter_game import AsteroidShooterGame
 
 
 def main():
-    logging.basicConfig(level=logging.WARN, format="%(levelname)s: %(filename)s:%(lineno)d: %(message)s")
+    logging.basicConfig(level=logging.DEBUG, format="%(levelname)s: %(filename)s:%(lineno)d: %(message)s")
 
     pygame.init()
 

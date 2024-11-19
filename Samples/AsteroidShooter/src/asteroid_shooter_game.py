@@ -54,15 +54,21 @@ class AsteroidShooterGame(pygamengn.Game):
         self.level = level
         self.asteroid_multiplier = asteroid_multiplier
         self.waypoint_multiplier = waypoint_multiplier
+        self.ui_fade_duration = 200
+
         self.time = 0
         self.score = 0
         self.running = True
         self.mode = Mode.MAIN_MENU
+
         self.main_menu_ui.set_start_callback(self.start_play)
         self.main_menu_ui.set_exit_callback(self.exit_game)
-        self.pause_menu_ui.set_resume_callback(self.resume_play)
-        self.pause_menu_ui.set_exit_callback(self.exit_game)
-        self.debrief_panel.set_continue_callback(self.go_to_main_menu)
+        self.toggle_ui(self.main_menu_ui, self.ui_fade_duration)
+
+        # self.pause_menu_ui.set_resume_callback(self.resume_play)
+        # self.pause_menu_ui.set_exit_callback(self.exit_game)
+
+        # self.debrief_panel.set_continue_callback(self.go_to_main_menu)
 
     def update(self, delta):
         """Updates the game."""
@@ -72,7 +78,7 @@ class AsteroidShooterGame(pygamengn.Game):
             self.update_play(delta)
 
         elif self.mode == Mode.MAIN_MENU:
-            self.update_ui(delta, self.main_menu_ui)
+            pass
 
         elif self.mode == Mode.PAUSE_MENU:
             self.update_ui(delta, self.pause_menu_ui)
@@ -105,15 +111,6 @@ class AsteroidShooterGame(pygamengn.Game):
 
         self.level.update(delta)
 
-    def update_ui(self, delta, ui):
-        """Updates the given UI component."""
-        pygame.mouse.set_visible(True)
-        if self.time > 0:
-            self.blit_ui(self.score_ui)
-            self.blit_ui(self.time_ui)
-        ui.update(self.screen.get_rect(), delta)
-        self.blit_ui(ui)
-
     def update_killing(self, delta):
         """Updates game states when killing all game objects in the render group before starting play mode."""
         for event in pygame.event.get():
@@ -130,11 +127,13 @@ class AsteroidShooterGame(pygamengn.Game):
     def start_play(self):
         """Prepares the game to start playing."""
         self.mode = Mode.KILLING_ALL
+        self.toggle_ui(self.main_menu_ui)
 
     def resume_play(self):
         """Resumes PLAY mode from PAUSE_MENU mode."""
         self.mode = Mode.PLAY
         self.toggle_pause()
+        self.toggle_ui(self.pause_menu_ui, self.ui_fade_duration)
 
     def exit_game(self):
         """Exits the application."""
@@ -143,6 +142,7 @@ class AsteroidShooterGame(pygamengn.Game):
     def go_to_main_menu(self):
         """Goes back to the main menu after showing the debrief UI."""
         self.mode = Mode.MAIN_MENU
+        self.toggle_ui(self.main_menu_ui, self.ui_fade_duration)
 
     def handle_input(self):
         """Reads input and makes things happen."""
@@ -153,6 +153,7 @@ class AsteroidShooterGame(pygamengn.Game):
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
                     self.toggle_pause()
+                    self.toggle_ui(self.pause_menu_ui, self.ui_fade_duration)
                     self.mode = Mode.PAUSE_MENU
                 if event.key == pygame.K_SPACE and self.player:
                     self.player.fire()

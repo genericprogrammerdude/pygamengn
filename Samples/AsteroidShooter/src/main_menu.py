@@ -1,12 +1,12 @@
 import pygame
 
-from pygamengn.UI.panel import ColourPanel
+from pygamengn.UI.root import Root
 from pygamengn.class_registrar import ClassRegistrar
 from asteroid import AsteroidSpawner
 
 
 @ClassRegistrar.register("MainMenu")
-class MainMenu(ColourPanel):
+class MainMenu(Root):
     """Main menu UI."""
 
     def __init__(self, asteroid_spawner, **kwargs):
@@ -14,27 +14,27 @@ class MainMenu(ColourPanel):
         self.asteroid_spawner = asteroid_spawner
         self.start_callback = None
         self.exit_callback = None
-        self.multiplyaer_callback = None
 
-    def update(self, parent_rect, delta):
+    def update(self, delta):
         """Updates the main menu."""
-        super().update(parent_rect, delta)
-        self.handle_input()
         self.asteroid_spawner.update(delta)
+        self.handle_input()
+        return super().update(delta)
 
     def handle_input(self):
         """Reads and handles input."""
-        mouse_pos = pygame.mouse.get_pos()
-        self.propagate_mouse_pos(mouse_pos)
-
         for event in pygame.event.get():
             if event.type == pygame.QUIT or (event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE):
                 self.exit_callback()
-            elif event.type == pygame.MOUSEBUTTONUP:
-                if self.start_button.rect.collidepoint(mouse_pos):
+            elif event.type == pygame.MOUSEBUTTONDOWN:
+                if self.start_button.process_mouse_event(event.pos, event.type):
                     self.start_callback()
-                elif self.exit_button.rect.collidepoint(mouse_pos):
+                elif self.exit_button.process_mouse_event(event.pos, event.type):
                     self.exit_callback()
+            elif event.type == pygame.MOUSEMOTION:
+                self._component.process_mouse_event(event.pos, event.type)
+            elif event.type == pygame.VIDEORESIZE:
+                self._component.resize_to_parent(pygame.Rect(0, 0, event.w, event.h))
 
     def set_start_callback(self, start_callback):
         """Sets the function to call when the start button is clicked."""
