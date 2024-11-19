@@ -15,9 +15,10 @@ class Root(GameObjectBase):
     Every UI screen with UI components should inherit from Root.
     """
 
-    def __init__(self, component: Component, **kwargs):
+    def __init__(self, component: Component, update_on_pause: bool = False, **kwargs):
         super().__init__(**kwargs)
         self._component = component
+        self._update_on_pause = update_on_pause
         self._bind_children()
         self._static_blit_surface = None
         self._is_dirty = True
@@ -110,3 +111,8 @@ class Root(GameObjectBase):
                     setattr(self, component.name, component)
             for child in component:
                 stack.append(child)
+
+
+    @property
+    def update_on_pause(self) -> bool:
+        return self._update_on_pause

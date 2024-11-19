@@ -24,6 +24,7 @@ class Game(GameObjectBase):
         """Updates the game."""
 
         if self.is_paused:
+            real_delta = delta
             delta = 0
 
         # Update game objects for rendering
@@ -39,7 +40,7 @@ class Game(GameObjectBase):
         # Update any active UI screens
         i = 0
         while i < len(self._uis):
-            if not self._uis[i].update(delta):
+            if not self._uis[i].update(real_delta if self.is_paused and self._uis[i].update_on_pause else delta):
                 self._uis.pop(i)
             else:
                 i += 1
