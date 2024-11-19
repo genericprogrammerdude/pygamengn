@@ -71,12 +71,9 @@ class Component(GameObjectBase):
         """
         Recursively blit each static component in the tree to the given surface.
         """
-        # _blit_surface can change a component's self._rect (e.g., Spinner), so we need to call _blit_surface on every
-        # component as we walk the tree in order to compute each component's screen position. This is bad design;
-        # as a property, _blit_surface shouldn't change state.
-        bs = self._blit_surface
         topleft = pygame.Vector2(self._rect.topleft) + parent_pos
         if not self._is_dynamic:
+            bs = self._blit_surface
             dest.blit(bs, topleft, special_flags = pygame.BLEND_ALPHA_SDL2)
         for child in self.__children:
             child.build_static_blit_surface(dest, topleft)
@@ -91,12 +88,9 @@ class Component(GameObjectBase):
         is one that needs its blit surface updated every frame.
         """
         bss = []
-        # _blit_surface can change a component's self._rect (e.g., Spinner), so we need to call _blit_surface on every
-        # component as we walk the tree in order to compute each component's screen position. This is bad design;
-        # as a property, _blit_surface shouldn't change state.
-        bs = self._blit_surface
         topleft = pygame.Vector2(self._rect.topleft) + parent_pos
         if self._is_dynamic:
+            bs = self._blit_surface
             bss.append(BlitSurface(bs, topleft))
         for child in self.__children:
             bss.extend(child.get_dynamic_blit_surfaces(topleft))
@@ -169,6 +163,19 @@ class Component(GameObjectBase):
 
 
     @property
+    def normalized_pos(self) -> pygame.Vector2:
+        return self._normalized_pos
+
+
+    @normalized_pos.setter
+    def normalized_pos(self, normalized_pos: pygame.Vector2):
+        """Sets the normalized position for the component."""
+        if normalized_pos != self._normalized_pos:
+            self._normalized_pos = normalized_pos
+            self.resize_to_parent(self._parent_rect)
+
+
+    @property
     def _is_dynamic(self) -> bool:
         """
         Returns whether the component is dynamic, meaning that it needs to redraw and reblit on every frame.
@@ -192,7 +199,7 @@ class Component(GameObjectBase):
 
 
     @property
-    @abstractmethod
+    # @abstractmethod
     def _blit_surface(self) -> pygame.Surface:
         """Returns the image that the UI component wants to blit to the screen."""
         pass
