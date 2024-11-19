@@ -38,8 +38,7 @@ class AsteroidShooterGame(pygamengn.Game):
             main_menu_ui,
             pause_menu_ui,
             debrief_panel,
-            score_ui,
-            time_ui,
+            hud_ui,
             level,
             asteroid_multiplier,
             waypoint_multiplier,
@@ -49,8 +48,7 @@ class AsteroidShooterGame(pygamengn.Game):
         self.main_menu_ui = main_menu_ui
         self.pause_menu_ui = pause_menu_ui
         self.debrief_panel = debrief_panel
-        self.score_ui = score_ui
-        self.time_ui = time_ui
+        self.hud_ui = hud_ui
         self.level = level
         self.asteroid_multiplier = asteroid_multiplier
         self.waypoint_multiplier = waypoint_multiplier
@@ -101,13 +99,8 @@ class AsteroidShooterGame(pygamengn.Game):
             self.score = self.player.score
 
         # Put time and score text together
-        screen_rect = self.screen.get_rect()
-        self.score_ui.children[0].set_text(str(self.score))
-        self.time_ui.children[0].set_text(self.get_time_string())
-        self.score_ui.update(screen_rect, delta)
-        self.time_ui.update(screen_rect, delta)
-        self.blit_ui(self.score_ui)
-        self.blit_ui(self.time_ui)
+        self.hud_ui.score_text.text = f"{self.score}"
+        self.hud_ui.time_text.text = f"{self.get_time_string()}"
 
         self.level.update(delta)
 
@@ -127,7 +120,8 @@ class AsteroidShooterGame(pygamengn.Game):
     def start_play(self):
         """Prepares the game to start playing."""
         self.mode = Mode.KILLING_ALL
-        self.toggle_ui(self.main_menu_ui)
+        self.toggle_ui(self.main_menu_ui, self.ui_fade_duration)
+        self.toggle_ui(self.hud_ui, self.ui_fade_duration)
 
     def resume_play(self):
         """Resumes PLAY mode from PAUSE_MENU mode."""

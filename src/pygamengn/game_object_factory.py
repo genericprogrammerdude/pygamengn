@@ -108,7 +108,7 @@ class GameObjectFactory():
             return gob
         except KeyError:
             logging.critical(f"GameObjectBase subclass '{type_spec["class_name"]}' not found")
-            return None
+            raise GameObjectFactory.UnknownGameType(f"Unknown game type: {type_spec["class_name"]}")
 
     def __get_game_type(self, name: str) -> dict:
         """Gets the given game type, recursing into nested dictionaries as necessary."""
@@ -120,7 +120,7 @@ class GameObjectFactory():
             return game_type
         except KeyError:
             logging.critical(f"Unknown game type: {name}")
-            raise GameObjectFactory.UnknownGameType("".join(["Unknown game type: ", name]))
+            raise GameObjectFactory.UnknownGameType(f"Unknown game type: {name}")
 
     def __resolve_refs(self, attribute_key, attribute_value, special_key, resolved_refs):
         """Resolves references."""

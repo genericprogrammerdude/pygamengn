@@ -131,10 +131,15 @@ assets = {
     }
 }
 
-import inventory.gameplay_types, inventory.main_menu, inventory.pause_menu, inventory.debrief_panel
+import inventory.gameplay_types
+import inventory.main_menu
+import inventory.pause_menu
+import inventory.debrief_panel
+import inventory.hud
 game_types = (
     inventory.gameplay_types.game_types |
     inventory.main_menu.game_types |
     inventory.pause_menu.game_types |
-    inventory.debrief_panel.game_types
+    inventory.debrief_panel.game_types |
+    inventory.hud.game_types
 )
