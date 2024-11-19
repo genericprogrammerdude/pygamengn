@@ -72,17 +72,15 @@ class AsteroidShooterGame(pygamengn.Game):
         """Updates the game."""
 
         if self.mode == Mode.PLAY:
-            pygame.mouse.set_visible(False)
             self.update_play(delta)
 
         elif self.mode == Mode.MAIN_MENU:
-            pygame.mouse.set_visible(True)
+            pass
 
         elif self.mode == Mode.PAUSE_MENU:
-            pygame.mouse.set_visible(True)
+            pass
 
         elif self.mode == Mode.KILLING_ALL:
-            pygame.mouse.set_visible(False)
             self.update_killing(delta)
 
         elif self.mode == Mode.DEBRIEF:
@@ -120,12 +118,14 @@ class AsteroidShooterGame(pygamengn.Game):
     def start_play(self):
         """Prepares the game to start playing."""
         self.mode = Mode.KILLING_ALL
+        pygame.mouse.set_visible(False)
         self.toggle_ui(self.main_menu_ui, self.ui_fade_duration)
         self.toggle_ui(self.hud_ui, self.ui_fade_duration)
 
     def resume_play(self):
         """Resumes PLAY mode from PAUSE_MENU mode."""
         self.mode = Mode.PLAY
+        pygame.mouse.set_visible(False)
         self.toggle_pause()
         self.toggle_ui(self.pause_menu_ui, self.ui_fade_duration)
 
@@ -136,6 +136,7 @@ class AsteroidShooterGame(pygamengn.Game):
     def go_to_main_menu(self):
         """Goes back to the main menu after showing the debrief UI."""
         self.mode = Mode.MAIN_MENU
+        pygame.mouse.set_visible(True)
         self.toggle_ui(self.main_menu_ui, self.ui_fade_duration)
 
     def handle_input(self):
@@ -149,6 +150,7 @@ class AsteroidShooterGame(pygamengn.Game):
                     self.toggle_pause()
                     self.toggle_ui(self.pause_menu_ui, self.ui_fade_duration)
                     self.mode = Mode.PAUSE_MENU
+                    pygame.mouse.set_visible(True)
                 if event.key == pygame.K_SPACE and self.player:
                     self.player.fire()
                     input_replica.append(InputAction.FIRE)
