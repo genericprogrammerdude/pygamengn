@@ -75,9 +75,9 @@ class Game(GameObjectBase):
         """Invoked after drawing render_group to the screen. Implement this for any direct-drawing needs."""
         pass
 
-    def show_ui(self, ui: Root, fade_in_ms: int):
+    def show_ui(self, ui: Root, fade_in_ms: int = 0):
         """
-        Shows the specified ui, fading it into the screen during fade_in number of ms.
+        Shows the specified ui, fading it into the screen during fade_in_ms number of ms.
 
         After a UI Root is shown, its update() method will be invoked as part of Game's update loop until the UI
         is hidden.
@@ -87,10 +87,19 @@ class Game(GameObjectBase):
         ui.set_parent_rect(self.screen.get_rect())
         ui.fade_in(fade_in_ms)
 
-    def hide_ui(self, ui: Root, fade_out_ms: int):
-        """Hides the specified ui, fading it into the screen during fade_in number of ms."""
+    def hide_ui(self, ui: Root, fade_out_ms: int = 0):
+        """Hides the specified ui, fading it into the screen during fade_in_ms number of ms."""
         if ui in self._uis:
-            ui.fade_in(fade_in_ms)
+            ui.fade_out(fade_out_ms)
+
+    def toggle_ui(self, ui: Root, fade_ms: int = 0) -> bool:
+        """Shows or hides a UI, depending on whether it's currently being shown."""
+        if ui in self._uis:
+            self.hide_ui(ui, fade_ms)
+            return False
+        else:
+            self.show_ui(ui, fade_ms)
+            return True
 
     def blit_ui(self, ui):
         self.add_blit_surface(ui.root_blit_surface)

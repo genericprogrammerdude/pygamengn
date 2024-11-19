@@ -35,8 +35,8 @@ import photo_metadata
 import images_dict
 
 if DEVELOP_AND_DEBUG:
-    image_load_count = 5
-    image_index_start = 240
+    image_load_count = 15
+    image_index_start = 110
     photo_asset_names = [f"/Photo_{i + image_index_start:03}" for i in range(image_load_count)]
     images = {}
     for i in range(image_load_count):
@@ -58,9 +58,8 @@ game_types = {
             "asset:render_group": "RenderGroup",
             "game_object:collision_manager": "CollisionManager",
             "game_object:photo_spawner": "/PhotoSpawner",
-            "game_object:year_panel": "/YearPanel",
-            "game_object:bar_panel": "/BarPanel",
-            "game_object:photo_info_panel": "/PhotoInfoPanel",
+            "game_object:slideshow_ui": "/SlideshowUI",
+            "game_object:photo_info_ui": "/PhotoInfoPanel",
         },
         "CollisionManager": {
             "class_name": "CollisionManager",
@@ -80,101 +79,122 @@ game_types = {
             }
         }
     },
-    "YearPanel": {
-        "class_name": "ColourPanel",
+    "SlideshowUI": {
+        "class_name": "Root",
         "kwargs": {
-            "pos": [0, 0.87],
-            "size": [0.11, 0.05],
-            "game_object:children": [
-                "YearText",
-            ],
-            "fix_aspect_ratio": True,
-            "colour": [100, 100, 100, 150],
-            "game_object:corner_radii": "corner_radii",
-            "name": "year_panel",
+            "game_object:component": "ScreenContainer",
         },
-        "corner_radii": {
-            "class_name": "CornerRadii",
+        "ScreenContainer": {
+            "class_name": "Component",
             "kwargs": {
-                "top_left": 1,
-                "top_right": 1,
-                "bottom_right": 0,
-                "bottom_left": 0,
-            },
-        },
-        "YearText": {
-            "class_name": "TextPanel",
-            "kwargs": {
-                "pos": [0.02, 0.1],
                 "size": [1, 1],
-                "game_object:children": [],
-                "fix_aspect_ratio": True,
-                "asset:font_asset": "mechanical_font",
-                "text_colour": [255, 211, 0],
-                "name": "year_text",
-                "horz_align": "CENTRE",
-                "vert_align": "CENTRE",
-                "shadow": True,
-                "shadow_colour": [50, 40, 0],
+                "game_object:children": [
+                    "BarPanel",
+                    "YearPanel",
+                ],
             },
-        },
-    },
-    "BarPanel": {
-        "class_name": "ColourPanel",
-        "kwargs": {
-            "pos": [0, 0.92],
-            "size": [1, 0.015],
-            "game_object:children": [],
-            "fix_aspect_ratio": True,
-            "colour": [100, 100, 100, 150],
-            "name": "bar_panel",
+            "YearPanel": {
+                "class_name": "ColourPanel",
+                "kwargs": {
+                    "pos": [0, 0.87],
+                    "size": [0.11, 0.05],
+                    "game_object:children": [
+                        "YearText",
+                    ],
+                    "fix_aspect_ratio": True,
+                    "colour": [100, 100, 100, 150],
+                    "game_object:corner_radii": "corner_radii",
+                    "name": "year_panel",
+                },
+                "corner_radii": {
+                    "class_name": "CornerRadii",
+                    "kwargs": {
+                        "top_left": 1,
+                        "top_right": 1,
+                        "bottom_right": 0,
+                        "bottom_left": 0,
+                    },
+                },
+                "YearText": {
+                    "class_name": "TextPanel",
+                    "kwargs": {
+                        "pos": [0.02, 0.1],
+                        "size": [1, 1],
+                        "game_object:children": [],
+                        "fix_aspect_ratio": True,
+                        "asset:font_asset": "mechanical_font",
+                        "text_colour": [255, 211, 0],
+                        "name": "year_text",
+                        "horz_align": "CENTRE",
+                        "vert_align": "CENTRE",
+                        "shadow": True,
+                        "shadow_colour": [50, 40, 0],
+                    },
+                },
+            },
+            "BarPanel": {
+                "class_name": "ColourPanel",
+                "kwargs": {
+                    "pos": [0, 0.92],
+                    "size": [1, 0.015],
+                    "game_object:children": [],
+                    "fix_aspect_ratio": True,
+                    "colour": [100, 100, 100, 150],
+                    "name": "bar_panel",
+                },
+            },
         },
     },
     "PhotoInfoPanel": {
-        "class_name": "ColourPanel",
+        "class_name": "Root",
         "kwargs": {
-            "pos": [0, 0],
-            "size": [0.2, 0.13],
-            "game_object:children": [
-                "PhotoNameText",
-                "PhotoDateText",
-                "PhotoFocalPointText",
-                "PhotoScaleText",
-            ],
-            "fix_aspect_ratio": True,
-            "colour": [100, 100, 100, 150],
-            "name": "photo_info_panel",
+            "game_object:component": "RootPanel",
         },
-        "PhotoNameText": {
-            "base_type": "/PhotoInfoPanel/PhotoInfoText",
+        "RootPanel": {
+            "class_name": "ColourPanel",
             "kwargs": {
-                "pos": [0.02, 0.02],
-                "name": "photo_name_text",
-                "text": "Name:",
+                "pos": [0, 0],
+                "size": [0.2, 0.13],
+                "game_object:children": [
+                    "PhotoNameText",
+                    "PhotoDateText",
+                    "PhotoFocalPointText",
+                    "PhotoScaleText",
+                ],
+                "fix_aspect_ratio": True,
+                "colour": [100, 100, 100, 150],
             },
-        },
-        "PhotoDateText": {
-            "base_type": "/PhotoInfoPanel/PhotoInfoText",
-            "kwargs": {
-                "pos": [0.02, 0.27],
-                "name": "photo_date_text",
-                "text": "Date:",
+            "PhotoNameText": {
+                "base_type": "/PhotoInfoPanel/PhotoInfoText",
+                "kwargs": {
+                    "pos": [0.02, 0.02],
+                    "name": "photo_name_text",
+                    "text": "Name:",
+                },
             },
-        },
-        "PhotoFocalPointText": {
-            "base_type": "/PhotoInfoPanel/PhotoInfoText",
-            "kwargs": {
-                "pos": [0.02, 0.52],
-                "name": "photo_focal_point_text",
-                "text": "Focal point:",
+            "PhotoDateText": {
+                "base_type": "/PhotoInfoPanel/PhotoInfoText",
+                "kwargs": {
+                    "pos": [0.02, 0.27],
+                    "name": "photo_date_text",
+                    "text": "Date:",
+                },
             },
-        },
-        "PhotoScaleText": {
-            "base_type": "/PhotoInfoPanel/PhotoInfoText",
-            "kwargs": {
-                "pos": [0.02, 0.77],
-                "name": "photo_scale_text",
-                "text": "Scale:",
+            "PhotoFocalPointText": {
+                "base_type": "/PhotoInfoPanel/PhotoInfoText",
+                "kwargs": {
+                    "pos": [0.02, 0.52],
+                    "name": "photo_focal_point_text",
+                    "text": "Focal point:",
+                },
+            },
+            "PhotoScaleText": {
+                "base_type": "/PhotoInfoPanel/PhotoInfoText",
+                "kwargs": {
+                    "pos": [0.02, 0.77],
+                    "name": "photo_scale_text",
+                    "text": "Scale:",
+                },
             },
         },
         "PhotoInfoText": {

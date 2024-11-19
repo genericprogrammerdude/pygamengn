@@ -74,7 +74,8 @@ class Component(GameObjectBase):
         topleft = pygame.Vector2(self._rect.topleft) + parent_pos
         if not self._is_dynamic:
             bs = self._blit_surface
-            dest.blit(bs, topleft, special_flags = pygame.BLEND_ALPHA_SDL2)
+            if bs:
+                dest.blit(bs, topleft, special_flags = pygame.BLEND_ALPHA_SDL2)
         for child in self.__children:
             child.build_static_blit_surface(dest, topleft)
 
@@ -91,7 +92,8 @@ class Component(GameObjectBase):
         topleft = pygame.Vector2(self._rect.topleft) + parent_pos
         if self._is_dynamic:
             bs = self._blit_surface
-            bss.append(BlitSurface(bs, topleft))
+            if bs:
+                bss.append(BlitSurface(bs, topleft))
         for child in self.__children:
             bss.extend(child.get_dynamic_blit_surfaces(topleft))
         return bss
@@ -176,6 +178,11 @@ class Component(GameObjectBase):
 
 
     @property
+    def normalized_size(self) -> pygame.Vector2:
+        return self.__size
+
+
+    @property
     def _is_dynamic(self) -> bool:
         """
         Returns whether the component is dynamic, meaning that it needs to redraw and reblit on every frame.
@@ -199,10 +206,9 @@ class Component(GameObjectBase):
 
 
     @property
-    # @abstractmethod
     def _blit_surface(self) -> pygame.Surface:
         """Returns the image that the UI component wants to blit to the screen."""
-        pass
+        return None
 
 
     def __iter__(self):

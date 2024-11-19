@@ -85,7 +85,7 @@ class Root(GameObjectBase):
 
 
     def fade_out(self, duration: int):
-        """Fades teh UI out. After the specified duration the UI will ask to be removed from the update loop."""
+        """Fades the UI out. After the specified duration the UI will ask to be removed from the update loop."""
         self._fade(255, 0, duration)
 
 

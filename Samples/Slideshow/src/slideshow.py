@@ -10,36 +10,28 @@ class Slideshow(pygamengn.Game):
     def __init__(
             self,
             photo_spawner,
-            year_panel,
-            bar_panel,
-            photo_info_panel,
+            slideshow_ui,
+            photo_info_ui,
             **kwargs
         ):
         super().__init__(**kwargs)
         self.running = True
-        self.year_panel = year_panel
-        self.bar_panel = bar_panel
-        self.photo_info_panel = photo_info_panel
+
+        self.slideshow_ui = slideshow_ui
+        self.photo_info_ui = photo_info_ui
+        self.show_ui(self.slideshow_ui, 500)
+
         self.photo_spawner = photo_spawner
-        self.photo_spawner.set_year_panel(year_panel, bar_panel)
-        self.photo_spawner.set_info_panel(photo_info_panel)
+        self.photo_spawner.set_slideshow_ui(slideshow_ui)
+        self.photo_spawner.set_info_ui(photo_info_ui)
         self.photo_spawner.move_to_next_photo()
         self.is_paused = False
 
     def update(self, delta):
         """Updates the game."""
         self.handle_input()
-        if self.photo_spawner.show_info_panel:
-            self.photo_info_panel.update(self.screen.get_rect(), delta)
-            self.blit_ui(self.photo_info_panel)
-
-        self.bar_panel.update(self.screen.get_rect(), delta if not self.is_paused else 0)
-        self.blit_ui(self.bar_panel)
-        self.year_panel.update(self.screen.get_rect(), delta if not self.is_paused else 0)
-        self.blit_ui(self.year_panel)
 
         if not self.is_paused:
-            self.year_panel.update(self.screen.get_rect(), delta)
             self.photo_spawner.update(delta)
 
             if self.photo_spawner.done:
@@ -63,7 +55,7 @@ class Slideshow(pygamengn.Game):
                     self.photo_spawner.move_to_prev_photo()
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_i:
-                    self.photo_spawner.show_info_panel = not self.photo_spawner.show_info_panel
+                    self.photo_spawner.show_info_ui = self.toggle_ui(self.photo_info_ui, 200)
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_SPACE:
                     self.is_paused = not self.is_paused
