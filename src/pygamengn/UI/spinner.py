@@ -1,37 +1,43 @@
+import logging
+
 import pygame
 
-from pygamengn.UI.panel import Panel
+from pygamengn.UI.panel import TexturePanel
 from pygamengn.class_registrar import ClassRegistrar
 
 
+
 @ClassRegistrar.register("Spinner")
-class Spinner(Panel):
-    """UI component that spins the given image."""
+class Spinner(TexturePanel):
+    """UI component that spins its texture image at an angular velocity expressed in degrees per second."""
 
-    def __init__(self, angular_velocity, **kwargs):
+    def __init__(self, angular_velocity = 0, **kwargs):
         super().__init__(**kwargs)
-        self.angular_velocity = angular_velocity
-        self.angle = 0
+        self.__angular_velocity = angular_velocity
+        self.__angle = 0
 
-    def resize(self):
-        """Resizes the image to match the panel's size with its parent's rect."""
-        scale = self.rect.width / self.image_asset.get_rect().width
-        self.image = pygame.transform.rotozoom(self.image_asset, self.angle, scale)
-        # Shift self.rect so that image spins around its centre point
-        image_rect = self.image.get_rect()
-        self.rect.x -= ((image_rect.width - self.rect.width) / 2)
-        self.rect.y -= ((image_rect.height - self.rect.height) / 2)
-
-    def update(self, parent_rect, delta):
+    def update(self, delta: int) -> bool:
         """Updates the UI component and its children."""
-        super().update(parent_rect, delta)
-        spin_delta = (self.angular_velocity * delta) / 1000.0
-        self.angle = (self.angle + spin_delta) % 360
+        spin_delta = (self.__angular_velocity * delta) / 1000
+        self.__angle = (self.__angle + spin_delta) % 360
+        rv = super().update(delta)
+        return False
 
-    def is_dirty(self) -> bool:
-        """This component is always dirty because it's spinning."""
+    def _draw_surface(self):
+        scale = self.rect.width / self._image_asset.get_rect().width
+        self._surface = pygame.transform.rotozoom(self._image_asset, self.__angle, scale)
+        # Shift self._rect so that image spins around its centre point
+        surface_rect = self._surface.get_rect()
+        self.resize_to_parent(self._parent_rect)
+        self._rect.x -= ((surface_rect.width - self._rect.width) / 2)
+        self._rect.y -= ((surface_rect.height - self._rect.height) / 2)
+
+    @property
+    def _needs_redraw(self) -> bool:
+        """Spinner redraws its surface on every frame."""
         return True
 
-    def _needs_redraw(self, parent_rect: pygame.rect) -> bool:
-        """This component always needs redrawing because it's spinning."""
+    @property
+    def _is_dynamic(self) -> bool:
+        """Spinner is a dynamic component (it needs to redraw and reblit on every update)."""
         return True

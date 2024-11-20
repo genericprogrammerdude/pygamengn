@@ -43,7 +43,7 @@ class GameObjectFactory():
         """Creates a GameObject instance."""
         game_type = self.__get_game_type(name)
 
-        # logging.debug("Creating {0}".format(name))
+        logging.debug(f"Creating {name}")
 
         base_type = game_type.get("base_type")
         if base_type:
@@ -107,8 +107,8 @@ class GameObjectFactory():
             gob = gob_class(**resolved_refs, **kwargs)
             return gob
         except KeyError:
-            logging.critical("GameObjectBase subclass '{0}' not found".format(type_spec["class_name"]))
-            return None
+            logging.critical(f"GameObjectBase subclass '{type_spec["class_name"]}' not found")
+            raise GameObjectFactory.UnknownGameType(f"Unknown game type: {type_spec["class_name"]}")
 
     def __get_game_type(self, name: str) -> dict:
         """Gets the given game type, recursing into nested dictionaries as necessary."""
@@ -119,8 +119,8 @@ class GameObjectFactory():
                 game_type = game_type[key]
             return game_type
         except KeyError:
-            logging.critical("Unknown game type: {0}. Raising UnknownGameType exception".format(name))
-            raise GameObjectFactory.UnknownGameType("".join(["Unknown game type: ", name]))
+            logging.critical(f"Unknown game type: {name}")
+            raise GameObjectFactory.UnknownGameType(f"Unknown game type: {name}")
 
     def __resolve_refs(self, attribute_key, attribute_value, special_key, resolved_refs):
         """Resolves references."""
@@ -136,7 +136,7 @@ class GameObjectFactory():
             resolved_refs[key] = []
             self.__assign_asset_list(attribute_value, resolved_refs[key], special_key[1])
         else:
-            logging.warn("Unrecognized type '{0}' for key '{1}'".format(type(attribute_value), attribute_key))
+            logging.warn(f"Unrecognized type '{type(attribute_value)}' for key '{attribute_key}'")
 
     def set_layer_manager_asset_name(self, name):
         """Sets the layer manager asset name for the factory to automatically assign layers to GameObjects."""

@@ -52,6 +52,14 @@ class Interpolator:
     def duration(self, d):
         self.__duration = d
 
+    @property
+    def from_value(self):
+        return self.__from_value
+
+    @property
+    def to_value(self):
+        return self.__to_value
+
     def __ease_in(self, t: float) -> float:
         """Interpolator that eases in. It uses f(x) = x^2 in the range [0.0, 1.0] as its function."""
         return (t / self.__duration) ** 2

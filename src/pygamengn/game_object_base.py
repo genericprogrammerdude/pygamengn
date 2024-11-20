@@ -1,4 +1,4 @@
-from _py_abc import ABCMeta
+from abc import ABCMeta
 
 
 class GameObjectBase(metaclass=ABCMeta):

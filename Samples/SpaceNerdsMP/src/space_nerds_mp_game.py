@@ -91,12 +91,12 @@ class SpaceNerdsMPGame(pygamengn.Game):
         self.handle_input()
 
         # Track round time and score
-        if not self.player is None and self.player.alive() and not self.is_paused:
+        if not self.player is None and self.player.alive() and not self._is_paused:
             self.time += delta
             self.score = self.player.score
 
         # Put time and score text together
-        screen_rect = self.screen.get_rect()
+        screen_rect = self._screen.get_rect()
         self.score_ui.children[0].set_text(str(self.score))
         self.time_ui.children[0].set_text(self.get_time_string())
         self.score_ui.update(screen_rect, delta)
@@ -112,7 +112,7 @@ class SpaceNerdsMPGame(pygamengn.Game):
         if self.time > 0:
             self.blit_ui(self.score_ui)
             self.blit_ui(self.time_ui)
-        ui.update(self.screen.get_rect(), delta)
+        ui.update(self._screen.get_rect(), delta)
         self.blit_ui(ui)
 
     def update_killing(self, delta):
@@ -122,9 +122,9 @@ class SpaceNerdsMPGame(pygamengn.Game):
                 self.running = False
 
         self.kill_render_group()
-        if len(self.render_group.sprites()) <= 0:
+        if len(self._render_group.sprites()) <= 0:
             self.mode = Mode.PLAY
-            self.level.create_objects(self.render_group)
+            self.level.create_objects(self._render_group)
             self.set_player(self.level.player)
             self.time = 0
 
@@ -135,7 +135,7 @@ class SpaceNerdsMPGame(pygamengn.Game):
     def multiplayer_play(self):
         """Prepares the game to start playing."""
         self.mode = Mode.KILLING_ALL
-        self.replication_manager.start_replication()
+        self._replication_manager.start_replication()
 
     def resume_play(self):
         """Resumes PLAY mode from PAUSE_MENU mode."""
@@ -182,8 +182,8 @@ class SpaceNerdsMPGame(pygamengn.Game):
             self.player.velocity = self.player.mover.velocity * 0.8
             input_replica.append(InputAction.BACK)
 
-        if self.replication_manager:
-            self.replication_manager.propagate_input(input_replica)
+        if self._replication_manager:
+            self._replication_manager.propagate_input(input_replica)
 
     def handle_player_death(self):
         """Invoked when the player dies."""
@@ -199,7 +199,7 @@ class SpaceNerdsMPGame(pygamengn.Game):
         self.player = None
 
     def kill_render_group(self):
-        gobs = self.render_group.sprites()
+        gobs = self._render_group.sprites()
         for gob in gobs:
             gob.take_damage(random.randint(0, 5), None)
 

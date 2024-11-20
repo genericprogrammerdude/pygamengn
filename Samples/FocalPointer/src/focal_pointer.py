@@ -39,7 +39,7 @@ class FocalPointer(pygamengn.Game):
             # Show dot in focal point if there is one
             focal_point = self.photo_data[self.photo_index]["focal_point"]
             world_pos = self.normalized_to_world(focal_point, self.active_photo.rect)
-            pygame.draw.circle(self.screen, pygame.Color(240, 250, 70), world_pos, 0.01 * self.screen.get_rect().width)
+            pygame.draw.circle(self._screen, pygame.Color(240, 250, 70), world_pos, 0.01 * self._screen.get_rect().width)
 
         except KeyError as e:
             pass

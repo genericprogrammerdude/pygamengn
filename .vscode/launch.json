@@ -52,5 +52,18 @@
                 "PYGAME_HIDE_SUPPORT_PROMPT": "1",
             },
         },
+        {
+            "name": "UISample",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/Samples/UISample/src/main.py",
+            "console": "integratedTerminal",
+            "justMyCode": true,
+            "cwd": "${workspaceFolder}/Samples/UISample/src",
+            "env": {
+                "PYTHONPATH": "${workspaceFolder}/src",
+                "PYGAME_HIDE_SUPPORT_PROMPT": "1",
+            },
+        },
     ]
 }

@@ -1,11 +1,11 @@
 import pygame
 
-from pygamengn.UI.panel import ColourPanel
+from pygamengn.UI.root import Root
 from pygamengn.class_registrar import ClassRegistrar
 
 
 @ClassRegistrar.register("PauseMenu")
-class PauseMenu(ColourPanel):
+class PauseMenu(Root):
     """Pause menu UI."""
 
     def __init__(self, **kwargs):
@@ -13,26 +13,21 @@ class PauseMenu(ColourPanel):
         self.resume_callback = None
         self.exit_callback = None
 
-    def update(self, parent_rect, delta):
-        """Updates the main menu."""
-        super().update(parent_rect, delta)
-        self.handle_input()
-
-    def handle_input(self):
-        """Reads and handles input."""
-        mouse_pos = pygame.mouse.get_pos()
-        self.propagate_mouse_pos(mouse_pos)
-
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                self.exit_callback()
-            elif event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
+    def handle_event(self, event: pygame.event) -> bool:
+        rv = False
+        if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
+            self.resume_callback()
+            rv = True
+        elif event.type == pygame.MOUSEBUTTONDOWN:
+            if self.resume_button.process_mouse_event(event.pos, event.type):
                 self.resume_callback()
-            elif event.type == pygame.MOUSEBUTTONUP:
-                if self.resume_button.rect.collidepoint(mouse_pos):
-                    self.resume_callback()
-                elif self.exit_button.rect.collidepoint(mouse_pos):
-                    self.exit_callback()
+                rv = True
+            elif self.exit_button.process_mouse_event(event.pos, event.type):
+                self.exit_callback()
+                rv = True
+        else:
+            rv = super().handle_event(event)
+        return rv
 
     def set_resume_callback(self, resume_callback):
         """Sets the function to call when the resume button is clicked."""

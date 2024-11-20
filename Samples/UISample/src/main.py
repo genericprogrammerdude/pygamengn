@@ -10,11 +10,11 @@ if "PYGAME_HIDE_SUPPORT_PROMPT" not in os.environ:
 import pygame
 import pygamengn
 
-from asteroid_shooter_game import AsteroidShooterGame
+from ui_sample import UISample
 
 
 def main():
-    logging.basicConfig(level=logging.INFO, format="%(levelname)s: %(filename)s:%(lineno)d: %(message)s")
+    logging.basicConfig(level=logging.DEBUG, format="%(levelname)s: %(filename)s:%(lineno)d: %(message)s")
 
     pygame.init()
 
@@ -25,9 +25,9 @@ def main():
 
     # Initialize window
     pygame.display.set_icon(factory.images["ship"])
-    pygame.display.set_caption("Asteroid Shooter")
+    pygame.display.set_caption("UI Sample")
 
-    game = factory.create("AsteroidShooterGame", screen=screen)
+    game = factory.create("UISample", screen=screen)
 
     clock = pygame.time.Clock()
 
@@ -35,7 +35,7 @@ def main():
         delta = clock.get_time()
         game.update(delta)
 
-        clock.tick(60)
+        clock.tick(30)
 
     pygame.quit()
 

@@ -23,4 +23,5 @@ from pygamengn.network.server import Server
 from pygamengn.UI.font_asset import FontAsset
 from pygamengn.UI.panel import Panel, ColourPanel, TextPanel
 from pygamengn.UI.spinner import Spinner
-from pygamengn.UI.ui_base import UIBase
+from pygamengn.UI.component import Component
+from pygamengn.UI.root import Root
