@@ -61,13 +61,12 @@ class AsteroidShooterGame(pygamengn.Game):
 
         self.main_menu_ui.set_start_callback(self.start_play)
         self.main_menu_ui.set_exit_callback(self.exit_game)
-        # self.toggle_ui(self.main_menu_ui, self.ui_fade_duration)
+        self.toggle_ui(self.main_menu_ui, self.ui_fade_duration)
 
         self.pause_menu_ui.set_resume_callback(self.resume_play)
         self.pause_menu_ui.set_exit_callback(self.exit_game)
 
         self.debrief_ui.set_continue_callback(self.go_to_main_menu)
-        self.toggle_ui(self.debrief_ui, self.ui_fade_duration)
 
     def update(self, delta):
         """Updates the game."""
@@ -93,9 +92,9 @@ class AsteroidShooterGame(pygamengn.Game):
         self.handle_input()
 
         # Track round time and score
-        if not self.player is None and self.player.alive() and not self.is_paused:
+        if not self._player is None and self._player.alive() and not self._is_paused:
             self.time += delta
-            self.score = self.player.score
+            self.score = self._player.score
 
         # Put time and score text together
         self.hud_ui.score_text.text = f"{self.score}"
@@ -110,9 +109,9 @@ class AsteroidShooterGame(pygamengn.Game):
                 self.running = False
 
         self.kill_render_group()
-        if len(self.render_group.sprites()) <= 0:
+        if len(self._render_group.sprites()) <= 0:
             self.mode = Mode.PLAY
-            self.level.create_objects(self.render_group)
+            self.level.create_objects(self._render_group)
             self.set_player(self.level.player)
             self.time = 0
 
@@ -153,45 +152,45 @@ class AsteroidShooterGame(pygamengn.Game):
                     self.toggle_ui(self.pause_menu_ui, self.ui_fade_duration)
                     self.mode = Mode.PAUSE_MENU
                     pygame.mouse.set_visible(True)
-                if event.key == pygame.K_SPACE and self.player:
-                    self.player.fire()
+                if event.key == pygame.K_SPACE and self._player:
+                    self._player.fire()
                     input_replica.append(InputAction.FIRE)
 
-        if self.player is None:
+        if self._player is None:
             return
 
         # Handle input for movement
         pressed_keys = pygame.key.get_pressed()
         if pressed_keys[pygame.K_a]:
-            self.player.heading = self.player.heading + self.player.mover.angular_velocity
+            self._player.heading = self._player.heading + self._player.mover.angular_velocity
             input_replica.append(InputAction.LEFT)
         if pressed_keys[pygame.K_d]:
-            self.player.heading = self.player.heading - self.player.mover.angular_velocity
+            self._player.heading = self._player.heading - self._player.mover.angular_velocity
             input_replica.append(InputAction.RIGHT)
         if pressed_keys[pygame.K_w]:
-            self.player.set_velocity(self.player.mover.max_velocity)
+            self._player.set_velocity(self._player.mover.max_velocity)
             input_replica.append(InputAction.FORWARD)
         if pressed_keys[pygame.K_s]:
-            self.player.set_velocity(self.player.mover.velocity * 0.8)
+            self._player.set_velocity(self._player.mover.velocity * 0.8)
             input_replica.append(InputAction.BACK)
 
     def handle_player_death(self):
-        """Invoked when the player dies."""
+        """Invoked when the _player dies."""
         self.mode = Mode.DEBRIEF
         self.debrief_ui.set_score_data(
             self.score,
             self.time,
-            self.player.kills,
-            self.player.waypoints,
+            self._player.kills,
+            self._player.waypoints,
             self.asteroid_multiplier,
             self.waypoint_multiplier
         )
         pygame.mouse.set_visible(True)
         self.toggle_ui(self.debrief_ui, self.ui_fade_duration)
-        self.player = None
+        self._player = None
 
     def kill_render_group(self):
-        gobs = self.render_group.sprites()
+        gobs = self._render_group.sprites()
         for gob in gobs:
             gob.take_damage(random.randint(0, 5), None)
 

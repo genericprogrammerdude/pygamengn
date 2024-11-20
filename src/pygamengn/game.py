@@ -11,62 +11,62 @@ class Game(GameObjectBase):
     """Highest level entity to manage game state."""
 
     def __init__(self, render_group, collision_manager, screen, replication_manager=None):
-        self.render_group = render_group
-        self.collision_manager = collision_manager
-        self.replication_manager = replication_manager
-        self.screen = screen
-        self.is_paused = False
-        self.blit_surfaces = []
-        self.player = None
+        self._render_group = render_group
+        self._collision_manager = collision_manager
+        self._replication_manager = replication_manager
+        self._screen = screen
+        self._is_paused = False
+        self._blit_surfaces = []
+        self._player = None
         self._uis = []
 
     def update(self, delta):
         """Updates the game."""
 
-        if self.is_paused:
+        if self._is_paused:
             real_delta = delta
             delta = 0
 
         # Update game objects for rendering
-        self.render_group.update(self.screen.get_rect(), delta)
+        self._render_group.update(self._screen.get_rect(), delta)
 
         # Do collision detection and notification
-        self.collision_manager.do_collisions()
+        self._collision_manager.do_collisions()
 
         # Do data replication as appropriate
-        if self.replication_manager:
-            self.replication_manager.update(delta)
+        if self._replication_manager:
+            self._replication_manager.update(delta)
 
         # Update any active UI screens
         i = 0
         while i < len(self._uis):
-            if not self._uis[i].update(real_delta if self.is_paused and self._uis[i].update_on_pause else delta):
+            if not self._uis[i].update(real_delta if self._is_paused and self._uis[i].update_on_pause else delta):
                 self._uis.pop(i)
             else:
                 i += 1
 
         # Render
-        self.render_group.draw(self.screen)
+        self._render_group.draw(self._screen)
         self.direct_draw()
-        for blit_surface in self.blit_surfaces:
-            self.screen.blit(blit_surface.surface, blit_surface.topleft)
+        for blit_surface in self._blit_surfaces:
+            self._screen.blit(blit_surface.surface, blit_surface.topleft)
         for ui in self._uis:
-            ui.blit_to_surface(self.screen)
+            ui.blit_to_surface(self._screen)
         pygame.display.flip()
 
-        self.blit_surfaces.clear()
+        self._blit_surfaces.clear()
 
     def set_player(self, player):
         """Tells the updateables which game object is the player."""
-        self.player = player
-        self.player.die_callback(self.handle_player_death)
+        self._player = player
+        self._player.die_callback(self.handle_player_death)
 
     def toggle_pause(self):
-        self.is_paused = not self.is_paused
+        self._is_paused = not self._is_paused
 
     def add_blit_surface(self, blit_surface):
         """Adds a surface to blit when rendering. The list gets cleared after every game update."""
-        self.blit_surfaces.append(blit_surface)
+        self._blit_surfaces.append(blit_surface)
 
     def handle_player_death(self):
         """Invoked when the player dies."""
@@ -85,7 +85,7 @@ class Game(GameObjectBase):
         """
         if ui not in self._uis:
             self._uis.append(ui)
-        ui.set_parent_rect(self.screen.get_rect())
+        ui.set_parent_rect(self._screen.get_rect())
         ui.fade_in(fade_in_ms)
 
     def hide_ui(self, ui: Root, fade_out_ms: int = 0):
