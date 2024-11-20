@@ -21,23 +21,21 @@ class DebriefUI(Root):
 
     def update(self, delta: int) -> bool:
         """Updates the main menu."""
-        self.handle_input()
         self.asteroid_spawner.update(delta)
         return super().update(delta)
 
-    def handle_input(self):
-        """Reads and handles input."""
-        for event in pygame.event.get():
-            if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
+    def handle_event(self, event: pygame.event) -> bool:
+        rv = False
+        if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
+            self.continue_callback()
+            rv = True
+        elif event.type == pygame.MOUSEBUTTONDOWN:
+            if self.continue_button.process_mouse_event(event.pos, event.type):
                 self.continue_callback()
-
-            elif event.type == pygame.MOUSEBUTTONDOWN:
-                if self.continue_button.process_mouse_event(event.pos, event.type):
-                    self.continue_callback()
-            elif event.type == pygame.MOUSEMOTION:
-                self._component.process_mouse_event(event.pos, event.type)
-            elif event.type == pygame.VIDEORESIZE:
-                self._component.resize_to_parent(pygame.Rect(0, 0, event.w, event.h))
+                rv = True
+        else:
+            rv = super().handle_event(event)
+        return rv
 
     def set_continue_callback(self, continue_callback):
         """Sets the function to call when the continue button is clicked."""

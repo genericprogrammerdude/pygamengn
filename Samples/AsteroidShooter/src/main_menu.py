@@ -18,23 +18,24 @@ class MainMenu(Root):
     def update(self, delta: int) -> bool:
         """Updates the main menu."""
         self.asteroid_spawner.update(delta)
-        self.handle_input()
         return super().update(delta)
 
-    def handle_input(self):
-        """Reads and handles input."""
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT or (event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE):
+    def handle_event(self, event: pygame.event) -> bool:
+        """Handles the given input event."""
+        rv = False
+        if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
+            self.exit_callback()
+            rv = True
+        elif event.type == pygame.MOUSEBUTTONDOWN:
+            if self.start_button.process_mouse_event(event.pos, event.type):
+                self.start_callback()
+                rv = True
+            elif self.exit_button.process_mouse_event(event.pos, event.type):
                 self.exit_callback()
-            elif event.type == pygame.MOUSEBUTTONDOWN:
-                if self.start_button.process_mouse_event(event.pos, event.type):
-                    self.start_callback()
-                elif self.exit_button.process_mouse_event(event.pos, event.type):
-                    self.exit_callback()
-            elif event.type == pygame.MOUSEMOTION:
-                self._component.process_mouse_event(event.pos, event.type)
-            elif event.type == pygame.VIDEORESIZE:
-                self._component.resize_to_parent(pygame.Rect(0, 0, event.w, event.h))
+                rv = True
+        else:
+            rv = super().handle_event(event)
+        return rv
 
     def set_start_callback(self, start_callback):
         """Sets the function to call when the start button is clicked."""

@@ -3,21 +3,23 @@ import pygame
 
 from pygamengn.class_registrar import ClassRegistrar
 from pygamengn.game_object_base import GameObjectBase
+from pygamengn.input_handler import InputHandler
 from pygamengn.interpolator import Interpolator
 from pygamengn.UI.component import Component
 
 
 
 @ClassRegistrar.register("Root")
-class Root(GameObjectBase):
+class Root(InputHandler):
     """
     This class is the only UI class that Game knows and deals with; it provides a simple interface for Game to use.
     Every UI screen with UI components should inherit from Root.
     """
 
-    def __init__(self, component: Component, update_on_pause: bool = False, **kwargs):
+    def __init__(self, component: Component, handles_input: bool = True, update_on_pause: bool = False, **kwargs):
         super().__init__(**kwargs)
         self._component = component
+        self._handles_input = handles_input
         self._update_on_pause = update_on_pause
         self._bind_children()
         self._static_blit_surface = None
@@ -47,6 +49,20 @@ class Root(GameObjectBase):
                 self._fade_interp = None
                 self._fade_duration = 0
         return keep_updating
+
+
+    def handle_event(self, event: pygame.event) -> bool:
+        """
+        Handles the given input event.
+
+        Root subclasses should implement this method if they want to handle input events themselves.
+        """
+        rv = False
+        if event.type == pygame.MOUSEMOTION:
+            rv = self._component.process_mouse_event(event.pos, event.type)
+        elif event.type == pygame.VIDEORESIZE:
+            rv = self._component.resize_to_parent(pygame.Rect(0, 0, event.w, event.h))
+        return rv
 
 
     def blit_to_surface(self, surface: pygame.Surface):
@@ -116,3 +132,8 @@ class Root(GameObjectBase):
     @property
     def update_on_pause(self) -> bool:
         return self._update_on_pause
+
+    @property
+    def handles_input(self) -> bool:
+        """Returns whether this Root wants to handle input or not."""
+        return self._handles_input

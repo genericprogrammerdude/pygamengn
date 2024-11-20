@@ -3,6 +3,7 @@ game_types = {
         "class_name": "Root",
         "kwargs": {
             "game_object:component": "container",
+            "handles_input": False,
         },
         "container": {
             "class_name": "Component",
