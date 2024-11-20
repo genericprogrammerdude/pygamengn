@@ -132,6 +132,7 @@ class ColourPanel(Panel):
         self.__mouse_is_hovering = False
         self.__mouse_is_hovering_changed = False
         self.__hover_surface = None
+        self.__border_changed = False
 
 
     @property
@@ -230,6 +231,24 @@ class ColourPanel(Panel):
 
     def _reset_reblit_flags(self):
         self.__mouse_is_hovering_changed = False
+
+
+    @property
+    def _needs_redraw(self) -> bool:
+        return super()._needs_redraw or self.__border_changed
+
+
+    def _reset_redraw_flags(self):
+        super()._reset_redraw_flags()
+        self.__border_changed = False
+
+
+    def set_border(self, normalized_width: float, colour: tuple[int]):
+        if normalized_width != self.__border_width and colour != self.__border_colour:
+            self.__border_width = normalized_width
+            self.__border_colour = colour
+            self.__border_changed = True
+
 
 
 
