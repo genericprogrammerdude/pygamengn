@@ -72,6 +72,8 @@ game_types = {
                 "colour": [100, 100, 100, 128],
                 "corner_radius": 0.1,
                 "game_object:corner_radii": "corner_radii",
+                "border_width": 0.01,
+                "border_colour": [0, 200, 100],
             },
             "corner_radii": {
                 "class_name": "CornerRadii",
