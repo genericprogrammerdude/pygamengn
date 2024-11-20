@@ -149,6 +149,8 @@ game_types = {
         "class_name": "Root",
         "kwargs": {
             "game_object:component": "RootPanel",
+            "update_on_pause": True,
+            "handles_input": False,
         },
         "RootPanel": {
             "class_name": "ColourPanel",
