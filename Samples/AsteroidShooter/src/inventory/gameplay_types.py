@@ -6,7 +6,7 @@ game_types = {
             "game_object:collision_manager": "CollisionManager",
             "game_object:main_menu_ui": "/MainMenu",
             "game_object:pause_menu_ui": "/PauseMenu",
-            "game_object:debrief_panel": "/DebriefPanel",
+            "game_object:debrief_ui": "/DebriefUI",
             "game_object:hud_ui": "/Hud",
             "game_object:level": "/Level_02",
             "asteroid_multiplier": 10,

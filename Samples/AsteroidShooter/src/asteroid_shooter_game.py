@@ -4,7 +4,7 @@ import random
 import pygame
 import pygamengn
 
-from debrief_panel import DebriefPanel
+from debrief_ui import DebriefUI
 from main_menu import MainMenu
 from pause_menu import PauseMenu
 from shield import Shield
@@ -37,7 +37,7 @@ class AsteroidShooterGame(pygamengn.Game):
             self,
             main_menu_ui,
             pause_menu_ui,
-            debrief_panel,
+            debrief_ui,
             hud_ui,
             level,
             asteroid_multiplier,
@@ -47,7 +47,7 @@ class AsteroidShooterGame(pygamengn.Game):
         super().__init__(**kwargs)
         self.main_menu_ui = main_menu_ui
         self.pause_menu_ui = pause_menu_ui
-        self.debrief_panel = debrief_panel
+        self.debrief_ui = debrief_ui
         self.hud_ui = hud_ui
         self.level = level
         self.asteroid_multiplier = asteroid_multiplier
@@ -61,12 +61,13 @@ class AsteroidShooterGame(pygamengn.Game):
 
         self.main_menu_ui.set_start_callback(self.start_play)
         self.main_menu_ui.set_exit_callback(self.exit_game)
-        self.toggle_ui(self.main_menu_ui, self.ui_fade_duration)
+        # self.toggle_ui(self.main_menu_ui, self.ui_fade_duration)
 
         self.pause_menu_ui.set_resume_callback(self.resume_play)
         self.pause_menu_ui.set_exit_callback(self.exit_game)
 
-        self.debrief_panel.set_continue_callback(self.go_to_main_menu)
+        self.debrief_ui.set_continue_callback(self.go_to_main_menu)
+        self.toggle_ui(self.debrief_ui, self.ui_fade_duration)
 
     def update(self, delta):
         """Updates the game."""
@@ -84,7 +85,7 @@ class AsteroidShooterGame(pygamengn.Game):
             self.update_killing(delta)
 
         elif self.mode == Mode.DEBRIEF:
-            self.update_ui(delta, self.debrief_panel)
+            pass
 
         super().update(delta)
 
@@ -138,6 +139,7 @@ class AsteroidShooterGame(pygamengn.Game):
         self.mode = Mode.MAIN_MENU
         pygame.mouse.set_visible(True)
         self.toggle_ui(self.main_menu_ui, self.ui_fade_duration)
+        self.toggle_ui(self.debrief_ui, self.ui_fade_duration)
 
     def handle_input(self):
         """Reads input and makes things happen."""
@@ -176,7 +178,7 @@ class AsteroidShooterGame(pygamengn.Game):
     def handle_player_death(self):
         """Invoked when the player dies."""
         self.mode = Mode.DEBRIEF
-        self.debrief_panel.set_score_data(
+        self.debrief_ui.set_score_data(
             self.score,
             self.time,
             self.player.kills,
@@ -184,6 +186,8 @@ class AsteroidShooterGame(pygamengn.Game):
             self.asteroid_multiplier,
             self.waypoint_multiplier
         )
+        pygame.mouse.set_visible(True)
+        self.toggle_ui(self.debrief_ui, self.ui_fade_duration)
         self.player = None
 
     def kill_render_group(self):
