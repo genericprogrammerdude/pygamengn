@@ -14,7 +14,7 @@ from asteroid_shooter_game import AsteroidShooterGame
 
 
 def main():
-    logging.basicConfig(level=logging.INFO, format="%(levelname)s: %(filename)s:%(lineno)d: %(message)s")
+    logging.basicConfig(level=logging.WARN, format="%(levelname)s: %(filename)s:%(lineno)d: %(message)s")
 
     pygame.init()
 
@@ -42,7 +42,7 @@ def main():
 
 def create_factory(assets_dir) -> pygamengn.GameObjectFactory:
     """Instantiates GameObjectFactory, the factory that will create all the game objects."""
-    from inventory import images, sounds, assets, game_types
+    from inventory.inventory import images, sounds, assets, game_types
     factory = pygamengn.GameObjectFactory(
         pygamengn.ClassRegistrar.registry,
         assets_dir,
