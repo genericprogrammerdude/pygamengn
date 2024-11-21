@@ -126,7 +126,7 @@ assets = {
         "class_name": "FontAsset",
         "kwargs": {
             "font:fname": "fast-hand-font/FastHand-lgBMV.ttf",
-            "size": 43,
+            "size": 51,
         },
     },
 }
