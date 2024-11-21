@@ -16,7 +16,9 @@ class TextPanel(Panel):
         font_asset: FontAsset,
         text_colour: tuple[int],
         shadow_colour: tuple[int] = None,
-        text = " ",
+        text: str = "",
+        auto_font_size: bool = False,
+        auto_font_size_tolerance: float = 0.6,
         **kwargs
     ):
         super().__init__(**kwargs)
@@ -24,21 +26,39 @@ class TextPanel(Panel):
         self.__text_colour = text_colour
         self.__shadow_colour = shadow_colour
         self.__text = text
+        self.__auto_font_size = auto_font_size
         self.__text_changed = False
+        self.__font_size = 0
+
+
+    def resize_to_parent(self, parent_rect: pygame.Rect):
+        super().resize_to_parent(parent_rect)
+        if self.__auto_font_size:
+            self.__font_size = self.__font_asset.get_font_size(
+                self.__text, pygame.Vector2(self._rect.size) * self.__auto_font_size_tolerance
+            )
 
 
     def _draw_surface(self):
         """TextPanel ignores its parent rect and renders to the font size."""
         super()._draw_surface()
-        if self.__shadow_colour:
-            shadow_surf = self.__font_asset.render(self.__text, self.__shadow_colour)
-            front_surf = self.__font_asset.render(self.__text, self.__text_colour)
-            dest = -0.06 * shadow_surf.get_rect().height
-            shadow_surf.blit(front_surf, (dest, dest))
-            self._surface = shadow_surf
-        else:
-            self._surface = self.__font_asset.render(self.__text, self.__text_colour)
+        self._surface = self.__font_asset.render(
+            text = self.__text,
+            text_colour = self.__text_colour,
+            shadow_colour = self.__shadow_colour,
+            font_size = self.__font_size
+        )
         self._align()
+
+
+    @property
+    def _needs_redraw(self) -> bool:
+        return super()._needs_redraw or self.__text_changed
+
+
+    def _reset_redraw_flags(self):
+        super()._reset_redraw_flags()
+        self.__text_changed = False
 
 
     @property
@@ -54,10 +74,17 @@ class TextPanel(Panel):
 
 
     @property
-    def _needs_redraw(self) -> bool:
-        return super()._needs_redraw or self.__text_changed
+    def font_asset(self) -> FontAsset:
+        return self.__font_asset
 
 
-    def _reset_redraw_flags(self):
-        super()._reset_redraw_flags()
-        self.__text_changed = False
+    @property
+    def font_size(self) -> int:
+        return self.__font_size
+
+
+    @font_size.setter
+    def font_size(self, font_size: int):
+        if font_size != self.__font_size:
+            self.__font_size = font_size
+            self.__text_changed = True

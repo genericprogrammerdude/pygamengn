@@ -36,9 +36,10 @@ game_types = {
                 "StartText": {
                     "base_type": "/MainMenu/MenuButton/MenuButtonText",
                     "kwargs": {
-                        "text": "Start"
-                    }
-                }
+                        "text": "Start",
+                        "name": "start_text",
+                    },
+                },
             },
             "ExitButton": {
                 "base_type": "/MainMenu/MenuButton",
@@ -52,9 +53,10 @@ game_types = {
                 "ExitText": {
                     "base_type": "/MainMenu/MenuButton/MenuButtonText",
                     "kwargs": {
-                        "text": "Exit"
-                    }
-                }
+                        "text": "Exit",
+                        "name": "exit_text",
+                    },
+                },
             },
         },
         "MenuButton": {

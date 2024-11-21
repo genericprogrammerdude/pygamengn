@@ -20,6 +20,22 @@ class MainMenu(Root):
         self.asteroid_spawner.update(delta)
         return super().update(delta)
 
+    def set_parent_rect(self, rect: pygame.Rect):
+        super().set_parent_rect(rect)
+        # Set a uniform font size for all TextPanels
+        font_asset = self.start_text.font_asset
+        start_font_size = font_asset.get_font_size(
+            self.start_text.text,
+            pygame.Vector2(self.start_text.rect.size) * 0.5
+        )
+        exit_font_size = font_asset.get_font_size(
+            self.exit_text.text,
+            pygame.Vector2(self.exit_text.rect.size) * 0.5
+        )
+        font_size = min(start_font_size, exit_font_size)
+        self.start_text.font_size = font_size
+        self.exit_text.font_size = font_size
+
     def handle_event(self, event: pygame.event.Event) -> bool:
         """Handles the given input event."""
         rv = False

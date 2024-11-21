@@ -56,32 +56,32 @@ assets = {
             "grid_draw": False,
             "grid_colour": [100, 100, 100],
             "grid_interval": 100,
-            "image:background": "background"
-        }
+            "image:background": "background",
+        },
     },
     "PlayerGroup": {
         "class_name": "SpriteGroup",
-        "kwargs": {}
+        "kwargs": {},
     },
     "PlayerProjectilesGroup": {
         "class_name": "SpriteGroup",
-        "kwargs": {}
+        "kwargs": {},
     },
     "AsteroidsGroup": {
         "class_name": "SpriteGroup",
-        "kwargs": {}
+        "kwargs": {},
     },
     "AsteroidProjectilesGroup": {
         "class_name": "SpriteGroup",
-        "kwargs": {}
+        "kwargs": {},
     },
     "AsteroidTurretsGroup": {
         "class_name": "SpriteGroup",
-        "kwargs": {}
+        "kwargs": {},
     },
     "TriggersGroup": {
         "class_name": "SpriteGroup",
-        "kwargs": {}
+        "kwargs": {},
     },
     "LayerManager": {
         "class_name": "LayerManager",
@@ -98,37 +98,37 @@ assets = {
                 ["NavArrow"],
                 ["AnimatedTexture"],
                 ["HealthBar"]
-            ]
-        }
+            ],
+        },
     },
     "explosion_small_atlas": {
         "class_name": "Atlas",
         "kwargs": {
             "image:images": ["explosion1"],
-            "frame_size": [256, 256]
-        }
+            "frame_size": [256, 256],
+        },
     },
     "explosion_atlas": {
         "class_name": "Atlas",
         "kwargs": {
             "image:images": ["explosion2", "explosion3", "explosion4"],
-            "frame_size": [256, 256]
-        }
+            "frame_size": [256, 256],
+        },
     },
     "explosion_big_atlas": {
         "class_name": "Atlas",
         "kwargs": {
             "image:images": ["explosion3", "explosion4"],
-            "frame_size": [256, 256]
-        }
+            "frame_size": [256, 256],
+        },
     },
     "fast_hand_font": {
         "class_name": "FontAsset",
         "kwargs": {
             "font:fname": "fast-hand-font/FastHand-lgBMV.ttf",
-            "size": 42
-        }
-    }
+            "size": 43,
+        },
+    },
 }
 
 import inventory.gameplay_types
