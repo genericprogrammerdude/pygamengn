@@ -51,7 +51,7 @@ class Root(InputHandler):
         return keep_updating
 
 
-    def handle_event(self, event: pygame.event) -> bool:
+    def handle_event(self, event: pygame.event.Event) -> bool:
         """
         Handles the given input event.
 

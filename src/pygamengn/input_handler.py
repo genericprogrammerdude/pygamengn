@@ -14,7 +14,7 @@ class InputHandler(GameObjectBase):
         super().__init__(**kwargs)
 
     @abstractmethod
-    def handle_event(self, event: pygame.event) -> bool:
+    def handle_event(self, event: pygame.event.Event) -> bool:
         """Processes the given event and returns True if it handled it, False otherwise."""
         pass
 
@@ -25,7 +25,7 @@ class DefaultInputHandler(InputHandler):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 
-    def handle_event(self, event: pygame.event) -> bool:
+    def handle_event(self, event: pygame.event.Event) -> bool:
         """Processes the given event and returns True if it handled it, False otherwise."""
         rv = False
         if event.type == pygame.QUIT:

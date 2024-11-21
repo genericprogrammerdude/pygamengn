@@ -24,7 +24,7 @@ class DebriefUI(Root):
         self.asteroid_spawner.update(delta)
         return super().update(delta)
 
-    def handle_event(self, event: pygame.event) -> bool:
+    def handle_event(self, event: pygame.event.Event) -> bool:
         rv = False
         if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
             self.continue_callback()
