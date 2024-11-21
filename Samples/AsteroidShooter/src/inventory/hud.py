@@ -38,7 +38,7 @@ game_types = {
                 "class_name": "ColourPanel",
                 "kwargs": {
                     "horz_align": "RIGHT",
-                    "vert_align": "BOTTOM",
+                    "vert_align": "TOP",
                     "size": [0.12, 0.06],
                     "game_object:children": [
                         "TimeText"
