@@ -103,7 +103,6 @@ game_types = {
                         "shadow_colour": [0, 20, 10],
                         "horz_align": "CENTRE",
                         "vert_align": "CENTRE",
-                        "shadow": True,
                     }
                 }
             },

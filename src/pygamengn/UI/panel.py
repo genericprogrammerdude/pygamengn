@@ -45,7 +45,7 @@ class Panel(Component):
             self._reset_redraw_flags()
         return super().update(delta) or needs_redraw or needs_reblit
 
-    def resize_to_parent(self, parent_rect: pygame.rect):
+    def resize_to_parent(self, parent_rect: pygame.Rect):
         super().resize_to_parent(parent_rect)
         self._parent_rect_changed = True
 

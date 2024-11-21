@@ -99,7 +99,7 @@ class Component(GameObjectBase):
         return bss
 
 
-    def resize_to_parent(self, parent_rect: pygame.rect):
+    def resize_to_parent(self, parent_rect: pygame.Rect):
         """
         Resizes the component's rect to match size with its parent's rect.
 
@@ -198,7 +198,7 @@ class Component(GameObjectBase):
 
 
     @property
-    def rect(self) -> pygame.rect:
+    def rect(self) -> pygame.Rect:
         return self._rect
 
 

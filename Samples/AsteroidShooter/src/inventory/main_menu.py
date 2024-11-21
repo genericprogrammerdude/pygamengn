@@ -77,7 +77,6 @@ game_types = {
                     "fix_aspect_ratio": True,
                     "asset:font_asset": "fast_hand_font",
                     "text_colour": [0, 200, 100],
-                    "shadow": True,
                     "shadow_colour": [0, 50, 25],
                 }
             }

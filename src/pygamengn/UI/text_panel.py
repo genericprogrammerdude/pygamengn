@@ -3,6 +3,7 @@ import pygame
 
 from pygamengn.class_registrar import ClassRegistrar
 from pygamengn.UI.panel import Panel
+from pygamengn.UI.font_asset import FontAsset
 
 
 
@@ -12,17 +13,15 @@ class TextPanel(Panel):
 
     def __init__(
         self,
-        font_asset,
-        text_colour,
-        shadow = False,
-        shadow_colour = (0, 0, 0),
-        text=" ",
+        font_asset: FontAsset,
+        text_colour: tuple[int],
+        shadow_colour: tuple[int] = None,
+        text = " ",
         **kwargs
     ):
         super().__init__(**kwargs)
         self.__font_asset = font_asset
         self.__text_colour = text_colour
-        self.__shadow = shadow
         self.__shadow_colour = shadow_colour
         self.__text = text
         self.__text_changed = False
@@ -31,14 +30,14 @@ class TextPanel(Panel):
     def _draw_surface(self):
         """TextPanel ignores its parent rect and renders to the font size."""
         super()._draw_surface()
-        if self.__shadow:
-            shadow_surf = self.__font_asset.font.render(self.__text, True, self.__shadow_colour)
-            front_surf = self.__font_asset.font.render(self.__text, True, self.__text_colour)
+        if self.__shadow_colour:
+            shadow_surf = self.__font_asset.render(self.__text, self.__shadow_colour)
+            front_surf = self.__font_asset.render(self.__text, self.__text_colour)
             dest = -0.06 * shadow_surf.get_rect().height
             shadow_surf.blit(front_surf, (dest, dest))
             self._surface = shadow_surf
         else:
-            self._surface = self.__font_asset.font.render(self.__text, True, self.__text_colour)
+            self._surface = self.__font_asset.render(self.__text, self.__text_colour)
         self._align()
 
 
