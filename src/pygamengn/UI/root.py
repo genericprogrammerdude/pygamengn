@@ -5,7 +5,9 @@ from pygamengn.class_registrar import ClassRegistrar
 from pygamengn.game_object_base import GameObjectBase
 from pygamengn.input_handler import InputHandler
 from pygamengn.interpolator import Interpolator
+
 from pygamengn.UI.component import Component
+from pygamengn.UI.text_panel import TextPanel
 
 
 
@@ -135,3 +137,19 @@ class Root(InputHandler):
     def handles_input(self) -> bool:
         """Returns whether this Root wants to handle input or not."""
         return self._handles_input
+
+    def _set_uniform_font_size(self, text_panels: list[TextPanel], size_factor: float = 1.0):
+        """
+        Sets the same font size for the given TextPanels, selecting a size that fits all of them and using the
+        FontAsset of the first on the list.
+        """
+        font_asset = text_panels[0].font_asset
+        font_size = 999999
+
+        for tp in text_panels:
+            size = font_asset.get_font_size(tp.text, pygame.Vector2(tp.rect.size) * size_factor)
+            if size < font_size:
+                font_size = size
+
+        for tp in text_panels:
+            tp.font_size = font_size

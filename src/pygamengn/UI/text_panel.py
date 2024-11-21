@@ -18,7 +18,7 @@ class TextPanel(Panel):
         shadow_colour: tuple[int] = None,
         text: str = "",
         auto_font_size: bool = False,
-        auto_font_size_tolerance: float = 0.6,
+        auto_font_size_factor: float = 1.0,
         **kwargs
     ):
         super().__init__(**kwargs)
@@ -27,6 +27,7 @@ class TextPanel(Panel):
         self.__shadow_colour = shadow_colour
         self.__text = text
         self.__auto_font_size = auto_font_size
+        self.__auto_font_size_factor = auto_font_size_factor
         self.__text_changed = False
         self.__font_size = 0
 
@@ -35,7 +36,7 @@ class TextPanel(Panel):
         super().resize_to_parent(parent_rect)
         if self.__auto_font_size:
             self.__font_size = self.__font_asset.get_font_size(
-                self.__text, pygame.Vector2(self._rect.size) * self.__auto_font_size_tolerance
+                self.__text, pygame.Vector2(self._rect.size) * self.__auto_font_size_factor
             )
 
 
@@ -71,6 +72,10 @@ class TextPanel(Panel):
         if self.__text != text:
             self.__text = text
             self.__text_changed = True
+            if self.__auto_font_size:
+                self.__font_size = self.__font_asset.get_font_size(
+                    self.__text, pygame.Vector2(self._rect.size) * self.__auto_font_size_factor
+                )
 
 
     @property

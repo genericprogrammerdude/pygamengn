@@ -21,6 +21,10 @@ class MainMenu(Root):
             self.fade_in(500)
         return True
 
+    def set_parent_rect(self, rect: pygame.Rect):
+        super().set_parent_rect(rect)
+        self._set_uniform_font_size([self.start_text, self.exit_text], 0.8)
+
     def handle_event(self, event: pygame.event) -> bool:
         """Reads and handles input."""
         rv = False
@@ -30,7 +34,7 @@ class MainMenu(Root):
                 rv = True
         elif event.type == pygame.MOUSEBUTTONDOWN:
             if self.start_button.process_mouse_event(event.pos, event.type):
-                self.exit_button_text.text = "Click me to exit!"
+                self.exit_text.text = "Click me to exit!"
                 self.exit_button.set_border(0.01, (250, 100, 150))
                 self.count += 1
                 if self.count % 2 != 0:
