@@ -31,8 +31,15 @@ class DefaultInputHandler(InputHandler):
         if event.type == pygame.QUIT:
             self.exit_game()
             rv = True
+        elif event.type == pygame.VIDEORESIZE:
+            self.resize_window(pygame.Rect(0, 0, event.w, event.h))
+            rv = True
         return rv
 
     @abstractmethod
     def exit_game(self):
+        pass
+
+    @abstractmethod
+    def resize_window(self, rect: pygame.Rect):
         pass

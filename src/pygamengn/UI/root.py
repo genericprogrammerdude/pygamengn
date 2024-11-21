@@ -60,8 +60,6 @@ class Root(InputHandler):
         rv = False
         if event.type == pygame.MOUSEMOTION:
             rv = self._component.process_mouse_event(event.pos, event.type)
-        elif event.type == pygame.VIDEORESIZE:
-            rv = self._component.resize_to_parent(pygame.Rect(0, 0, event.w, event.h))
         return rv
 
 

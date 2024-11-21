@@ -67,11 +67,6 @@ class Game(DefaultInputHandler):
         self._blit_surfaces.clear()
 
 
-    def exit_game(self):
-        """Flags that the game is ready to stop execution and exit the application."""
-        self._running = False
-
-
     @property
     def running(self) -> bool:
         return self._running
@@ -105,6 +100,16 @@ class Game(DefaultInputHandler):
         assert(self._input_stack[-1] == input_handler)
         self._input_stack.pop()
         logging.info(f"Popped {input_handler}")
+
+
+    def exit_game(self):
+        """Flags that the game is ready to stop execution and exit the application."""
+        self._running = False
+
+
+    def resize_window(self, rect: pygame.Rect):
+        for ui in self._uis:
+            ui.set_parent_rect(rect)
 
 
 
