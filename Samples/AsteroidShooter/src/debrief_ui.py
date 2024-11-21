@@ -18,11 +18,25 @@ class DebriefUI(Root):
         self.waypoint_count = 0
         self.asteroid_multiplier = 0
         self.waypoint_multiplier = 0
+        self.__uniform_font_panels = [
+            self.asteroid_count_text,
+            self.asteroid_multiplier_text,
+            self.asteroid_total_text,
+            self.waypoint_count_text,
+            self.waypoint_multiplier_text,
+            self.waypoint_total_text,
+            self.total_score_text,
+            self.final_score_text,
+        ]
 
     def update(self, delta: int) -> bool:
         """Updates the main menu."""
         self.asteroid_spawner.update(delta)
         return super().update(delta)
+
+    def set_parent_rect(self, rect: pygame.Rect):
+        super().set_parent_rect(rect)
+        self._set_uniform_font_size(self.__uniform_font_panels, 0.6)
 
     def handle_event(self, event: pygame.event.Event) -> bool:
         rv = False

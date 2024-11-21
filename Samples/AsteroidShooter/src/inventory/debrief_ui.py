@@ -74,29 +74,29 @@ game_types = {
                     "kwargs": {
                         "game_object:children": [
                             "MultiplierText"
-                        ]
+                        ],
                     },
                     "MultiplierText": {
                         "base_type": "/DebriefUI/DebriefRowPanel/RowText",
                         "kwargs": {
-                            "name": "asteroid_multiplier_text"
-                        }
-                    }
+                            "name": "asteroid_multiplier_text",
+                        },
+                    },
                 },
                 "Total": {
                     "base_type": "/DebriefUI/DebriefRowPanel/Total",
                     "kwargs": {
                         "game_object:children": [
                             "TotalText"
-                        ]
+                        ],
                     },
                     "TotalText": {
                         "base_type": "/DebriefUI/DebriefRowPanel/RowText",
                         "kwargs": {
-                            "name": "asteroid_total_text"
-                        }
-                    }
-                }
+                            "name": "asteroid_total_text",
+                        },
+                    },
+                },
             },
             "WaypointRowPanel": {
                 "base_type": "/DebriefUI/DebriefRowPanel",
@@ -105,59 +105,59 @@ game_types = {
                         "Spinner",
                         "Count",
                         "Multiplier",
-                        "Total"
+                        "Total",
                     ],
-                    "pos": [0.1, 0.3]
+                    "pos": [0.1, 0.3],
                 },
                 "Spinner": {
                     "base_type": "/DebriefUI/DebriefRowPanel/Spinner",
                     "kwargs": {
                         "image:image_asset": "waypoint",
-                        "angular_velocity":-45
-                    }
+                        "angular_velocity":-45,
+                    },
                 },
                 "Count": {
                     "base_type": "/DebriefUI/DebriefRowPanel/Count",
                     "kwargs": {
                         "game_object:children": [
-                            "CountText"
-                        ]
+                            "CountText",
+                        ],
                     },
                     "CountText": {
                         "base_type": "/DebriefUI/DebriefRowPanel/RowText",
                         "kwargs": {
-                            "name": "waypoint_count_text"
-                        }
-                    }
+                            "name": "waypoint_count_text",
+                        },
+                    },
                 },
                 "Multiplier": {
                     "base_type": "/DebriefUI/DebriefRowPanel/Multiplier",
                     "kwargs": {
                         "game_object:children": [
-                            "MultiplierText"
-                        ]
+                            "MultiplierText",
+                        ],
                     },
                     "MultiplierText": {
                         "base_type": "/DebriefUI/DebriefRowPanel/RowText",
                         "kwargs": {
-                            "name": "waypoint_multiplier_text"
-                        }
-                    }
+                            "name": "waypoint_multiplier_text",
+                        },
+                    },
                 },
                 "Total": {
                     "base_type": "/DebriefUI/DebriefRowPanel/Total",
                     "kwargs": {
                         "game_object:children": [
-                            "TotalText"
-                        ]
+                            "TotalText",
+                        ],
                     },
                     "TotalText": {
                         "base_type": "/DebriefUI/DebriefRowPanel/RowText",
                         "kwargs": {
-                            "name": "waypoint_total_text"
-                        }
-                    }
-                }
+                            "name": "waypoint_total_text",
+                        },
+                    },
+                },
             },
             "FinalScorePanel": {
                 "class_name": "ColourPanel",
@@ -167,11 +167,11 @@ game_types = {
                     "game_object:children": [
                         "Spinner",
                         "TotalTitlePanel",
-                        "TotalScorePanel"
+                        "TotalScorePanel",
                     ],
                     "corner_radius": 0.15,
                     "fix_aspect_ratio": False,
-                    "colour": [150, 150, 150, 100]
+                    "colour": [150, 150, 150, 100],
                 },
                 "Spinner": {
                     "class_name": "Spinner",
@@ -180,8 +180,8 @@ game_types = {
                         "size": [0.1, 1],
                         "fix_aspect_ratio": True,
                         "image:image_asset": "ship",
-                        "angular_velocity": 30
-                    }
+                        "angular_velocity": 30,
+                    },
                 },
                 "TotalTitlePanel": {
                     "class_name": "ColourPanel",
@@ -189,11 +189,11 @@ game_types = {
                         "pos": [0.1, 0.08],
                         "size": [0.6, 1],
                         "game_object:children": [
-                            "TotalTitleText"
+                            "TotalTitleText",
                         ],
                         "fix_aspect_ratio": False,
                         "corner_radius": 0.15,
-                        "colour": [0, 0, 0, 0]
+                        "colour": [0, 0, 0, 0],
                     },
                     "TotalTitleText": {
                         "class_name": "TextPanel",
@@ -205,9 +205,10 @@ game_types = {
                             "text_colour": [0, 200, 100],
                             "horz_align": "RIGHT",
                             "vert_align": "CENTRE",
-                            "text": "Final Score"
-                        }
-                    }
+                            "text": "Final Score",
+                            "name": "final_score_text",
+                        },
+                    },
                 },
                 "TotalScorePanel": {
                     "class_name": "ColourPanel",
@@ -215,11 +216,11 @@ game_types = {
                         "pos": [0.7, 0],
                         "size": [0.3, 1],
                         "game_object:children": [
-                            "TotalText"
+                            "TotalText",
                         ],
                         "fix_aspect_ratio": False,
                         "corner_radius": 0.15,
-                        "colour": [0, 0, 0, 0]
+                        "colour": [0, 0, 0, 0],
                     },
                     "TotalText": {
                         "class_name": "TextPanel",
@@ -232,10 +233,10 @@ game_types = {
                             "text_colour": [0, 200, 100],
                             "horz_align": "RIGHT",
                             "vert_align": "CENTRE",
-                            "text": "0"
-                        }
-                    }
-                }
+                            "text": "0",
+                        },
+                    },
+                },
             },
         },
         "DebriefRowPanel": {

@@ -29,8 +29,10 @@ game_types = {
                     "base_type": "/Hud/HudText",
                     "kwargs": {
                         "horz_align": "RIGHT",
-                        "text": "0000",
+                        "text": "0",
                         "name": "score_text",
+                        "auto_font_size": True,
+                        "auto_font_size_factor": 0.8,
                     },
                 },
             },
@@ -52,6 +54,8 @@ game_types = {
                     "kwargs": {
                         "text": "00:00",
                         "name": "time_text",
+                        "auto_font_size": True,
+                        "auto_font_size_factor": 0.8,
                     },
                 },
             },
