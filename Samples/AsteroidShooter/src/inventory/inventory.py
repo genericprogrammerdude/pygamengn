@@ -26,7 +26,7 @@ images = {
     "asteroid_07": "SpaceShooterRedux/PNG/Meteors/meteorBrown_small2.png",
     "asteroid_08": "SpaceShooterRedux/PNG/Meteors/meteorBrown_tiny1.png",
     "asteroid_09": "SpaceShooterRedux/PNG/Meteors/meteorBrown_tiny2.png",
-    "background": "SpaceShooterRedux/Backgrounds/black.png",
+    "background": "SpaceShooterRedux/Backgrounds/darkPurple.png",
     "waypoint": "SpaceShooterRedux/PNG/ufoRed.png",
     "arrow": "arrow.png",
     "0": "SpaceShooterRedux/PNG/UI/numeral0.png",
