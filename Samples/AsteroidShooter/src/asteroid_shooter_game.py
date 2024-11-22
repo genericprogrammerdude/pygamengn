@@ -113,6 +113,10 @@ class AsteroidShooterGame(pygamengn.Game):
 
     def start_play(self):
         """Prepares the game to start playing."""
+        self.time = 0
+        self.score = 0
+        self.hud_ui.score_text.text = "0"
+        self.hud_ui.time_text.text = "00:00"
         self.mode = Mode.KILLING_ALL
         pygame.mouse.set_visible(False)
         self.toggle_ui(self.main_menu_ui, self.ui_fade_duration)
@@ -133,6 +137,7 @@ class AsteroidShooterGame(pygamengn.Game):
         pygame.mouse.set_visible(True)
         self.toggle_ui(self.debrief_ui, self.ui_fade_duration)
         self.toggle_ui(self.main_menu_ui, self.ui_fade_duration)
+        self.toggle_ui(self.hud_ui, self.ui_fade_duration)
 
 
     def handle_event(self, event: pygame.event) -> bool:
