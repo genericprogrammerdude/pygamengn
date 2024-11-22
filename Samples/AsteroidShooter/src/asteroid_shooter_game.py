@@ -109,18 +109,15 @@ class AsteroidShooterGame(pygamengn.Game):
             self.level.create_objects(self._render_group)
             self.set_player(self.level.player)
             self.time = 0
+            self.score = 0
+            self.toggle_ui(self.hud_ui, self.ui_fade_duration)
 
 
     def start_play(self):
         """Prepares the game to start playing."""
-        self.time = 0
-        self.score = 0
-        self.hud_ui.score_text.text = "0"
-        self.hud_ui.time_text.text = "00:00"
         self.mode = Mode.KILLING_ALL
         pygame.mouse.set_visible(False)
         self.toggle_ui(self.main_menu_ui, self.ui_fade_duration)
-        self.toggle_ui(self.hud_ui, self.ui_fade_duration)
 
 
     def resume_play(self):
