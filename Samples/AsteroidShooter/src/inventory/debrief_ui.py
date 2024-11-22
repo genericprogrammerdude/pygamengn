@@ -16,9 +16,10 @@ game_types = {
                     "WaypointRowPanel",
                     "FinalScorePanel",
                 ],
-                "fix_aspect_ratio": False,
-                "corner_radius": 0.05,
                 "colour": [100, 100, 100, 128],
+                "corner_radius": 0.125,
+                "border_width": 0.005,
+                "border_colour": [0, 200, 100],
             },
             "ContinueButton": {
                 "base_type": "/MainMenu/MenuButton",

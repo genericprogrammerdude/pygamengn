@@ -18,7 +18,6 @@ game_types = {
                     "ExitButton",
                 ],
                 "name": "main_menu",
-                "fix_aspect_ratio": False,
                 "colour": [100, 100, 100, 128],
                 "corner_radius": 0.125,
                 "border_width": 0.005,
@@ -63,8 +62,6 @@ game_types = {
             "class_name": "ColourPanel",
             "kwargs": {
                 "size": [0.5, 0.25],
-                "game_object:children": [],
-                "fix_aspect_ratio": False,
                 "colour": [200, 200, 200, 100],
                 "hover_colour": [100, 210, 100, 100],
                 "corner_radius": 0.15,
@@ -75,7 +72,6 @@ game_types = {
                 "kwargs": {
                     "horz_align": "CENTRE",
                     "vert_align": "CENTRE",
-                    "size": [1, 1],
                     "fix_aspect_ratio": True,
                     "asset:font_asset": "fast_hand_font",
                     "text_colour": [0, 200, 100],

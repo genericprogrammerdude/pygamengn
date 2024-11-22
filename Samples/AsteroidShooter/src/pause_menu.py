@@ -13,6 +13,10 @@ class PauseMenu(Root):
         self.resume_callback = None
         self.exit_callback = None
 
+    def set_parent_rect(self, rect: pygame.Rect):
+        super().set_parent_rect(rect)
+        self._set_uniform_font_size([self.resume_text, self.exit_text], 0.6)
+
     def handle_event(self, event: pygame.event.Event) -> bool:
         rv = False
         if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
