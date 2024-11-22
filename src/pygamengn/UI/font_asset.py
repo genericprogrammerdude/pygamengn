@@ -47,13 +47,18 @@ class FontAsset(GameObjectBase):
         font_size = self.__size
         text_size = self.__fonts[font_size].size(text)
 
-        while font_size > 0 and (text_size[0] > fit_size[0] or text_size[1] > fit_size[1]):
-            font_size -= 2
-            text_size = self.__get_font(font_size).size(text)
+        tight_dim = 1
+        if (fit_size[0] / text_size[0]) < (fit_size[1] / text_size[1]):
+            tight_dim = 0
 
-        while text_size[0] < fit_size[0] and text_size[1] < fit_size[1]:
-            font_size += 2
+        visited_sizes = []
+        while abs(1 - text_size[tight_dim] / fit_size[tight_dim]) > 0.01 and not font_size in visited_sizes:
+            font_size = round(font_size * fit_size[tight_dim] / text_size[tight_dim])
             text_size = self.__get_font(font_size).size(text)
+            visited_sizes.append(font_size)
+            tight_dim = 1
+            if (fit_size[0] / text_size[0]) < (fit_size[1] / text_size[1]):
+                tight_dim = 0
 
         return font_size
 
@@ -64,6 +69,6 @@ class FontAsset(GameObjectBase):
         except KeyError:
             font = pygame.font.Font(self.__fname, size)
             self.__fonts[size] = font
-            logging.info(f"Added size {size} for {self.__fname}")
+            logging.debug(f"Added size {size} for {self.__fname}")
 
         return font
