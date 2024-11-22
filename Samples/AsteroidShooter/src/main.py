@@ -1,3 +1,4 @@
+import asyncio
 import logging
 import os
 
@@ -13,15 +14,17 @@ import pygamengn
 from asteroid_shooter_game import AsteroidShooterGame
 
 
-def main():
-    logging.basicConfig(level=logging.INFO, format="%(levelname)s: %(filename)s:%(lineno)d: %(message)s")
+async def main(assets_dir: str = None):
+    logging.basicConfig(level=logging.ERROR, format="%(levelname)s: %(filename)s:%(lineno)d: %(message)s")
 
     pygame.init()
 
     # Create window
     screen = pygame.display.set_mode((1280, 720), pygame.DOUBLEBUF | pygame.HWSURFACE | pygame.RESIZABLE)
 
-    factory = create_factory(os.path.join("..", "..", "Assets"))
+    if not assets_dir:
+        assets_dir = os.path.join("..", "..", "Assets")
+    factory = create_factory(assets_dir)
 
     # Initialize window
     pygame.display.set_icon(factory.images["ship"])
@@ -36,6 +39,7 @@ def main():
         game.update(delta)
 
         clock.tick(60)
+        await asyncio.sleep(0)
 
     pygame.quit()
 
@@ -56,4 +60,4 @@ def create_factory(assets_dir) -> pygamengn.GameObjectFactory:
 
 
 if __name__ == "__main__":
-    main()
+    asyncio.run(main())
