@@ -23,7 +23,7 @@ game_types = {
             "ContinueButton": {
                 "base_type": "/MainMenu/MenuButton",
                 "kwargs": {
-                    "pos": [0.25, 0.7],
+                    "pos": [0.25, 0.75],
                     "size": [0.5, 0.15],
                     "game_object:children": [
                         "ContinueText",
@@ -46,7 +46,7 @@ game_types = {
                         "Multiplier",
                         "Total"
                     ],
-                    "pos": [0.1, 0.15]
+                    "pos": [0.1, 0.1]
                 },
                 "Spinner": {
                     "base_type": "/DebriefUI/DebriefRowPanel/Spinner",
@@ -113,7 +113,7 @@ game_types = {
                     "base_type": "/DebriefUI/DebriefRowPanel/Spinner",
                     "kwargs": {
                         "image:image_asset": "waypoint",
-                        "angular_velocity":-45,
+                        "angular_velocity": -45,
                     },
                 },
                 "Count": {
@@ -160,27 +160,20 @@ game_types = {
                 },
             },
             "FinalScorePanel": {
-                "class_name": "ColourPanel",
+                "base_type": "/DebriefUI/DebriefRowPanel",
                 "kwargs": {
-                    "pos": [0.1, 0.45],
-                    "size": [0.8, 0.1],
                     "game_object:children": [
                         "Spinner",
                         "TotalTitlePanel",
                         "TotalScorePanel",
                     ],
-                    "corner_radius": 0.15,
-                    "fix_aspect_ratio": False,
-                    "colour": [150, 150, 150, 100],
+                    "pos": [0.1, 0.5],
                 },
                 "Spinner": {
-                    "class_name": "Spinner",
+                    "base_type": "/DebriefUI/DebriefRowPanel/Spinner",
                     "kwargs": {
-                        "pos": [0, 0.12],
-                        "size": [0.1, 1],
-                        "fix_aspect_ratio": True,
                         "image:image_asset": "ship",
-                        "angular_velocity": 30,
+                        "angular_velocity": 45,
                     },
                 },
                 "TotalTitlePanel": {
@@ -198,8 +191,6 @@ game_types = {
                     "TotalTitleText": {
                         "class_name": "TextPanel",
                         "kwargs": {
-                            "pos": [0, 0],
-                            "size": [1, 1],
                             "fix_aspect_ratio": True,
                             "asset:font_asset": "fast_hand_font",
                             "text_colour": [0, 200, 100],
@@ -207,6 +198,7 @@ game_types = {
                             "vert_align": "CENTRE",
                             "text": "Final Score",
                             "name": "final_score_text",
+                            "shadow_colour": [0, 50, 25],
                         },
                     },
                 },
@@ -234,6 +226,7 @@ game_types = {
                             "horz_align": "RIGHT",
                             "vert_align": "CENTRE",
                             "text": "0",
+                            "shadow_colour": [0, 50, 25],
                         },
                     },
                 },
@@ -242,7 +235,7 @@ game_types = {
         "DebriefRowPanel": {
             "class_name": "ColourPanel",
             "kwargs": {
-                "size": [0.8, 0.1],
+                "size": [0.8, 0.15],
                 "game_object:children": [],
                 "fix_aspect_ratio": False,
                 "corner_radius": 0.15,
@@ -251,8 +244,10 @@ game_types = {
             "Spinner": {
                 "class_name": "Spinner",
                 "kwargs": {
-                    "pos": [0, 0],
-                    "size": [0.1, 1],
+                    "horz_align": "LEFT",
+                    "vert_align": "CENTRE",
+                    "pos": [0.05, 0.0],
+                    "size": [0.12, 0.8],
                     "game_object:children": [],
                     "fix_aspect_ratio": True,
                 }
@@ -290,15 +285,15 @@ game_types = {
             "RowText": {
                 "class_name": "TextPanel",
                 "kwargs": {
-                    "pos": [0, 0],
-                    "size": [1, 1],
+                    "pos": [-0.05, 0],
                     "game_object:children": [],
                     "fix_aspect_ratio": True,
                     "asset:font_asset": "fast_hand_font",
                     "text_colour": [0, 200, 100],
                     "horz_align": "RIGHT",
                     "vert_align": "CENTRE",
-                    "text": "0"
+                    "text": "0",
+                    "shadow_colour": [0, 50, 25],
                 },
             },
         },
