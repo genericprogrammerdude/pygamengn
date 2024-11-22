@@ -44,8 +44,8 @@ images = {
 sounds = {
     "ship_shot": "SpaceShooterRedux/Bonus/sfx_laser1.ogg",
     "turret_shot": "SpaceShooterRedux/Bonus/sfx_laser2.ogg",
-    "explosion_small": "Explosions/Explosion+1.wav",
-    "explosion_large": "Explosions/Explosion+5.wav",
+    "explosion_small": "Explosions/Explosion1.ogg",
+    "explosion_large": "Explosions/Explosion5.ogg",
     "enter_sound": "SpaceShooterRedux/Bonus/sfx_shieldUp.ogg"
 }
 
