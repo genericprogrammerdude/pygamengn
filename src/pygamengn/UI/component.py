@@ -162,19 +162,6 @@ class Component(GameObjectBase):
 
 
     @property
-    def normalized_pos(self) -> pygame.Vector2:
-        return self._normalized_pos
-
-
-    @normalized_pos.setter
-    def normalized_pos(self, normalized_pos: pygame.Vector2):
-        """Sets the normalized position for the component."""
-        if normalized_pos != self._normalized_pos:
-            self._normalized_pos = normalized_pos
-            self.resize_to_parent(self._parent_rect)
-
-
-    @property
     def normalized_size(self) -> pygame.Vector2:
         return self.__size
 
@@ -210,3 +197,17 @@ class Component(GameObjectBase):
 
     def __iter__(self):
         return iter(self.__children)
+
+
+    def delete_child(self, child: Component) -> bool:
+        """Deletes the given child component from this component's tree."""
+        i = 0
+        rv = False
+        while i < len(self.__children):
+            if child == self.__children[i]:
+                self.__children.pop(i)
+                rv = True
+            else:
+                rv = self.__children[i].delete_child(child) or rv
+                i += 1
+        return rv
