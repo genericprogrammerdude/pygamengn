@@ -33,6 +33,7 @@ class Panel(Component):
         self._horz_align = Panel.HorzAlign(horz_align)
         self._vert_align = Panel.VertAlign(vert_align)
         self._surface = None
+        self._pos_changed = True
         self._surface_changed = True
 
     def update(self, delta: int) -> bool:
@@ -48,6 +49,59 @@ class Panel(Component):
     def resize_to_parent(self, parent_rect: pygame.Rect):
         super().resize_to_parent(parent_rect)
         self._parent_rect_changed = True
+
+
+    @property
+    def normalized_pos(self) -> pygame.Vector2:
+        return self._normalized_pos
+
+
+    @normalized_pos.setter
+    def normalized_pos(self, normalized_pos: pygame.Vector2):
+        """Sets the normalized position for the component."""
+        if normalized_pos != self._normalized_pos:
+            self._normalized_pos = normalized_pos
+            self._pos_changed = True
+
+
+    @property
+    def horz_align(self) -> HorzAlign:
+        return self._horz_align
+
+
+    @horz_align.setter
+    def horz_align(self, horz_align: HorzAlign):
+        """Sets the horizontal alignment for the component."""
+        if horz_align != self._horz_align:
+            self._horz_align = horz_align
+            self._pos_changed = True
+
+
+    @property
+    def vert_align(self) -> VertAlign:
+        return self._vert_align
+
+
+    @vert_align.setter
+    def vert_align(self, vert_align: VertAlign):
+        """Sets the horizontal alignment for the component."""
+        if vert_align != self._vert_align:
+            self._vert_align = vert_align
+            self._pos_changed = True
+
+
+    @property
+    def normalized_pos(self) -> pygame.Vector2:
+        return self._normalized_pos
+
+
+    @normalized_pos.setter
+    def normalized_pos(self, normalized_pos: pygame.Vector2):
+        """Sets the normalized position for the component."""
+        if normalized_pos != self._normalized_pos:
+            self._normalized_pos = normalized_pos
+            self._pos_changed = True
+
 
     @abstractmethod
     def _draw_surface(self):
@@ -93,10 +147,10 @@ class Panel(Component):
 
     @property
     def _needs_reblit(self) -> bool:
-        return False
+        return self._pos_changed
 
     def _reset_reblit_flags(self):
-        pass
+        self._pos_changed = False
 
 
 
