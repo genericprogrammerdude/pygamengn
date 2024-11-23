@@ -1,7 +1,12 @@
+import sys
+
 import pygame
 
-from pygamengn.UI.root import Root
 from pygamengn.class_registrar import ClassRegistrar
+
+from pygamengn.UI.panel import Panel
+from pygamengn.UI.root import Root
+
 from asteroid import AsteroidSpawner
 
 
@@ -14,6 +19,13 @@ class MainMenu(Root):
         self.asteroid_spawner = asteroid_spawner
         self.start_callback = None
         self.exit_callback = None
+        if sys.platform == "emscripten":
+            # No need for an Exit button when running as a web app
+            self._component.delete_child(self.exit_button)
+            self.exit_button = None
+            self.start_button._normalized_pos = pygame.Vector2()
+            self.start_button.vert_align = Panel.VertAlign.CENTRE
+            self.start_button.horz_align = Panel.HorzAlign.CENTRE
 
     def update(self, delta: int) -> bool:
         """Updates the main menu."""
@@ -22,7 +34,10 @@ class MainMenu(Root):
 
     def set_parent_rect(self, rect: pygame.Rect):
         super().set_parent_rect(rect)
-        self._set_uniform_font_size([self.start_text, self.exit_text], 0.6)
+        self._set_uniform_font_size(
+            [self.start_text, self.exit_text] if self.exit_button else [self.start_text],
+            0.6
+        )
 
     def handle_event(self, event: pygame.event.Event) -> bool:
         """Handles the given input event."""
@@ -34,7 +49,7 @@ class MainMenu(Root):
             if self.start_button.process_mouse_event(event.pos, event.type):
                 self.start_callback()
                 rv = True
-            elif self.exit_button.process_mouse_event(event.pos, event.type):
+            elif self.exit_button and self.exit_button.process_mouse_event(event.pos, event.type):
                 self.exit_callback()
                 rv = True
         else:
