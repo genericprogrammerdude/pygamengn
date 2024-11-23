@@ -49,6 +49,10 @@ sounds = {
     "enter_sound": "SpaceShooterRedux/Bonus/sfx_shieldUp.ogg"
 }
 
+fonts = {
+    "fast_hand": "fast-hand-font/FastHand-lgBMV.ttf",
+}
+
 assets = {
     "RenderGroup": {
         "class_name": "RenderGroup",
