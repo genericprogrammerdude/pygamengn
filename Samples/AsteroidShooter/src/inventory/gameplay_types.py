@@ -62,9 +62,9 @@ game_types = {
             "class_name": "MoverVelocity",
             "kwargs": {
                 "velocity": 0.0,
-                "velocity_decay_factor": 0.9,
+                "velocity_decay_factor": 0.95,
                 "max_velocity": 200.0,
-                "angular_velocity": 1.5
+                "angular_velocity": 120,
             }
         },
         "PlayerHealthBar": {

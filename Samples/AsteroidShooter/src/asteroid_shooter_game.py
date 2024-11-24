@@ -90,9 +90,19 @@ class AsteroidShooterGame(pygamengn.Game):
 
     def update_play(self, delta):
         # Track round time and score
-        if not self._player is None and self._player.alive() and not self._is_paused:
+        if self._player and self._player.alive() and not self._is_paused:
             self.time += delta
             self.score = self._player.score
+            # Process move keys
+            pressed_keys = pygame.key.get_pressed()
+            if pressed_keys[pygame.K_a]:
+                self._player.heading = self._player.heading + delta * self._player.mover.angular_velocity / 1000
+            if pressed_keys[pygame.K_d]:
+                self._player.heading = self._player.heading - delta * self._player.mover.angular_velocity / 1000
+            if pressed_keys[pygame.K_w]:
+                self._player.set_velocity(self._player.mover.max_velocity)
+            if pressed_keys[pygame.K_s]:
+                self._player.set_velocity(self._player.mover.velocity * 0.8)
 
         # Put time and score text together
         self.hud_ui.score_text.text = f"{self.score}"
@@ -161,21 +171,6 @@ class AsteroidShooterGame(pygamengn.Game):
             rv = super().handle_event(event)
 
         return rv
-
-
-    def _process_input(self):
-        # Handle input for movement
-        super()._process_input()
-        if self._player:
-            pressed_keys = pygame.key.get_pressed()
-            if pressed_keys[pygame.K_a]:
-                self._player.heading = self._player.heading + self._player.mover.angular_velocity
-            if pressed_keys[pygame.K_d]:
-                self._player.heading = self._player.heading - self._player.mover.angular_velocity
-            if pressed_keys[pygame.K_w]:
-                self._player.set_velocity(self._player.mover.max_velocity)
-            if pressed_keys[pygame.K_s]:
-                self._player.set_velocity(self._player.mover.velocity * 0.8)
 
 
     def handle_player_death(self):
