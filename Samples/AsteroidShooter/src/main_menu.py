@@ -43,7 +43,8 @@ class MainMenu(Root):
         """Handles the given input event."""
         rv = False
         if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
-            self.exit_callback()
+            if self.exit_button:
+                self.exit_callback()
             rv = True
         elif event.type == pygame.MOUSEBUTTONDOWN:
             if self.start_button.process_mouse_event(event.pos, event.type):
