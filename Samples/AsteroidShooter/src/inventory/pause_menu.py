@@ -13,7 +13,7 @@ game_types = {
                 "size": [0.5, 0.5],
                 "game_object:children": [
                     "ResumeButton",
-                    "ExitButton",
+                    "MainMenuButton",
                 ],
                 "name": "pause_menu",
                 "colour": [100, 100, 100, 128],
@@ -38,20 +38,20 @@ game_types = {
                     },
                 },
             },
-            "ExitButton": {
+            "MainMenuButton": {
                 "base_type": "/MainMenu/MenuButton",
                 "kwargs": {
                     "pos": [0.25, 0.55],
                     "game_object:children": [
-                        "ExitText",
+                        "MainMenuText",
                     ],
-                    "name": "exit_button",
+                    "name": "main_menu_button",
                 },
-                "ExitText": {
+                "MainMenuText": {
                     "base_type": "/MainMenu/MenuButton/MenuButtonText",
                     "kwargs": {
-                        "text": "Exit",
-                        "name": "exit_text",
+                        "text": "Main Menu",
+                        "name": "main_menu_text",
                     },
                 },
             },

@@ -63,7 +63,7 @@ class AsteroidShooterGame(pygamengn.Game):
         self.toggle_ui(self.main_menu_ui, self.ui_fade_duration)
 
         self.pause_menu_ui.set_resume_callback(self.resume_play)
-        self.pause_menu_ui.set_exit_callback(self.exit_game)
+        self.pause_menu_ui.set_main_menu_callback(self.go_to_main_menu)
 
         self.debrief_ui.set_continue_callback(self.go_to_main_menu)
 
@@ -130,11 +130,18 @@ class AsteroidShooterGame(pygamengn.Game):
 
     def go_to_main_menu(self):
         """Goes back to the main menu after showing the debrief UI."""
-        self.mode = Mode.MAIN_MENU
         pygame.mouse.set_visible(True)
-        self.toggle_ui(self.debrief_ui, self.ui_fade_duration)
-        self.toggle_ui(self.main_menu_ui, self.ui_fade_duration)
-        self.toggle_ui(self.hud_ui, self.ui_fade_duration)
+        if self.mode == Mode.DEBRIEF:
+            self.toggle_ui(self.debrief_ui, self.ui_fade_duration)
+            self.toggle_ui(self.hud_ui, self.ui_fade_duration)
+        else:
+            assert(self._is_paused)
+            self.kill_render_group(1000)
+            self.toggle_ui(self.hud_ui, self.ui_fade_duration)
+            self.toggle_pause()
+            self.toggle_ui(self.pause_menu_ui, self.ui_fade_duration)
+        self.toggle_ui(self.main_menu_ui, self.ui_fade_duration * 2)
+        self.mode = Mode.MAIN_MENU
 
 
     def handle_event(self, event: pygame.event) -> bool:
@@ -173,24 +180,25 @@ class AsteroidShooterGame(pygamengn.Game):
 
     def handle_player_death(self):
         """Invoked when the _player dies."""
-        self.mode = Mode.DEBRIEF
-        self.debrief_ui.set_score_data(
-            self.score,
-            self.time,
-            self._player.kills,
-            self._player.waypoints,
-            self.asteroid_multiplier,
-            self.waypoint_multiplier
-        )
-        pygame.mouse.set_visible(True)
-        self.toggle_ui(self.debrief_ui, self.ui_fade_duration)
-        self._player = None
+        if self.mode == Mode.PLAY:
+            self.mode = Mode.DEBRIEF
+            self.debrief_ui.set_score_data(
+                self.score,
+                self.time,
+                self._player.kills,
+                self._player.waypoints,
+                self.asteroid_multiplier,
+                self.waypoint_multiplier
+            )
+            self.toggle_ui(self.debrief_ui, self.ui_fade_duration)
+            pygame.mouse.set_visible(True)
+            self._player = None
 
 
-    def kill_render_group(self):
+    def kill_render_group(self, damage: int = 0):
         gobs = self._render_group.sprites()
         for gob in gobs:
-            gob.take_damage(random.randint(0, 5), None)
+            gob.take_damage(random.randint(0, 5) if damage == 0 else damage, None)
 
 
     def get_time_string(self):

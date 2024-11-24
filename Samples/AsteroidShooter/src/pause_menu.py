@@ -11,11 +11,11 @@ class PauseMenu(Root):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.resume_callback = None
-        self.exit_callback = None
+        self.main_menu_callback = None
 
     def set_parent_rect(self, rect: pygame.Rect):
         super().set_parent_rect(rect)
-        self._set_uniform_font_size([self.resume_text, self.exit_text], 0.6)
+        self._set_uniform_font_size([self.resume_text, self.main_menu_text], 0.6)
 
     def handle_event(self, event: pygame.event.Event) -> bool:
         rv = False
@@ -26,8 +26,8 @@ class PauseMenu(Root):
             if self.resume_button.process_mouse_event(event.pos, event.type):
                 self.resume_callback()
                 rv = True
-            elif self.exit_button.process_mouse_event(event.pos, event.type):
-                self.exit_callback()
+            elif self.main_menu_button.process_mouse_event(event.pos, event.type):
+                self.main_menu_callback()
                 rv = True
         else:
             rv = super().handle_event(event)
@@ -37,6 +37,7 @@ class PauseMenu(Root):
         """Sets the function to call when the resume button is clicked."""
         self.resume_callback = resume_callback
 
-    def set_exit_callback(self, exit_callback):
-        """Sets the function to call when the exit button is clicked."""
-        self.exit_callback = exit_callback
+    def set_main_menu_callback(self, main_menu_callback):
+        """Sets the function to call when the main_menu button is clicked."""
+        self.main_menu_callback = main_menu_callback
+
