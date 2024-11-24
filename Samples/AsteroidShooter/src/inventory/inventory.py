@@ -61,6 +61,7 @@ assets = {
             "grid_colour": [100, 100, 100],
             "grid_interval": 100,
             "image:background": "background",
+            "target_follow_tightness": 0.1,
         },
     },
     "PlayerGroup": {

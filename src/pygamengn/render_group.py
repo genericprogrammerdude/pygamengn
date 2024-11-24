@@ -11,12 +11,13 @@ class RenderGroup(pygame.sprite.LayeredUpdates, GameObjectBase):
 
     def __init__(
             self,
-            world_rect=pygame.Rect(0, 0, 0, 0),
-            grid_draw=False,
-            grid_colour=(100, 100, 100),
-            grid_interval=100,
-            background=None,
-            background_colour=(0, 0, 0)
+            world_rect = pygame.Rect(0, 0, 0, 0),
+            grid_draw = False,
+            grid_colour = (100, 100, 100),
+            grid_interval = 100,
+            background = None,
+            background_colour = (0, 0, 0),
+            target_follow_tightness = 1.0,
         ):
         super().__init__()
         self.target = None
@@ -28,6 +29,7 @@ class RenderGroup(pygame.sprite.LayeredUpdates, GameObjectBase):
         self.grid_interval = grid_interval
         self.background = background
         self.background_colour = background_colour
+        self.target_follow_tightness = target_follow_tightness
 
     def set_target(self, target):
         """Sets the game object to follow."""
@@ -42,9 +44,12 @@ class RenderGroup(pygame.sprite.LayeredUpdates, GameObjectBase):
 
         if self.target:
             # Keep the view_rect centered with the target's rect center
-            x = -self.target.rect.center[0] + self.view_rect.center[0]
-            y = -self.target.rect.center[1] + self.view_rect.center[1]
-            self.cam += (pygame.Vector2((x, y)) - self.cam) * 0.05
+            desired_cam_pos = pygame.Vector2(
+                self.view_rect.center[0] - self.target.rect.center[0],
+                self.view_rect.center[1] - self.target.rect.center[1]
+            )
+            diff = desired_cam_pos - self.cam
+            self.cam += (diff * self.target_follow_tightness)
             if self.world_rect.width > 0 and self.world_rect.height > 0:
                 # Keep the camera within the world_rect if one was given
                 self.cam.x = max(-(self.world_rect.width - self.view_rect.width), min(0, self.cam.x))
