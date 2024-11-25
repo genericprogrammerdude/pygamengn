@@ -33,7 +33,7 @@ class Asteroid(GameObject):
         # Apply damage to the collided sprite
         if isinstance(gob, Turret):
             # HACK ALERT!
-            if gob.get_object_id() > self.get_object_id():
+            if gob.object_id > self.object_id:
                 # Ignore collision because the turret is drawn over the asteroid, so they shouldn't collide
                 return
         super().handle_collision(gob, world_pos)

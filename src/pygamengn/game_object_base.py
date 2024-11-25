@@ -15,7 +15,8 @@ class GameObjectBase(metaclass=ABCMeta):
         GameObjectBase.__next_object_id += 1
 
     def __str__(self):
-        return "{0}: {1}".format(self.__object_id, super().__str__())
+        return f"{self.__object_id}: {super().__str__()}"
 
-    def get_object_id(self):
+    @property
+    def object_id(self):
         return self.__object_id
