@@ -11,8 +11,9 @@ jobs:
     - uses: actions/checkout@v2
     - name: Checkout
       run: |
+            python -m packitup -s $GITHUB_WORKSPACE/Samples/AsteroidShooter -o $GITHUB_WORKSPACE/web-deploy
             python -m pip install pygbag
-            python -m pygbag --build $GITHUB_WORKSPACE/main.py
+            python -m pygbag --build $GITHUB_WORKSPACE/web-deploy/main.py
     - name : "Upload to GitHub pages branch gh-pages"
       uses: JamesIves/github-pages-deploy-action@4.1.7
       with:
