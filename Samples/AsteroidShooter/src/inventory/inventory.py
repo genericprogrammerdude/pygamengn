@@ -1,5 +1,6 @@
 images = {
     "ship": "SpaceShooterRedux/PNG/playerShip2_blue.png",
+    "ship_icon": "../../favicon.png",
     "explosion1": "Explosions/explosion1.png",
     "explosion2": "Explosions/explosion2.png",
     "explosion3": "Explosions/explosion3.png",

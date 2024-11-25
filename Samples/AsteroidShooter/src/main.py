@@ -28,7 +28,7 @@ async def main(assets_dir: str = None):
     factory = create_factory(assets_dir)
 
     # Initialize window
-    pygame.display.set_icon(factory.images["ship"])
+    pygame.display.set_icon(factory.images["ship_icon"])
     pygame.display.set_caption("Asteroid Shooter")
 
     game = factory.create("AsteroidShooterGame", screen=screen)
