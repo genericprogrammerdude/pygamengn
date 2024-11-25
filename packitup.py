@@ -86,7 +86,7 @@ def copy_asset_list(assets: list[str], in_dir: str, out_dir: str):
 
 
 def log(src: str, dest: str):
-    print(f"{src} -> {dest}")
+    print(f"{os.path.abspath(src)} -> {os.path.abspath(dest)}")
 
 
 
