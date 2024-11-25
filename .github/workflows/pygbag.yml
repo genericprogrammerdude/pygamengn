@@ -14,7 +14,7 @@ jobs:
             python -m pip install pygame
             python -m packitup -s $GITHUB_WORKSPACE/Samples/AsteroidShooter -o $GITHUB_WORKSPACE/web-deploy
             python -m pip install pygbag
-            python -m pygbag --build $GITHUB_WORKSPACE/web-deploy
+            python -m pygbag --build $GITHUB_WORKSPACE/web-deploy/AsteroidShooter
     - name : "Upload to GitHub pages branch gh-pages"
       uses: JamesIves/github-pages-deploy-action@4.1.7
       with:
