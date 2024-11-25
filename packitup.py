@@ -47,8 +47,11 @@ def main():
         return
 
     # Copy files
+    log("main.py", os.path.join(out_dir, "main.py"))
     shutil.copyfile("main.py", os.path.join(out_dir, "main.py"))
+    log("favicon.png", os.path.join(out_dir, "favicon.png"))
     shutil.copyfile("favicon.png", os.path.join(out_dir, "favicon.png"))
+    log(args.sample_dir, os.path.join(out_dir, "Samples", sample_name))
     shutil.copytree(
         args.sample_dir,
         os.path.join(out_dir, "Samples", sample_name),
@@ -64,6 +67,7 @@ def main():
     copy_asset_list(sounds.values(), assets_in_dir, assets_out_dir)
 
     # Copy pygamengn source code
+    log(os.path.join(args.sample_dir, "..", "..", "src"), os.path.join(out_dir, "src"))
     shutil.copytree(
         os.path.join(args.sample_dir, "..", "..", "src"),
         os.path.join(out_dir, "src"),
@@ -77,7 +81,12 @@ def copy_asset_list(assets: list[str], in_dir: str, out_dir: str):
         asset_out_dir = os.path.dirname(os.path.join(out_dir, asset))
         if not os.path.isdir(asset_out_dir):
             os.makedirs(asset_out_dir)
+        log(os.path.join(in_dir, asset), os.path.join(out_dir, asset))
         shutil.copyfile(os.path.join(in_dir, asset), os.path.join(out_dir, asset))
+
+
+def log(src: str, dest: str):
+    print(f"{src} -> {dest}")
 
 
 
