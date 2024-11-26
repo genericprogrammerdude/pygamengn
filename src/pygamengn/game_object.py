@@ -20,7 +20,8 @@ class GameObject(pygame.sprite.Sprite, GameObjectBase):
                  heading=0,
                  death_effect=None,
                  damage=0,
-                 kill_when_off_screen=False
+                 kill_when_off_screen=False,
+                 off_screen_ttl=0
     ):
         pygame.sprite.Sprite.__init__(self)
         GameObjectBase.__init__(self)
@@ -45,6 +46,9 @@ class GameObject(pygame.sprite.Sprite, GameObjectBase):
         self.death_effect = death_effect
         self.damage = damage
         self.kill_when_off_screen = kill_when_off_screen
+        self.__off_screen_warning = False
+        self.__off_screen_ms = 0
+        self.__off_screen_ttl = off_screen_ttl
 
     def get_replicated_props(self):
         """Returns a list of properties that this object will replicate from server to connected clients."""
@@ -56,6 +60,15 @@ class GameObject(pygame.sprite.Sprite, GameObjectBase):
     def update(self, delta):
         """Updates the game object. Delta time is in ms."""
         super().update()
+
+        if self.__off_screen_warning:
+            self.__off_screen_ms -= delta
+            if self.__off_screen_ms <= 0:
+                # If an object is off the screen for its maximum allowed time to be off the screen (off_screen_ms),
+                # then it and its attachments get killed, regardless of whether the attachments are off the screen.
+                self.__kill_myself()
+                return
+
         self.transform()
         for attachment in self.attachments:
             if attachment.parent_transform:
@@ -167,6 +180,27 @@ class GameObject(pygame.sprite.Sprite, GameObjectBase):
     def death_effect_callback(self):
         """Callback for when the death effect is done playing."""
         pass
+
+    @property
+    def off_screen_warning(self) -> bool:
+        return self.__off_screen_warning
+
+    @off_screen_warning.setter
+    def off_screen_warning(self, value: bool):
+        self.__off_screen_warning = value
+        if value:
+            self.__off_screen_ms = self.__off_screen_ttl
+
+    @property
+    def off_screen_ms(self) -> int:
+        return self.__off_screen_ms
+
+    def __kill_myself(self):
+        """Recursively kills this GameObject and its attachments."""
+        for attachment in self.attachments:
+            attachment.game_object.__kill_myself()
+        self.attachments.clear()
+        self.kill()
 
     @classmethod
     def get_root_parent(cls, gob):

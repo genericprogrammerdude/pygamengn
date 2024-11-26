@@ -126,7 +126,6 @@ game_types = {
             "kwargs": {
                 "image:image_asset": "waypoint",
                 "type_spec:death_effect": "/Explosions/Explosion",
-                "kill_when_off_screen": False,
                 "distance": 1000,
                 "angular_velocity": 60.0,
                 "image:digit_image_assets": [
@@ -341,7 +340,8 @@ game_types = {
             "type_spec:death_effect": "/Explosions/Explosion",
             "game_object:mover": "AsteroidMover",
             "type_spec:death_spawn": [],
-            "kill_when_off_screen": True
+            "kill_when_off_screen": True,
+            "off_screen_ttl": 2000,
         },
         "groups": [
             "RenderGroup",
