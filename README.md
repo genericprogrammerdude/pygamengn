@@ -1,10 +1,10 @@
 # pygamengn
 
-A game engine built on [pygame](https://www.pygame.org/ "pygame"). This engine is developed for fun and in the best shooting-from-the-hip coding tradition, with limited thought put into the design of its components (although it's worth mentioning that the author has 15+ years experience in game development). Expect little.
+A game engine built on [pygame-ce](https://pyga.me/). This engine is developed for fun and in the best shooting-from-the-hip coding tradition, with limited thought put into the design of its components (although it's worth mentioning that the author has 15+ years experience in game development). Expect little.
 
 ## Dependencies
 
-### [pygame](https://www.pygame.org/ "pygame")
+### [pygame-ce](https://pyga.me/)
 ### [NumPy](https://www.numpy.org/ "NumPy")
 
 ## Running Samples
@@ -17,3 +17,7 @@ $ python3 main.py
 ```
 
 Alternatively, you can load the `pygamengn` directory in [Visual Studio Code](https://code.visualstudio.com/). There are launch configurations for each of the samples.
+
+## Let Me Play!
+
+If you just want to jump into the exciting gameplay action of a modernized 1980's Asteroid Shooter game, go check it out on [itch.io](https://zer0complexity.itch.io/asteroid-shooter).
