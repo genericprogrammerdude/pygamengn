@@ -135,7 +135,7 @@ class GameObject(pygame.sprite.Sprite, GameObjectBase):
         self.alpha = alpha
 
     def attach(self, game_object, offset, take_parent_transform):
-        """Attaches a game object to this game object at the give offset."""
+        """Attaches a game object to this game object at the given offset."""
         self.attachments.append(Attachment(game_object, offset, take_parent_transform))
         game_object.set_parent(self)
 
