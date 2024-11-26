@@ -20,7 +20,7 @@ Alternatively, you can load the `pygamengn` directory in [Visual Studio Code](ht
 
 ## Let Me Play!
 
-If you just want to jump into the exciting gameplay action of a modernized 1980's Asteroid Shooter game, go check it out on [itch.io](https://zer0complexity.itch.io/asteroid-shooter).
+If you just want to jump into the exciting gameplay action of a modernized 1980's Asteroid Shooter game, go check it out on ![itch.io](https://zer0complexity.itch.io/asteroid-shooter).
 
-![Gameplay Demo](https://github.com/user-attachments/assets/aefedef5-7ec7-448e-847e-86989331c533)
+[Gameplay Demo](https://github.com/user-attachments/assets/aefedef5-7ec7-448e-847e-86989331c533)
 
