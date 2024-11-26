@@ -22,4 +22,4 @@ Alternatively, you can load the `pygamengn` directory in [Visual Studio Code](ht
 
 If you just want to jump into the exciting gameplay action of a modernized 1980's Asteroid Shooter game, go check it out on [itch.io](https://zer0complexity.itch.io/asteroid-shooter).
 
-![](https://drive.google.com/file/d/1jbttpuHws4QfIzjj2518EkZB2x28S1uZ/view?usp=drive_link)
+![Video](https://drive.google.com/file/d/1jbttpuHws4QfIzjj2518EkZB2x28S1uZ/view?usp=drive_link)
