@@ -268,7 +268,8 @@ game_types = {
             "health": 40,
             "damage": 10,
             "type_spec:death_spawn": ["AsteroidSmall", "AsteroidMedium"],
-            "score_on_die": 50
+            "score_on_die": 50,
+            "max_angular_velocity": 30,
         },
         "attachments": [
             {
@@ -367,7 +368,8 @@ game_types = {
             "health": 40,
             "damage": 10,
             "type_spec:death_spawn": ["AsteroidMedium", "AsteroidMedium"],
-            "score_on_die": 30
+            "score_on_die": 30,
+            "max_angular_velocity": 60,
         }
     },
     "AsteroidMedium": {
@@ -380,7 +382,8 @@ game_types = {
             "health": 20,
             "damage": 5,
             "type_spec:death_spawn": ["AsteroidSmall", "AsteroidTiny"],
-            "score_on_die": 20
+            "score_on_die": 20,
+            "max_angular_velocity": 80,
         }
     },
     "AsteroidSmall": {
@@ -392,7 +395,8 @@ game_types = {
             ],
             "health": 10,
             "damage": 2,
-            "score_on_die": 10
+            "score_on_die": 10,
+            "max_angular_velocity": 100,
         }
     },
     "AsteroidTiny": {
@@ -404,7 +408,8 @@ game_types = {
             "health": 5,
             "type_spec:death_effect": "/Explosions/ExplosionSmall",
             "damage": 1,
-            "score_on_die": 7
+            "score_on_die": 7,
+            "max_angular_velocity": 120,
         }
     }
 }

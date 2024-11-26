@@ -12,16 +12,17 @@ from pygamengn.updatable import Updatable
 @ClassRegistrar.register("Asteroid")
 class Asteroid(GameObject):
 
-    def __init__(self, images, mover, health, death_spawn, score_on_die, **kwargs):
+    def __init__(self, images, mover, health, death_spawn, score_on_die, max_angular_velocity, **kwargs):
         super().__init__(image_asset=random.choice(images), **kwargs)
         self.mover = mover
         self.health = health
         self.death_spawn = death_spawn
         self.spin_delta_factor = random.choice([-1.0, 1.0])
+        self.angular_velocity = random.randint(10, max_angular_velocity)
         self.score_on_die = score_on_die
 
     def update(self, delta):
-        spin_delta = (45.0 * delta) / 1000.0 * self.spin_delta_factor
+        spin_delta = (self.angular_velocity * delta) / 1000.0 * self.spin_delta_factor
         self.heading = self.heading + spin_delta
         self.position = self.position + self.mover.move(delta)
         super().update(delta)
@@ -92,37 +93,43 @@ class AsteroidSpawner(Updatable):
             # Spawn new asteroid
             asteroid_type_spec = random.choice(self.asteroid_types)
             asteroid = asteroid_type_spec.create()
-            pos, direction = self.get_random_pos_dir(self.render_group.get_world_view_rect())
+            pos, direction = self.get_random_pos_dir(self.render_group.get_world_view_rect(), asteroid.rect.size)
             asteroid.mover.set_direction(direction)
             asteroid.position = pos
             asteroid.transform()
             for attachment in asteroid.attachments:
                 attachment.game_object.set_target(self.player)
 
-    def get_random_pos_dir(self, world_view_rect):
+    def get_random_pos_dir(self, world_view_rect, asteroid_size):
         # Aim roughly to the center of the screen
         dest = pygame.Vector2(world_view_rect.center)
         range_x = round(world_view_rect.width / 3)
         dest.x += random.randint(-range_x, range_x)
         range_y = round(world_view_rect.height / 3)
         dest.y += random.randint(-range_y, range_y)
-        origin = self.get_random_point(world_view_rect)
+        origin = self.get_random_point(world_view_rect, asteroid_size)
         direction = (dest - origin).normalize()
         return origin, direction
 
-    def get_random_point(self, world_view_rect):
+    def get_random_point(self, world_view_rect, asteroid_size):
         point = ()
         axis = random.randint(0, 1)
         if axis == 0:
             # Select random value along x axis and one of the two values of y for the top and bottom edges of the screen
             point = pygame.Vector2(
                 random.randint(world_view_rect.topleft[0], world_view_rect.topright[0]),
-                random.choice([world_view_rect.topleft[1], world_view_rect.bottomleft[1]])
+                random.choice([
+                    world_view_rect.topleft[1] - asteroid_size[1] / 2,
+                    world_view_rect.bottomleft[1] + asteroid_size[1] / 2
+                ])
             )
         else:
             # Select random value along y axis and one of the two values of x for the left and right edges of the screen
             point = pygame.Vector2(
-                random.choice([world_view_rect.topleft[0], world_view_rect.topright[0]]),
+                random.choice([
+                    world_view_rect.topleft[0] - asteroid_size[0] / 2,
+                    world_view_rect.topright[0] + asteroid_size[0] / 2
+                ]),
                 random.randint(world_view_rect.topleft[1], world_view_rect.bottomleft[1])
             )
         return point
