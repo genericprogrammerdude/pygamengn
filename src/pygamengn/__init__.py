@@ -20,10 +20,11 @@ from pygamengn.updatable import Updatable
 from pygamengn.network.client import Client
 from pygamengn.network.server import Server
 
-from pygamengn.UI.font_asset import FontAsset
-from pygamengn.UI.panel import Panel, TexturePanel
 from pygamengn.UI.colour_panel import ColourPanel
-from pygamengn.UI.text_panel import TextPanel
-from pygamengn.UI.spinner import Spinner
 from pygamengn.UI.component import Component
+from pygamengn.UI.font_asset import FontAsset
+from pygamengn.UI.panel import Panel
 from pygamengn.UI.root import Root
+from pygamengn.UI.spinner import Spinner
+from pygamengn.UI.text_panel import TextPanel
+from pygamengn.UI.texture_panel import TexturePanel

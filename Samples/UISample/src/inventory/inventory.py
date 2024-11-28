@@ -180,6 +180,7 @@ game_types = {
                         "image:image_asset": "ship",
                         "fix_aspect_ratio": True,
                         "wanted_mouse_events": [MOUSEMOTION],
+                        "scale_texture_to_rect": False,
                     },
                 },
             },
