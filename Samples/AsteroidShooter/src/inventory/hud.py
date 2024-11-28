@@ -11,6 +11,7 @@ game_types = {
                 "game_object:children": [
                     "ScorePanel",
                     "TimePanel",
+                    "Joystick",
                 ],
             },
             "ScorePanel": {
@@ -43,11 +44,11 @@ game_types = {
                     "vert_align": "TOP",
                     "size": [0.12, 0.06],
                     "game_object:children": [
-                        "TimeText"
+                        "TimeText",
                     ],
                     "fix_aspect_ratio": True,
                     "corner_radius": 0.3,
-                    "colour": [100, 100, 100, 100]
+                    "colour": [100, 100, 100, 100],
                 },
                 "TimeText": {
                     "base_type": "/Hud/HudText",
@@ -56,6 +57,30 @@ game_types = {
                         "name": "time_text",
                         "auto_font_size": True,
                         "auto_font_size_factor": 0.8,
+                    },
+                },
+            },
+            "Joystick": {
+                "class_name": "ColourPanel",
+                "kwargs": {
+                    "vert_align": "BOTTOM",
+                    "pos": [0.028, -0.03],
+                    "size": [0.1688, 0.3],
+                    "corner_radius": 0.5,
+                    "colour": [100, 100, 100, 80],
+                    "fix_aspect_ratio" : True,
+                    "game_object:children": [
+                        "Ship",
+                    ],
+                },
+                "Ship": {
+                    "class_name": "TexturePanel",
+                    "kwargs": {
+                        "horz_align": "CENTRE",
+                        "vert_align": "CENTRE",
+                        "pos": [0, -0.02],
+                        "size": [0.6, 0.6],
+                        "image:image_asset": "ship",
                     },
                 },
             },

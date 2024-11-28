@@ -158,10 +158,29 @@ class Panel(Component):
 class TexturePanel(Panel):
     """Basic UI panel that shows an image."""
 
-    def __init__(self, image_asset, **kwargs):
+    def __init__(
+        self,
+        image_asset,
+        fix_texture_aspect_ratio = True,
+        scale_texture_to_rect = True,
+        **kwargs
+    ):
         super().__init__(**kwargs)
         self._image_asset = image_asset
+        self._fix_texture_aspect_ratio = fix_texture_aspect_ratio
+        self._scale_texture_to_rect = scale_texture_to_rect
 
     def _draw_surface(self):
         super()._draw_surface()
-        self._surface = pygame.transform.smoothscale(self._image_asset, self.rect.size)
+        if self._scale_texture_to_rect:
+            # Fit the texture to the Component's rect, keeping original texture aspect ratio if required
+            if self._fix_texture_aspect_ratio:
+                surface_rect = self._image_asset.get_rect().fit(self.rect)
+            else:
+                surface_rect = self.rect
+            self._surface = pygame.transform.smoothscale(self._image_asset, surface_rect.size)
+        else:
+            self._surface = self._image_asset.copy()
+
+    def resize_to_parent(self, parent_rect: pygame.Rect):
+        super().resize_to_parent(parent_rect)
