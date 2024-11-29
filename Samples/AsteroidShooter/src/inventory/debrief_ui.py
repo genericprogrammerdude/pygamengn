@@ -47,14 +47,20 @@ game_types = {
                         "Multiplier",
                         "Total"
                     ],
-                    "pos": [0.1, 0.1]
+                    "pos": [0.1, 0.1],
                 },
                 "Spinner": {
                     "base_type": "/DebriefUI/DebriefRowPanel/Spinner",
                     "kwargs": {
-                        "image:image_asset": "asteroid_04",
-                        "angular_velocity": 45
-                    }
+                        "game_object:children": ["ActualSpinner"],
+                    },
+                    "ActualSpinner": {
+                        "base_type": "/DebriefUI/DebriefRowPanel/Spinner/ActualSpinner",
+                        "kwargs": {
+                            "image:image_asset": "asteroid_04",
+                            "angular_velocity": 45,
+                        },
+                    },
                 },
                 "Count": {
                     "base_type": "/DebriefUI/DebriefRowPanel/Count",
@@ -113,8 +119,14 @@ game_types = {
                 "Spinner": {
                     "base_type": "/DebriefUI/DebriefRowPanel/Spinner",
                     "kwargs": {
-                        "image:image_asset": "waypoint",
-                        "angular_velocity": -45,
+                        "game_object:children": ["ActualSpinner"],
+                    },
+                    "ActualSpinner": {
+                        "base_type": "/DebriefUI/DebriefRowPanel/Spinner/ActualSpinner",
+                        "kwargs": {
+                            "image:image_asset": "waypoint",
+                            "angular_velocity": -45,
+                        },
                     },
                 },
                 "Count": {
@@ -173,8 +185,14 @@ game_types = {
                 "Spinner": {
                     "base_type": "/DebriefUI/DebriefRowPanel/Spinner",
                     "kwargs": {
-                        "image:image_asset": "ship",
-                        "angular_velocity": 45,
+                        "game_object:children": ["ActualSpinner"],
+                    },
+                    "ActualSpinner": {
+                        "base_type": "/DebriefUI/DebriefRowPanel/Spinner/ActualSpinner",
+                        "kwargs": {
+                            "image:image_asset": "ship",
+                            "angular_velocity": 45,
+                        },
                     },
                 },
                 "TotalTitlePanel": {
@@ -243,15 +261,20 @@ game_types = {
                 "colour": [150, 150, 150, 100]
             },
             "Spinner": {
-                "class_name": "Spinner",
+                "class_name": "Component",
                 "kwargs": {
-                    "horz_align": "LEFT",
-                    "vert_align": "CENTRE",
-                    "pos": [0.05, 0.0],
+                    "pos": [0.05, 0.1],
                     "size": [0.12, 0.8],
-                    "game_object:children": [],
-                    "fix_aspect_ratio": True,
-                }
+                    "game_object:children": ["ActualSpinner"],
+                },
+                "ActualSpinner": {
+                    "class_name": "Spinner",
+                    "kwargs": {
+                        "horz_align": "CENTRE",
+                        "vert_align": "CENTRE",
+                        "fix_aspect_ratio": True,
+                    },
+                },
             },
             "Count": {
                 "class_name": "ColourPanel",
