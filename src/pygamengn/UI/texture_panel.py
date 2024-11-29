@@ -51,7 +51,7 @@ class TexturePanel(Panel):
                 )
             )
         else:
-            self._surface = self._image_asset.copy()
+            self._surface = pygame.transform.rotozoom(self._image_asset, self._angle, 1)
 
     @property
     def angle(self) -> float:
