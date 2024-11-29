@@ -75,3 +75,23 @@ class Interpolator:
     def __linear(self, t: int) -> float:
         """Linear interpolator. It uses f(x) = x in the range [0.0, 1.0] as its function."""
         return (t / self.__duration)
+
+
+
+class AutoInterpolator(Interpolator):
+    """Interpolator that tracks its own duration given a delta."""
+
+    def __init__(
+        self,
+        duration: int,
+        from_value = 0.0,
+        to_value = 1.0,
+        mode: InterpolationMode = InterpolationMode.LINEAR
+    ):
+        super().__init__(duration, from_value, to_value, mode)
+        self.__time = 0
+
+    def update(self, delta: int):
+        """Advances the interpolator's time and returns the new interpolated value."""
+        self.__time += delta
+        return self.get(self.__time)
