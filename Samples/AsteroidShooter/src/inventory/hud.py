@@ -1,9 +1,10 @@
+import pygame
+
 game_types = {
     "Hud": {
-        "class_name": "Root",
+        "class_name": "Hud",
         "kwargs": {
             "game_object:component": "container",
-            "handles_input": False,
         },
         "container": {
             "class_name": "Component",
@@ -13,6 +14,7 @@ game_types = {
                     "TimePanel",
                     "Joystick",
                 ],
+                "name": "hud",
             },
             "ScorePanel": {
                 "class_name": "ColourPanel",
@@ -61,27 +63,16 @@ game_types = {
                 },
             },
             "Joystick": {
-                "class_name": "ColourPanel",
+                "class_name": "TexturePanel",
                 "kwargs": {
                     "vert_align": "BOTTOM",
                     "pos": [0.028, -0.03],
                     "size": [0.1688, 0.3],
-                    "corner_radius": 0.5,
-                    "colour": [100, 100, 100, 80],
-                    "fix_aspect_ratio" : True,
-                    "game_object:children": [
-                        "Ship",
-                    ],
-                },
-                "Ship": {
-                    "class_name": "TexturePanel",
-                    "kwargs": {
-                        "horz_align": "CENTRE",
-                        "vert_align": "CENTRE",
-                        "pos": [0, -0.02],
-                        "size": [0.6, 0.6],
-                        "image:image_asset": "ship",
-                    },
+                    "image:image_asset": "joystick",
+                    "name": "joystick",
+                    "fix_texture_aspect_ratio": False,
+                    "scale_texture_to_rect": False,
+                    "wanted_mouse_events": [pygame.MOUSEMOTION],
                 },
             },
         },

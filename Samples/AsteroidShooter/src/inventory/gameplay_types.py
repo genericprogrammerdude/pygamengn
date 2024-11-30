@@ -63,7 +63,7 @@ game_types = {
             "kwargs": {
                 "velocity": 0.0,
                 "velocity_decay_factor": 0.95,
-                "max_velocity": 200.0,
+                "max_velocity": 12000.0,
                 "angular_velocity": 100,
             }
         },

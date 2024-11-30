@@ -30,6 +30,7 @@ images = {
     "background": "SpaceShooterRedux/Backgrounds/darkPurple.png",
     "waypoint": "SpaceShooterRedux/PNG/ufoRed.png",
     "arrow": "arrow.png",
+    "joystick": "joystick.png",
     "0": "SpaceShooterRedux/PNG/UI/numeral0.png",
     "1": "SpaceShooterRedux/PNG/UI/numeral1.png",
     "2": "SpaceShooterRedux/PNG/UI/numeral2.png",

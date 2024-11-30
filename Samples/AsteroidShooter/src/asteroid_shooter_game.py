@@ -5,6 +5,7 @@ import pygame
 import pygamengn
 
 from debrief_ui import DebriefUI
+from hud import Hud
 from main_menu import MainMenu
 from pause_menu import PauseMenu
 from shield import Shield
@@ -19,15 +20,6 @@ class Mode(Enum):
     PAUSE_MENU = auto()
     KILLING_ALL = auto()
     DEBRIEF = auto()
-
-
-class InputAction(Enum):
-    """The input actions the game understands."""
-    FORWARD = auto()
-    BACK = auto()
-    LEFT = auto()
-    RIGHT = auto()
-    FIRE = auto()
 
 
 @pygamengn.ClassRegistrar.register("AsteroidShooterGame")
@@ -93,6 +85,25 @@ class AsteroidShooterGame(pygamengn.Game):
         if self._player and self._player.alive() and not self._is_paused:
             self.time += delta
             self.score = self._player.score
+
+            if self.hud_ui.joystick_active:
+                heading_diff = self.hud_ui.heading - self._player.heading
+                heading_diff = (heading_diff + 180) % 360 - 180
+                if heading_diff < 0:
+                    heading_delta = max(
+                        heading_diff,
+                        -delta * self._player.mover.angular_velocity / 1000
+                    )
+                else:
+                    heading_delta = min(
+                        heading_diff,
+                        delta * self._player.mover.angular_velocity / 1000
+                    )
+                self._player.heading += heading_delta
+            self._player.set_velocity(
+                self._player.mover.max_velocity * delta / 1000 * self.hud_ui.velocity_multiplier
+            )
+
             # Process move keys
             pressed_keys = pygame.key.get_pressed()
             if pressed_keys[pygame.K_a]:
@@ -100,13 +111,13 @@ class AsteroidShooterGame(pygamengn.Game):
             if pressed_keys[pygame.K_d]:
                 self._player.heading = self._player.heading - delta * self._player.mover.angular_velocity / 1000
             if pressed_keys[pygame.K_w]:
-                self._player.set_velocity(self._player.mover.max_velocity)
+                self._player.set_velocity(self._player.mover.max_velocity * delta / 1000)
             if pressed_keys[pygame.K_s]:
                 self._player.set_velocity(self._player.mover.velocity * 0.8)
 
-        # Put time and score text together
-        self.hud_ui.score_text.text = f"{self.score}"
-        self.hud_ui.time_text.text = f"{self.get_time_string()}"
+            # Put time and score text together
+            self.hud_ui.score_text.text = f"{self.score}"
+            self.hud_ui.time_text.text = f"{self.get_time_string()}"
 
         self.level.update(delta)
 
@@ -147,9 +158,9 @@ class AsteroidShooterGame(pygamengn.Game):
         else:
             assert(self._is_paused)
             self.kill_render_group(1000)
-            self.toggle_ui(self.hud_ui, self.ui_fade_duration)
             self.toggle_pause()
             self.toggle_ui(self.pause_menu_ui, self.ui_fade_duration)
+            self.toggle_ui(self.hud_ui, self.ui_fade_duration)
         self.toggle_ui(self.main_menu_ui, self.ui_fade_duration * 2)
         self.mode = Mode.MAIN_MENU
 
