@@ -104,6 +104,9 @@ class AsteroidShooterGame(pygamengn.Game):
                     self._player.mover.max_velocity * delta / 1000 * self.hud_ui.velocity_multiplier
                 )
 
+            if self.hud_ui.fire:
+                self._player.fire()
+
             # Process move keys
             pressed_keys = pygame.key.get_pressed()
             if pressed_keys[pygame.K_a]:
