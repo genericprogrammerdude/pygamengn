@@ -100,9 +100,9 @@ class AsteroidShooterGame(pygamengn.Game):
                         delta * self._player.mover.angular_velocity / 1000
                     )
                 self._player.heading += heading_delta
-                self._player.set_velocity(
-                    self._player.mover.max_velocity * delta / 1000 * self.hud_ui.velocity_multiplier
-                )
+            self._player.set_velocity(
+                self._player.mover.max_velocity * delta / 1000 * self.hud_ui.velocity_multiplier
+            )
 
             if self.hud_ui.fire:
                 self._player.fire()

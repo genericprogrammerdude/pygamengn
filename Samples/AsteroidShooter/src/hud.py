@@ -22,7 +22,6 @@ class Hud(Root):
         self._velocity_decay_ms = velocity_decay_ms
         self._vel_interp = AutoInterpolator(duration = velocity_decay_ms, from_value = 0, to_value = 0)
         self._joystick_finger = -1
-        self.joystick_active = False
         self._fire = False
 
 
@@ -36,26 +35,9 @@ class Hud(Root):
 
     def handle_event(self, event: pygame.event.Event) -> bool:
         """Handles the given input event."""
-
         rv = False
-        if event.type == pygame.MOUSEMOTION:
-            # <Event(1024-MouseMotion {'pos': (998, 456), 'rel': (1, -2), 'buttons': (0, 0, 0), 'touch': False, 'window': None})>
-            # mouse_pos = event.pos
-            # input_rect = self.joystick.rect
-            # diff = mouse_pos - pygame.Vector2(input_rect.center)
-            # if diff.magnitude() < input_rect.width / 2:
-            #     r, theta = diff.as_polar()
-            #     self.heading = -theta - 90
-            #     if not self.joystick_active:
-            #         self._vel_interp = AutoInterpolator(self._velocity_decay_ms, 1, 0)
-            #         self.joystick_active = True
-            #     rv = True
-            # else:
-            #     self.joystick_active = False
-            pass
-
-        elif event.type == pygame.FINGERDOWN:
-            if event.x < 0.5:
+        if event.type == pygame.FINGERDOWN:
+            if self._process_finger(event.x, event.y):
                 self._joystick_finger = event.finger_id
             else:
                 self._fire = True
@@ -68,18 +50,33 @@ class Hud(Root):
 
         elif event.type == pygame.FINGERMOTION:
             if event.finger_id == self._joystick_finger:
-                # <Event(1794-FingerMotion {'touch_id': 65679, 'finger_id': 354, 'x': 0.22499999403953552, 'y': 0.7736111283302307, 'dx': 0.0, 'dy': -0.001388847827911377, 'pressure': -0.001388847827911377, 'window': None})>
-                dv = pygame.Vector2(event.dx, event.dy)
-                r, theta = dv.as_polar()
-                if r > 0.002:
-                    self.heading = -theta - 90
-                    if not self.joystick_active:
-                        self._vel_interp = AutoInterpolator(self._velocity_decay_ms, 1, 0)
-                    rv = True
-                logging.info(f"r, theta == {r}, {theta}")
+                processed = self._process_finger(event.x, event.y)
+                if not processed:
+                    self._joystick_finger = -1
+            rv = True
 
-        self.joystick_active = self._joystick_finger != -1
         return rv
+
+
+    def _process_finger(self, x: int, y: int) -> bool:
+        rv = False
+        finger_pos = pygame.Vector2(
+            x * self._component.rect.width,
+            y * self._component.rect.height
+        )
+        input_rect = self.joystick.rect
+        diff = finger_pos - pygame.Vector2(input_rect.center)
+        r, theta = diff.as_polar()
+        if r < input_rect.width / 2:
+            self.heading = -theta - 90
+            self.ship.angle = self.heading
+            rv = True
+        return rv
+
+
+    @property
+    def joystick_active(self) -> bool:
+        return self._joystick_finger != -1
 
 
     @property
@@ -91,6 +88,13 @@ class Hud(Root):
         """
         rv = self._fire
         self._fire = False
+        return rv
+
+
+    @property
+    def joystick_motion(self) -> pygame.Vector2:
+        rv = self._joystick_motion.copy()
+        self._joystick_motion.update(0, 0)
         return rv
 
 
@@ -108,5 +112,4 @@ class Hud(Root):
 
     def _initialize_state(self):
         self._joystick_finger = -1
-        self.joystick_active = False
         self._fire = False

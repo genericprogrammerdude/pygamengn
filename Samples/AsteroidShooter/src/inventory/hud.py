@@ -73,6 +73,21 @@ game_types = {
                     "fix_texture_aspect_ratio": False,
                     "scale_texture_to_rect": False,
                     "wanted_mouse_events": [pygame.MOUSEMOTION],
+                    "game_object:children": [
+                        "Ship",
+                    ],
+                },
+                "Ship": {
+                    "class_name": "Spinner",
+                    "kwargs": {
+                        "image:image_asset": "ship-alpha",
+                        "horz_align": "CENTRE",
+                        "vert_align": "CENTRE",
+                        "size": [0.6, 0.6],
+                        "name": "ship",
+                        "fix_texture_aspect_ratio": True,
+                        "scale_texture_to_rect": True,
+                    },
                 },
             },
         },
