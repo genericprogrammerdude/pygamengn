@@ -92,13 +92,17 @@ class Game(DefaultInputHandler):
         Pushes the given InputHandler to the input stack.  The given handler will own input while it remains at the
         top.
         """
+        self._input_stack[-1].deactivate()
         self._input_stack.append(input_handler)
+        input_handler.activate()
         logging.info(f"Pushed {input_handler}")
 
 
     def pop_input_handler(self, input_handler: InputHandler):
         assert(self._input_stack[-1] == input_handler)
+        input_handler.deactivate()
         self._input_stack.pop()
+        self._input_stack[-1].activate()
         logging.info(f"Popped {input_handler}")
 
 

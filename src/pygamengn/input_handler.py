@@ -15,6 +15,14 @@ class InputHandler(GameObjectBase):
         """Processes the given event and returns True if it handled it, False otherwise."""
         pass
 
+    def activate(self) -> bool:
+        """This is invoked when the input handler becomes active."""
+        pass
+
+    def deactivate(self) -> bool:
+        """This is invoked when the input handler is deactivated."""
+        pass
+
 
 @ClassRegistrar.register("DefaultInputHandler")
 class DefaultInputHandler(InputHandler):
