@@ -16,14 +16,15 @@ class Hud(Root):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.heading = 0
-
         self._joystick_finger = -1
         self._fire = False
+        self.__zero_angle = pygame.Vector2(1, 0)
 
 
     def handle_event(self, event: pygame.event.Event) -> bool:
         """Handles the given input event."""
         rv = False
+
         if event.type == pygame.FINGERDOWN:
             if event.x < 0.6:
                 self._process_finger(event.x, event.y)
@@ -50,9 +51,8 @@ class Hud(Root):
             x * self._component.rect.width,
             y * self._component.rect.height
         )
-        input_rect = self.joystick.rect
-        diff = finger_pos - pygame.Vector2(input_rect.center)
-        r, theta = diff.as_polar()
+        diff = finger_pos - pygame.Vector2(self.joystick.rect.center)
+        theta = self.__zero_angle.angle_to(diff)
         self.heading = -theta - 90
         self.ship.angle = self.heading
 
@@ -74,25 +74,8 @@ class Hud(Root):
         return rv
 
 
-    @property
-    def joystick_motion(self) -> pygame.Vector2:
-        rv = self._joystick_motion.copy()
-        self._joystick_motion.update(0, 0)
-        return rv
-
-
     def activate(self) -> bool:
         """This is invoked when the input handler becomes active."""
         super().activate()
-        self._initialize_state()
-
-
-    def deactivate(self) -> bool:
-        """This is invoked when the input handler is deactivated."""
-        super().deactivate()
-        self._initialize_state()
-
-
-    def _initialize_state(self):
         self._joystick_finger = -1
         self._fire = False
