@@ -15,7 +15,7 @@ from asteroid_shooter_game import AsteroidShooterGame
 
 
 async def main(assets_dir: str = None):
-    logging.basicConfig(level=logging.ERROR, format="%(levelname)s: %(filename)s:%(lineno)d: %(message)s")
+    logging.basicConfig(level=logging.WARN, format="%(levelname)s: %(filename)s:%(lineno)d: %(message)s")
 
     pygame.mixer.pre_init(44100, 16, 2, 4096)
     pygame.init()
