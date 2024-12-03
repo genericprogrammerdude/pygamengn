@@ -42,10 +42,10 @@ class MainMenu(Root):
     def handle_event(self, event: pygame.event.Event) -> bool:
         """Handles the given input event."""
         rv = False
-        if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
-            if self.exit_button:
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_ESCAPE and self.exit_button:
                 self.exit_callback()
-            rv = True
+                rv = True
         elif event.type == pygame.MOUSEBUTTONDOWN:
             if self.start_button.process_mouse_event(event.pos, event.type):
                 self.start_callback()
@@ -53,7 +53,7 @@ class MainMenu(Root):
             elif self.exit_button and self.exit_button.process_mouse_event(event.pos, event.type):
                 self.exit_callback()
                 rv = True
-        else:
+        if not rv:
             rv = super().handle_event(event)
         return rv
 

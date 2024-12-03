@@ -7,6 +7,7 @@ from pygamengn.class_registrar import ClassRegistrar
 from pygamengn.game_object_base import GameObjectBase
 from pygamengn.input_handler import InputHandler, DefaultInputHandler
 from pygamengn.UI.root import Root
+from pygamengn.UI.console import Console
 
 
 @ClassRegistrar.register("Game")
@@ -26,6 +27,7 @@ class Game(DefaultInputHandler):
         self._player = None
         self._uis = []
         self._input_stack = [self]
+        self._console_ui = Console(self.toggle_console)
 
 
     def update(self, delta):
@@ -51,7 +53,8 @@ class Game(DefaultInputHandler):
         # Update any active UI screens
         i = 0
         while i < len(self._uis):
-            if not self._uis[i].update(real_delta if self._is_paused and self._uis[i].update_on_pause else delta):
+            ui = self._uis[i]
+            if not ui.update(real_delta if self._is_paused and ui.update_on_pause else delta):
                 self._uis.pop(i)
             else:
                 i += 1
@@ -114,6 +117,15 @@ class Game(DefaultInputHandler):
     def resize_window(self, rect: pygame.Rect):
         for ui in self._uis:
             ui.set_parent_rect(rect)
+
+
+    def toggle_console(self):
+        showing_console = self.toggle_ui(self._console_ui, 300)
+        if showing_console:
+            self._console_ui.restore_pause_state = self._is_paused
+            self._is_paused = True
+        else:
+            self._is_paused = self._console_ui.restore_pause_state
 
 
 

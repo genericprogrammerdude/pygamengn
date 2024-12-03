@@ -36,6 +36,10 @@ class DefaultInputHandler(InputHandler):
         elif event.type == pygame.VIDEORESIZE:
             self.resize_window(pygame.Rect(0, 0, event.w, event.h))
             rv = True
+        elif event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_BACKQUOTE:
+                self.toggle_console()
+                rv = True
         return rv
 
     @abstractmethod
@@ -44,4 +48,8 @@ class DefaultInputHandler(InputHandler):
 
     @abstractmethod
     def resize_window(self, rect: pygame.Rect):
+        pass
+
+    def toggle_console(self):
+        """Subclasses can implement this method to show or hide the game console."""
         pass

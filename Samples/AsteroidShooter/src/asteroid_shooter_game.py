@@ -176,10 +176,12 @@ class AsteroidShooterGame(pygamengn.Game):
                 self.mode = Mode.PAUSE_MENU
                 pygame.mouse.set_visible(True)
                 rv = True
-            if event.key == pygame.K_SPACE and self._player:
-                self._player.fire()
-                rv = True
-        else:
+            elif event.key == pygame.K_SPACE:
+                if self._player:
+                    self._player.fire()
+                    rv = True
+
+        if not rv:
             rv = super().handle_event(event)
 
         return rv
