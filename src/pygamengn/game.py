@@ -90,7 +90,13 @@ class Game(DefaultInputHandler):
         """
         for event in pygame.event.get():
             if not self._input_stack[-1].handle_event(event):
-                self.handle_event(event)
+                processed = False
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_f and event.mod & pygame.KMOD_CTRL:
+                        self.toggle_ui(self._fps_ui)
+                        processed = True
+                if not processed:
+                    self.handle_event(event)
 
 
     def push_input_handler(self, input_handler: InputHandler):
