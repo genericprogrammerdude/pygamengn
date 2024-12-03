@@ -6,8 +6,10 @@ from pygamengn.blit_surface import BlitSurface
 from pygamengn.class_registrar import ClassRegistrar
 from pygamengn.game_object_base import GameObjectBase
 from pygamengn.input_handler import InputHandler, DefaultInputHandler
-from pygamengn.UI.root import Root
+
 from pygamengn.UI.console import Console
+from pygamengn.UI.fps import Fps
+from pygamengn.UI.root import Root
 
 
 @ClassRegistrar.register("Game")
@@ -27,7 +29,8 @@ class Game(DefaultInputHandler):
         self._player = None
         self._uis = []
         self._input_stack = [self]
-        self._console_ui = Console(self.toggle_console)
+        self._fps_ui = Fps()
+        self._console_ui = Console(self.toggle_console, lambda: self.toggle_ui(self._fps_ui, 300))
 
 
     def update(self, delta):
