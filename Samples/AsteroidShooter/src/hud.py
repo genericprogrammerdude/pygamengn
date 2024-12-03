@@ -6,7 +6,6 @@ from pygame._sdl2 import touch
 
 from pygamengn.class_registrar import ClassRegistrar
 
-from pygamengn.interpolator import AutoInterpolator
 from pygamengn.UI.root import Root
 
 
@@ -14,30 +13,20 @@ from pygamengn.UI.root import Root
 class Hud(Root):
     """HUD UI."""
 
-    def __init__(self, velocity_decay_ms = 1000, **kwargs):
+    def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.heading = 0
-        self.velocity_multiplier = 0
 
-        self._velocity_decay_ms = velocity_decay_ms
-        self._vel_interp = AutoInterpolator(duration = velocity_decay_ms, from_value = 0, to_value = 0)
         self._joystick_finger = -1
         self._fire = False
-
-
-    def update(self, delta: int) -> bool:
-        if self.joystick_active:
-            self.velocity_multiplier = 1
-        else:
-            self.velocity_multiplier = self._vel_interp.update(delta)
-        return super().update(delta)
 
 
     def handle_event(self, event: pygame.event.Event) -> bool:
         """Handles the given input event."""
         rv = False
         if event.type == pygame.FINGERDOWN:
-            if self._process_finger(event.x, event.y):
+            if event.x < 0.6:
+                self._process_finger(event.x, event.y)
                 self._joystick_finger = event.finger_id
             else:
                 self._fire = True
@@ -50,16 +39,13 @@ class Hud(Root):
 
         elif event.type == pygame.FINGERMOTION:
             if event.finger_id == self._joystick_finger:
-                processed = self._process_finger(event.x, event.y)
-                if not processed:
-                    self._joystick_finger = -1
+                self._process_finger(event.x, event.y)
             rv = True
 
         return rv
 
 
-    def _process_finger(self, x: int, y: int) -> bool:
-        rv = False
+    def _process_finger(self, x: int, y: int):
         finger_pos = pygame.Vector2(
             x * self._component.rect.width,
             y * self._component.rect.height
@@ -67,11 +53,8 @@ class Hud(Root):
         input_rect = self.joystick.rect
         diff = finger_pos - pygame.Vector2(input_rect.center)
         r, theta = diff.as_polar()
-        if r < input_rect.width / 2:
-            self.heading = -theta - 90
-            self.ship.angle = self.heading
-            rv = True
-        return rv
+        self.heading = -theta - 90
+        self.ship.angle = self.heading
 
 
     @property

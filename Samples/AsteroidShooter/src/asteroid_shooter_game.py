@@ -100,9 +100,7 @@ class AsteroidShooterGame(pygamengn.Game):
                         delta * self._player.mover.angular_velocity / 1000
                     )
                 self._player.heading += heading_delta
-            self._player.set_velocity(
-                self._player.mover.max_velocity * delta / 1000 * self.hud_ui.velocity_multiplier
-            )
+                self._player.set_velocity(self._player.mover.max_velocity)
 
             if self.hud_ui.fire:
                 self._player.fire()
@@ -114,9 +112,9 @@ class AsteroidShooterGame(pygamengn.Game):
             if pressed_keys[pygame.K_d]:
                 self._player.heading = self._player.heading - delta * self._player.mover.angular_velocity / 1000
             if pressed_keys[pygame.K_w]:
-                self._player.set_velocity(self._player.mover.max_velocity * delta / 1000)
+                self._player.set_velocity(self._player.mover.max_velocity)
             if pressed_keys[pygame.K_s]:
-                self._player.set_velocity(self._player.mover.velocity * delta / 1000 * 0.8)
+                self._player.set_velocity(self._player.mover.velocity * 0.8)
 
             # Put time and score text together
             self.hud_ui.score_text.text = f"{self.score}"
