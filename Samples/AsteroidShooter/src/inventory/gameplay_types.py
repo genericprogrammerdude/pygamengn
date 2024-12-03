@@ -181,7 +181,7 @@ game_types = {
         "Explosion": {
             "class_name": "AnimatedTexture",
             "kwargs": {
-                "asset:asset": "explosion_atlas",
+                "asset:atlas": "explosion_atlas",
                 "duration": 750,
             },
             "groups": [
@@ -191,7 +191,7 @@ game_types = {
         "ExplosionSmall": {
             "class_name": "AnimatedTexture",
             "kwargs": {
-                "asset:asset": "explosion_small_atlas",
+                "asset:atlas": "explosion_small_atlas",
                 "duration": 500,
                 "sound:sound": "explosion_small"
             },
@@ -202,7 +202,7 @@ game_types = {
         "ExplosionBig": {
             "class_name": "AnimatedTexture",
             "kwargs": {
-                "asset:asset": "explosion_big_atlas",
+                "asset:atlas": "explosion_big_atlas",
                 "duration": 1500,
                 "sound:sound": "explosion_large"
             },

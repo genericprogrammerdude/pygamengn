@@ -10,10 +10,10 @@ from pygamengn.game_object import GameObject
 @ClassRegistrar.register("AnimatedTexture")
 class AnimatedTexture(GameObject):
 
-    def __init__(self, asset, duration, sound=None, **kwargs):
-        super().__init__(asset.frames[0][0], False, **kwargs)
+    def __init__(self, atlas, duration, sound=None, **kwargs):
+        super().__init__(atlas.frames[0][0], False, **kwargs)
         self.dirty_image = False
-        self.asset = asset
+        self.atlas = atlas
         self.duration = duration
         self.sound = sound
         self.animation_time = 0
@@ -26,7 +26,7 @@ class AnimatedTexture(GameObject):
         if self.is_playing:
             # Figure out which frame to use and set the image
             progress = 1.0 * self.animation_time / self.duration
-            frames = self.asset.frames[self.atlas_index]
+            frames = self.atlas.frames[self.atlas_index]
             frame_index = round(progress * len(frames))
             if frame_index < len(frames):
                 self.image = frames[frame_index]
@@ -45,7 +45,7 @@ class AnimatedTexture(GameObject):
 
     def play(self, done_callback=None):
         self.is_playing = True
-        self.atlas_index = random.randint(0, len(self.asset.frames) - 1)
+        self.atlas_index = random.randint(0, len(self.atlas.frames) - 1)
         self.done_callback = done_callback
         if self.sound:
             self.sound.play()
