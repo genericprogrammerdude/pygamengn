@@ -64,7 +64,7 @@ game_types = {
                 "velocity": 0.0,
                 "velocity_decay_ms": 2000,
                 "max_velocity": 250.0,
-                "angular_velocity": 100,
+                "angular_velocity": 120,
             }
         },
         "PlayerHealthBar": {
