@@ -96,11 +96,10 @@ class Console(Root):
                 lp.text = lp.text + " "
                 rv = True
 
-            else:
-                key_name = pygame.key.name(event.key)
-                if len(key_name) == 1:
-                    lp.text = lp.text + key_name
-                    rv = True
+        elif event.type == pygame.TEXTINPUT:
+            if event.text != "`":
+                lp.text = lp.text + event.text
+                rv = True
 
         if not rv:
             rv = super().handle_event(event)
