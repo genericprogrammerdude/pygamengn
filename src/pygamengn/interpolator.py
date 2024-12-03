@@ -95,3 +95,11 @@ class AutoInterpolator(Interpolator):
         """Advances the interpolator's time and returns the new interpolated value."""
         self.__time += delta
         return self.get(self.__time)
+
+    @property
+    def time(self) -> int:
+        return self.__time
+
+    @time.setter
+    def time(self, t: int):
+        self.__time = t

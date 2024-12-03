@@ -62,8 +62,8 @@ game_types = {
             "class_name": "MoverVelocity",
             "kwargs": {
                 "velocity": 0.0,
-                "velocity_decay_factor": 0.95,
-                "max_velocity": 12000.0,
+                "velocity_decay_ms": 2000,
+                "max_velocity": 250.0,
                 "angular_velocity": 100,
             }
         },
@@ -115,7 +115,6 @@ game_types = {
                 "class_name": "MoverVelocity",
                 "kwargs": {
                     "velocity": 1200.0,
-                    "velocity_decay_factor": 1.0,
                     "max_velocity": 800.0,
                     "angular_velocity": 0.0
                 }
@@ -327,7 +326,6 @@ game_types = {
                     "class_name": "MoverVelocity",
                     "kwargs": {
                         "velocity": 500.0,
-                        "velocity_decay_factor": 1.0,
                         "max_velocity": 500.0,
                         "angular_velocity": 0.0
                     }

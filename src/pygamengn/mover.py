@@ -17,22 +17,26 @@ class Mover(GameObjectBase):
 class MoverVelocity(Mover):
     """Velocity-based mover."""
 
-    def __init__(self, velocity_decay_factor, velocity, max_velocity, angular_velocity):
+    def __init__(self, velocity, max_velocity, angular_velocity, velocity_decay_ms = -1):
         self.velocity = velocity
-        self.velocity_decay_factor = velocity_decay_factor
         self.max_velocity = max_velocity
         self.angular_velocity = angular_velocity
+        self._velocity_decay_interp = AutoInterpolator(velocity_decay_ms, 1, 0 if velocity_decay_ms > -1 else 1)
 
     def move(self, delta, pos, heading):
         """Computes movement from the given parameters."""
-        theta = numpy.deg2rad(90 - heading)
-        direction = pygame.Vector2(numpy.cos(theta), numpy.sin(theta))
-        delta_pos = direction * delta / -1000.0 * self.velocity
-        self.velocity = self.velocity * self.velocity_decay_factor
-        return (pos + delta_pos, heading)
+        if self.velocity > 0:
+            theta = numpy.deg2rad(90 - heading)
+            direction = pygame.Vector2(numpy.cos(theta), numpy.sin(theta))
+            delta_pos = direction * delta / -1000.0 * self.velocity
+            self.velocity = self.velocity * self._velocity_decay_interp.update(delta)
+            return (pos + delta_pos, heading)
+        else:
+            return (pos, heading)
 
     def set_velocity(self, velocity):
         self.velocity = velocity
+        self._velocity_decay_interp.time = 0
 
 
 @ClassRegistrar.register("MoverVelDir")
