@@ -34,7 +34,7 @@ class TextPanel(Panel):
 
     def resize_to_parent(self, parent_rect: pygame.Rect):
         super().resize_to_parent(parent_rect)
-        if self.__auto_font_size:
+        if self.__auto_font_size and self.__text != "":
             self.__font_size = self.__font_asset.get_font_size(
                 self.__text, pygame.Vector2(self._rect.size) * self.__auto_font_size_factor
             )
