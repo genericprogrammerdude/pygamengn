@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import logging
 
 import pygame
@@ -11,12 +13,14 @@ from pygamengn.game_object_base import GameObjectBase
 class FontAsset(GameObjectBase):
     """Loadable font asset."""
 
+    """Default monospace font that is always available through FontAsset.monospace()."""
+    __monospace_font_asset = None
+
     def __init__(self, fname: str, size: int):
         self.__fname = fname
         self.__size = size
-        self.__fonts = {
-            size: pygame.font.Font(fname, size),
-        }
+        self.__fonts = {}
+        self.__get_font(size)
 
 
     def render(
@@ -67,8 +71,23 @@ class FontAsset(GameObjectBase):
         try:
             font = self.__fonts[size]
         except KeyError:
-            font = pygame.font.Font(self.__fname, size)
+            try:
+                font = pygame.font.Font(self.__fname, size)
+            except TypeError:
+                font = pygame.font.SysFont(self.__fname, size)
+                self.__fname = [font.name]
             self.__fonts[size] = font
             logging.debug(f"Added size {size} for {self.__fname}")
 
         return font
+
+
+    @classmethod
+    def monospace(cls) -> FontAsset:
+        if cls.__monospace_font_asset is None:
+            cls.__monospace_font_asset = FontAsset(
+                # At least one of these _should_ be available in any platform
+                fname = ["Consolas", "SF Mono", "DejaVu Sans Mono", "Roboto Mono", "Courier"],
+                size = 12
+            )
+        return cls.__monospace_font_asset
