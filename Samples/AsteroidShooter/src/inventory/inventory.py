@@ -114,6 +114,7 @@ assets = {
         "kwargs": {
             "image:images": ["explosion1"],
             "frame_size": [256, 256],
+            "scale": 0.8,
         },
     },
     "explosion_atlas": {
@@ -128,6 +129,7 @@ assets = {
         "kwargs": {
             "image:images": ["explosion3", "explosion4"],
             "frame_size": [256, 256],
+            "scale": 1.5,
         },
     },
     "fast_hand_font": {

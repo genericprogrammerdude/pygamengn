@@ -30,12 +30,6 @@ class AnimatedTexture(GameObject):
             frame_index = round(progress * len(frames))
             if frame_index < len(frames):
                 self.image = frames[frame_index]
-                if self.scale != 1 or self.heading != 0:
-                    self.image = pygame.transform.rotozoom(frames[frame_index], self.heading, self.scale)
-#                     self.image = pygame.transform.scale(self.image,
-#                                                         (self.image.get_rect().width * self.scale,
-#                                                          self.image.get_rect().height * self.scale))
-#                     print("WARNING! Scaling asset frames!")
                 self.rect = self.image.get_rect()
 
             self.rect = self.image.get_rect()
@@ -45,15 +39,12 @@ class AnimatedTexture(GameObject):
             # Update animation time
             self.animation_time = self.animation_time + delta
             if self.animation_time > self.duration:
-                self.reset()
-                self.kill()
                 if self.done_callback:
                     self.done_callback()
-                    self.done_callback = None
+                self.reset()
 
     def play(self, done_callback=None):
         self.is_playing = True
-        self.heading = random.randint(0, 360)
         self.atlas_index = random.randint(0, len(self.asset.frames) - 1)
         self.done_callback = done_callback
         if self.sound:
@@ -63,6 +54,7 @@ class AnimatedTexture(GameObject):
         """Resets the animation and leaves the object ready to play from the start."""
         self.animation_time = 0
         self.is_playing = False
+        self.done_callback = None
         self.kill()
 
     def take_damage(self, *_):

@@ -183,7 +183,6 @@ game_types = {
             "kwargs": {
                 "asset:asset": "explosion_atlas",
                 "duration": 750,
-                "scale": 1
             },
             "groups": [
                 "RenderGroup"
@@ -194,7 +193,6 @@ game_types = {
             "kwargs": {
                 "asset:asset": "explosion_small_atlas",
                 "duration": 500,
-                "scale": 0.8,
                 "sound:sound": "explosion_small"
             },
             "groups": [
@@ -206,7 +204,6 @@ game_types = {
             "kwargs": {
                 "asset:asset": "explosion_big_atlas",
                 "duration": 1500,
-                "scale": 1.5,
                 "sound:sound": "explosion_large"
             },
             "groups": [
