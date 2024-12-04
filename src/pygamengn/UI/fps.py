@@ -19,17 +19,44 @@ class Fps(Root):
                 children = [
                     ColourPanel(
                         colour = (30, 30, 30, 150),
-                        size = (0.06, 0.06),
+                        size = (0.06, 0.1),
                         horz_align = Panel.HorzAlign.RIGHT,
                         children = [
                             TextPanel(
                                 name = "fps",
                                 font_asset = FontAsset.monospace(),
                                 text_colour = (0xFF, 0xBF, 0, 255),
-                                auto_font_size = True,
-                                auto_font_size_factor = 0.9,
+                                size = (1.0, 0.25),
                                 horz_align = Panel.HorzAlign.RIGHT,
-                                vert_align = Panel.VertAlign.CENTRE,
+                                pos = (0, 0),
+                                text = "FPS: 00",
+                            ),
+                            TextPanel(
+                                name = "avg",
+                                font_asset = FontAsset.monospace(),
+                                text_colour = (0xFF, 0xBF, 0, 255),
+                                size = (1.0, 0.25),
+                                horz_align = Panel.HorzAlign.RIGHT,
+                                pos = (0, 0.25),
+                                text = "Avg: 00",
+                            ),
+                            TextPanel(
+                                name = "min",
+                                font_asset = FontAsset.monospace(),
+                                text_colour = (0xFF, 0xBF, 0, 255),
+                                size = (1.0, 0.25),
+                                horz_align = Panel.HorzAlign.RIGHT,
+                                pos = (0, 0.5),
+                                text = "Min: 00",
+                            ),
+                            TextPanel(
+                                name = "max",
+                                font_asset = FontAsset.monospace(),
+                                text_colour = (0xFF, 0xBF, 0, 255),
+                                size = (1.0, 0.25),
+                                horz_align = Panel.HorzAlign.RIGHT,
+                                pos = (0, 0.75),
+                                text = "Max: 00",
                             ),
                         ],
                     ),
@@ -38,8 +65,38 @@ class Fps(Root):
             update_on_pause = True,
             handles_input = False,
         )
+        self._min = 500
+        self._max = -500
+        self._count = 0
+        self._accum = 0
+        self.__uniform_font_panels = [self.fps, self.avg, self.min, self.max]
 
 
     def update(self, delta: int) -> bool:
-        self.fps.text = f"{round(1000 / delta):d}"
+        fps = round(1000 / delta)
+        if fps < self._min:
+            self._min = fps
+        if fps > self._max:
+            self._max = fps
+        self._accum += fps
+        self._count += 1
+
+        self.fps.text = f"FPS: {fps:d}"
+        self.avg.text = f"Avg: {round(self._accum / self._count):d}"
+        self.min.text = f"Min: {self._min}"
+        self.max.text = f"Max: {self._max}"
+
         return super().update(delta)
+
+
+    def set_parent_rect(self, rect: pygame.Rect):
+        super().set_parent_rect(rect)
+        self._set_uniform_font_size(self.__uniform_font_panels, 0.9)
+
+
+    def fade_in(self, duration: int):
+        self._min = 500
+        self._max = -500
+        self._count = 0
+        self._accum = 0
+        super().fade_in(duration)
