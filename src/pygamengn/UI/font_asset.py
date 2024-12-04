@@ -73,7 +73,7 @@ class FontAsset(GameObjectBase):
         except KeyError:
             try:
                 font = pygame.font.Font(self.__fname, size)
-            except TypeError:
+            except (TypeError, RuntimeError) as e:
                 font = pygame.font.SysFont(self.__fname, size)
                 self.__fname = [font.name]
             self.__fonts[size] = font
