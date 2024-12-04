@@ -65,12 +65,13 @@ game_types = {
             "Joystick": {
                 "class_name": "Component",
                 "kwargs": {
+                    "name": "joystick",
                     "game_object:children": ["Stick", "Button"],
                 },
                 "Stick": {
                     "class_name": "TexturePanel",
                     "kwargs": {
-                        "name": "joystick",
+                        "name": "stick",
                         "vert_align": "BOTTOM",
                         "pos": [0.028, -0.03],
                         "size": [0.1688, 0.3],
