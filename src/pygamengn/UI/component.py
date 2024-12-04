@@ -48,6 +48,7 @@ class Component(GameObjectBase):
         self._normalized_pos = pygame.Vector2(pos)
         self._parent_rect = None
         self._rect = None
+        self._active = True
 
 
     def update(self, delta: int) -> bool:
@@ -61,9 +62,13 @@ class Component(GameObjectBase):
         bool
             Whether there is a component in the tree that wants to redraw itself.
         """
+        if not self._active:
+            return False
+
         dirty = False
         for child in self.__children:
-            dirty = child.update(delta) or dirty
+            if child._active:
+                dirty = child.update(delta) or dirty
         return dirty
 
 
@@ -71,6 +76,9 @@ class Component(GameObjectBase):
         """
         Recursively blit each static component in the tree to the given surface.
         """
+        if not self._active:
+            return
+
         topleft = pygame.Vector2(self._rect.topleft) + parent_pos
         if not self._is_dynamic:
             bs = self._blit_surface
@@ -88,14 +96,18 @@ class Component(GameObjectBase):
         A static component is one that doesn't need to change its blit surface on every frame. A dynamic component
         is one that needs its blit surface updated every frame.
         """
+        if not self._active:
+            return []
+
         bss = []
         topleft = pygame.Vector2(self._rect.topleft) + parent_pos
         if self._is_dynamic:
             bs = self._blit_surface
             if bs:
                 bss.append(BlitSurface(bs, topleft))
-        for child in self.__children:
-            bss.extend(child.get_dynamic_blit_surfaces(topleft))
+
+        [bss.extend(child.get_dynamic_blit_surfaces(topleft)) for child in self.__children]
+
         return bss
 
 
@@ -105,6 +117,9 @@ class Component(GameObjectBase):
 
         _rect is always in parent coordinates, NOT screen coordinates.
         """
+        if not self._active:
+            return
+
         width = parent_rect.width * self.__size.x
         height = parent_rect.height * self.__size.y
 
@@ -122,8 +137,7 @@ class Component(GameObjectBase):
         self._rect = pygame.Rect(pos.x, pos.y, width, height)
         self._parent_rect = parent_rect
 
-        for child in self.__children:
-            child.resize_to_parent(self._rect)
+        [child.resize_to_parent(self._rect) for child in self.__children]
 
 
     def process_mouse_event(self, pos: pygame.Vector2, event_type: int) -> bool:
@@ -143,6 +157,9 @@ class Component(GameObjectBase):
         bool
             Whether there was a component in the tree that did something with the information.
         """
+        if not self._active:
+            return False
+
         capture_event = False
         local_pos = pos - pygame.Vector2(self._parent_rect.topleft)
         for child in self.__children:
@@ -193,6 +210,17 @@ class Component(GameObjectBase):
     def _blit_surface(self) -> pygame.Surface:
         """Returns the image that the UI component wants to blit to the screen."""
         return None
+
+
+    @property
+    def active(self) -> bool:
+        """Returns whether the component is active. Inactive components's update() method is not invoked."""
+        return self._active
+
+
+    @active.setter
+    def active(self, state: bool):
+        self._active = state
 
 
     def __iter__(self):
