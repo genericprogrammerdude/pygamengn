@@ -2,8 +2,6 @@ import logging
 
 import pygame
 
-from pygame._sdl2 import touch
-
 from pygamengn.class_registrar import ClassRegistrar
 
 from pygamengn.UI.root import Root
