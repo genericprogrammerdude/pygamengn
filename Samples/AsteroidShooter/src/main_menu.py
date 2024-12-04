@@ -48,7 +48,7 @@ class MainMenu(Root):
                 rv = True
         elif event.type == pygame.MOUSEBUTTONDOWN:
             if self.start_button.process_mouse_event(event.pos, event.type):
-                self.start_callback()
+                self.start_callback(event.touch)
                 rv = True
             elif self.exit_button and self.exit_button.process_mouse_event(event.pos, event.type):
                 self.exit_callback()

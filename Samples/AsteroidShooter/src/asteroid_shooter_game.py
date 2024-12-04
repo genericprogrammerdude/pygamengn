@@ -86,24 +86,25 @@ class AsteroidShooterGame(pygamengn.Game):
             self.time += delta
             self.score = self._player.score
 
-            heading_diff = self.hud_ui.heading - self._player.heading
-            heading_diff = (heading_diff + 180) % 360 - 180
-            if heading_diff < 0:
-                heading_delta = max(
-                    heading_diff,
-                    -delta * self._player.mover.angular_velocity / 1000
-                )
-            else:
-                heading_delta = min(
-                    heading_diff,
-                    delta * self._player.mover.angular_velocity / 1000
-                )
-            self._player.heading += heading_delta
-            if self.hud_ui.joystick_active:
-                self._player.set_velocity(self._player.mover.max_velocity)
+            if self.hud_ui.touch_joystick_active:
+                heading_diff = self.hud_ui.heading - self._player.heading
+                heading_diff = (heading_diff + 180) % 360 - 180
+                if heading_diff < 0:
+                    heading_delta = max(
+                        heading_diff,
+                        -delta * self._player.mover.angular_velocity / 1000
+                    )
+                else:
+                    heading_delta = min(
+                        heading_diff,
+                        delta * self._player.mover.angular_velocity / 1000
+                    )
+                self._player.heading += heading_delta
+                if self.hud_ui.joystick_motion:
+                    self._player.set_velocity(self._player.mover.max_velocity)
 
-            if self.hud_ui.fire:
-                self._player.fire()
+                if self.hud_ui.fire:
+                    self._player.fire()
 
             # Process move keys
             pressed_keys = pygame.key.get_pressed()
@@ -135,11 +136,12 @@ class AsteroidShooterGame(pygamengn.Game):
             self.toggle_ui(self.hud_ui, self.ui_fade_duration)
 
 
-    def start_play(self):
+    def start_play(self, touch_input: bool):
         """Prepares the game to start playing."""
         self.mode = Mode.KILLING_ALL
         pygame.mouse.set_visible(False)
         self.toggle_ui(self.main_menu_ui, self.ui_fade_duration)
+        self.hud_ui.set_joystick_state(touch_input)
 
 
     def resume_play(self):

@@ -17,32 +17,33 @@ class Hud(Root):
         self._joystick_finger = -1
         self._fire = False
         self.__zero_angle = pygame.Vector2(1, 0)
-        self._joystick_active = False
+        self._joystick_motion = False
 
 
     def handle_event(self, event: pygame.event.Event) -> bool:
         """Handles the given input event."""
         rv = False
 
-        if event.type == pygame.FINGERDOWN:
-            if event.x < 0.6:
-                self._update_heading(event.x, event.y, True)
-                self._joystick_finger = event.finger_id
-            else:
-                self._fire = True
-            rv = True
-
-        elif event.type == pygame.FINGERUP:
-            if event.finger_id == self._joystick_finger:
-                self._joystick_finger = -1
-                self._joystick_active = False
+        if self.joystick.active:
+            if event.type == pygame.FINGERDOWN:
+                if event.x < 0.6:
+                    self._update_heading(event.x, event.y, True)
+                    self._joystick_finger = event.finger_id
+                else:
+                    self._fire = True
                 rv = True
 
-        elif event.type == pygame.FINGERMOTION:
-            if event.finger_id == self._joystick_finger:
-                self._update_heading(event.x, event.y)
-                self._joystick_active = True
-            rv = True
+            elif event.type == pygame.FINGERUP:
+                if event.finger_id == self._joystick_finger:
+                    self._joystick_finger = -1
+                    self._joystick_motion = False
+                    rv = True
+
+            elif event.type == pygame.FINGERMOTION:
+                if event.finger_id == self._joystick_finger:
+                    self._update_heading(event.x, event.y)
+                    self._joystick_motion = True
+                rv = True
 
         return rv
 
@@ -60,8 +61,13 @@ class Hud(Root):
 
 
     @property
-    def joystick_active(self) -> bool:
-        return self._joystick_active
+    def joystick_motion(self) -> bool:
+        return self._joystick_motion
+
+
+    @property
+    def touch_joystick_active(self) -> bool:
+        return self.joystick.active
 
 
     @property
@@ -80,6 +86,10 @@ class Hud(Root):
         super().fade_in(duration)
         self.heading = 0
         self.ship.angle = 0
-        self._joystick_active = False
+        self._joystick_motion = False
         self._joystick_finger = -1
         self._fire = False
+
+
+    def set_joystick_state(self, state: bool):
+        self.joystick.active = state
