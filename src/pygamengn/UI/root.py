@@ -133,10 +133,12 @@ class Root(InputHandler):
     def update_on_pause(self) -> bool:
         return self._update_on_pause
 
+
     @property
     def handles_input(self) -> bool:
         """Returns whether this Root wants to handle input or not."""
         return self._handles_input
+
 
     def _set_uniform_font_size(self, text_panels: list[TextPanel], size_factor: float = 1.0):
         """

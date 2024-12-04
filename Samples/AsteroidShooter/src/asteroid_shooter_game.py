@@ -86,20 +86,20 @@ class AsteroidShooterGame(pygamengn.Game):
             self.time += delta
             self.score = self._player.score
 
+            heading_diff = self.hud_ui.heading - self._player.heading
+            heading_diff = (heading_diff + 180) % 360 - 180
+            if heading_diff < 0:
+                heading_delta = max(
+                    heading_diff,
+                    -delta * self._player.mover.angular_velocity / 1000
+                )
+            else:
+                heading_delta = min(
+                    heading_diff,
+                    delta * self._player.mover.angular_velocity / 1000
+                )
+            self._player.heading += heading_delta
             if self.hud_ui.joystick_active:
-                heading_diff = self.hud_ui.heading - self._player.heading
-                heading_diff = (heading_diff + 180) % 360 - 180
-                if heading_diff < 0:
-                    heading_delta = max(
-                        heading_diff,
-                        -delta * self._player.mover.angular_velocity / 1000
-                    )
-                else:
-                    heading_delta = min(
-                        heading_diff,
-                        delta * self._player.mover.angular_velocity / 1000
-                    )
-                self._player.heading += heading_delta
                 self._player.set_velocity(self._player.mover.max_velocity)
 
             if self.hud_ui.fire:
