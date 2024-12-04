@@ -15,17 +15,12 @@ class Atlas(GameObjectBase):
         self.frames = []
         for img in self.images:
             rect = img.get_rect()
-            frame_count = (rect.height // frame_size[1]) * (rect.width // frame_size[0])
-            image_frames = [
-                pygame.Surface(
-                    (frame_size[0] * scale, frame_size[1] * scale),
-                    pygame.SRCALPHA
-                ) for i in range(frame_count)
-            ]
+            image_frames = []
             frame_index = 0
             for y in range(0, rect.height, frame_size[1]):
                 for x in range(0, rect.width, frame_size[0]):
                     frame_rect = pygame.Rect(x, y, frame_size[0], frame_size[1])
-                    pygame.transform.smoothscale_by(img.subsurface(frame_rect), scale, image_frames[frame_index])
-                    frame_index += 1
+                    image_frames.append(
+                        pygame.transform.smoothscale_by(img.subsurface(frame_rect), scale)
+                    )
             self.frames.append(image_frames)
