@@ -35,6 +35,7 @@ class Panel(Component):
         self._pos_changed = True
         self._surface_changed = True
 
+
     def update(self, delta: int) -> bool:
         needs_redraw = self._needs_redraw
         needs_reblit = self._needs_reblit
@@ -44,6 +45,7 @@ class Panel(Component):
             self._align()
             self._reset_redraw_flags()
         return super().update(delta) or needs_redraw or needs_reblit
+
 
     def resize_to_parent(self, parent_rect: pygame.Rect):
         super().resize_to_parent(parent_rect)

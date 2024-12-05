@@ -72,12 +72,10 @@ game_types = {
                     "class_name": "TexturePanel",
                     "kwargs": {
                         "name": "stick",
-                        "vert_align": "BOTTOM",
-                        "pos": [0.028, -0.03],
-                        "size": [0.1688, 0.3],
+                        "pos": [0.03, 0.7],
+                        "size": [0.15, 0.25],
                         "image:image_asset": "joystick",
-                        "fix_texture_aspect_ratio": False,
-                        "scale_texture_to_rect": False,
+                        "scale_texture_to_rect": True,
                         "game_object:children": [
                             "Ship",
                         ],
@@ -90,7 +88,6 @@ game_types = {
                             "vert_align": "CENTRE",
                             "size": [0.6, 0.6],
                             "name": "ship",
-                            "fix_texture_aspect_ratio": True,
                             "scale_texture_to_rect": True,
                         },
                     },
