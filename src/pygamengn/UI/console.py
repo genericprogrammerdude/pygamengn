@@ -3,6 +3,7 @@ import pygame
 from pygamengn.class_registrar import ClassRegistrar
 
 from pygamengn.UI.colour_panel import ColourPanel
+from pygamengn.console_registrar import ConsoleRegistrar
 from pygamengn.UI.component import Component
 from pygamengn.UI.font_asset import FontAsset
 from pygamengn.UI.root import Root
@@ -17,7 +18,7 @@ class Console(Root):
     __CURSOR_CHARACTER = "[]"
 
 
-    def __init__(self, hide_callback, fps_callback, size = (1.0 , 0.5), line_count = 15):
+    def __init__(self, hide_callback, size = (1.0 , 0.5), line_count = 15):
         line_height = 1 / line_count
         super().__init__(
             component = Component(
@@ -45,7 +46,6 @@ class Console(Root):
         )
         self.restore_pause_state = False
         self._hide_callback = hide_callback
-        self._fps_callback = fps_callback
         self._cursor_line_index = 0
         self._line_count = line_count
         self._cursor_time = self.__CURSOR_BLINK_TIME
@@ -113,10 +113,14 @@ class Console(Root):
 
 
     def _execute_command(self, command: str):
-        if command == "fps":
-            self._fps_callback()
-        else:
-            print(f"IMPLEMENT ME! Execute command `{command}`")
+        rv = ConsoleRegistrar.callback(command)()
+        if not rv is None:
+            self._add_output(f"{rv}")
+
+
+    def _add_output(self, s: str):
+        self._increment_line_index()
+        self._lp(self._cursor_line_index).text = s
 
 
     def _increment_line_index(self):
