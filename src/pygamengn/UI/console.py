@@ -52,6 +52,7 @@ class Console(Root):
         self._show_cursor = False
         self._history_index = 0
         self._history = []
+        ConsoleRegistrar.register("exit", self._hide_callback)
 
 
     def update(self, delta: int) -> bool:
@@ -93,25 +94,41 @@ class Console(Root):
             elif event.key == pygame.K_BACKSPACE:
                 if lp.text[len(self.__CURSOR_LINE):] != "":
                     lp.text = lp.text[:-1]
-                    rv = True
+                rv = True
 
             elif event.key == pygame.K_UP:
                 if self._history_index < len(self._history):
                     self._history_index += 1
-                    lp.text = f">{self._history[-self._history_index]}"
+                    lp.text = f"{self.__CURSOR_LINE}{self._history[-self._history_index]}"
+                rv = True
 
             elif event.key == pygame.K_DOWN:
                 if self._history_index > 1:
                     self._history_index -= 1
-                    lp.text = f">{self._history[-self._history_index]}"
+                    lp.text = f"{self.__CURSOR_LINE}{self._history[-self._history_index]}"
                 else:
                     lp.text = self.__CURSOR_LINE
                     self._history_index = 0
+                rv = True
+
+            elif event.key == pygame.K_TAB:
+                commands = [
+                    s for s in ConsoleRegistrar.registry.keys() if s.startswith(
+                        lp.text[len(self.__CURSOR_LINE):]
+                    )
+                ]
+                if commands:
+                    if len(commands) == 1:
+                        lp.text = f"{self.__CURSOR_LINE}{commands[0]}"
+                    else:
+                        self._add_output(" ".join(commands))
+                        self._cursor_line_index -= 1
+                rv = True
 
         elif event.type == pygame.TEXTINPUT:
             if event.text != "`":
                 lp.text = lp.text + event.text
-                rv = True
+            rv = True
 
         if not rv:
             rv = super().handle_event(event)
