@@ -32,12 +32,21 @@ class TextPanel(Panel):
         self.__font_size = 0
 
 
-    def resize_to_parent(self, parent_rect: pygame.Rect):
-        super().resize_to_parent(parent_rect)
+    def _adjust_rect(self):
+        redraw = self._surface is None
         if self.__auto_font_size and self.__text != "":
-            self.__font_size = self.__font_asset.get_font_size(
-                self.__text, pygame.Vector2(self._rect.size) * self.__auto_font_size_factor
-            )
+            font_size = self.__font_asset.get_font_size(self.__text, self.get_desired_rect_size())
+            if font_size != self.__font_size:
+                self.__font_size = font_size
+                redraw = True
+
+        if redraw:
+            self._draw_surface()
+            self._reset_redraw_flags()
+
+        surface_rect = self._surface.get_rect()
+        self._rect.update(self._rect.topleft, (surface_rect.width, surface_rect.height))
+        self._align()
 
 
     def _draw_surface(self):
@@ -49,7 +58,8 @@ class TextPanel(Panel):
             shadow_colour = self.__shadow_colour,
             font_size = self.__font_size
         )
-        self._align()
+        surface_rect = self._surface.get_rect()
+        self._rect.update(self._rect.topleft, (surface_rect.width, surface_rect.height))
 
 
     @property
@@ -73,9 +83,7 @@ class TextPanel(Panel):
             self.__text = text
             self.__text_changed = True
             if self.__auto_font_size:
-                self.__font_size = self.__font_asset.get_font_size(
-                    self.__text, pygame.Vector2(self._rect.size) * self.__auto_font_size_factor
-                )
+                self.__font_size = self.__font_asset.get_font_size( self.__text, self.get_desired_rect_size())
 
 
     @property
@@ -93,3 +101,12 @@ class TextPanel(Panel):
         if font_size != self.__font_size:
             self.__font_size = font_size
             self.__text_changed = True
+
+
+    def get_desired_rect_size(self):
+        """Returns the panel's desired rect size as opposed to its current one."""
+        factor = self.__auto_font_size_factor if self.__auto_font_size else 1.0
+        return pygame.Vector2(
+            self._parent_rect.width * self.normalized_size.x * factor,
+            self._parent_rect.height * self.normalized_size.y * factor
+        )
