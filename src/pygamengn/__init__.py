@@ -2,6 +2,7 @@ from pygamengn.animated_texture import AnimatedTexture
 from pygamengn.atlas import Atlas
 from pygamengn.class_registrar import ClassRegistrar
 from pygamengn.collision_manager import CollisionManager
+from pygamengn.console_registrar import ConsoleRegistrar
 from pygamengn.game import Game, BlitSurface
 from pygamengn.game_object import GameObject
 from pygamengn.game_object_base import GameObjectBase
