@@ -95,14 +95,13 @@ class Root(InputHandler):
                     dest = bs.topleft,
                     special_flags = pygame.BLEND_ALPHA_SDL2
                 )
-                ## DEBUG ##
-                # pygame.draw.rect(
-                #     surface,
-                #     (0, 255, 255, 255),
-                #     pygame.Rect(bs.topleft, bs.surface.get_rect().size),
-                #     width = 1
-                # )
-                ## DEBUG ##
+                if Component.debug_draw_ui_borders:
+                    pygame.draw.rect(
+                        surface,
+                        (0, 255, 255, 255),
+                        pygame.Rect(bs.topleft, bs.surface.get_rect().size),
+                        width = 1
+                    )
 
 
     def fade_in(self, duration: int):
@@ -157,7 +156,7 @@ class Root(InputHandler):
         font_size = 999999
 
         for tp in text_panels:
-            size = font_asset.get_font_size(tp.text, pygame.Vector2(tp.rect.size) * size_factor)
+            size = font_asset.get_font_size(tp.text, tp.get_desired_rect_size() * size_factor)
             if size < font_size:
                 font_size = size
 

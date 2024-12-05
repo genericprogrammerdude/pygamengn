@@ -6,6 +6,7 @@ import pygame
 
 from pygamengn.blit_surface import BlitSurface
 from pygamengn.class_registrar import ClassRegistrar
+from pygamengn.console_registrar import ConsoleRegistrar
 from pygamengn.game_object_base import GameObjectBase
 
 
@@ -26,6 +27,12 @@ class Component(GameObjectBase):
     In addition, this class must always be instantiable as a parent container of other UI components that need to be
     kept together under a single parent, especially when the parent doesn't need to draw to the screen.
     """
+
+    debug_draw_ui_borders = False
+
+    @classmethod
+    def toggle_ui_borders(cls):
+        Component.debug_draw_ui_borders = not Component.debug_draw_ui_borders
 
 
     def __init__(
@@ -84,9 +91,8 @@ class Component(GameObjectBase):
             bs = self._blit_surface
             if bs:
                 dest.blit(bs, topleft, special_flags = pygame.BLEND_ALPHA_SDL2)
-                # ## DEBUG ##
-                # pygame.draw.rect(dest, (0, 255, 255, 255), pygame.Rect(topleft, self._rect.size), width = 1)
-                # ## DEBUG ##
+                if Component.debug_draw_ui_borders:
+                    pygame.draw.rect(dest, (0, 255, 255, 255), pygame.Rect(topleft, self._rect.size), width = 1)
         for child in self.__children:
             child.build_static_blit_surface(dest, topleft)
 
@@ -123,7 +129,7 @@ class Component(GameObjectBase):
         _rect is always in parent coordinates, NOT screen coordinates.
         """
         if self._parent_rect == parent_rect:
-            logging.warn(f"{self.name}: _parent_rect{self._parent_rect} == parent_rect{parent_rect}")
+            logging.debug(f"{self.name}: _parent_rect{self._parent_rect} == parent_rect{parent_rect}")
             return
 
         width = parent_rect.width * self.__size.x
@@ -257,3 +263,6 @@ class Component(GameObjectBase):
                 rv = self.__children[i].delete_child(child) or rv
                 i += 1
         return rv
+
+
+ConsoleRegistrar.register("uiborders", Component.toggle_ui_borders)
