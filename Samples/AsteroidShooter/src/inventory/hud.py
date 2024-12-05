@@ -120,6 +120,7 @@ game_types = {
                 "text_colour": [0, 200, 100],
                 "horz_align": "CENTRE",
                 "vert_align": "CENTRE",
+                "shadow_colour": [0, 50, 25],
             },
         },
     },
