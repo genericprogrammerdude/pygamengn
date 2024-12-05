@@ -26,7 +26,8 @@ game_types = {
             "StartButton": {
                 "base_type": "/MainMenu/MenuButton",
                 "kwargs": {
-                    "pos": [0.25, 0.2],
+                    "horz_align": "CENTRE",
+                    "pos": [0, 0.2],
                     "game_object:children": [
                         "StartText"
                     ],
@@ -43,7 +44,8 @@ game_types = {
             "ExitButton": {
                 "base_type": "/MainMenu/MenuButton",
                 "kwargs": {
-                    "pos": [0.25, 0.55],
+                    "horz_align": "CENTRE",
+                    "pos": [0, 0.55],
                     "game_object:children": [
                         "ExitText"
                     ],
@@ -72,7 +74,6 @@ game_types = {
                 "kwargs": {
                     "horz_align": "CENTRE",
                     "vert_align": "CENTRE",
-                    "fix_aspect_ratio": True,
                     "asset:font_asset": "fast_hand_font",
                     "text_colour": [0, 200, 100],
                     "shadow_colour": [0, 50, 25],

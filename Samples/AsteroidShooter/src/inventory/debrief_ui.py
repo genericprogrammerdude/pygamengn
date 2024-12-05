@@ -35,6 +35,8 @@ game_types = {
                     "base_type": "/MainMenu/MenuButton/MenuButtonText",
                     "kwargs": {
                         "text": "Continue",
+                        "auto_font_size": True,
+                        "auto_font_size_factor": 0.6,
                     }
                 }
             },
@@ -198,7 +200,7 @@ game_types = {
                 "TotalTitlePanel": {
                     "class_name": "ColourPanel",
                     "kwargs": {
-                        "pos": [0.1, 0.08],
+                        "pos": [0.1, 0],
                         "size": [0.6, 1],
                         "game_object:children": [
                             "TotalTitleText",
