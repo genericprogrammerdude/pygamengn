@@ -95,6 +95,14 @@ class Root(InputHandler):
                     dest = bs.topleft,
                     special_flags = pygame.BLEND_ALPHA_SDL2
                 )
+                ## DEBUG ##
+                # pygame.draw.rect(
+                #     surface,
+                #     (0, 255, 255, 255),
+                #     pygame.Rect(bs.topleft, bs.surface.get_rect().size),
+                #     width = 1
+                # )
+                ## DEBUG ##
 
 
     def fade_in(self, duration: int):

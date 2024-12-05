@@ -84,6 +84,9 @@ class Component(GameObjectBase):
             bs = self._blit_surface
             if bs:
                 dest.blit(bs, topleft, special_flags = pygame.BLEND_ALPHA_SDL2)
+                # ## DEBUG ##
+                # pygame.draw.rect(dest, (0, 255, 255, 255), pygame.Rect(topleft, self._rect.size), width = 1)
+                # ## DEBUG ##
         for child in self.__children:
             child.build_static_blit_surface(dest, topleft)
 
