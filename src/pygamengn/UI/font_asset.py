@@ -36,13 +36,18 @@ class FontAsset(GameObjectBase):
         else:
             font = self.__get_font(font_size)
 
-        surface = font.render(text, True, text_colour)
+        front_surface = font.render(text, True, text_colour)
 
         if shadow_colour:
             shadow_surface = font.render(text, True, shadow_colour)
-            dest = -0.06 * surface.get_rect().height
-            shadow_surface.blit(surface, (dest, dest))
-            surface = shadow_surface
+            dest = round(0.06 * shadow_surface.get_rect().height)
+            surface = pygame.Surface(
+                (shadow_surface.get_width() + dest, shadow_surface.get_height() + dest),
+                pygame.SRCALPHA
+            )
+            surface.blits(((shadow_surface, (dest, dest)), (front_surface, (0, 0))))
+        else:
+            surface = front_surface
 
         return surface
 
