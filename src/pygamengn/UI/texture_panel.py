@@ -31,6 +31,7 @@ class TexturePanel(Panel):
         self._angle = angle
         self._angle_changed = True
 
+
     def _draw_surface(self):
         super()._draw_surface()
         if self._scale_texture_to_rect:
@@ -39,7 +40,7 @@ class TexturePanel(Panel):
             self._surface = pygame.transform.rotozoom(
                 self._image_asset,
                 self._angle,
-                max(
+                min(
                     self.rect.width / image_asset_rect.width,
                     self.rect.height / image_asset_rect.height
                 )
@@ -47,9 +48,19 @@ class TexturePanel(Panel):
         else:
             self._surface = pygame.transform.rotate(self._image_asset, self._angle)
 
+
+    def _adjust_rect(self):
+        self._draw_surface()
+        surface_rect = self._surface.get_rect()
+        self._rect.update(self._rect.topleft, (surface_rect.width, surface_rect.height))
+        self._align()
+        self._reset_redraw_flags()
+
+
     @property
     def angle(self) -> float:
         return self.__angle
+
 
     @angle.setter
     def angle(self, alpha: float):
@@ -57,10 +68,12 @@ class TexturePanel(Panel):
             self._angle = alpha
             self._angle_changed = True
 
+
     @property
     def _needs_redraw(self) -> bool:
         """Spinner redraws its surface on every frame."""
         return super()._needs_redraw or self._angle_changed
+
 
     def _reset_redraw_flags(self):
         super()._reset_redraw_flags()

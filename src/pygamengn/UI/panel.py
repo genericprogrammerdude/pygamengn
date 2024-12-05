@@ -48,8 +48,9 @@ class Panel(Component):
 
 
     def resize_to_parent(self, parent_rect: pygame.Rect):
-        super().resize_to_parent(parent_rect)
+        # Set the flag first in case a subclass resets it in _adjust_rect(), which Component.resize_to_parent() calls
         self._parent_rect_changed = True
+        super().resize_to_parent(parent_rect)
 
 
     @property

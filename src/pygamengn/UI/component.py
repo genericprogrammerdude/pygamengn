@@ -118,9 +118,12 @@ class Component(GameObjectBase):
         """
         Resizes the component's rect to match size with its parent's rect.
 
+        This method should be called on resize even when the Component is not active.
+
         _rect is always in parent coordinates, NOT screen coordinates.
         """
-        if not self._active:
+        if self._parent_rect == parent_rect:
+            logging.warn(f"{self.name}: _parent_rect{self._parent_rect} == parent_rect{parent_rect}")
             return
 
         width = parent_rect.width * self.__size.x
@@ -140,7 +143,19 @@ class Component(GameObjectBase):
         self._rect = pygame.Rect(pos.x, pos.y, width, height)
         self._parent_rect = parent_rect
 
+        # Give subclasses a chance to adjust their rectangle before resizing their kids
+        self._adjust_rect()
+
         [child.resize_to_parent(self._rect) for child in self.__children]
+
+
+    def _adjust_rect(self):
+        """
+        Hook to allow subclasses to adjust their self._rect before their children's.
+
+        Subclasses avoid implementing resize_to_parent() and use _adjust_rect() instead.
+        """
+        pass
 
 
     def process_mouse_event(self, pos: pygame.Vector2, event_type: int) -> bool:
