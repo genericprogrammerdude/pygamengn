@@ -17,8 +17,5 @@ class ConsoleRegistrar:
             cls.registry[command] = callback
 
     @classmethod
-    def callback(cls, key):
-        try:
-            return cls.registry[key]
-        except KeyError:
-            return lambda: f"Error: command `{key}` not found"
+    def callback(cls, command):
+        return cls.registry[command]

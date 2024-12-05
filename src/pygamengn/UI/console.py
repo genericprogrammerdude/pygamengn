@@ -50,6 +50,8 @@ class Console(Root):
         self._line_count = line_count
         self._cursor_time = self.__CURSOR_BLINK_TIME
         self._show_cursor = False
+        self._history_index = 0
+        self._history = []
 
 
     def update(self, delta: int) -> bool:
@@ -85,6 +87,7 @@ class Console(Root):
                 if lp.text[len(self.__CURSOR_LINE):] != "":
                     self._execute_command(lp.text[len(self.__CURSOR_LINE):])
                     self._increment_line_index()
+                    self._history_index = 0
                     rv = True
 
             elif event.key == pygame.K_BACKSPACE:
@@ -92,9 +95,18 @@ class Console(Root):
                     lp.text = lp.text[:-1]
                     rv = True
 
-            elif event.key == pygame.K_SPACE:
-                lp.text = lp.text + " "
-                rv = True
+            elif event.key == pygame.K_UP:
+                if self._history_index < len(self._history):
+                    self._history_index += 1
+                    lp.text = f">{self._history[-self._history_index]}"
+
+            elif event.key == pygame.K_DOWN:
+                if self._history_index > 1:
+                    self._history_index -= 1
+                    lp.text = f">{self._history[-self._history_index]}"
+                else:
+                    lp.text = self.__CURSOR_LINE
+                    self._history_index = 0
 
         elif event.type == pygame.TEXTINPUT:
             if event.text != "`":
@@ -113,9 +125,15 @@ class Console(Root):
 
 
     def _execute_command(self, command: str):
-        rv = ConsoleRegistrar.callback(command)()
-        if not rv is None:
-            self._add_output(f"{rv}")
+        try:
+            rv = ConsoleRegistrar.callback(command)()
+            if len(self._history) == 0 or (len(self._history) > 0 and self._history[-1] != command):
+                self._history.append(command)
+            if not rv is None:
+                self._add_output(f"{rv}")
+
+        except KeyError:
+            self._add_output(f"Error: Command `{command}` not found")
 
 
     def _add_output(self, s: str):
