@@ -121,7 +121,7 @@ class AsteroidShooterGame(pygamengn.Game):
             self.hud_ui.score_text.text = f"{self.score}"
             self.hud_ui.time_text.text = f"{self.get_time_string()}"
 
-        self.level.update(delta)
+            self.level.update(delta)
 
 
     def update_killing(self, delta):
