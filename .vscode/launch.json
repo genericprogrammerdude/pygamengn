@@ -26,5 +26,21 @@
                 "PYGAME_HIDE_SUPPORT_PROMPT": "1",
             },
         },
+        {
+            "name": "AsteroidShooter-profile",
+            "type": "debugpy",
+            "request": "launch",
+            "module": "cProfile",
+            "args": [
+                "-o", "prof/shooter.prof", "${workspaceFolder}/Samples/AsteroidShooter/src/main.py"
+            ],
+            "console": "integratedTerminal",
+            "justMyCode": true,
+            "cwd": "${workspaceFolder}/Samples/AsteroidShooter/src",
+            "env": {
+                "PYTHONPATH": "${workspaceFolder}/src",
+                "PYGAME_HIDE_SUPPORT_PROMPT": "1",
+            },
+        },
     ]
 }
