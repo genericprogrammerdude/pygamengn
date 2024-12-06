@@ -204,7 +204,6 @@ images = {
         "class_name": "ImageAsset",
         "kwargs": {
             "fname": "arrow.png",
-            "cache_rotations": True,
         }
     },
     # "joystick": {
