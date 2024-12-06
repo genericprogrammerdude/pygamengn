@@ -32,7 +32,7 @@ class GameObject(pygame.sprite.Sprite, GameObjectBase):
         self.scale = scale
         self.__pos = pygame.math.Vector2(0.0, 0.0)
         self.__heading = normalize_angle(round(heading))
-        self.dirty_image = True
+        self._dirty_image = True
         self.is_collidable = is_collidable
         if self.is_collidable:
             self.mask = pygame.mask.from_surface(self.image, 16)
@@ -41,7 +41,7 @@ class GameObject(pygame.sprite.Sprite, GameObjectBase):
         self.parent = None
         self.health = 100
         self.attachments = []
-        self.alpha = alpha
+        self.__alpha = alpha
         self.visible = visible
         self.death_effect = death_effect
         self.damage = damage
@@ -81,14 +81,14 @@ class GameObject(pygame.sprite.Sprite, GameObjectBase):
     def transform(self):
         """Transforms the object based on current heading, scale, and position."""
         # Rotate and scale if necessary
-        if self.dirty_image:
+        if self._dirty_image:
             self.image = self.image_asset.get_surface(self.__heading, self.scale)
-            if self.alpha != 1.0:
-                self.image.set_alpha(self.alpha * 255)
+            if self.__alpha != 1.0:
+                self.image.set_alpha(self.__alpha * 255)
             self.rect = self.image.get_rect()
             if self.is_collidable:
                 self.mask = pygame.mask.from_surface(self.image, 16)
-            self.dirty_image = False
+            self._dirty_image = False
 
         # Translate
         topleft = self.position - pygame.math.Vector2(self.rect.width / 2.0, self.rect.height / 2.0)
@@ -96,7 +96,7 @@ class GameObject(pygame.sprite.Sprite, GameObjectBase):
 
     def set_scale(self, scale):
         """Sets the scale of the sprite."""
-        self.dirty_image = self.dirty_image or self.scale != scale
+        self._dirty_image = self._dirty_image or self.scale != scale
         self.scale = scale
 
     @property
@@ -119,21 +119,25 @@ class GameObject(pygame.sprite.Sprite, GameObjectBase):
         return self.__heading
 
     @heading.setter
-    def heading(self, heading):
+    def heading(self, h):
         """Sets the orientation of the game object."""
-        if heading != self.__heading:
-            self.__heading = normalize_angle(round(heading))
-            self.dirty_image = True
+        self._dirty_image = self._dirty_image or self.__heading != h
+        self.__heading = normalize_angle(round(h))
 
     def set_image(self, image_asset):
         """Sets a new image for the game object."""
         self.image_asset = image_asset
         self.image = self.image_asset.surface
-        self.dirty_image = True
+        self._dirty_image = True
 
-    def set_alpha(self, alpha):
-        self.dirty_image = (alpha != self.alpha)
-        self.alpha = alpha
+    @property
+    def alpha(self) -> float:
+        return self.__alpha
+
+    @alpha.setter
+    def alpha(self, a: float):
+        self._dirty_image = self._dirty_image or self.__alpha != a
+        self.__alpha = a
 
     def attach(self, game_object, offset, take_parent_transform):
         """Attaches a game object to this game object at the given offset."""

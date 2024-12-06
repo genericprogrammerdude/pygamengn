@@ -12,7 +12,7 @@ class AnimatedTexture(GameObject):
 
     def __init__(self, atlas, duration, sound=None, **kwargs):
         super().__init__(None, False, **kwargs)
-        self.dirty_image = False
+        self._dirty_image = False
         self.atlas = atlas
         self.duration = duration
         self.sound = sound

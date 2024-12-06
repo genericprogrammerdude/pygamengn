@@ -12,7 +12,7 @@ class HealthBar(GameObject):
         self.images = images
 
     def update(self, delta):
-        self.dirty_image = False
+        self._dirty_image = False
         if self.parent:
             bg = self.images[0].surface.copy()
             fg = self.images[1].surface.copy()
