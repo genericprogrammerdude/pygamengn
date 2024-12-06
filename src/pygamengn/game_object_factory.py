@@ -5,6 +5,7 @@ import os
 import pygame
 
 from pygamengn.game_object_base import GameObjectBase
+from pygamengn.image_asset import ImageAsset
 
 
 class GameObjectFactory():
@@ -35,7 +36,7 @@ class GameObjectFactory():
         self.game_types = self.__init_game_types(game_types)
 
         # Load images and sounds, and initialize assets
-        self.images = self.__create_assets(images, lambda v: pygame.image.load(os.path.join(assets_dir, v)).convert_alpha())
+        self.images = self.__create_assets(images, lambda v: self.__create_image_asset(assets_dir, v))
         self.sounds = self.__create_assets(sounds, lambda v: pygame.mixer.Sound(os.path.join(assets_dir, v)))
         self.assets = self.__create_assets(assets, lambda v: self.__create_object(v))
 
@@ -195,6 +196,14 @@ class GameObjectFactory():
         for key, value in dictionary.items():
             rv[key] = creator_func(value)
         return rv
+
+    def __create_image_asset(self, assets_dir: str, d: dict) -> ImageAsset:
+        try:
+            d["kwargs"]["fname"] = os.path.join(assets_dir, d["kwargs"]["fname"])
+            image_asset = self.__create_object(d)
+            return image_asset.surface
+        except TypeError:
+            return pygame.image.load(os.path.join(assets_dir, d)).convert_alpha()
 
     def __recursive_copy(self, from_obj, to_obj, key):
         """Recursively copies dictionary keys."""

@@ -1,5 +1,11 @@
 images = {
-    "ship": "SpaceShooterRedux/PNG/playerShip2_blue.png",
+    "ship": {
+        "class_name": "ImageAsset",
+        "kwargs": {
+            "fname": "SpaceShooterRedux/PNG/playerShip2_blue.png",
+            "cache_rotations": True,
+        },
+    },
     "ship_icon": "../../favicon.png",
     "explosion1": "Explosions/explosion1.png",
     "explosion2": "Explosions/explosion2.png",
