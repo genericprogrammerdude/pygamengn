@@ -16,7 +16,8 @@ class FontAsset(GameObjectBase):
     """Default monospace font that is always available through FontAsset.monospace()."""
     __monospace_font_asset = None
 
-    def __init__(self, fname: str, size: int):
+    def __init__(self, fname: str, size: int, **kwargs):
+        super().__init__(**kwargs)
         self.__fname = fname
         self.__size = size
         self.__fonts = {}
