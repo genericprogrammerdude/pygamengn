@@ -32,7 +32,7 @@
             "request": "launch",
             "module": "cProfile",
             "args": [
-                "-o", "prof/shooter.prof", "${workspaceFolder}/Samples/AsteroidShooter/src/main.py"
+                "-o", "prof/${input:shortDate}.prof", "${workspaceFolder}/Samples/AsteroidShooter/src/main.py"
             ],
             "console": "integratedTerminal",
             "justMyCode": true,
@@ -42,5 +42,24 @@
                 "PYGAME_HIDE_SUPPORT_PROMPT": "1",
             },
         },
-    ]
+    ],
+    "inputs": [
+        {
+            "id": "shortDate",
+            "type": "command",
+            "command": "extension.commandvariable.dateTime",
+            "args": {
+                "options": {
+                    "year": "numeric",
+                    "month": "2-digit",
+                    "day": "2-digit",
+                    "hour12": false,
+                    "hour": "2-digit",
+                    "minute": "2-digit",
+                    "second": "2-digit"
+                },
+                "template": "${year}${month}${day}_${hour}${minute}${second}",
+            },
+        },
+    ],
 }
