@@ -43,8 +43,8 @@ class ImageAsset(GameObjectBase):
             return None
 
         except IndexError:
-            logging.info(f"ImageAsset '{self.__fname}': Rotation angle {rotation} is not cached. Rotating base surface.")
-            return pygame.transform.rotate(self.__scaled_rotations[scale][0], rotation)
+            logging.debug(f"ImageAsset '{self.__fname}': Rotation angle {rotation} is not cached. Rotating base surface.")
+            return pygame.transform.rotozoom(self.__scaled_rotations[scale][0], rotation, scale)
 
 
     def cache_scale(self, scale: float):
