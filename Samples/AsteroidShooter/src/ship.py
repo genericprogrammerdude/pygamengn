@@ -4,19 +4,25 @@ import numpy
 import pygame
 
 from pygamengn.class_registrar import ClassRegistrar
+from pygamengn.console_registrar import ConsoleRegistrar
 from pygamengn.game_object import GameObject
 
 from asteroid import Asteroid
-# from health_bar import HealthBar
-# from mover import MoverVelocity
 from nav_arrow import NavArrow
-# from projectile import Projectile
 from waypoint import Waypoint
 
 
 @ClassRegistrar.register("Ship")
 class Ship(GameObject):
     """Space ship game object."""
+
+    __god_mode = False
+
+    @classmethod
+    def toggle_god_mode(cls):
+        Ship.__god_mode = not Ship.__god_mode
+        return f"god mode {"enabled" if Ship.__god_mode else "disabled"}"
+
 
     def __init__(self, projectile_type, fire_freq, mover, waypoint, shot_sound, **kwargs):
         super().__init__(**kwargs)
@@ -99,3 +105,11 @@ class Ship(GameObject):
             # The presence of a valid gob indicates we're here as a result of a collision
             self.waypoints += 1
         self.waypoint.set_number(self.waypoints + 1)
+
+    def take_damage(self, damage, instigator):
+        """Takes damage for this game object."""
+        if not self.__god_mode:
+            super().take_damage(damage, instigator)
+
+
+ConsoleRegistrar.register("god", Ship.toggle_god_mode)
