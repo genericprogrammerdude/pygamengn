@@ -198,12 +198,8 @@ class GameObjectFactory():
         return rv
 
     def __create_image_asset(self, assets_dir: str, d: dict) -> ImageAsset:
-        try:
-            d["kwargs"]["fname"] = os.path.join(assets_dir, d["kwargs"]["fname"])
-            image_asset = self.__create_object(d)
-            return image_asset.surface
-        except TypeError:
-            return pygame.image.load(os.path.join(assets_dir, d)).convert_alpha()
+        d["kwargs"]["fname"] = os.path.join(assets_dir, d["kwargs"]["fname"])
+        return self.__create_object(d)
 
     def __recursive_copy(self, from_obj, to_obj, key):
         """Recursively copies dictionary keys."""

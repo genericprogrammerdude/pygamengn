@@ -6,53 +6,319 @@ images = {
             "cache_rotations": True,
         },
     },
-    "ship_icon": "../../favicon.png",
-    "explosion1": "Explosions/explosion1.png",
-    "explosion2": "Explosions/explosion2.png",
-    "explosion3": "Explosions/explosion3.png",
-    "explosion4": "Explosions/explosion4.png",
-    "shield1": "SpaceShooterRedux/PNG/Effects/shield1.png",
-    "shield2": "SpaceShooterRedux/PNG/Effects/shield2.png",
-    "shield3": "SpaceShooterRedux/PNG/Effects/shield3.png",
-    "turret": "SpaceShooterRedux/PNG/Parts/turretBase_big.png",
-    "turret_gun": "SpaceShooterRedux/PNG/Parts/gun04.png",
-    "turret_projectile": "SpaceShooterRedux/PNG/Lasers/laserRed06.png",
-    "player_projectile": "SpaceShooterRedux/PNG/Lasers/laserGreen07.png",
-    "player_health_bar_fg": "SpaceShooterRedux/PNG/Lasers/laserBlue02.png",
-    "player_health_bar_bg": "SpaceShooterRedux/PNG/Lasers/laserBlue14.png",
-    "turret_health_bar_fg": "SpaceShooterRedux/PNG/Lasers/laserRed02.png",
-    "turret_health_bar_bg": "SpaceShooterRedux/PNG/Lasers/laserRed14.png",
-    "turret_projectile2": "SpaceShooterRedux/PNG/Lasers/laserBlue01.png",
-    "asteroid_00": "SpaceShooterRedux/PNG/Meteors/meteorBrown_big1.png",
-    "asteroid_01": "SpaceShooterRedux/PNG/Meteors/meteorBrown_big2.png",
-    "asteroid_02": "SpaceShooterRedux/PNG/Meteors/meteorBrown_big3.png",
-    "asteroid_03": "SpaceShooterRedux/PNG/Meteors/meteorBrown_big4.png",
-    "asteroid_04": "SpaceShooterRedux/PNG/Meteors/meteorBrown_med1.png",
-    "asteroid_05": "SpaceShooterRedux/PNG/Meteors/meteorBrown_med2.png",
-    "asteroid_06": "SpaceShooterRedux/PNG/Meteors/meteorBrown_small1.png",
-    "asteroid_07": "SpaceShooterRedux/PNG/Meteors/meteorBrown_small2.png",
-    "asteroid_08": "SpaceShooterRedux/PNG/Meteors/meteorBrown_tiny1.png",
-    "asteroid_09": "SpaceShooterRedux/PNG/Meteors/meteorBrown_tiny2.png",
-    "background": "SpaceShooterRedux/Backgrounds/darkPurple.png",
-    "waypoint": "SpaceShooterRedux/PNG/ufoRed.png",
-    "arrow": "arrow.png",
-    # "joystick": "kenney_onscreen-controls/Sprites/transparent-dark/transparentDark05.png",
-    # "joystick": "kenney_onscreen-controls/Sprites/shaded-dark/shadedDark11.png",
-    # "ship-alpha": "kenney_onscreen-controls/Sprites/shaded-dark/shadedDark01.png",
-    # "ship-alpha": "ship-alpha.png",
-    "joystick": "joystick.png",
-    "ship-alpha": "ship-alpha.png",
-    "red-button": "kenney_onscreen-controls/Sprites/shaded-dark/shadedDark36.png",
-    "0": "SpaceShooterRedux/PNG/UI/numeral0.png",
-    "1": "SpaceShooterRedux/PNG/UI/numeral1.png",
-    "2": "SpaceShooterRedux/PNG/UI/numeral2.png",
-    "3": "SpaceShooterRedux/PNG/UI/numeral3.png",
-    "4": "SpaceShooterRedux/PNG/UI/numeral4.png",
-    "5": "SpaceShooterRedux/PNG/UI/numeral5.png",
-    "6": "SpaceShooterRedux/PNG/UI/numeral6.png",
-    "7": "SpaceShooterRedux/PNG/UI/numeral7.png",
-    "8": "SpaceShooterRedux/PNG/UI/numeral8.png",
-    "9": "SpaceShooterRedux/PNG/UI/numeral9.png"
+    "ship_icon": {
+        "class_name": "ImageAsset",
+        "kwargs": {
+            "fname": "../../favicon.png",
+        }
+    },
+    "explosion1": {
+        "class_name": "ImageAsset",
+        "kwargs": {
+            "fname": "Explosions/explosion1.png",
+        }
+    },
+    "explosion2": {
+        "class_name": "ImageAsset",
+        "kwargs": {
+            "fname": "Explosions/explosion2.png",
+        }
+    },
+    "explosion3": {
+        "class_name": "ImageAsset",
+        "kwargs": {
+            "fname": "Explosions/explosion3.png",
+        }
+    },
+    "explosion4": {
+        "class_name": "ImageAsset",
+        "kwargs": {
+            "fname": "Explosions/explosion4.png",
+        }
+    },
+    "shield1": {
+        "class_name": "ImageAsset",
+        "kwargs": {
+            "fname": "SpaceShooterRedux/PNG/Effects/shield1.png",
+            "cache_rotations": True,
+        }
+    },
+    "shield2": {
+        "class_name": "ImageAsset",
+        "kwargs": {
+            "fname": "SpaceShooterRedux/PNG/Effects/shield2.png",
+            "cache_rotations": True,
+        }
+    },
+    "shield3": {
+        "class_name": "ImageAsset",
+        "kwargs": {
+            "fname": "SpaceShooterRedux/PNG/Effects/shield3.png",
+            "cache_rotations": True,
+        }
+    },
+    "turret": {
+        "class_name": "ImageAsset",
+        "kwargs": {
+            "fname": "SpaceShooterRedux/PNG/Parts/turretBase_big.png",
+            "cache_rotations": True,
+        }
+    },
+    "turret_gun": {
+        "class_name": "ImageAsset",
+        "kwargs": {
+            "fname": "SpaceShooterRedux/PNG/Parts/gun04.png",
+            "cache_rotations": True,
+            "scale": 0.8,
+        }
+    },
+    "turret_projectile": {
+        "class_name": "ImageAsset",
+        "kwargs": {
+            "fname": "SpaceShooterRedux/PNG/Lasers/laserRed06.png",
+            "cache_rotations": True,
+        }
+    },
+    "player_projectile": {
+        "class_name": "ImageAsset",
+        "kwargs": {
+            "fname": "SpaceShooterRedux/PNG/Lasers/laserGreen07.png",
+            "cache_rotations": True,
+        }
+    },
+    "player_health_bar_fg": {
+        "class_name": "ImageAsset",
+        "kwargs": {
+            "fname": "SpaceShooterRedux/PNG/Lasers/laserBlue02.png",
+        }
+    },
+    "player_health_bar_bg": {
+        "class_name": "ImageAsset",
+        "kwargs": {
+            "fname": "SpaceShooterRedux/PNG/Lasers/laserBlue14.png",
+        }
+    },
+    "turret_health_bar_fg": {
+        "class_name": "ImageAsset",
+        "kwargs": {
+            "fname": "SpaceShooterRedux/PNG/Lasers/laserRed02.png",
+        }
+    },
+    "turret_health_bar_bg": {
+        "class_name": "ImageAsset",
+        "kwargs": {
+            "fname": "SpaceShooterRedux/PNG/Lasers/laserRed14.png",
+        }
+    },
+    "turret_projectile2": {
+        "class_name": "ImageAsset",
+        "kwargs": {
+            "fname": "SpaceShooterRedux/PNG/Lasers/laserBlue01.png",
+            "cache_rotations": True,
+        }
+    },
+    "asteroid_00": {
+        "class_name": "ImageAsset",
+        "kwargs": {
+            "fname": "SpaceShooterRedux/PNG/Meteors/meteorBrown_big1.png",
+            "cache_rotations": True,
+        }
+    },
+    "asteroid_01": {
+        "class_name": "ImageAsset",
+        "kwargs": {
+            "fname": "SpaceShooterRedux/PNG/Meteors/meteorBrown_big2.png",
+            "cache_rotations": True,
+        }
+    },
+    "asteroid_02": {
+        "class_name": "ImageAsset",
+        "kwargs": {
+            "fname": "SpaceShooterRedux/PNG/Meteors/meteorBrown_big3.png",
+            "cache_rotations": True,
+        }
+    },
+    "asteroid_03": {
+        "class_name": "ImageAsset",
+        "kwargs": {
+            "fname": "SpaceShooterRedux/PNG/Meteors/meteorBrown_big4.png",
+            "cache_rotations": True,
+        }
+    },
+    "asteroid_04": {
+        "class_name": "ImageAsset",
+        "kwargs": {
+            "fname": "SpaceShooterRedux/PNG/Meteors/meteorBrown_med1.png",
+            "cache_rotations": True,
+        }
+    },
+    "asteroid_05": {
+        "class_name": "ImageAsset",
+        "kwargs": {
+            "fname": "SpaceShooterRedux/PNG/Meteors/meteorBrown_med2.png",
+            "cache_rotations": True,
+        }
+    },
+    "asteroid_06": {
+        "class_name": "ImageAsset",
+        "kwargs": {
+            "fname": "SpaceShooterRedux/PNG/Meteors/meteorBrown_small1.png",
+            "cache_rotations": True,
+        }
+    },
+    "asteroid_07": {
+        "class_name": "ImageAsset",
+        "kwargs": {
+            "fname": "SpaceShooterRedux/PNG/Meteors/meteorBrown_small2.png",
+            "cache_rotations": True,
+        }
+    },
+    "asteroid_08": {
+        "class_name": "ImageAsset",
+        "kwargs": {
+            "fname": "SpaceShooterRedux/PNG/Meteors/meteorBrown_tiny1.png",
+            "cache_rotations": True,
+        }
+    },
+    "asteroid_09": {
+        "class_name": "ImageAsset",
+        "kwargs": {
+            "fname": "SpaceShooterRedux/PNG/Meteors/meteorBrown_tiny2.png",
+            "cache_rotations": True,
+        }
+    },
+    "background": {
+        "class_name": "ImageAsset",
+        "kwargs": {
+            "fname": "SpaceShooterRedux/Backgrounds/darkPurple.png",
+        }
+    },
+    "waypoint": {
+        "class_name": "ImageAsset",
+        "kwargs": {
+            "fname": "SpaceShooterRedux/PNG/ufoRed.png",
+            "cache_rotations": True,
+        }
+    },
+    "arrow": {
+        "class_name": "ImageAsset",
+        "kwargs": {
+            "fname": "arrow.png",
+            "cache_rotations": True,
+        }
+    },
+    # "joystick": {
+    #     "class_name": "ImageAsset",
+    #     "kwargs": {
+    #         "fname": "kenney_onscreen-controls/Sprites/transparent-dark/transparentDark05.png",
+    #     }
+    # },
+    # "joystick": {
+    #     "class_name": "ImageAsset",
+    #     "kwargs": {
+    #         "fname": "kenney_onscreen-controls/Sprites/shaded-dark/shadedDark11.png",
+    #     }
+    # },
+    # "ship-alpha": {
+    #     "class_name": "ImageAsset",
+    #     "kwargs": {
+    #         "fname": "kenney_onscreen-controls/Sprites/shaded-dark/shadedDark01.png",
+    #     }
+    # },
+    # "ship-alpha": {
+    #     "class_name": "ImageAsset",
+    #     "kwargs": {
+    #         "fname": "ship-alpha.png",
+    #     }
+    # },
+    "joystick": {
+        "class_name": "ImageAsset",
+        "kwargs": {
+            "fname": "joystick.png",
+        }
+    },
+    "ship-alpha": {
+        "class_name": "ImageAsset",
+        "kwargs": {
+            "fname": "ship-alpha.png",
+        }
+    },
+    "red-button": {
+        "class_name": "ImageAsset",
+        "kwargs": {
+            "fname": "kenney_onscreen-controls/Sprites/shaded-dark/shadedDark36.png",
+        }
+    },
+    "0": {
+        "class_name": "ImageAsset",
+        "kwargs": {
+            "fname": "SpaceShooterRedux/PNG/UI/numeral0.png",
+            "cache_rotations": True,
+        }
+    },
+    "1": {
+        "class_name": "ImageAsset",
+        "kwargs": {
+            "fname": "SpaceShooterRedux/PNG/UI/numeral1.png",
+            "cache_rotations": True,
+        }
+    },
+    "2": {
+        "class_name": "ImageAsset",
+        "kwargs": {
+            "fname": "SpaceShooterRedux/PNG/UI/numeral2.png",
+            "cache_rotations": True,
+        }
+    },
+    "3": {
+        "class_name": "ImageAsset",
+        "kwargs": {
+            "fname": "SpaceShooterRedux/PNG/UI/numeral3.png",
+            "cache_rotations": True,
+        }
+    },
+    "4": {
+        "class_name": "ImageAsset",
+        "kwargs": {
+            "fname": "SpaceShooterRedux/PNG/UI/numeral4.png",
+            "cache_rotations": True,
+        }
+    },
+    "5": {
+        "class_name": "ImageAsset",
+        "kwargs": {
+            "fname": "SpaceShooterRedux/PNG/UI/numeral5.png",
+            "cache_rotations": True,
+        }
+    },
+    "6": {
+        "class_name": "ImageAsset",
+        "kwargs": {
+            "fname": "SpaceShooterRedux/PNG/UI/numeral6.png",
+            "cache_rotations": True,
+        }
+    },
+    "7": {
+        "class_name": "ImageAsset",
+        "kwargs": {
+            "fname": "SpaceShooterRedux/PNG/UI/numeral7.png",
+            "cache_rotations": True,
+        }
+    },
+    "8": {
+        "class_name": "ImageAsset",
+        "kwargs": {
+            "fname": "SpaceShooterRedux/PNG/UI/numeral8.png",
+            "cache_rotations": True,
+        }
+    },
+    "9": {
+        "class_name": "ImageAsset",
+        "kwargs": {
+            "fname": "SpaceShooterRedux/PNG/UI/numeral9.png",
+            "cache_rotations": True,
+        }
+    },
 }
 
 sounds = {

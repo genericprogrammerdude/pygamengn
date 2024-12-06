@@ -36,9 +36,9 @@ class TexturePanel(Panel):
         super()._draw_surface()
         if self._scale_texture_to_rect:
             # Fit the texture to the Component's rect, keeping original texture aspect ratio if required
-            image_asset_rect = self._image_asset.get_rect()
+            image_asset_rect = self._image_asset.surface.get_rect()
             self._surface = pygame.transform.rotozoom(
-                self._image_asset,
+                self._image_asset.surface,
                 self._angle,
                 min(
                     self.rect.width / image_asset_rect.width,
@@ -46,7 +46,7 @@ class TexturePanel(Panel):
                 )
             )
         else:
-            self._surface = pygame.transform.rotate(self._image_asset, self._angle)
+            self._surface = pygame.transform.rotate(self._image_asset.surface, self._angle)
 
 
     def _adjust_rect(self):

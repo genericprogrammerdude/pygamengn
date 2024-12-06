@@ -15,7 +15,7 @@ from asteroid_shooter_game import AsteroidShooterGame
 
 
 async def main(assets_dir: str = None):
-    logging.basicConfig(level=logging.WARN, format="%(levelname)s: %(filename)s:%(lineno)d: %(message)s")
+    logging.basicConfig(level=logging.INFO, format="%(levelname)s: %(filename)s:%(lineno)d: %(message)s")
 
     pygame.mixer.pre_init(44100, 16, 2, 4096)
     pygame.init()
@@ -28,7 +28,7 @@ async def main(assets_dir: str = None):
     factory = create_factory(assets_dir)
 
     # Initialize window
-    pygame.display.set_icon(factory.images["ship_icon"])
+    pygame.display.set_icon(factory.images["ship_icon"].surface)
     pygame.display.set_caption("Asteroid Shooter")
 
     game = factory.create("AsteroidShooterGame", screen=screen)

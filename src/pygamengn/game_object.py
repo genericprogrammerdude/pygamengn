@@ -2,7 +2,7 @@ import pygame
 
 from pygamengn.class_registrar import ClassRegistrar
 from pygamengn.game_object_base import GameObjectBase
-import pygamengn.geometry
+from pygamengn.geometry import normalize_angle
 from pygamengn.network.replicated_property import ReplicatedProperty
 from pygamengn.transform import Transform
 
@@ -27,11 +27,11 @@ class GameObject(pygame.sprite.Sprite, GameObjectBase):
         GameObjectBase.__init__(self)
 
         self.image_asset = image_asset
-        self.image = self.image_asset
-        self.rect = self.image.get_rect()
+        self.image = self.image_asset.surface if self.image_asset else None
+        self.rect = self.image.get_rect() if self.image_asset else None
         self.scale = scale
         self.__pos = pygame.math.Vector2(0.0, 0.0)
-        self.__heading = heading
+        self.__heading = normalize_angle(round(heading))
         self.dirty_image = True
         self.is_collidable = is_collidable
         if self.is_collidable:
@@ -82,7 +82,7 @@ class GameObject(pygame.sprite.Sprite, GameObjectBase):
         """Transforms the object based on current heading, scale, and position."""
         # Rotate and scale if necessary
         if self.dirty_image:
-            self.image = pygame.transform.rotozoom(self.image_asset, self.heading, self.scale)
+            self.image = self.image_asset.get_surface(self.__heading, self.scale)
             if self.alpha != 1.0:
                 self.image.set_alpha(self.alpha * 255)
             self.rect = self.image.get_rect()
@@ -121,13 +121,14 @@ class GameObject(pygame.sprite.Sprite, GameObjectBase):
     @heading.setter
     def heading(self, heading):
         """Sets the orientation of the game object."""
-        self.dirty_image = self.dirty_image or self.__heading != heading
-        self.__heading = pygamengn.geometry.normalize_angle(heading)
+        if heading != self.__heading:
+            self.__heading = normalize_angle(round(heading))
+            self.dirty_image = True
 
     def set_image(self, image_asset):
         """Sets a new image for the game object."""
         self.image_asset = image_asset
-        self.image = self.image_asset
+        self.image = self.image_asset.surface
         self.dirty_image = True
 
     def set_alpha(self, alpha):

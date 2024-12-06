@@ -11,7 +11,7 @@ from pygamengn.game_object import GameObject
 class AnimatedTexture(GameObject):
 
     def __init__(self, atlas, duration, sound=None, **kwargs):
-        super().__init__(atlas.frames[0][0], False, **kwargs)
+        super().__init__(None, False, **kwargs)
         self.dirty_image = False
         self.atlas = atlas
         self.duration = duration
@@ -46,6 +46,8 @@ class AnimatedTexture(GameObject):
     def play(self, done_callback=None):
         self.is_playing = True
         self.atlas_index = random.randint(0, len(self.atlas.frames) - 1)
+        self.image = self.atlas.frames[self.atlas_index][0]
+        self.rect = self.image.get_rect()
         self.done_callback = done_callback
         if self.sound:
             self.sound.play()

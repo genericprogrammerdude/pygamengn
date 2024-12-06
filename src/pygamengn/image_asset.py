@@ -13,18 +13,18 @@ from pygamengn.game_object_base import GameObjectBase
 class ImageAsset(GameObjectBase):
     """Loadable image asset."""
 
-    def __init__(self, fname: str, cache_rotations: bool = False, **kwargs):
+    def __init__(self, fname: str, scale: float = 1.0, cache_rotations: bool = False, **kwargs):
         super().__init__(**kwargs)
         self.__fname = fname
         self.__cache_rotations = cache_rotations
-        self.__base_surface = pygame.image.load(self.__fname).convert_alpha()
+        self.__base_surface = pygame.transform.smoothscale_by(pygame.image.load(self.__fname).convert_alpha(), scale)
         self.__scaled_rotations = {}
         if self.__cache_rotations:
-            self.__scaled_rotations[1] = [self.__base_surface].extend(
-                [pygame.transform.rotate(self.__base_surface, i) for i in range(1, 360)]
-            )
+            self.__scaled_rotations[1.0] = [
+                pygame.transform.rotozoom(self.__base_surface, i, 1.0) for i in range(0, 360)
+            ]
         else:
-            self.__scaled_rotations[1] = [self.__base_surface]
+            self.__scaled_rotations[1.0] = [self.__base_surface]
 
 
     @property
@@ -43,8 +43,8 @@ class ImageAsset(GameObjectBase):
             return None
 
         except IndexError:
-            logging.warn(f"ImageAsset '{self.__fname}': Rotation angle {rotation} is not cached.")
-            return None
+            logging.info(f"ImageAsset '{self.__fname}': Rotation angle {rotation} is not cached. Rotating base surface.")
+            return pygame.transform.rotate(self.__scaled_rotations[scale][0], rotation)
 
 
     def cache_scale(self, scale: float):

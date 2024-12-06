@@ -14,8 +14,8 @@ class HealthBar(GameObject):
     def update(self, delta):
         self.dirty_image = False
         if self.parent:
-            bg = self.images[0].copy()
-            fg = self.images[1].copy()
+            bg = self.images[0].surface.copy()
+            fg = self.images[1].surface.copy()
             scale = self.parent.health / 100.0
             size = bg.get_rect().size
             fg = pygame.transform.scale(fg, (size[0], round(scale * size[1])))

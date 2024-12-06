@@ -80,7 +80,7 @@ class RenderGroup(pygame.sprite.LayeredUpdates, GameObjectBase):
 
     def __draw_background(self, surface):
         """Tiles the background image across the screen."""
-        rect = self.background.get_rect()
+        rect = self.background.surface.get_rect()
         cam_x = round(-self.cam.x)
         cam_y = round(-self.cam.y)
         range_x = range((cam_x // rect.width) * rect.width, cam_x + self.view_rect.width, rect.width)
@@ -90,7 +90,7 @@ class RenderGroup(pygame.sprite.LayeredUpdates, GameObjectBase):
             for x in range_x:
                 rect.x = x - cam_x
                 rect.y = y - cam_y
-                blits.append((self.background, (rect.x, rect.y)))
+                blits.append((self.background.surface, (rect.x, rect.y)))
         surface.blits(blits, doreturn = False)
 
     def __draw_grid(self, surface):
