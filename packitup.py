@@ -63,7 +63,7 @@ def main():
     assets_in_dir = os.path.join(args.sample_dir, args.assets_dir)
     assets_out_dir = os.path.join(out_dir, "Samples", "Assets")
     copy_asset_list(fonts.values(), assets_in_dir, assets_out_dir)
-    copy_asset_list(images.values(), assets_in_dir, assets_out_dir)
+    copy_asset_list([v["kwargs"]["fname"] for v in images.values()], assets_in_dir, assets_out_dir)
     copy_asset_list(sounds.values(), assets_in_dir, assets_out_dir)
 
     # Copy pygamengn source code
