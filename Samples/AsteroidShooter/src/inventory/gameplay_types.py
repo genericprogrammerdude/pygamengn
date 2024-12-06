@@ -299,7 +299,6 @@ game_types = {
                 "class_name": "GameObject",
                 "kwargs": {
                     "image:image_asset": "turret_gun",
-                    "scale": 0.8,
                     "is_collidable": False
                 },
                 "groups": [
