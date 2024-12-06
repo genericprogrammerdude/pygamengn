@@ -65,17 +65,8 @@ class AsteroidShooterGame(pygamengn.Game):
         if self.mode == Mode.PLAY:
             self.update_play(delta)
 
-        elif self.mode == Mode.MAIN_MENU:
-            pass
-
-        elif self.mode == Mode.PAUSE_MENU:
-            pass
-
         elif self.mode == Mode.KILLING_ALL:
             self.update_killing(delta)
-
-        elif self.mode == Mode.DEBRIEF:
-            pass
 
         super().update(delta)
 
