@@ -65,6 +65,7 @@ class RenderGroup(pygame.sprite.LayeredUpdates, GameObjectBase):
         if self.grid_draw:
             self.__draw_grid(surface)
 
+        blits = []
         for sprite in self.sprites():
             if sprite.visible:
                 transformed_rect = sprite.rect.move(self.cam)
@@ -74,7 +75,8 @@ class RenderGroup(pygame.sprite.LayeredUpdates, GameObjectBase):
                         sprite.off_screen_warning = sprite.kill_when_off_screen
                 else:
                     sprite.off_screen_warning = False
-                    surface.blit(sprite.image, transformed_rect)
+                    blits.append((sprite.image, (transformed_rect.x, transformed_rect.y)))
+        surface.blits(blits, doreturn = False)
 
     def __draw_background(self, surface):
         """Tiles the background image across the screen."""
@@ -83,11 +85,13 @@ class RenderGroup(pygame.sprite.LayeredUpdates, GameObjectBase):
         cam_y = round(-self.cam.y)
         range_x = range((cam_x // rect.width) * rect.width, cam_x + self.view_rect.width, rect.width)
         range_y = range((cam_y // rect.height) * rect.height, cam_y + self.view_rect.height, rect.height)
+        blits = []
         for y in range_y:
             for x in range_x:
                 rect.x = x - cam_x
                 rect.y = y - cam_y
-                surface.blit(self.background, rect)
+                blits.append((self.background, (rect.x, rect.y)))
+        surface.blits(blits, doreturn = False)
 
     def __draw_grid(self, surface):
         """Draws a grid as a background."""
