@@ -82,7 +82,7 @@ images = {
     "player_projectile": {
         "class_name": "ImageAsset",
         "kwargs": {
-            "fname": "SpaceShooterRedux/PNG/Lasers/laserGreen07.png",
+            "fname": "SpaceShooterRedux/PNG/Lasers/laserGreen11.png",
             "cache_rotations": True,
         }
     },
