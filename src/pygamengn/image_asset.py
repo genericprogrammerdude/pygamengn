@@ -13,11 +13,11 @@ from pygamengn.game_object_base import GameObjectBase
 class ImageAsset(GameObjectBase):
     """Loadable image asset."""
 
-    def __init__(self, fname: str, scale: float = 1.0, cache_rotations: bool = False, **kwargs):
+    def __init__(self, fname: str, scale: float = 1.0, angle: int = 0, cache_rotations: bool = False, **kwargs):
         super().__init__(**kwargs)
         self.__fname = fname
         self.__cache_rotations = cache_rotations
-        self.__base_surface = pygame.transform.smoothscale_by(pygame.image.load(self.__fname).convert_alpha(), scale)
+        self.__base_surface = pygame.transform.rotozoom(pygame.image.load(self.__fname).convert_alpha(), angle, scale)
         self.__scaled_rotations = {}
         if self.__cache_rotations:
             self.__scaled_rotations[1.0] = [
