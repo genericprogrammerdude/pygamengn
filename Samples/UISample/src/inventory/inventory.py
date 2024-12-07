@@ -1,5 +1,10 @@
 images = {
-    "ship": "SpaceShooterRedux/PNG/playerShip2_blue.png",
+    "ship": {
+        "class_name": "ImageAsset",
+        "kwargs": {
+            "fname": "SpaceShooterRedux/PNG/playerShip2_blue.png",
+        },
+    },
 }
 
 sounds = {

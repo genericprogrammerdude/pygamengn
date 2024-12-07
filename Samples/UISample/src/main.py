@@ -24,7 +24,7 @@ def main():
     factory = create_factory(os.path.join("..", "..", "Assets"))
 
     # Initialize window
-    pygame.display.set_icon(factory.images["ship"])
+    pygame.display.set_icon(factory.images["ship"].surface)
     pygame.display.set_caption("UI Sample")
 
     game = factory.create("UISample", screen=screen)
