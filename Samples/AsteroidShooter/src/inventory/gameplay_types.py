@@ -70,8 +70,8 @@ game_types = {
         "PlayerHealthBar": {
             "class_name": "HealthBar",
             "kwargs": {
-                "image:images": ["player_health_bar_bg", "player_health_bar_fg"],
-                "heading": 90,
+                "image:bg_image_asset": "player_health_bar_bg",
+                "image:fg_image_asset": "player_health_bar_fg",
                 "is_collidable": False
             },
             "groups": [

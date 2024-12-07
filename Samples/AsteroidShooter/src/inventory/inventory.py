@@ -90,25 +90,15 @@ images = {
         "class_name": "ImageAsset",
         "kwargs": {
             "fname": "SpaceShooterRedux/PNG/Lasers/laserBlue02.png",
-        }
+            "angle": 90,
+        },
     },
     "player_health_bar_bg": {
         "class_name": "ImageAsset",
         "kwargs": {
             "fname": "SpaceShooterRedux/PNG/Lasers/laserBlue14.png",
-        }
-    },
-    "turret_health_bar_fg": {
-        "class_name": "ImageAsset",
-        "kwargs": {
-            "fname": "SpaceShooterRedux/PNG/Lasers/laserRed02.png",
-        }
-    },
-    "turret_health_bar_bg": {
-        "class_name": "ImageAsset",
-        "kwargs": {
-            "fname": "SpaceShooterRedux/PNG/Lasers/laserRed14.png",
-        }
+            "angle": 90,
+        },
     },
     "turret_projectile2": {
         "class_name": "ImageAsset",
