@@ -67,8 +67,10 @@ class Game(DefaultInputHandler):
         # Draw things on the screen
         self._render_group.draw(self._screen)
         self.direct_draw()
-        for blit_surface in self._blit_surfaces:
-            self._screen.blit(blit_surface.surface, blit_surface.topleft)
+        self._screen.blits(
+            [(bs.surface, bs.topleft, None, pygame.BLEND_ALPHA_SDL2) for bs in self._blit_surfaces],
+            doreturn = False
+        )
         for ui in self._uis:
             ui.blit_to_surface(self._screen)
         pygame.display.flip()

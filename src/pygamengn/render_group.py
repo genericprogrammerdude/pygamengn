@@ -75,7 +75,7 @@ class RenderGroup(pygame.sprite.LayeredUpdates, GameObjectBase):
                         sprite.off_screen_warning = sprite.kill_when_off_screen
                 else:
                     sprite.off_screen_warning = False
-                    blits.append((sprite.image, (transformed_rect.x, transformed_rect.y)))
+                    blits.append((sprite.image, transformed_rect.topleft, None, pygame.BLEND_ALPHA_SDL2))
         surface.blits(blits, doreturn = False)
 
     def __draw_background(self, surface):
@@ -90,7 +90,7 @@ class RenderGroup(pygame.sprite.LayeredUpdates, GameObjectBase):
             for x in range_x:
                 rect.x = x - cam_x
                 rect.y = y - cam_y
-                blits.append((self.background.surface, (rect.x, rect.y)))
+                blits.append((self.background.surface, rect.topleft, None, pygame.BLEND_ALPHA_SDL2))
         surface.blits(blits, doreturn = False)
 
     def __draw_grid(self, surface):
