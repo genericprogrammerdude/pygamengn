@@ -59,6 +59,7 @@ class AsteroidShooterGame(pygamengn.Game):
 
         self.debrief_ui.set_continue_callback(self.go_to_main_menu)
 
+
     def update(self, delta):
         """Updates the game."""
 
@@ -198,9 +199,16 @@ class AsteroidShooterGame(pygamengn.Game):
 
 
     def kill_render_group(self, damage: int = 0):
-        gobs = self._render_group.sprites()
-        for gob in gobs:
-            gob.take_damage(random.randint(0, 5) if damage == 0 else damage, None)
+        god_mode = Ship.god_mode
+        if god_mode:
+            Ship.toggle_god_mode()
+        [
+            sprite.take_damage(random.randint(0, 5) if damage == 0 else damage, None)
+            for sprite in self._render_group.sprites()
+        ]
+        if god_mode:
+            Ship.toggle_god_mode()
+
 
 
     def get_time_string(self):

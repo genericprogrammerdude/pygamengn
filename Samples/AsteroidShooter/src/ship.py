@@ -23,6 +23,11 @@ class Ship(GameObject):
         Ship.__god_mode = not Ship.__god_mode
         return f"god mode {"enabled" if Ship.__god_mode else "disabled"}"
 
+    @classmethod
+    @property
+    def god_mode(cls) -> bool:
+        return cls.__god_mode
+
 
     def __init__(self, projectile_type, fire_freq, mover, waypoint, shot_sound, **kwargs):
         super().__init__(**kwargs)
