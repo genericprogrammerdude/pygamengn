@@ -1,7 +1,9 @@
 import math
 import pygame
 
+from pygamengn.blit_surface import BlitSurface
 from pygamengn.class_registrar import ClassRegistrar
+from pygamengn.game_object import GameObject
 from pygamengn.game_object_base import GameObjectBase
 
 
@@ -31,11 +33,13 @@ class RenderGroup(pygame.sprite.LayeredUpdates, GameObjectBase):
         self.background_colour = background_colour
         self.target_follow_tightness = target_follow_tightness
 
+
     def set_target(self, target):
         """Sets the game object to follow."""
         self.target = target
         if self.target:
             self.add(target)
+
 
     def update(self, view_size, *args):
         """Updates itself and its sprites."""
@@ -55,43 +59,50 @@ class RenderGroup(pygame.sprite.LayeredUpdates, GameObjectBase):
                 self.cam.x = max(-(self.world_rect.width - self.view_rect.width), min(0, self.cam.x))
                 self.cam.y = max(-(self.world_rect.height - self.view_rect.height), min(0, self.cam.y))
 
+
     def draw(self, surface):
         """Draws the sprites in the group on the given surface."""
+        blits = []
         if self.background:
-            self.__draw_background(surface)
+            self.__draw_background(blits)
         else:
             surface.fill(self.background_colour)
 
         if self.grid_draw:
             self.__draw_grid(surface)
 
-        blits = []
-        for sprite in self.sprites():
-            if sprite.visible:
-                transformed_rect = sprite.rect.move(self.cam)
-                if not self.view_rect.colliderect(transformed_rect):
-                    # Ignore sprites that are outside of the view rectangle, but warn them that they're off the screen
-                    if not sprite.off_screen_warning:
-                        sprite.off_screen_warning = sprite.kill_when_off_screen
-                else:
-                    sprite.off_screen_warning = False
-                    blits.append((sprite.image, transformed_rect.topleft, None, pygame.BLEND_ALPHA_SDL2))
+        [self.__draw_sprite(sprite, blits) for sprite in self.sprites() if sprite.visible]
         surface.blits(blits, doreturn = False)
 
-    def __draw_background(self, surface):
+
+    def __draw_sprite(self, sprite: GameObject, blits: list[BlitSurface]):
+        transformed_rect = sprite.rect.move(self.cam)
+        if not self.view_rect.colliderect(transformed_rect):
+            # Ignore sprites that are outside of the view rectangle, but warn them that they're off the screen
+            if not sprite.off_screen_warning:
+                sprite.off_screen_warning = sprite.kill_when_off_screen
+        else:
+            sprite.off_screen_warning = False
+            blits.extend([
+                    (bs.surface, transformed_rect, None, pygame.BLEND_ALPHA_SDL2)
+                    for bs in sprite.blit_surfaces
+                ]
+            )
+
+
+    def __draw_background(self, blits):
         """Tiles the background image across the screen."""
         rect = self.background.surface.get_rect()
         cam_x = round(-self.cam.x)
         cam_y = round(-self.cam.y)
         range_x = range((cam_x // rect.width) * rect.width, cam_x + self.view_rect.width, rect.width)
         range_y = range((cam_y // rect.height) * rect.height, cam_y + self.view_rect.height, rect.height)
-        blits = []
         for y in range_y:
             for x in range_x:
                 rect.x = x - cam_x
                 rect.y = y - cam_y
                 blits.append((self.background.surface, rect.topleft, None, pygame.BLEND_ALPHA_SDL2))
-        surface.blits(blits, doreturn = False)
+
 
     def __draw_grid(self, surface):
         """Draws a grid as a background."""
@@ -106,6 +117,7 @@ class RenderGroup(pygame.sprite.LayeredUpdates, GameObjectBase):
         for y in range(int(low_y - self.cam.y), int(hi_y - self.cam.y), self.grid_interval):
             ycor = self.view_rect.height - y
             pygame.draw.line(surface, self.grid_colour, (0, ycor), (self.view_rect.width, ycor))
+
 
     def get_world_view_rect(self):
         rv = pygame.Rect(self.view_rect)

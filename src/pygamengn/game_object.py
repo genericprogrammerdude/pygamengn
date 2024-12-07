@@ -1,5 +1,6 @@
 import pygame
 
+from pygamengn.blit_surface import BlitSurface
 from pygamengn.class_registrar import ClassRegistrar
 from pygamengn.game_object_base import GameObjectBase
 from pygamengn.geometry import normalize_angle
@@ -199,6 +200,10 @@ class GameObject(pygame.sprite.Sprite, GameObjectBase):
     @property
     def off_screen_ms(self) -> int:
         return self.__off_screen_ms
+
+    @property
+    def blit_surfaces(self) -> list[BlitSurface]:
+        return [BlitSurface(self.image, self.rect)]
 
     def __kill_myself(self):
         """Recursively kills this GameObject and its attachments."""
