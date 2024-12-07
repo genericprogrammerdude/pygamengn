@@ -173,7 +173,7 @@ images = {
     "background": {
         "class_name": "ImageAsset",
         "kwargs": {
-            "fname": "SpaceShooterRedux/Backgrounds/black.png",
+            "fname": "SpaceShooterRedux/Backgrounds/blue.png",
         }
     },
     "waypoint": {
