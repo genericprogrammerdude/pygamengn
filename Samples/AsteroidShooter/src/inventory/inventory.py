@@ -100,13 +100,6 @@ images = {
             "angle": 90,
         },
     },
-    "turret_projectile2": {
-        "class_name": "ImageAsset",
-        "kwargs": {
-            "fname": "SpaceShooterRedux/PNG/Lasers/laserBlue01.png",
-            "cache_rotations": True,
-        }
-    },
     "asteroid_00": {
         "class_name": "ImageAsset",
         "kwargs": {
@@ -180,7 +173,7 @@ images = {
     "background": {
         "class_name": "ImageAsset",
         "kwargs": {
-            "fname": "SpaceShooterRedux/Backgrounds/darkPurple.png",
+            "fname": "SpaceShooterRedux/Backgrounds/blue.png",
         }
     },
     "waypoint": {
