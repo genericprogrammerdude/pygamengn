@@ -53,6 +53,7 @@ class Console(Root):
         self._history_index = 0
         self._history = []
         ConsoleRegistrar.register("exit", self._hide_callback)
+        ConsoleRegistrar.register("ls", lambda: f" ".join(sorted(ConsoleRegistrar.registry.keys())))
 
 
     def update(self, delta: int) -> bool:
