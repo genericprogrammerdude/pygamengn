@@ -75,6 +75,11 @@ def main():
         ignore = shutil.ignore_patterns("__pycache__")
     )
 
+    # Copy splash image
+    splash = "splash.jpeg"
+    log(os.path.join(assets_in_dir, splash), os.path.join(out_dir, splash))
+    shutil.copy(os.path.join(assets_in_dir, splash), os.path.join(out_dir, splash))
+
 
 def copy_asset_list(assets: list[str], in_dir: str, out_dir: str):
     for asset in assets:
