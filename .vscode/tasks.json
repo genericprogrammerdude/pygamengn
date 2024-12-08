@@ -15,7 +15,8 @@
                 "--title", "\"Asteroid Continuum 1983\"",
                 "--no_opt",
                 "--icon", "favicon.png",
-                "${workspaceFolder}/../AsteroidShooter"
+                "--template", "${workspaceFolder}/Samples/AsteroidShooter/default.tmpl",
+                "${workspaceFolder}/../AsteroidShooter",
             ],
             "problemMatcher": [],
             "group": {
