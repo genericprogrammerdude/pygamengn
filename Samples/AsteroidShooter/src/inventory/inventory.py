@@ -9,7 +9,7 @@ images = {
     "ship_icon": {
         "class_name": "ImageAsset",
         "kwargs": {
-            "fname": "../../favicon.png",
+            "fname": "favicon.png",
         }
     },
     "explosion1": {
