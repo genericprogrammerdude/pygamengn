@@ -24,7 +24,6 @@ class Ship(GameObject):
         return f"god mode {"enabled" if Ship.__god_mode else "disabled"}"
 
     @classmethod
-    @property
     def god_mode(cls) -> bool:
         return cls.__god_mode
 
