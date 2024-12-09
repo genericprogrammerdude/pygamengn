@@ -20,8 +20,8 @@ WIDTH=1024  # {{cookiecutter.width}}
 HEIGHT=600  # {{cookiecutter.height}}
 
 # reference/idealized screen pixels
-REFX = 1980
-REFY = 1080
+REFX = 1280
+REFY = 720
 
 def u(real, ref, v):
     if abs(v)<0.9999999:
@@ -62,7 +62,7 @@ async def custom_site():
     import embed
 
 
-    platform.document.body.style.background = "#7f7f7f"
+    platform.document.body.style.background = "#000000"
 
     import pygame
 
@@ -108,8 +108,8 @@ async def custom_site():
 
     track = platform.window.MM.prepare(apk, json.dumps(cfg))
 
-    marginx = ux(.020) # 20%
-    marginy = uy(.045) # 45%
+    marginx = ux(.020)
+    marginy = uy(.095)
 
 
     def pg_bar(pos):
@@ -119,17 +119,29 @@ async def custom_site():
         slot = ux(.060)/ total # 60%
 
         pygame.draw.rect(screen,(10,10,10),( marginx-ux(10), marginy-uy(10), (total*slot)+ux(20), uy(110) ) )
-        pygame.draw.rect(screen,(0,255,0), ( marginx, marginy, track.pos*slot, uy(90)) )
+        pygame.draw.rect(screen,(0,200,100), ( marginx, marginy, track.pos*slot, uy(90)) )
+
+        print(f"******************** pg_bar: pos == {pos}")
 
     # wait until zip mount + overlayfs is complete
     while not track.ready:
         pg_bar(track.pos)
         compose()
-        await asyncio.sleep(.1)
+        await asyncio.sleep(.01)
+
+    # Load splash screen
+    splash = pygame.image.load(os.path.join(appdir, "assets", "splash.jpeg")).convert()
+    splash_rect = splash.get_rect().fit(screen.get_rect())
+    splash = pygame.transform.smoothscale(splash, splash_rect.size)
+
+    screen.blit(splash, splash_rect)
+    compose()
 
     # fill it up in case it was cached and instant download
     pg_bar(track.len)
-    compose()
+
+    # screen.blit(splash, splash_rect)
+    # compose()
 
 
     # preloader will change dir and prepend it to sys.path
@@ -178,10 +190,12 @@ async def custom_site():
     """)
         while not platform.window.MM.UME:
             await asyncio.sleep(.1)
+    else:
+        print(f" * NOT Waiting for media user engagement : go straight into game *")
 
     # cleanup
-    screen.fill( (0,0,0,0) )
-    pygame.display.flip()
+    # screen.fill( (0,0,0,0) )
+    # pygame.display.flip()
 
     await shell.runpy(main, callback=ui_callback)
 
@@ -265,7 +279,7 @@ config = {
     <style>
         #status {
             display: inline-block;
-            vertical-align: top;
+            vertical-align: center;
             margin-top: 20px;
             margin-left: 30px;
             font-weight: bold;
@@ -304,7 +318,7 @@ config = {
             font-family: arial;
             margin: 0;
             padding: none;
-            background-color:powderblue;
+            background-color:black;
         }
 
         .topright{
