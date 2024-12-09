@@ -29,7 +29,7 @@ async def main(assets_dir: str = None):
 
     # Initialize window
     pygame.display.set_icon(factory.images["ship_icon"].surface)
-    pygame.display.set_caption("Asteroid Shooter")
+    pygame.display.set_caption("Asteroid Continuum 1983")
 
     game = factory.create("AsteroidShooterGame", screen=screen)
 
