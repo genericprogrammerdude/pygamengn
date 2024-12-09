@@ -14,17 +14,11 @@
                 "--can_close", "1",
                 "--title", "\"Asteroid Continuum 1983\"",
                 "--no_opt",
-                "--icon", "favicon.png",
+                "--icon", "${workspaceFolder}/../AsteroidShooter/assets/favicon.png",
                 "--template", "${workspaceFolder}/Samples/AsteroidShooter/default.tmpl",
                 "${workspaceFolder}/../AsteroidShooter",
             ],
-            "problemMatcher": [],
-            "group": {
-                "kind": "build",
-            },
-            "options": {
-               "hide": "true",
-            },
+            "hide": true,
         },
         {
             "label": "packitup",
@@ -35,24 +29,13 @@
                 "--sample-dir", "Samples/AsteroidShooter",
                 "--out", "${workspaceFolder}/..",
             ],
-            "problemMatcher": [],
-            "group": {
-               "hide": true,
-            },
-            "options": {
-               "hide": "true",
-            },
+            "hide": true,
         },
         {
             "label": "rm-AsteroidShooter",
             "type": "shell",
             "command": "rm -rf ../AsteroidShooter",
-            "group": {
-                "kind": "build",
-            },
-            "options": {
-               "hide": true,
-            },
+            "hide": true,
         },
         {
             "label": "HTML5 Local",
@@ -60,7 +43,7 @@
             "dependsOrder": "sequence",
             "group": {
                 "kind": "build",
-                // "isDefault": true,
+                "isDefault": true,
             },
         },
     ],
