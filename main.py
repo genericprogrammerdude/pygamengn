@@ -20,4 +20,4 @@ from Samples.AsteroidShooter.src.main import main
 
 
 if __name__ == "__main__":
-    asyncio.run(main(os.path.join("Samples", "Assets")))
+    asyncio.run(main(os.path.join("assets")))
