@@ -36,8 +36,9 @@ async def main(assets_dir: str = None):
     # Initialize window
     pygame.display.set_icon(factory.images["ship_icon"].surface)
     pygame.display.set_caption("Asteroid Continuum 1983")
+    logging.info(f"Created window: {time.time() - t:.3f} seconds")
+    t = time.time()
 
-    logging.info(f"Create game")
     game = factory.create("AsteroidShooterGame", screen=screen)
     logging.info(f"Created game: {time.time() - t:.3f} seconds")
 
