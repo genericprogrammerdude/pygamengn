@@ -4,6 +4,24 @@
     "version": "2.0.0",
     "tasks": [
         {
+            "label": "pygbag-web-zip",
+            "type": "shell",
+            "command": "python3",
+            "args": [
+                "-m", "pygbag",
+                "--app_name", "\"Asteroid Continuum 1983\"",
+                "--ume_block", "0",
+                "--can_close", "1",
+                "--title", "\"Asteroid Continuum 1983\"",
+                "--no_opt",
+                "--icon", "${workspaceFolder}/../AsteroidShooter/assets/favicon.png",
+                "--template", "${workspaceFolder}/Samples/AsteroidShooter/default.tmpl",
+                "--archive",
+                "${workspaceFolder}/../AsteroidShooter",
+            ],
+            "hide": true,
+        },
+        {
             "label": "pygbag-local-deploy",
             "type": "shell",
             "command": "python3",
@@ -43,7 +61,15 @@
             "dependsOrder": "sequence",
             "group": {
                 "kind": "build",
-                "isDefault": true,
+                // "isDefault": true,
+            },
+        },
+        {
+            "label": "HTML5 zip",
+            "dependsOn": ["rm-AsteroidShooter", "packitup", "pygbag-web-zip"],
+            "dependsOrder": "sequence",
+            "group": {
+                "kind": "build",
             },
         },
     ],
