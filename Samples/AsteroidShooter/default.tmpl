@@ -80,7 +80,7 @@ async def custom_site():
             bar_y: float = 0.99,
             bar_bg_colour = (10, 10, 10),
             bar_fg_colour = (0, 200, 100),
-            seconds = 5,
+            seconds = 10,
         ):
             self._screen = screen
             self._splash = None
@@ -109,6 +109,7 @@ async def custom_site():
             while self._elapsed <= self._total_time:
                 self._update(self._elapsed / self._total_time)
                 self._elapsed = (time.time() - self._start_time)
+                # print(f"**************************** {self._elapsed}")
                 await asyncio.sleep(.1)
 
         def load_splash(self, splash_path: str):
