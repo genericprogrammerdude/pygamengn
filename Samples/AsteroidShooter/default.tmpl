@@ -58,6 +58,7 @@ async def custom_site():
     from pathlib import Path
     import embed
     import pygame
+    import time
 
     platform.document.body.style.background = "#000000"
 
@@ -79,6 +80,7 @@ async def custom_site():
             bar_y: float = 0.99,
             bar_bg_colour = (10, 10, 10),
             bar_fg_colour = (0, 200, 100),
+            seconds = 5,
         ):
             self._screen = screen
             self._splash = None
@@ -97,6 +99,17 @@ async def custom_site():
             )
             self._fg_rect = self._bg_rect.copy()
             self._fg_rect.width = 0
+            self._total_time = seconds
+            self._start_time = 0
+            self._elapsed = 0
+
+        async def go(self):
+            self._elapsed = 0
+            self._start_time = time.time()
+            while self._elapsed <= self._total_time:
+                self._update(self._elapsed / self._total_time)
+                self._elapsed = (time.time() - self._start_time)
+                await asyncio.sleep(.1)
 
         def load_splash(self, splash_path: str):
             self._splash = pygame.image.load(splash_path).convert()
@@ -105,10 +118,14 @@ async def custom_site():
             self._splash_rect = self._splash.get_rect().fit(screen_rect)
             self._splash = pygame.transform.smoothscale(self._splash, self._splash_rect.size)
 
-        def update(self, progress: float):
-            if not self._splash is None:
+        def finish(self):
+            self._elapsed = self._total_time
+            self._start_time = time.time() - self._total_time
+
+        def _update(self, progress: float):
+            if self._splash:
                 self._screen.blit(self._splash, self._splash_rect)
-                self._splash = None
+                self._splash = None # Nonify so that it's only blitted once
             screen_rect = self._screen.get_rect()
             radius = round(self._bg_rect.height * 0.3)
             pygame.draw.rect(
@@ -132,9 +149,6 @@ async def custom_site():
                     self._fg_rect,
                     border_radius = radius,
                 )
-            self._update_display()
-
-        def _update_display(self):
             pygame.display.update()
             window.chromakey(None, *self._screen.get_colorkey(), 40)
 
@@ -146,7 +160,7 @@ async def custom_site():
     screen.set_colorkey((0,0,0,0), pygame.RLEACCEL)
 
     load_screen = LoadScreen(screen)
-    load_screen.update(0.0)
+    load_screen_task = asyncio.create_task(load_screen.go(), name = "load_screen_task")
 
     platform.window.transfer.hidden = true
     platform.window.canvas.style.visibility = "visible"
@@ -172,17 +186,13 @@ async def custom_site():
 
     # wait until zip mount + overlayfs is complete
     while not track.ready:
-        load_screen.update((0.5 * track.pos / track.len) if track.len != 0 else 0)
-        await asyncio.sleep(.01)
+        await asyncio.sleep(.1)
 
     # The splash image is available now -> load it and show it
     load_screen.load_splash(os.path.join(appdir, "assets", "splash.jpeg"))
-    load_screen.update(0.55)
 
     # preloader will change dir and prepend it to sys.path
     platform.run_main(PyConfig, loaderhome= appdir / "assets", loadermain=None)
-
-    load_screen.update(0.6)
 
     # wait preloading complete
     # that includes images and wasm compilation of bundled modules
@@ -191,12 +201,8 @@ async def custom_site():
 
     main = appdir / "assets" / "main.py"
 
-    load_screen.update(0.7)
-
     # start async top level machinery and add a console.
     await TopLevel_async_handler.start_toplevel(platform.shell, console=window.python.config.debug)
-
-    load_screen.update(0.8)
 
     # now that apk is mounted we have access to font cache
     # but we need to fill __file__ that is not yet set
@@ -236,11 +242,10 @@ async def custom_site():
         print(f" * NOT Waiting for media user engagement : go straight into game *")
     # END WARNING
 
-    load_screen.update(0.9)
-
     await shell.runpy(main, callback=ui_callback)
 
-    load_screen.update(1.0)
+    load_screen.finish()
+    await load_screen_task
 
 
 import asyncio
@@ -449,7 +454,7 @@ width="470px" height="90%"
 allowtransparency="true"
 style="z-index: 10;"
 style="background: #FFFFFF;"
-frameborder="1"
+frameborder="0"
                 allowfullscreen="true"
                 webkitallowfullscreen="true"
                 msallowfullscreen="true"
