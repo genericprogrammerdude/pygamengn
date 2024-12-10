@@ -1,3 +1,4 @@
+import asyncio
 import copy
 import logging
 import os
@@ -17,11 +18,12 @@ class GameObjectFactory():
         def __init__(self, message):
             super().__init__(message)
 
-    def __init__(self, registry, assets_dir, images, sounds, assets, game_types):
+    def __init__(self, registry):
         self.layer_manager = None
         self.replication_manager = None
         self.registry = registry
 
+    async def load(self, assets_dir, images, sounds, assets, game_types):
         # Keys that get special treatment
         self.special_keys = [
             ("image:", lambda name: self.images[name]),
@@ -34,11 +36,15 @@ class GameObjectFactory():
 
         # Initialize game types
         self.game_types = self.__init_game_types(game_types)
+        await asyncio.sleep(0)
 
         # Load images and sounds, and initialize assets
         self.images = self.__create_assets(images, lambda v: self.__create_image_asset(assets_dir, v))
+        await asyncio.sleep(0)
         self.sounds = self.__create_assets(sounds, lambda v: pygame.mixer.Sound(os.path.join(assets_dir, v)))
+        await asyncio.sleep(0)
         self.assets = self.__create_assets(assets, lambda v: self.__create_object(v))
+        await asyncio.sleep(0)
 
     def create(self, name: str, **kwargs) -> GameObjectBase:
         """Creates a GameObject instance."""
