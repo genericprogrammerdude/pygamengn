@@ -56,45 +56,109 @@ async def custom_site():
     import platform
     import json
     from pathlib import Path
-
-
-
     import embed
-
+    import pygame
 
     platform.document.body.style.background = "#000000"
 
-    import pygame
+    class LoadScreen():
+        """
+        Render and track a progress bar as well as a splash screen while resources are being loaded.
 
-    def compose():
-        pygame.display.update()
-        window.chromakey(None, *screen.get_colorkey(), 40)
+        All widths, heights, and positions this class uses are normalized to the range [0...1]. When the splash image
+        and progress bar are drawn to the screen, the normalized numbers are converted to pygame's screen units.
+
+        Initially only the progress bar is shown, as the splash image is loaded with the apk. When the apk is fully
+        loaded the splash image will be presented on the screen, along with the progress bar.
+        """
+        def __init__(
+            self,
+            screen: pygame.Surface,
+            bar_width: float = 1.0,
+            bar_height: float = 0.01,
+            bar_y: float = 0.99,
+            bar_bg_colour = (10, 10, 10),
+            bar_fg_colour = (0, 200, 100),
+        ):
+            self._screen = screen
+            self._splash = None
+            self._splash_rect = None
+            self._bar_width = bar_width
+            self._bar_height = bar_height
+            self._bar_y = bar_y
+            self._bar_bg_colour = bar_bg_colour
+            self._bar_fg_colour = bar_fg_colour
+            screen_rect = self._screen.get_rect()
+            self._bg_rect = pygame.Rect(
+                (1.0 - self._bar_width) / 2.0 *  screen_rect.width,
+                self._bar_y * screen_rect.height,
+                self._bar_width * screen_rect.width,
+                self._bar_height * screen_rect.height
+            )
+            self._fg_rect = self._bg_rect.copy()
+            self._fg_rect.width = 0
+
+        def load_splash(self, splash_path: str):
+            self._splash = pygame.image.load(splash_path).convert()
+            screen_rect = self._screen.get_rect().copy()
+            screen_rect.height *= (1.0 - self._bar_height)
+            self._splash_rect = self._splash.get_rect().fit(screen_rect)
+            self._splash = pygame.transform.smoothscale(self._splash, self._splash_rect.size)
+
+        def update(self, progress: float):
+            if not self._splash is None:
+                self._screen.blit(self._splash, self._splash_rect)
+                self._splash = None
+            screen_rect = self._screen.get_rect()
+            radius = round(self._bg_rect.height * 0.3)
+            pygame.draw.rect(
+                self._screen,
+                self._bar_bg_colour,
+                self._bg_rect,
+                border_radius = radius,
+            )
+            pygame.draw.rect(
+                self._screen,
+                self._bar_fg_colour,
+                self._bg_rect,
+                width = 1,
+                border_radius = radius,
+            )
+            if progress != 0:
+                self._fg_rect.width = progress * self._bar_width * self._screen.get_rect().width
+                pygame.draw.rect(
+                    self._screen,
+                    self._bar_fg_colour,
+                    self._fg_rect,
+                    border_radius = radius,
+                )
+            self._update_display()
+
+        def _update_display(self):
+            pygame.display.update()
+            window.chromakey(None, *self._screen.get_colorkey(), 40)
+
 
     pygame.init()
     pygame.font.init()
 
     screen = pygame.display.set_mode([ux(.100),uy(.100)], pygame.SRCALPHA, 32)
-    screen.set_colorkey( (0,0,0,0), pygame.RLEACCEL )
-    screen.fill( (0,0,0,0) )
+    screen.set_colorkey((0,0,0,0), pygame.RLEACCEL)
 
-    compose()
+    load_screen = LoadScreen(screen)
+    load_screen.update(0.0)
 
     platform.window.transfer.hidden = true
     platform.window.canvas.style.visibility = "visible"
 
-
-
     apk = "{{cookiecutter.archive}}.apk"
-
     bundle = "{{cookiecutter.archive}}"
 
     # the C or js loader could do that but be explicit.
     appdir = Path(f"/data/data/{bundle}") # /data/data/{{cookiecutter.archive}}
     appdir.mkdir()
 
-
     # mount apk
-
     cfg = {
         "io": "url",
         "type":"mount",
@@ -104,49 +168,21 @@ async def custom_site():
         },
         "path" : f"/ => {appdir.as_posix()}",
     }
-
-
     track = platform.window.MM.prepare(apk, json.dumps(cfg))
-
-    marginx = ux(.020)
-    marginy = uy(.095)
-
-
-    def pg_bar(pos):
-        nonlocal marginx, marginy
-        # resolution of progress bar, recalculate since it may not be know yet.
-        total = track.len or 10  # avoid div0
-        slot = ux(.060)/ total # 60%
-
-        pygame.draw.rect(screen,(10,10,10),( marginx-ux(10), marginy-uy(10), (total*slot)+ux(20), uy(110) ) )
-        pygame.draw.rect(screen,(0,200,100), ( marginx, marginy, track.pos*slot, uy(90)) )
-
-        print(f"******************** pg_bar: pos == {pos}")
 
     # wait until zip mount + overlayfs is complete
     while not track.ready:
-        pg_bar(track.pos)
-        compose()
+        load_screen.update((0.5 * track.pos / track.len) if track.len != 0 else 0)
         await asyncio.sleep(.01)
 
-    # Load splash screen
-    splash = pygame.image.load(os.path.join(appdir, "assets", "splash.jpeg")).convert()
-    splash_rect = splash.get_rect().fit(screen.get_rect())
-    splash = pygame.transform.smoothscale(splash, splash_rect.size)
-
-    screen.blit(splash, splash_rect)
-    compose()
-
-    # fill it up in case it was cached and instant download
-    pg_bar(track.len)
-
-    # screen.blit(splash, splash_rect)
-    # compose()
-
+    # The splash image is available now -> load it and show it
+    load_screen.load_splash(os.path.join(appdir, "assets", "splash.jpeg"))
+    load_screen.update(0.55)
 
     # preloader will change dir and prepend it to sys.path
     platform.run_main(PyConfig, loaderhome= appdir / "assets", loadermain=None)
 
+    load_screen.update(0.6)
 
     # wait preloading complete
     # that includes images and wasm compilation of bundled modules
@@ -155,19 +191,26 @@ async def custom_site():
 
     main = appdir / "assets" / "main.py"
 
+    load_screen.update(0.7)
+
     # start async top level machinery and add a console.
     await TopLevel_async_handler.start_toplevel(platform.shell, console=window.python.config.debug)
+
+    load_screen.update(0.8)
 
     # now that apk is mounted we have access to font cache
     # but we need to fill __file__ that is not yet set
     __import__(__name__).__file__ = str(main)
 
 
-    # now make a prompt
-    fnt = pygame.sysfont.SysFont("freesans",  uy(80) )
+    # BEGIN WARNING
+    # ui_callback() and the block under if not platform.window.MM.UME will blow up because I deleted definitions
+    # of variables they use. I want to see it blow up and fix it when it does. Load localhost:8000/?-i in the browser
+    # to see the interpreter's output and debug the issue if loading the game appears frozen.
 
+    # now make a prompt
     def ui_callback(pkg, error=None):
-        nonlocal fnt
+        fnt = pygame.sysfont.SysFont("freesans",  uy(80) )
         if error:
             prompt = fnt.render(f"{error}", True, "black")
         else:
@@ -178,7 +221,6 @@ async def custom_site():
 
     # test/wait if user media interaction required
     if not platform.window.MM.UME:
-
         # now make a prompt
         fnt = pygame.sysfont.SysFont("freesans",  uy(80) )
         prompt = fnt.render("Ready to start !", True, "blue")
@@ -192,13 +234,13 @@ async def custom_site():
             await asyncio.sleep(.1)
     else:
         print(f" * NOT Waiting for media user engagement : go straight into game *")
+    # END WARNING
 
-    # cleanup
-    # screen.fill( (0,0,0,0) )
-    # pygame.display.flip()
+    load_screen.update(0.9)
 
     await shell.runpy(main, callback=ui_callback)
 
+    load_screen.update(1.0)
 
 
 import asyncio
