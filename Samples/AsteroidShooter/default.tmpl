@@ -16,8 +16,8 @@ Loading {{cookiecutter.title}} from {{cookiecutter.archive}}.apk
 
 
 # screen pixels (real, hardware)
-WIDTH=1024  # {{cookiecutter.width}}
-HEIGHT=600  # {{cookiecutter.height}}
+WIDTH=1280  # {{cookiecutter.width}}
+HEIGHT=720  # {{cookiecutter.height}}
 
 # reference/idealized screen pixels
 REFX = 1280
@@ -157,7 +157,7 @@ async def custom_site():
     pygame.init()
     pygame.font.init()
 
-    screen = pygame.display.set_mode([ux(.100),uy(.100)], pygame.SRCALPHA, 32)
+    screen = pygame.display.set_mode((1280, 720), pygame.SRCALPHA, 32)
     screen.set_colorkey((0,0,0,0), pygame.RLEACCEL)
 
     load_screen = LoadScreen(screen)
@@ -340,8 +340,8 @@ config = {
         }
 
         div.emscripten { text-align: center; }
-        div.emscripten_border { border: 1px solid black; }
-        div.thick_border { border: 4px solid black; }
+        div.emscripten_border { border: 0px solid black; }
+        div.thick_border { border: 0px solid black; }
 
         /* the canvas *must not* have any border or padding, or mouse coords will be wrong */
         /* average size of droid screen 470dp x 320dp  */
@@ -390,14 +390,14 @@ config = {
         .trinfo{
            position:relative;
            right:0px;
-           border: 1px solid black;
+           border: 0px solid black;
         }
 
         .framed{
            position:relative;
            top:150px;
            right:10px;
-           border: 1px solid black;
+           border: 0px solid black;
         }
     </style>
 
@@ -451,7 +451,7 @@ height="1px"
             <div id="info" class="trinfo"></div>
 
             <iframe id="iframe" class="framed" name="iframe"
-width="470px" height="90%"
+width="1280px" height="90%"
 allowtransparency="true"
 style="z-index: 10;"
 style="background: #FFFFFF;"
