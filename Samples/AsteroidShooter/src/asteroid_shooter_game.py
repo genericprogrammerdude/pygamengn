@@ -199,7 +199,7 @@ class AsteroidShooterGame(pygamengn.Game):
 
 
     def kill_render_group(self, damage: int = 0):
-        god_mode = Ship.god_mode
+        god_mode = Ship.god_mode()
         if god_mode:
             Ship.toggle_god_mode()
         [
