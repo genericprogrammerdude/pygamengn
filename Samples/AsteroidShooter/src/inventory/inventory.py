@@ -9,7 +9,7 @@ images = {
     "ship_icon": {
         "class_name": "ImageAsset",
         "kwargs": {
-            "fname": "../../favicon.png",
+            "fname": "favicon.png",
         }
     },
     "explosion1": {
@@ -173,7 +173,7 @@ images = {
     "background": {
         "class_name": "ImageAsset",
         "kwargs": {
-            "fname": "SpaceShooterRedux/Backgrounds/black.png",
+            "fname": "SpaceShooterRedux/Backgrounds/blue.png",
         }
     },
     "waypoint": {

@@ -49,8 +49,6 @@ def main():
     # Copy files
     log("main.py", os.path.join(out_dir, "main.py"))
     shutil.copyfile("main.py", os.path.join(out_dir, "main.py"))
-    log("favicon.png", os.path.join(out_dir, "favicon.png"))
-    shutil.copyfile("favicon.png", os.path.join(out_dir, "favicon.png"))
     log(args.sample_dir, os.path.join(out_dir, "Samples", sample_name))
     shutil.copytree(
         args.sample_dir,
@@ -61,7 +59,7 @@ def main():
 
     # Copy assets
     assets_in_dir = os.path.join(args.sample_dir, args.assets_dir)
-    assets_out_dir = os.path.join(out_dir, "Samples", "Assets")
+    assets_out_dir = os.path.join(out_dir, "assets")
     copy_asset_list(fonts.values(), assets_in_dir, assets_out_dir)
     copy_asset_list([v["kwargs"]["fname"] for v in images.values()], assets_in_dir, assets_out_dir)
     copy_asset_list(sounds.values(), assets_in_dir, assets_out_dir)
@@ -74,6 +72,11 @@ def main():
         dirs_exist_ok = True,
         ignore = shutil.ignore_patterns("__pycache__")
     )
+
+    # Copy splash image
+    splash = "splash.jpeg"
+    log(os.path.join(assets_in_dir, splash), os.path.join(out_dir, splash))
+    shutil.copy(os.path.join(assets_in_dir, splash), os.path.join(out_dir, splash))
 
 
 def copy_asset_list(assets: list[str], in_dir: str, out_dir: str):

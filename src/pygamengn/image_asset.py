@@ -17,7 +17,7 @@ class ImageAsset(GameObjectBase):
         super().__init__(**kwargs)
         self.__fname = fname
         self.__cache_rotations = cache_rotations
-        self.__base_surface = pygame.transform.rotozoom(pygame.image.load(self.__fname).convert_alpha(), angle, scale)
+        self.__base_surface = pygame.transform.rotozoom(pygame.image.load(self.__fname), angle, scale)
         self.__scaled_rotations = {}
         if self.__cache_rotations:
             self.__scaled_rotations[1.0] = [
