@@ -1,3 +1,4 @@
+import asyncio
 import logging
 import os
 
@@ -13,7 +14,7 @@ import pygamengn
 from ui_sample import UISample
 
 
-def main():
+async def main():
     logging.basicConfig(level=logging.DEBUG, format="%(levelname)s: %(filename)s:%(lineno)d: %(message)s")
 
     pygame.init()
@@ -21,10 +22,10 @@ def main():
     # Create window
     screen = pygame.display.set_mode((1280, 720), pygame.DOUBLEBUF | pygame.HWSURFACE | pygame.RESIZABLE)
 
-    factory = create_factory(os.path.join("..", "..", "Assets"))
+    factory = await create_factory(os.path.join("..", "..", "Assets"))
 
     # Initialize window
-    pygame.display.set_icon(factory.images["ship"].surface)
+    pygame.display.set_icon(factory.images["ship_icon"].surface)
     pygame.display.set_caption("UI Sample")
 
     game = factory.create("UISample", screen=screen)
@@ -40,11 +41,13 @@ def main():
     pygame.quit()
 
 
-def create_factory(assets_dir) -> pygamengn.GameObjectFactory:
+async def create_factory(assets_dir) -> pygamengn.GameObjectFactory:
     """Instantiates GameObjectFactory, the factory that will create all the game objects."""
     from inventory.inventory import images, sounds, assets, game_types
     factory = pygamengn.GameObjectFactory(
         pygamengn.ClassRegistrar.registry,
+    )
+    await factory.load(
         assets_dir,
         images,
         sounds,
@@ -56,4 +59,4 @@ def create_factory(assets_dir) -> pygamengn.GameObjectFactory:
 
 
 if __name__ == "__main__":
-    main()
+    asyncio.run(main())
