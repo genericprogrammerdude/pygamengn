@@ -66,16 +66,15 @@ game_types = {
                 "class_name": "Component",
                 "kwargs": {
                     "name": "joystick",
-                    "game_object:children": ["Stick", "Button"],
+                    "game_object:children": ["Stick", "Button", "Pause"],
                 },
                 "Stick": {
                     "class_name": "TexturePanel",
                     "kwargs": {
                         "name": "stick",
                         "pos": [0.03, 0.7],
-                        "size": [0.15, 0.25],
+                        "size": [0.25, 0.25],
                         "image:image_asset": "joystick",
-                        "scale_texture_to_rect": True,
                         "game_object:children": [
                             "Ship",
                         ],
@@ -86,9 +85,8 @@ game_types = {
                             "image:image_asset": "ship-alpha",
                             "horz_align": "CENTRE",
                             "vert_align": "CENTRE",
-                            "size": [0.6, 0.6],
+                            "size": [0.5, 0.5],
                             "name": "ship",
-                            "scale_texture_to_rect": True,
                         },
                     },
                 },
@@ -96,17 +94,31 @@ game_types = {
                     "class_name": "Component",
                     "kwargs": {
                         "pos": [0.85, 0.75],
-                        "size": [0.15, 0.25],
+                        "size": [0.075, 0.125],
                         "game_object:children": ["ButtonPanel"],
+                        "name": "button",
                     },
                     "ButtonPanel": {
                         "class_name": "TexturePanel",
                         "kwargs": {
-                            "vert_align": "TOP",
-                            "horz_align": "LEFT",
-                            "size": [0.5, 0.5],
                             "image:image_asset": "red-button",
-                            "name": "button",
+                        },
+                    },
+                },
+                "Pause": {
+                    "class_name": "Component",
+                    "kwargs": {
+                        "pos": [0.85, 0.15],
+                        "size": [0.045, 0.075],
+                        "game_object:children": ["ButtonPanel"],
+                        "name": "pause_button",
+                        "wanted_mouse_events": [pygame.FINGERDOWN],
+                    },
+                    "ButtonPanel": {
+                        "class_name": "TexturePanel",
+                        "kwargs": {
+                            # "size": [0.3, 0.3],
+                            "image:image_asset": "pause-button",
                         },
                     },
                 },

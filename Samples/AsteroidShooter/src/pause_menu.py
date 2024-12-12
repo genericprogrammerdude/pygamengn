@@ -20,11 +20,11 @@ class PauseMenu(Root):
     def handle_event(self, event: pygame.event.Event) -> bool:
         rv = False
         if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
-            self.resume_callback()
+            self.resume_callback(event.touch)
             rv = True
         elif event.type == pygame.MOUSEBUTTONDOWN:
             if self.resume_button.process_mouse_event(event.pos, event.type):
-                self.resume_callback()
+                self.resume_callback(event.touch)
                 rv = True
             elif self.main_menu_button.process_mouse_event(event.pos, event.type):
                 self.main_menu_callback()

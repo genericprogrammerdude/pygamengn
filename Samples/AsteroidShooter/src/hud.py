@@ -18,6 +18,7 @@ class Hud(Root):
         self._fire = False
         self.__zero_angle = pygame.Vector2(1, 0)
         self._joystick_motion = False
+        self._pause_callback = None
 
 
     def handle_event(self, event: pygame.event.Event) -> bool:
@@ -26,18 +27,27 @@ class Hud(Root):
 
         if self.joystick.active:
             if event.type == pygame.FINGERDOWN:
-                if event.x < 0.6:
+                if event.x < 0.4:
                     self._update_heading(event.x, event.y, True)
                     self._joystick_finger = event.finger_id
                 else:
-                    self._fire = True
+                    component_rect = self._component.rect
+                    if self.pause_button.process_mouse_event(
+                        pygame.Vector2(event.x * component_rect.width, event.y * component_rect.height),
+                        event.type
+                    ):
+                        self._pause_callback()
+                    else:
+                        pos = self.button._normalized_pos
+                        if event.x >= pos.x * 0.9 and event.y >= pos.y * 0.9 :
+                            self._fire = True
                 rv = True
 
             elif event.type == pygame.FINGERUP:
                 if event.finger_id == self._joystick_finger:
                     self._joystick_finger = -1
                     self._joystick_motion = False
-                    rv = True
+                rv = True
 
             elif event.type == pygame.FINGERMOTION:
                 if event.finger_id == self._joystick_finger:
@@ -84,8 +94,6 @@ class Hud(Root):
 
     def fade_in(self, duration: int):
         super().fade_in(duration)
-        self.heading = 0
-        self.ship.angle = 0
         self._joystick_motion = False
         self._joystick_finger = -1
         self._fire = False
@@ -93,3 +101,12 @@ class Hud(Root):
 
     def set_joystick_state(self, state: bool):
         self.joystick.active = state
+
+
+    def set_pause_callback(self, pause_callback):
+        self._pause_callback = pause_callback
+
+
+    def reset_heading(self):
+        self.ship.angle = 0
+        self.heading = 0
