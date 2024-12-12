@@ -94,15 +94,14 @@ game_types = {
                     "class_name": "Component",
                     "kwargs": {
                         "pos": [0.85, 0.75],
-                        "size": [0.15, 0.25],
+                        "size": [0.075, 0.125],
                         "game_object:children": ["ButtonPanel"],
+                        "name": "button",
                     },
                     "ButtonPanel": {
                         "class_name": "TexturePanel",
                         "kwargs": {
-                            "size": [0.5, 0.5],
                             "image:image_asset": "red-button",
-                            "name": "button",
                         },
                     },
                 },
@@ -110,15 +109,16 @@ game_types = {
                     "class_name": "Component",
                     "kwargs": {
                         "pos": [0.85, 0.15],
-                        "size": [0.15, 0.25],
+                        "size": [0.045, 0.075],
                         "game_object:children": ["ButtonPanel"],
+                        "name": "pause_button",
+                        "wanted_mouse_events": [pygame.FINGERDOWN],
                     },
                     "ButtonPanel": {
                         "class_name": "TexturePanel",
                         "kwargs": {
-                            "size": [0.3, 0.3],
+                            # "size": [0.3, 0.3],
                             "image:image_asset": "pause-button",
-                            "name": "pause_button",
                         },
                     },
                 },

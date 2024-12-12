@@ -52,7 +52,7 @@ class AsteroidShooterGame(pygamengn.Game):
         self.pause_menu_ui.set_resume_callback(self.resume_play)
         self.pause_menu_ui.set_main_menu_callback(self.go_to_main_menu)
 
-        self.hud_ui.set_pause_callback(self.pause_game)
+        self.hud_ui.set_pause_callback(self.pause_play)
 
         self.debrief_ui.set_continue_callback(self.go_to_main_menu)
 
@@ -138,15 +138,24 @@ class AsteroidShooterGame(pygamengn.Game):
         self.mode = Mode.KILLING_ALL
         pygame.mouse.set_visible(False)
         self.toggle_ui(self.main_menu_ui, self.ui_fade_duration)
+        self.hud_ui.reset_heading()
         self.hud_ui.set_joystick_state(touch_input)
 
 
-    def resume_play(self):
+    def pause_play(self):
+        self.toggle_pause()
+        self.toggle_ui(self.pause_menu_ui, self.ui_fade_duration)
+        self.mode = Mode.PAUSE_MENU
+        pygame.mouse.set_visible(True)
+
+
+    def resume_play(self, touch_input: bool):
         """Resumes PLAY mode from PAUSE_MENU mode."""
         self.mode = Mode.PLAY
         pygame.mouse.set_visible(False)
         self.toggle_pause()
         self.toggle_ui(self.pause_menu_ui, self.ui_fade_duration)
+        self.hud_ui.set_joystick_state(touch_input)
 
 
     def go_to_main_menu(self):
@@ -165,19 +174,12 @@ class AsteroidShooterGame(pygamengn.Game):
         self.mode = Mode.MAIN_MENU
 
 
-    def pause_game(self):
-        self.toggle_pause()
-        self.toggle_ui(self.pause_menu_ui, self.ui_fade_duration)
-        self.mode = Mode.PAUSE_MENU
-        pygame.mouse.set_visible(True)
-
-
     def handle_event(self, event: pygame.event) -> bool:
         """Reads input and makes things happen."""
         rv = False
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_ESCAPE:
-                self.pause_game()
+                self.pause_play()
                 rv = True
             elif event.key == pygame.K_SPACE:
                 if self._player:
