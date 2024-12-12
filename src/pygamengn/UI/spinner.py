@@ -19,7 +19,7 @@ class Spinner(TexturePanel):
         """Updates the UI component and its children."""
         if self._angular_velocity != 0:
             spin_delta = (self._angular_velocity * delta) / 1000
-            self.angle = (self._angle + spin_delta) % 360
+            self.angle = (self.angle + spin_delta) % 360
         rv = super().update(delta)
         return False if self._is_dynamic else rv
 
