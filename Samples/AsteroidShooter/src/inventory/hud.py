@@ -73,7 +73,7 @@ game_types = {
                     "kwargs": {
                         "name": "stick",
                         "pos": [0.03, 0.7],
-                        "size": [0.15, 0.25],
+                        "size": [0.25, 0.25],
                         "image:image_asset": "joystick",
                         "scale_texture_to_rect": True,
                         "game_object:children": [
@@ -86,7 +86,7 @@ game_types = {
                             "image:image_asset": "ship-alpha",
                             "horz_align": "CENTRE",
                             "vert_align": "CENTRE",
-                            "size": [0.6, 0.6],
+                            "size": [0.5, 0.5],
                             "name": "ship",
                             "scale_texture_to_rect": True,
                         },
