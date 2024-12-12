@@ -48,17 +48,22 @@ class AsteroidShooterGame(pygamengn.Game):
 
         self.time = 0
         self.score = 0
-        self.mode = Mode.MAIN_MENU
-
-        self.main_menu_ui.set_start_callback(self.start_play)
-        self.main_menu_ui.set_exit_callback(self.exit_game)
-        self.toggle_ui(self.main_menu_ui, self.ui_fade_duration)
 
         self.pause_menu_ui.set_resume_callback(self.resume_play)
         self.pause_menu_ui.set_main_menu_callback(self.go_to_main_menu)
 
+        self.hud_ui.set_pause_callback(self.pause_game)
+
         self.debrief_ui.set_continue_callback(self.go_to_main_menu)
 
+        self.mode = Mode.MAIN_MENU
+        self.main_menu_ui.set_start_callback(self.start_play)
+        self.main_menu_ui.set_exit_callback(self.exit_game)
+        self.toggle_ui(self.main_menu_ui, self.ui_fade_duration)
+
+        # DEBUG #
+        # self.start_play(True)
+        # DEBUG #
 
     def update(self, delta):
         """Updates the game."""
@@ -160,15 +165,19 @@ class AsteroidShooterGame(pygamengn.Game):
         self.mode = Mode.MAIN_MENU
 
 
+    def pause_game(self):
+        self.toggle_pause()
+        self.toggle_ui(self.pause_menu_ui, self.ui_fade_duration)
+        self.mode = Mode.PAUSE_MENU
+        pygame.mouse.set_visible(True)
+
+
     def handle_event(self, event: pygame.event) -> bool:
         """Reads input and makes things happen."""
         rv = False
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_ESCAPE:
-                self.toggle_pause()
-                self.toggle_ui(self.pause_menu_ui, self.ui_fade_duration)
-                self.mode = Mode.PAUSE_MENU
-                pygame.mouse.set_visible(True)
+                self.pause_game()
                 rv = True
             elif event.key == pygame.K_SPACE:
                 if self._player:

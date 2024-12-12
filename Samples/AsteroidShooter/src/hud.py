@@ -18,6 +18,7 @@ class Hud(Root):
         self._fire = False
         self.__zero_angle = pygame.Vector2(1, 0)
         self._joystick_motion = False
+        self._pause_callback = None
 
 
     def handle_event(self, event: pygame.event.Event) -> bool:
@@ -30,7 +31,10 @@ class Hud(Root):
                     self._update_heading(event.x, event.y, True)
                     self._joystick_finger = event.finger_id
                 else:
-                    self._fire = True
+                    if self.pause_button.process_mouse_event(event.pos, event.type):
+                        self.pause_callback()
+                    else:
+                        self._fire = True
                 rv = True
 
             elif event.type == pygame.FINGERUP:
@@ -93,3 +97,7 @@ class Hud(Root):
 
     def set_joystick_state(self, state: bool):
         self.joystick.active = state
+
+
+    def set_pause_callback(self, pause_callback):
+        self._pause_callback = pause_callback

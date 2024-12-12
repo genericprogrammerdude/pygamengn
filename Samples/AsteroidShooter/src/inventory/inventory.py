@@ -207,6 +207,12 @@ images = {
             "fname": "kenney_onscreen-controls/Sprites/shaded-dark/shadedDark36.png",
         }
     },
+    "pause-button": {
+        "class_name": "ImageAsset",
+        "kwargs": {
+            "fname": "kenney_onscreen-controls/Sprites/shaded-dark/shadedDark14.png",
+        },
+    },
     "0": {
         "class_name": "ImageAsset",
         "kwargs": {
