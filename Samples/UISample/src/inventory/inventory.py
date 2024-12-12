@@ -5,6 +5,12 @@ images = {
             "fname": "SpaceShooterRedux/PNG/playerShip2_blue.png",
         },
     },
+    "ship_icon": {
+        "class_name": "ImageAsset",
+        "kwargs": {
+            "fname": "favicon.png",
+        }
+    },
 }
 
 sounds = {
