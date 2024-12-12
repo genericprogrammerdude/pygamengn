@@ -59,13 +59,13 @@ class TexturePanel(Panel):
 
     @property
     def angle(self) -> float:
-        return self.__angle
+        return self._angle
 
 
     @angle.setter
-    def angle(self, alpha: float):
-        if alpha != self._angle:
-            self._angle = alpha
+    def angle(self, theta: float):
+        if theta != self._angle:
+            self._angle = theta
             self._angle_changed = True
 
 
