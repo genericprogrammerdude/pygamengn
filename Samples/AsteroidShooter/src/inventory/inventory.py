@@ -189,35 +189,11 @@ images = {
             "fname": "arrow.png",
         }
     },
-    # "joystick": {
-    #     "class_name": "ImageAsset",
-    #     "kwargs": {
-    #         "fname": "kenney_onscreen-controls/Sprites/transparent-dark/transparentDark05.png",
-    #     }
-    # },
-    # "joystick": {
-    #     "class_name": "ImageAsset",
-    #     "kwargs": {
-    #         "fname": "kenney_onscreen-controls/Sprites/shaded-dark/shadedDark11.png",
-    #     }
-    # },
-    # "ship-alpha": {
-    #     "class_name": "ImageAsset",
-    #     "kwargs": {
-    #         "fname": "kenney_onscreen-controls/Sprites/shaded-dark/shadedDark01.png",
-    #     }
-    # },
-    # "ship-alpha": {
-    #     "class_name": "ImageAsset",
-    #     "kwargs": {
-    #         "fname": "ship-alpha.png",
-    #     }
-    # },
     "joystick": {
         "class_name": "ImageAsset",
         "kwargs": {
-            "fname": "joystick.png",
-        }
+            "fname": "kenney_onscreen-controls/Sprites/shaded-dark/shadedDark07.png",
+        },
     },
     "ship-alpha": {
         "class_name": "ImageAsset",
