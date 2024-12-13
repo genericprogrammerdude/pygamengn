@@ -70,9 +70,15 @@ class Root(InputHandler):
         if self._is_dirty:
             logging.debug(f"{self._component.name} is reblitting its root surface to the screen")
             self._static_blit_surface = pygame.Surface(self._component.rect.size, pygame.SRCALPHA)
+            blits = []
             self._component.build_static_blit_surface(
                 self._static_blit_surface,
-                -pygame.Vector2(self._component.rect.topleft)
+                -pygame.Vector2(self._component.rect.topleft),
+                blits
+            )
+            self._static_blit_surface.blits(
+                [(bs.surface, bs.topleft, None, bs.special_flags) for bs in blits],
+                doreturn = False
             )
 
         if self._fade_interp:

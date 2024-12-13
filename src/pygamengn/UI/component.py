@@ -37,12 +37,13 @@ class Component(GameObjectBase):
 
     def __init__(
         self,
-        pos = [0, 0],
-        size = [1, 1],
-        children = [],
-        fix_aspect_ratio = False,
-        name="",
-        wanted_mouse_events = list[int],
+        pos: pygame.Vector2 = pygame.Vector2(),
+        size: pygame.Vector2 = pygame.Vector2(1, 1),
+        children: list[Component] = [],
+        fix_aspect_ratio: bool = False,
+        name: str = "",
+        wanted_mouse_events: list[int] = [],
+        visible: bool = True,
         **kwargs
     ):
         super().__init__(**kwargs)
@@ -51,6 +52,7 @@ class Component(GameObjectBase):
         self.__fix_aspect_ratio = fix_aspect_ratio
         self.__name = name
         self.__wanted_mouse_events = wanted_mouse_events
+        self.__is_visible = visible
         self.__aspect_ratio = None
         self._normalized_pos = pygame.Vector2(pos)
         self._parent_rect = None
@@ -79,7 +81,12 @@ class Component(GameObjectBase):
         return dirty
 
 
-    def build_static_blit_surface(self, dest: pygame.Surface, parent_pos: pygame.Vector2):
+    def build_static_blit_surface(
+        self,
+        dest: pygame.Surface,
+        parent_pos: pygame.Vector2,
+        blits: list[BlitSurface]
+    ):
         """
         Recursively blit each static component in the tree to the given surface.
         """
@@ -90,11 +97,11 @@ class Component(GameObjectBase):
         if not self._is_dynamic:
             bs = self._blit_surface
             if bs:
-                dest.blit(bs, topleft, special_flags = pygame.BLEND_ALPHA_SDL2)
+                blits.append(BlitSurface(bs, topleft, special_flags = pygame.BLEND_ALPHA_SDL2))
                 if Component.debug_draw_ui_borders:
                     pygame.draw.rect(dest, (0, 255, 255, 255), pygame.Rect(topleft, self._rect.size), width = 1)
-        for child in self.__children:
-            child.build_static_blit_surface(dest, topleft)
+
+        [child.build_static_blit_surface(dest, topleft, blits) for child in self.__children]
 
 
     def get_dynamic_blit_surfaces(self, parent_pos: pygame.Vector2 = pygame.Vector2()) -> list[BlitSurface]:
@@ -238,13 +245,24 @@ class Component(GameObjectBase):
 
     @property
     def active(self) -> bool:
-        """Returns whether the component is active. Inactive components's update() method is not invoked."""
+        """Returns whether the component is active. Inactive components' update() method is not invoked."""
         return self._active
 
 
     @active.setter
     def active(self, state: bool):
         self._active = state
+
+
+    @property
+    def visible(self) -> bool:
+        """Returns whether the component is visible. Invisible components' are not drawn on the screen."""
+        return self.__is_visible
+
+
+    @visible.setter
+    def visible(self, state: bool):
+        self.__is_visible = state
 
 
     def __iter__(self):
