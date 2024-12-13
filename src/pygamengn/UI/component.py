@@ -52,9 +52,10 @@ class Component(GameObjectBase):
         self.__fix_aspect_ratio = fix_aspect_ratio
         self.__name = name
         self.__wanted_mouse_events = wanted_mouse_events
-        self.__is_visible = visible
         self.__aspect_ratio = None
         self._normalized_pos = pygame.Vector2(pos)
+        self.__visible = visible
+        self.__visible_changed = False
         self._parent_rect = None
         self._rect = None
         self._active = True
@@ -78,7 +79,9 @@ class Component(GameObjectBase):
         for child in self.__children:
             if child._active:
                 dirty = child.update(delta) or dirty
-        return dirty
+        rv = dirty or self.__visible_changed
+        self.__visible_changed = False
+        return rv
 
 
     def build_static_blit_surface(
@@ -90,7 +93,7 @@ class Component(GameObjectBase):
         """
         Recursively blit each static component in the tree to the given surface.
         """
-        if not self._active:
+        if not self._active or (not self.__visible and not self.__visible_changed):
             return
 
         topleft = pygame.Vector2(self._rect.topleft) + parent_pos
@@ -112,7 +115,7 @@ class Component(GameObjectBase):
         A static component is one that doesn't need to change its blit surface on every frame. A dynamic component
         is one that needs its blit surface updated every frame.
         """
-        if not self._active:
+        if not self._active or not self.__visible:
             return []
 
         bss = []
@@ -245,7 +248,10 @@ class Component(GameObjectBase):
 
     @property
     def active(self) -> bool:
-        """Returns whether the component is active. Inactive components' update() method is not invoked."""
+        """
+        Returns whether the component is active. Inactive components' and their children's update() method is not
+        invoked.
+        """
         return self._active
 
 
@@ -256,13 +262,14 @@ class Component(GameObjectBase):
 
     @property
     def visible(self) -> bool:
-        """Returns whether the component is visible. Invisible components' are not drawn on the screen."""
-        return self.__is_visible
+        """Returns whether the component is visible. Invisible components and their children are not drawn."""
+        return self.__visible
 
 
-    @visible.setter
-    def visible(self, state: bool):
-        self.__is_visible = state
+    def set_visible(self, state: bool):
+        self.__visible_changed = self.__visible != state
+        self.__visible = state
+        [child.set_visible(state) for child in self.__children]
 
 
     def __iter__(self):

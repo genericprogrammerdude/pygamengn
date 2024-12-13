@@ -157,7 +157,8 @@ game_types = {
                     "colour": [240, 200, 200, 100],
                     "game_object:children": [
                         "Spinner",
-                    ]
+                    ],
+                    "name": "spinner_panel",
                 },
                 "Spinner": {
                     "class_name": "Spinner",
@@ -180,7 +181,8 @@ game_types = {
                     "colour": [200, 20, 200, 100],
                     "game_object:children": [
                         "ShipPanel",
-                    ]
+                    ],
+                    "name": "static_ship",
                 },
                 "ShipPanel": {
                     "class_name": "TexturePanel",

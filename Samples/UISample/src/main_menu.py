@@ -35,6 +35,7 @@ class MainMenu(Root):
         elif event.type == pygame.MOUSEBUTTONDOWN:
             if self.start_button.process_mouse_event(event.pos, event.type):
                 self.exit_text.text = "Click me to exit!"
+                self.spinner_panel.set_visible(not self.spinner_panel.visible)
                 self.exit_button.set_border(0.01, (250, 100, 150))
                 self.count += 1
                 if self.count % 2 != 0:
