@@ -37,6 +37,7 @@ class Hud(Root):
                         event.type
                     ):
                         self._pause_callback()
+                        self.joystick.set_visible(False)
                     else:
                         pos = self.button._normalized_pos
                         if event.x >= pos.x * 0.9 and event.y >= pos.y * 0.9 :
@@ -101,6 +102,7 @@ class Hud(Root):
 
     def set_joystick_state(self, state: bool):
         self.joystick.active = state
+        self.joystick.set_visible(state)
 
 
     def set_pause_callback(self, pause_callback):
