@@ -23,8 +23,6 @@ class Waypoint(Trigger):
 
         if self.dirty_number:
             self.dirty_number = False
-            if self.number > 99:
-                self.number = 0
             tens = self.number // 10
             ones = self.number % 10
             self.attachments[0].game_object.set_image(self.digit_image_assets[tens])
