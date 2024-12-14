@@ -11,6 +11,8 @@ from pygamengn.health_bar import HealthBar
 from pygamengn.layer_manager import LayerManager
 from pygamengn.level import Level
 from pygamengn.mover import Mover, MoverVelocity, MoverVelDir
+from pygamengn.powerup import HealthPowerup
+from pygamengn.powerup import Powerup
 from pygamengn.projectile import Projectile
 from pygamengn.render_group import RenderGroup
 from pygamengn.replication_manager import ReplicationManager

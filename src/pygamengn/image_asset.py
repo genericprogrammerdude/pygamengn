@@ -46,10 +46,10 @@ class ImageAsset(GameObjectBase):
         return self.__base_surface
 
 
-    def get_surface(self, rotation: int = 0, scale: float = 1.0, force_cache: bool = False):
+    def get_surface(self, rotation: float = 0.0, scale: float = 1.0, force_cache: bool = False):
         """Returns the image at the given rotation and scale."""
         try:
-            return self.__scaled_rotations[scale][rotation]
+            return self.__scaled_rotations[scale][round(rotation)]
 
         except KeyError:
             rv = None

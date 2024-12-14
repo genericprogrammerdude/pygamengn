@@ -116,14 +116,14 @@ class GameObject(pygame.sprite.Sprite, GameObjectBase):
         return (self.__pos.x, self.__pos.y)
 
     @property
-    def heading(self):
+    def heading(self) -> float:
         return self.__heading
 
     @heading.setter
-    def heading(self, h):
+    def heading(self, h: float):
         """Sets the orientation of the game object."""
         self._dirty_image = self._dirty_image or self.__heading != h
-        self.__heading = normalize_angle(round(h))
+        self.__heading = h % 360
 
     def set_image(self, image_asset):
         """Sets a new image for the game object."""
@@ -140,7 +140,7 @@ class GameObject(pygame.sprite.Sprite, GameObjectBase):
         self._dirty_image = self._dirty_image or self.__alpha != a
         self.__alpha = a
 
-    def attach(self, game_object, offset, take_parent_transform):
+    def attach(self, game_object, offset = pygame.Vector2(), take_parent_transform = True):
         """Attaches a game object to this game object at the given offset."""
         self.attachments.append(Attachment(game_object, offset, take_parent_transform))
         game_object.set_parent(self)
@@ -157,6 +157,8 @@ class GameObject(pygame.sprite.Sprite, GameObjectBase):
         if self.health <= 0:
             self.health = 0
             self.die(instigator)
+        elif self.health > 100:
+            self.health = 100
 
     def die(self, instigator):
         """Die."""
