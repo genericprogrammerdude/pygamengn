@@ -8,7 +8,9 @@ from pygamengn.console_registrar import ConsoleRegistrar
 from pygamengn.game_object import GameObject
 
 from asteroid import Asteroid
-from nav_arrow import NavArrow
+from nav_arrow import NavArrow, PowerupArrow
+from shield import Shield
+from shield_powerup import ShieldPowerup
 from waypoint import Waypoint
 
 
@@ -28,7 +30,7 @@ class Ship(GameObject):
         return cls.__god_mode
 
 
-    def __init__(self, projectile_type, fire_freq, mover, waypoint, shot_sound, **kwargs):
+    def __init__(self, projectile_type, fire_freq, mover, shot_sound, waypoint, powerup, **kwargs):
         super().__init__(**kwargs)
         self.mover = mover
         self.projectile_type = projectile_type
@@ -38,10 +40,15 @@ class Ship(GameObject):
         self.kills = 0
         self.waypoints = 0
         self.death_callbacks = []
-        self.waypoint = waypoint
         self.shot_sound = shot_sound
-        self.waypoint.set_enter_callback(self.place_waypoint)
+        self.waypoint = waypoint
         self.waypoint.visible = False
+        self.waypoint.set_enter_callback(self.place_waypoint)
+        self.powerup = powerup
+        self.powerup.visible = False
+        self.__powerup_arrow = None
+        self.__waypoint_arrow = None
+        self.__shield = None
 
     def update(self, delta):
         """Updates the ship."""
@@ -53,15 +60,19 @@ class Ship(GameObject):
         if not self.waypoint.visible:
             self.waypoint.visible = True
             self.place_waypoint()
+            self.place_powerup()
 
     def attach(self, game_object, offset, take_parent_transform):
         """Attaches a game object to this game object at the give offset."""
         super().attach(game_object, offset, take_parent_transform)
-        try:
-            # Set the waypoint to point to -- only applies to NavArrow attachment
-            game_object.set_waypoint(self.waypoint)
-        except AttributeError:
-            pass
+        if isinstance(game_object, PowerupArrow):
+            self.__powerup_arrow = game_object
+            self.__powerup_arrow.pointee = self.powerup
+        elif isinstance(game_object, NavArrow):
+            self.__waypoint_arrow = game_object
+            self.__waypoint_arrow.pointee = self.waypoint
+        elif isinstance(game_object, Shield):
+            self.__shield = game_object
 
     def set_velocity(self, velocity):
         """Sets the ship's velocity."""
@@ -89,17 +100,22 @@ class Ship(GameObject):
     def death_effect_callback(self):
         """Callback for when the death effect is done playing."""
         self.waypoint.die(None)
+        self.powerup.die(None)
         for callback in self.death_callbacks:
             callback()
 
     def set_waypoint(self, waypoint):
         """Sets the waypoint the ship should go to."""
         self.waypoint = waypoint
-        for attachment in self.attachments:
-            try:
-                attachment.game_object.set_waypoint(waypoint)
-            except AttributeError:
-                pass
+        self.__waypoint_arrow.set_pointee(waypoint)
+        # for attachment in self.attachments:
+        #     try:
+        #         attachment.game_object.set_pointee(waypoint)
+        #     except AttributeError:
+        #         pass
+
+    def set_powerup(self, powerup: GameObject):
+        self.__powerup_arrow.set_pointee(powerup)
 
     def place_waypoint(self, gob=None):
         angle = numpy.deg2rad(random.randrange(0, 360))
@@ -110,10 +126,28 @@ class Ship(GameObject):
             self.waypoints += 1
         self.waypoint.set_number(self.waypoints + 1)
 
+    def place_powerup(self):
+        angle = numpy.deg2rad(random.randrange(0, 360))
+        pos = self.position + self.powerup.distance * pygame.Vector2(numpy.cos(angle), numpy.sin(angle))
+        self.powerup.position = pos
+        self.powerup.visible = True
+
     def take_damage(self, damage, instigator):
         """Takes damage for this game object."""
         if not self.__god_mode:
             super().take_damage(damage, instigator)
+
+    @property
+    def shield(self) -> GameObject:
+      return self.__shield
+
+    @shield.setter
+    def shield(self, shield: GameObject):
+        # Find the shield attachment
+        shield_attachments = [a for a in self.attachments if isinstance(a.game_object, Shield)]
+        assert(len(shield_attachments) == 1)
+        shield_attachments[0].game_object = shield
+        self.__shield = shield
 
 
 ConsoleRegistrar.register("god", Ship.toggle_god_mode)

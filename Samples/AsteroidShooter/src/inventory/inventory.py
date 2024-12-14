@@ -189,6 +189,12 @@ images = {
             "fname": "arrow.png",
         }
     },
+    "powerup-arrow": {
+        "class_name": "ImageAsset",
+        "kwargs": {
+            "fname": "powerup-arrow.png",
+        }
+    },
     "joystick": {
         "class_name": "ImageAsset",
         "kwargs": {
@@ -282,6 +288,22 @@ images = {
             "fname": "SpaceShooterRedux/PNG/UI/numeral9.png",
             "cache_rotations": True,
         }
+    },
+    "health-powerup": {
+        "class_name": "ImageAsset",
+        "kwargs": {
+            "fname": "health-powerup.png",
+            "cache_rotations": True,
+            "scale": 0.6,
+        },
+    },
+    "shield-powerup": {
+        "class_name": "ImageAsset",
+        "kwargs": {
+            "fname": "shield-powerup.png",
+            "cache_rotations": True,
+            "scale": 0.6,
+        },
     },
 }
 

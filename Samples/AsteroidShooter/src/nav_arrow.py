@@ -7,18 +7,23 @@ class NavArrow(GameObject):
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self.waypoint = None
+        self.__gob = None
 
-    def set_waypoint(self, waypoint):
-        """Sets the waypoint to point to."""
-        self.waypoint = waypoint
+    @property
+    def pointee(self) -> GameObject:
+        return self.__gob
+
+    @pointee.setter
+    def pointee(self, gob: GameObject):
+        """Sets the GameOject to point to."""
+        self.__gob = gob
 
     def update(self, delta):
         super().update(delta)
 
-        if self.waypoint and self.parent:
+        if self.__gob and self.parent:
             self.visible = True
-            diff = self.waypoint.position - self.parent.position
+            diff = self.__gob.position - self.parent.position
             dist_to_target = diff.length()
             direction = diff / dist_to_target
 
@@ -34,3 +39,8 @@ class NavArrow(GameObject):
 
         else:
             self.visible = False
+
+
+@ClassRegistrar.register("PowerupArrow")
+class PowerupArrow(NavArrow):
+    pass

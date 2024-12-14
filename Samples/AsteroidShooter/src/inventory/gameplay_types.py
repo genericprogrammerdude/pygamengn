@@ -36,6 +36,8 @@ game_types = {
             "type_spec:death_effect": "/Explosions/ExplosionBig",
             "damage": 50,
             "game_object:waypoint": "Waypoint",
+            "game_object:powerup": "HealthPowerup",
+            # "game_object:powerup": "ShieldPowerup",
             "sound:shot_sound": "ship_shot"
         },
         "groups": [
@@ -53,10 +55,15 @@ game_types = {
                 "parent_transform": False
             },
             {
+                "game_type": "/PlayerShip/PowerupArrow",
+                "offset": [0, 0],
+                "parent_transform": False
+            },
+            {
                 "game_type": "/PlayerShip/PlayerHealthBar",
                 "offset": [0, 0],
                 "parent_transform": False
-            }
+            },
         ],
         "PlayerShipMover": {
             "class_name": "MoverVelocity",
@@ -93,6 +100,15 @@ game_types = {
             "class_name": "NavArrow",
             "kwargs": {
                 "image:image_asset": "arrow"
+            },
+            "groups": [
+                "RenderGroup"
+            ]
+        },
+        "PowerupArrow": {
+            "class_name": "PowerupArrow",
+            "kwargs": {
+                "image:image_asset": "powerup-arrow"
             },
             "groups": [
                 "RenderGroup"
@@ -174,8 +190,35 @@ game_types = {
                 "groups": [
                     "RenderGroup"
                 ]
-            }
-        }
+            },
+        },
+        "HealthPowerup": {
+            "class_name": "HealthPowerup",
+            "kwargs": {
+                "image:image_asset": "health-powerup",
+                "distance": 1000,
+                "angular_velocity": 10.0,
+                "sound:enter_sound": "enter_sound"
+            },
+            "groups": [
+                "RenderGroup",
+                "TriggersGroup"
+            ],
+        },
+        "ShieldPowerup": {
+            "class_name": "ShieldPowerup",
+            "kwargs": {
+                "image:image_asset": "shield-powerup",
+                "distance": 1000,
+                "angular_velocity": 10.0,
+                "sound:enter_sound": "enter_sound",
+                "type_spec:shield_type": "/PlayerShip/PlayerShield",
+            },
+            "groups": [
+                "RenderGroup",
+                "TriggersGroup"
+            ],
+        },
     },
     "Explosions": {
         "Explosion": {
